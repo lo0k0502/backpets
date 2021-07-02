@@ -1,11 +1,8 @@
 import React from 'react';
 import { BottomNavigation, Text } from 'react-native-paper';
-
-const HomeRoute = () => <Text>Home</Text>;
-
-const MapRoute = () => <Text>Map</Text>;
-
-const StoreRoute = () => <Text>Store</Text>;
+import HomeRoute from './HomeRoute';
+import MapRoute from './MapRoute';
+import StoreRoute from './StoreRoute';
 
 const BottomNav = () => {
     const [index, setIndex] = React.useState(0);
@@ -27,7 +24,7 @@ const BottomNav = () => {
         onIndexChange={setIndex}
         renderScene={renderScene}
         shifting
-        barStyle={{ backgroundColor: 'dodgerblue', }}
+        barStyle={{ backgroundColor: '#48609d', }}
         />
     );
 };
