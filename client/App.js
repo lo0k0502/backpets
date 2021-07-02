@@ -1,21 +1,41 @@
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, Button, TouchableHighlightComponent } from 'react-native';
+import BottomNav from './src/components/BottomNav';
 
 export default function App() {
+  const [Count, setCount] = useState(0);
+
+  const handlePress = () => {
+    setCount(Count + 1);
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <StatusBar 
+        style="auto" 
+        backgroundColor="white" 
+        animated
+        networkActivityIndicatorVisible
+        translucent
+      />
+      <BottomNav />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop: 34,
+    backgroundColor: 'dodgerblue',
+  },
+  text: {
+    color: 'white',
+    textAlign: 'center',
+  },
+  statusbar: {
+    flex: 1,
+    backgroundColor: 'white',
   },
 });

@@ -12,3 +12,4 @@ cd server
 yarn install
 yarn start
 ```
+# Make sure to yarn install after each pull!!
