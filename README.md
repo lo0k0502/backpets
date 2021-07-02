@@ -1,4 +1,5 @@
 # ProjectP
+## Make sure to yarn install after each pull!!
 ```bash
 git clone https://github.com/lo0k0502/ProjectP.git
 ```
@@ -12,4 +13,3 @@ cd server
 yarn install
 yarn start
 ```
-# Make sure to yarn install after each pull!!
