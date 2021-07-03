@@ -16,6 +16,10 @@ const styles = StyleSheet.create({
         elevation: 3,
         borderRadius: 10,
     },
+    cardimg: {
+        height: 300,
+        backgroundColor: '#ff8000',
+    },
     cardactions: {
         justifyContent: 'flex-end',
     },
@@ -44,7 +48,10 @@ const HomeRoute = () => {
                 <Card.Content>
 
                 </Card.Content>
-                <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
+                <Card.Cover 
+                    source={require('../../assets/black-cat-icon-18776.png')} 
+                    style={styles.cardimg}
+                />
                 <Card.Actions style={styles.cardactions}>
                     <Button icon="thumb-up" color="#ff8000">OK</Button>
                     <Button icon="thumb-down" color="#ff8000">Not OK</Button>

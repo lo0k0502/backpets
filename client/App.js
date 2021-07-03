@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView, Platform } from 'react-native';
 import BottomNav from './src/components/BottomNav';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 35,
+    paddingTop: Platform.OS === 'android' ? 35 : 0,
   },
   statusbar: {
     flex: 1,
