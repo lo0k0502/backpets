@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, SafeAreaView, Platform } from 'react-native';
+import { StyleSheet, SafeAreaView, Platform, View } from 'react-native';
 import BottomNav from './src/components/BottomNav';
 
 const styles = StyleSheet.create({

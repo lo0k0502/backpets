@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { BottomNavigation } from 'react-native-paper';
 import HomeRoute from './HomeRoute';
 import MapRoute from './MapRoute';
@@ -7,9 +7,13 @@ import StoreRoute from './StoreRoute';
 
 const styles = StyleSheet.create({
   bar: {
+    height: 54,
+    margin: 10,
     backgroundColor: '#14f1e5', 
-    borderTopLeftRadius: 35, 
-    borderTopRightRadius: 35, 
+    borderTopEndRadius: 35, 
+    borderTopStartRadius: 35, 
+    borderBottomEndRadius: 35, 
+    borderBottomStartRadius: 35, 
     overflow: 'hidden',
   },
 });
