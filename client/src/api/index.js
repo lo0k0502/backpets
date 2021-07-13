@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const SERVERURL = 'http://localhost:5001';
+export const SERVERURL = 'http://192.168.1.103:5001';
 
 const API = axios.create({ baseURL: SERVERURL });
 

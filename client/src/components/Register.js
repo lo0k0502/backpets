@@ -91,14 +91,14 @@ const Register = ({ navigation }) => {
             const result = await UserRegister({
                 username,
                 password,
-                email
+                email,
             });
+            console.log(result);
             if (result) navigation.goBack('Login');
             setIsLoading(false);
         } catch (error) {
             setIsLoading(false);
-            setErrorMsg(error.message);
-            console.log(error);
+            setErrorMsg(error.response.data.message);
         }
     };
 

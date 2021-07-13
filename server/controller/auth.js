@@ -24,6 +24,7 @@ export const Login = async (req, res) => {
 export const Register = async (req, res) => {
   const { username, password, email } = req.body;
   try {
+    console.log({ username, password, email });
     console.log(await User.find());
     const existUser = await User.findOne({ username });
     if (existUser)
@@ -45,6 +46,7 @@ export const Register = async (req, res) => {
     );
     res.status(200).json({ result, token });
   } catch (error) {
+    console.log(error);
     res.status(400).json({ message: '錯誤' });
   }
 };
