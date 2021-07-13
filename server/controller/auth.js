@@ -24,9 +24,14 @@ export const Login = async (req, res) => {
 export const Register = async (req, res) => {
   const { username, password, email } = req.body;
   try {
+    console.log(await User.find());
     const existUser = await User.findOne({ username });
     if (existUser)
       return res.status(400).json({ message: '用戶名已被使用!' });
+    
+    const existEmail = await User.findOne({ email });
+    if (existEmail)
+      return res.status(400).json({ message: 'Email已被使用!' });
       
     const hashedPassword = await bcrypt.hash(password, 10);
     const result = await User.create({
