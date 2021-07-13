@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, SafeAreaView, Platform, View, Text } from 'react-native';
+import { Button } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -9,7 +10,7 @@ import Login from './src/components/Auth/Login';
 import BottomNavigation from './src/components/Home/BottomNavigation';
 import Register from './src/components/Auth/Register';
 import DeleteUser from './src/components/DevOptions/DeleteUser';
-import { Button } from 'react-native-paper';
+import AllUsers from './src/components/DevOptions/AllUsers';
 
 const styles = StyleSheet.create({
   container: {
@@ -30,7 +31,7 @@ const DevOptions = ({ navigation }) => {
       <Button onPress={() => navigation.navigate('DeleteUser')}>
         DeleteUser
       </Button>
-      <Button>
+      <Button onPress={() => navigation.navigate('AllUsers')}>
         AllUsers
       </Button>
     </View>
@@ -64,6 +65,7 @@ export default function App() {
           <Stacks.Screen name='Register' component={Register} />
           <Stacks.Screen name='DeleteUser' component={DeleteUser} />
           <Stacks.Screen name='Home' component={BottomNavigation} />
+          <Stacks.Screen name='AllUsers' component={AllUsers} />
         </Stacks.Navigator>
       </NavigationContainer>
     </SafeAreaView>

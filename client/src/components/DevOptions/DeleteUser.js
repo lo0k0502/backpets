@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { Button, HelperText, TextInput } from 'react-native-paper';
-import { deleteUser } from '../../api/index';
+import { deleteUser } from '../../api';
 
 const DeleteUser = ({ navigation }) => {
     const [username, setUsername] = useState('');

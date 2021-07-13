@@ -104,6 +104,7 @@ const Login = ({ navigation }) => {
             <Button
                 mode='contained'
                 uppercase={false}
+                style={{ marginTop: 10, }}
                 onPress={() => navigation.toggleDrawer()}
             >
                 Development Options
