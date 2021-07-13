@@ -41,7 +41,7 @@ const AllUsers = ({ navigation }) => {
     return (
         <View style={{ flex: 1, }}>
             {allUsers.map(user => (
-                <View style={{ flexDirection: 'row', }}>
+                <View key={user._id} style={{ flexDirection: 'row', }}>
                     <Text style={styles.username}>{user.username}</Text>
                     <Text style={styles.email}>{user.email}</Text>
                 </View>
