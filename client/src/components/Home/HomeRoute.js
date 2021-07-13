@@ -49,7 +49,7 @@ const HomeRoute = () => {
 
                 </Card.Content>
                 <Card.Cover 
-                    source={require('../../assets/black-cat-icon-18776.png')} 
+                    source={require('../../../assets/black-cat-icon-18776.png')} 
                     style={styles.cardimg}
                 />
                 <Card.Actions style={styles.cardactions}>

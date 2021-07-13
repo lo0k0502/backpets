@@ -1,6 +1,7 @@
+import { createNavigatorFactory } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
-import { TextInput, View, StyleSheet, Image, Pressable, Text } from 'react-native';
-import { Button, Divider } from 'react-native-paper';
+import { View, StyleSheet, Image, Pressable, Text } from 'react-native';
+import { TextInput, Button, Divider } from 'react-native-paper';
 
 const styles = StyleSheet.create({
     root: {
@@ -11,35 +12,18 @@ const styles = StyleSheet.create({
     },
     img: {
         width: '60%',
-        height: '50%',
+        height: '40%',
         marginBottom: 10,
     },
     inputusername: {
         width: '50%',
-        height: 50,
-        fontSize: 16,
-        borderWidth: 2,
-        borderBottomWidth: 1,
-        borderColor: 'gray',
-        borderRadius: 10,
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
-        paddingLeft: 5,
-        paddingRight: 5,
+        color: 'black',
+        backgroundColor: 'white',
     },
     inputpassword: {
         width: '50%',
-        height: 50,
-        fontSize: 16,
-        borderWidth: 2,
-        borderTopWidth: 1,
-        borderColor: 'gray',
-        borderRadius: 10,
-        borderTopLeftRadius: 0,
-        borderTopRightRadius: 0,
-        paddingLeft: 5,
-        paddingRight: 5,
         marginBottom: 10,
+        backgroundColor: 'white',
     },
     loginbtn: {
         width: '50%',
@@ -71,19 +55,25 @@ const Login = ({ navigation }) => {
     return (
         <View style={styles.root}>
             <Image 
-                source={require('../../assets/rsz_black-cat-icon-6.png')} 
+                source={require('../../../assets/rsz_black-cat-icon-6.png')} 
                 style={styles.img}
             />
             <TextInput 
+                mode='outlined'
                 placeholder='Username'
                 placeholderTextColor='gray'
+                outlineColor='black'
+                underlineColor='black'
                 value={username}
                 style={styles.inputusername}
                 onChangeText={(text) => setUsername(text)}
             />
             <TextInput 
+                mode='outlined'
                 placeholder='Password'
                 placeholderTextColor='gray'
+                outlineColor='black'
+                underlineColor='black'
                 secureTextEntry
                 value={password}
                 style={styles.inputpassword}
@@ -111,6 +101,13 @@ const Login = ({ navigation }) => {
                     </Text>
                 </Pressable>
             </View>
+            <Button
+                mode='contained'
+                uppercase={false}
+                onPress={() => navigation.toggleDrawer()}
+            >
+                Development Options
+            </Button>
         </View>
     );
 };

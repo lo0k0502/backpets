@@ -40,11 +40,7 @@ export const Register = async (req, res) => {
       password: hashedPassword,
       email,
     });
-    const token = await jwt.sign(
-      { username: result.username, email: result.email, id: result._id },
-      'test'
-    );
-    res.status(200).json({ result, token });
+    res.status(200).json({ result });
   } catch (error) {
     console.log(error);
     res.status(400).json({ message: '錯誤' });
