@@ -52,6 +52,8 @@ const Login = ({ navigation }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    const[isLoading, setIsLoading] = useState(false);
+
     return (
         <View style={styles.root}>
             <Image 
@@ -64,6 +66,7 @@ const Login = ({ navigation }) => {
                 placeholderTextColor='gray'
                 outlineColor='black'
                 underlineColor='black'
+                disabled={isLoading}
                 value={username}
                 style={styles.inputusername}
                 onChangeText={(text) => setUsername(text)}
@@ -74,6 +77,7 @@ const Login = ({ navigation }) => {
                 placeholderTextColor='gray'
                 outlineColor='black'
                 underlineColor='black'
+                disabled={isLoading}
                 secureTextEntry
                 value={password}
                 style={styles.inputpassword}

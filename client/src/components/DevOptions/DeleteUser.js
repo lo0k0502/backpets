@@ -8,14 +8,17 @@ const DeleteUser = ({ navigation }) => {
     const [password, setPassword] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const handleSubmit = async () => {
         if (!username || !password) return;
-        console.log(username, password);
         try {
+            setIsLoading(true);
             const res = await deleteUser({ username, password });
-            console.log('here');
-            console.log(res.data.success);
+            if (res.data.success) navigation.goBack();
+            setIsLoading(false);
         } catch (error) {
+            setIsLoading(false);
             setErrorMsg(error.response.data.message);
         }
     };
@@ -31,6 +34,7 @@ const DeleteUser = ({ navigation }) => {
             <TextInput 
                 placeholder='Username'
                 placeholderTextColor='gray'
+                disabled={isLoading}
                 style={{ borderWidth: 2, }}
                 value={username}
                 onChangeText={(text) => setUsername(text)}
@@ -38,12 +42,14 @@ const DeleteUser = ({ navigation }) => {
             <TextInput 
                 placeholder='Password'
                 placeholderTextColor='gray'
+                disabled={isLoading}
                 style={{ borderWidth: 2, }}
                 value={password}
                 onChangeText={(text) => setPassword(text)}
             />
             <Button
                 mode='contained'
+                loading={isLoading}
                 onPress={handleSubmit}
             >
                 Delete

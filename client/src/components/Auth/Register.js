@@ -120,6 +120,7 @@ const Register = ({ navigation }) => {
                 placeholder='Username'
                 placeholderTextColor='gray'
                 error={usernameErrorMsg}
+                disabled={isLoading}
                 value={username}
                 style={styles.input} 
                 onChangeText={(text) => checkUsername(text)}
@@ -135,6 +136,7 @@ const Register = ({ navigation }) => {
                 placeholder='E-mail'
                 placeholderTextColor='gray'
                 error={emailErrorMsg}
+                disabled={isLoading}
                 value={email}
                 style={styles.input} 
                 onChangeText={(text) => checkEmail(text)}
@@ -150,6 +152,7 @@ const Register = ({ navigation }) => {
                 placeholder='Password'
                 placeholderTextColor='gray'
                 error={passwordErrorMsg}
+                disabled={isLoading}
                 secureTextEntry={passwordSecure}
                 value={password}
                 style={styles.input} 
@@ -172,6 +175,7 @@ const Register = ({ navigation }) => {
                 placeholder='ConfirmPassword'
                 placeholderTextColor='gray'
                 error={confirmPasswordErrorMsg}
+                disabled={isLoading}
                 secureTextEntry={confirmPasswordSecure}
                 value={confirmPassword}
                 style={styles.input} 
