@@ -29,12 +29,32 @@ const Drawers = createDrawerNavigator();
 
 const DevOptions = ({ navigation }) => {
   return (
-    <View>
-      <Button onPress={() => navigation.navigate('DeleteUser')}>
-        DeleteUser
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Button 
+        mode='outlined' 
+        icon='account-off'
+        uppercase={false}
+        onPress={() => navigation.navigate('DeleteUser')}
+        style={{ margin: 10, }}
+      >
+        Delete User
       </Button>
-      <Button onPress={() => navigation.navigate('AllUsers')}>
-        AllUsers
+      <Button 
+        mode='outlined' 
+        icon='account-multiple'
+        uppercase={false}
+        onPress={() => navigation.navigate('AllUsers')}
+        style={{ margin: 10, }}
+      >
+        All Users
+      </Button>
+      <Button 
+        mode='contained' 
+        uppercase={false}
+        onPress={() => navigation.goBack('Login')}
+        style={{ margin: 10, }}
+      >
+        Go Back
       </Button>
     </View>
   );

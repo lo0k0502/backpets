@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     fab: {
         position: 'absolute',
         right: 40,
-        bottom: 40,
+        bottom: 80,
         backgroundColor: '#ff8000',
     },
 });

@@ -79,6 +79,8 @@ const Login = ({ navigation }) => {
             unwrapResult(result);
             navigation.navigate('Home');
             setIsLoading(false);
+            setUsername('');
+            setPassword('');
         } catch (error) {
             setIsLoading(false);
             setErrorMsg(error.message);
@@ -153,7 +155,7 @@ const Login = ({ navigation }) => {
                 style={{ marginTop: 10, }}
                 onPress={() => navigation.toggleDrawer()}
             >
-                Development Options
+                Options
             </Button>
         </View>
     );

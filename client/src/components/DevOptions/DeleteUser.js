@@ -24,7 +24,7 @@ const DeleteUser = ({ navigation }) => {
     };
 
     return (
-        <View style={{ flex: 1, }}>
+        <View style={{ flex: 1, justifyContent: 'center', }}>
             <HelperText
                 type='error'
                 visible={errorMsg}
@@ -32,18 +32,20 @@ const DeleteUser = ({ navigation }) => {
                 {errorMsg}
             </HelperText>
             <TextInput 
+                mode='outlined'
                 placeholder='Username'
                 placeholderTextColor='gray'
                 disabled={isLoading}
-                style={{ borderWidth: 2, }}
+                style={{ margin: 10, }}
                 value={username}
                 onChangeText={(text) => setUsername(text)}
             />
             <TextInput 
+                mode='outlined'
                 placeholder='Password'
                 placeholderTextColor='gray'
                 disabled={isLoading}
-                style={{ borderWidth: 2, }}
+                style={{ margin: 10, }}
                 value={password}
                 onChangeText={(text) => setPassword(text)}
             />

@@ -95,6 +95,10 @@ const Register = ({ navigation }) => {
             });
             if (result) navigation.goBack('Login');
             setIsLoading(false);
+            setUsername('');
+            setEmail('');
+            setPassword('');
+            setConfirmPassword('');
         } catch (error) {
             setIsLoading(false);
             setErrorMsg(error.response.data.message);
