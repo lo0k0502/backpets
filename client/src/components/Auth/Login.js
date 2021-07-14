@@ -1,7 +1,11 @@
-import { createNavigatorFactory } from '@react-navigation/native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Image, Pressable, Text } from 'react-native';
-import { TextInput, Button, Divider } from 'react-native-paper';
+import { TextInput, Button, Divider, HelperText } from 'react-native-paper';
+import { useDispatch } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { loginUser } from '../../redux/userReducer';
+import { UserLogin } from '../../api';
+
 
 const styles = StyleSheet.create({
     root: {
@@ -11,18 +15,13 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     img: {
-        width: '60%',
-        height: '40%',
+        width: '30%',
+        height: '30%',
         marginBottom: 10,
     },
-    inputusername: {
+    input: {
         width: '50%',
         color: 'black',
-        backgroundColor: 'white',
-    },
-    inputpassword: {
-        width: '50%',
-        marginBottom: 10,
         backgroundColor: 'white',
     },
     loginbtn: {
@@ -52,7 +51,39 @@ const Login = ({ navigation }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    const [usernameErrorMsg, setUsernameErrorMsg] = useState('');
+    const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
+    const [errorMsg, setErrorMsg] = useState('');
+
     const[isLoading, setIsLoading] = useState(false);
+
+    const dispatch = useDispatch();
+
+    const checkUsername = (text) => {
+        setUsername(text);
+        setUsernameErrorMsg(text ? '' : 'Must not be null!');
+    };
+
+    const checkPassword = (text) => {
+        setPassword(text);
+        setPasswordErrorMsg(text ? '' : 'Must not be null!');
+    };
+
+    const handleLogin = async () => {
+        if (!username) return setUsernameErrorMsg('Must not be null!');
+        if (!password) return setPasswordErrorMsg('Must not be null!');
+
+        try {
+            setIsLoading(true);
+            const result = await dispatch(loginUser({ username, password }));
+            unwrapResult(result);
+            navigation.navigate('Home');
+            setIsLoading(false);
+        } catch (error) {
+            setIsLoading(false);
+            setErrorMsg(error.message);
+        }
+    };
 
     return (
         <View style={styles.root}>
@@ -60,34 +91,45 @@ const Login = ({ navigation }) => {
                 source={require('../../../assets/rsz_black-cat-icon-6.png')} 
                 style={styles.img}
             />
+            <HelperText type='error'>
+                {errorMsg}
+            </HelperText>
             <TextInput 
                 mode='outlined'
                 placeholder='Username'
                 placeholderTextColor='gray'
                 outlineColor='black'
                 underlineColor='black'
+                error={usernameErrorMsg}
                 disabled={isLoading}
                 value={username}
-                style={styles.inputusername}
-                onChangeText={(text) => setUsername(text)}
+                style={styles.input}
+                onChangeText={(text) => checkUsername(text)}
             />
+            <HelperText type='error'>
+                {usernameErrorMsg}
+            </HelperText>
             <TextInput 
                 mode='outlined'
                 placeholder='Password'
                 placeholderTextColor='gray'
                 outlineColor='black'
                 underlineColor='black'
+                error={passwordErrorMsg}
                 disabled={isLoading}
                 secureTextEntry
                 value={password}
-                style={styles.inputpassword}
-                onChangeText={(text) => setPassword(text)}
+                style={styles.input}
+                onChangeText={(text) => checkPassword(text)}
             />
+            <HelperText type='error'>
+                {passwordErrorMsg}
+            </HelperText>
             <Button 
                 mode='contained'
                 style={styles.loginbtn}
                 contentStyle={{ width: '100%', height: '100%', }}
-                onPress={() => navigation.push('Home')}
+                onPress={handleLogin}
             >
                 Login
             </Button>

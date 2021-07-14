@@ -1,8 +1,17 @@
 import axios from 'axios';
+import { AsyncStorage } from 'react-native';
 
 export const SERVERURL = 'http://192.168.1.103:5001';
 
 const API = axios.create({ baseURL: SERVERURL });
+
+API.interceptors.request.use(async (req) => {
+    const userInfo = await AsyncStorage.getItem('userInfo')
+    if (userInfo) {
+        req.headers.Authorization = `Bearer ${userInfo.token}`;
+    }
+    return req;
+})
 
 //auth
 export const UserLogin = (payload) => API.post('/auth/login', payload);

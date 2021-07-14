@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, SafeAreaView, Platform, View, Text } from 'react-native';
+import { StyleSheet, SafeAreaView, Platform, View, Text, AsyncStorage } from 'react-native';
 import { Button } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { Provider } from 'react-redux';
+import store from './src/redux/store';
 
 import Login from './src/components/Auth/Login';
 import BottomNavigation from './src/components/Home/BottomNavigation';
@@ -41,8 +43,12 @@ const DevOptions = ({ navigation }) => {
 const LoginDrawer = () => {
   return (
     <Drawers.Navigator>
-      <Drawers.Screen name='Login' component={Login} />
-      <Drawers.Screen name='DevOptions' component={DevOptions} />
+      <Drawers.Screen name='Login'>
+        {props => <Login {...props} />}
+      </Drawers.Screen>
+      <Drawers.Screen name='DevOptions'>
+        {props => <DevOptions {...props} />}
+      </Drawers.Screen>
     </Drawers.Navigator>
   );
 };
@@ -50,24 +56,40 @@ const LoginDrawer = () => {
 export default function App() {
   const [isLogin, setIsLogin] = useState(false);
 
+  useEffect(() => {
+    setIsLogin(AsyncStorage.getItem('useInfo') ? true : false);
+  }, [AsyncStorage.getItem('userInfo')]);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar 
-        style='auto' 
-        backgroundColor='white' 
-        animated
-        networkActivityIndicatorVisible
-        translucent
-      />
-      <NavigationContainer>
-        <Stacks.Navigator initialRouteName={isLogin ? 'Home' : 'Drawer'}>
-          <Stacks.Screen name='LoginDrawer' component={LoginDrawer} options={{ title: 'Login' }} />
-          <Stacks.Screen name='Register' component={Register} />
-          <Stacks.Screen name='DeleteUser' component={DeleteUser} />
-          <Stacks.Screen name='Home' component={BottomNavigation} />
-          <Stacks.Screen name='AllUsers' component={AllUsers} />
-        </Stacks.Navigator>
-      </NavigationContainer>
-    </SafeAreaView>
+    <Provider store={store}>
+      <SafeAreaView style={styles.container}>
+        <StatusBar 
+          style='auto' 
+          backgroundColor='white' 
+          animated
+          networkActivityIndicatorVisible
+          translucent
+        />
+        <NavigationContainer>
+          <Stacks.Navigator initialRouteName={isLogin ? 'Home' : 'LoginDrawer'}>
+            <Stacks.Screen name='LoginDrawer' options={{ title: 'Login' }}>
+              {props => <LoginDrawer {...props} />}
+            </Stacks.Screen>
+            <Stacks.Screen name='Register'>
+              {props => <Register {...props} />}
+            </Stacks.Screen>
+            <Stacks.Screen name='DeleteUser'>
+              {props => <DeleteUser {...props} />}
+            </Stacks.Screen>
+            <Stacks.Screen name='Home'>
+              {props => <BottomNavigation {...props} />}
+            </Stacks.Screen>
+            <Stacks.Screen name='AllUsers'>
+              {props => <AllUsers {...props} />}
+            </Stacks.Screen>
+          </Stacks.Navigator>
+        </NavigationContainer>
+      </SafeAreaView>
+    </Provider>
   );
 }

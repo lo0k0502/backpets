@@ -19,4 +19,4 @@ mongoose
         app.listen(port, () => console.log(`server is running on ${port}`));
     });
 
-mongoose.connection.on("connected", () => console.log("db connected"));
+mongoose.connection.on('connected', () => console.log('db connected'));

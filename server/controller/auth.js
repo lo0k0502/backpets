@@ -1,21 +1,24 @@
 import User from '../model/user.js';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const Login = async (req, res) => {
     const { username, password } = req.body;
     try {
-      const User = await User.findOne({ username });
-      if (!User) return res.status(400).json({ message: '用戶不存在' });
+      const existUser = await User.findOne({ username });
+      if (!existUser) return res.status(400).json({ message: '用戶不存在' });
       
-      const isCorrect = await bcrypt.compare(password, User.password);
+      const isCorrect = await bcrypt.compare(password, existUser.password);
       if (!isCorrect) return res.status(400).json({ message: '密碼錯誤' });
       
       const token = jwt.sign(
-        { username: User.username, id: User._id },
-        'test',
-        { expiresIn: '1h' }
+        { username: existUser.username },
+        process.env.ACCESS_TOKEN_SECRET,
       );
-      res.status(200).json({ token, result: User });
+      res.status(200).json({ result: existUser, token });
     } catch (error) {
       console.log(error);
       res.status(400).json({ message: '錯誤' });

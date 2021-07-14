@@ -10,6 +10,6 @@ app.use(cors());
 
 app.use('/auth', auth);
 app.use('/user', user);
-app.use('*', (req, res) => res.status(404).json({ error: "not found" }));
+app.use('*', (req, res) => res.status(404).json({ error: 'not found' }));
 
 export default app;
