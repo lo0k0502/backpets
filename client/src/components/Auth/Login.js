@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Image, Pressable, Text } from 'react-native';
 import { TextInput, Button, Divider, HelperText } from 'react-native-paper';
+import * as Google from 'expo-google-app-auth';
 import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { loginUser } from '../../redux/userReducer';
-import { UserLogin } from '../../api';
+import { loginUser, googleLogin } from '../../redux/userReducer';
+
+import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from '@env';
+import { fetchUserByEmail, UserRegister } from '../../api';
+import genPassword from '../../utils/randomPassword';
 
 
 const styles = StyleSheet.create({
@@ -32,6 +36,15 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         elevation: 5,
     },
+    googleloginbtn: {
+        width: '50%',
+        height: 50,
+        color: 'white',
+        backgroundColor: 'green',
+        borderRadius: 10,
+        elevation: 5,
+        marginTop: 10,
+    },
     divider: {
         width: '90%',
         borderColor: 'lightgray',
@@ -56,6 +69,8 @@ const Login = ({ navigation }) => {
     const [errorMsg, setErrorMsg] = useState('');
 
     const[isLoading, setIsLoading] = useState(false);
+    const[loginLoading, setLoginLoading] = useState(false);
+    const[googleLoginLoading, setGoogleLoginLoading] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -75,15 +90,69 @@ const Login = ({ navigation }) => {
 
         try {
             setIsLoading(true);
+            setLoginLoading(true);
+
             const result = await dispatch(loginUser({ username, password }));
             unwrapResult(result);
             navigation.navigate('Home');
+
             setIsLoading(false);
+            setLoginLoading(false);
             setUsername('');
             setPassword('');
         } catch (error) {
             setIsLoading(false);
+            setLoginLoading(false);
             setErrorMsg(error.message);
+        }
+    };
+
+    const handleGoogleLogin = () => {
+        const config = {
+            androidClientId: GOOGLE_ANDROID_CLIENT_ID,
+            iosClientId: GOOGLE_IOS_CLIENT_ID,
+            scopes: ['profile', 'email'],
+        };
+
+        try {
+            setIsLoading(true);
+            setGoogleLoginLoading(true);
+
+            Google
+                .logInAsync(config)
+                .then(async ({ type, user }) => {
+                    if (type === 'success') {
+                        const { email, familyName, givenName, photoUrl } = user;
+                        const res = await fetchUserByEmail({ email });
+                        if (res.data.result) {
+                            const result = await dispatch(googleLogin({ 
+                                username: res.data.result.username, 
+                            }));
+                            unwrapResult(result);
+                            navigation.navigate('Home');
+                        } else {
+                            const password = genPassword(10, true, true, false);
+                            const rst = await UserRegister({
+                                username: familyName + givenName,
+                                password,
+                                email,
+                                photoUrl,
+                            });
+                            const result = await dispatch(googleLogin({ 
+                                username: rst.data.result.username, 
+                            }));
+                            unwrapResult(result);
+                            navigation.navigate('Home', { password });
+                        }
+                    }
+                })
+                .catch(error => console.log(error));
+
+            setIsLoading(false);
+            setGoogleLoginLoading(false);
+        } catch (error) {
+            setIsLoading(false);
+            setGoogleLoginLoading(false);
         }
     };
 
@@ -129,11 +198,24 @@ const Login = ({ navigation }) => {
             </HelperText>
             <Button 
                 mode='contained'
+                disabled={isLoading}
+                loading={loginLoading}
                 style={styles.loginbtn}
                 contentStyle={{ width: '100%', height: '100%', }}
                 onPress={handleLogin}
             >
                 Login
+            </Button>
+            <Button
+                mode='contained'
+                icon={require('../../../assets/GoogleIconG.png')}
+                disabled={isLoading}
+                loading={googleLoginLoading}
+                style={styles.googleloginbtn}
+                contentStyle={{ width: '100%', height: '100%', }}
+                onPress={handleGoogleLogin}
+            >
+                Google Login
             </Button>
             <Divider style={styles.divider} />
             <View style={styles.signupmsg}>

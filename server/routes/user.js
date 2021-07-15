@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { fetchAllUsers, deleteUser } from '../controller/user.js';
+import { fetchUserByEmail, fetchAllUsers, deleteUser } from '../controller/user.js';
 
 const router = Router();
 
+router.post('/fetchbyemail', fetchUserByEmail);
 router.get('/fetchall', fetchAllUsers);
 router.post('/delete', deleteUser);
 

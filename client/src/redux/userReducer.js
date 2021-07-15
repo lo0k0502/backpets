@@ -1,12 +1,23 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { UserLogin, UserRegister } from '../api';
+import { UserLogin, GoogleLogin, UserRegister } from '../api';
 
 export const loginUser = createAsyncThunk(
   'user/login',
   async ({ username, password }, { rejectWithValue }) => {
     try {
       const response = await UserLogin({ username, password });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+export const googleLogin = createAsyncThunk(
+  'user/googlelogin',
+  async ({ username }, { rejectWithValue }) => {
+    try {
+      const response = await GoogleLogin({ username });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -42,6 +53,13 @@ export const userSlice = createSlice({
   },
   extraReducers: {
     [loginUser.fulfilled]: (state, action) => {
+      const info = action.payload.result;
+      const token = action.payload.token;
+      state.information = info;
+      state.token = token;
+      AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
+    },
+    [googleLogin.fulfilled]: (state, action) => {
       const info = action.payload.result;
       const token = action.payload.token;
       state.information = info;

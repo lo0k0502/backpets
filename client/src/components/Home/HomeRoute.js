@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const HomeRoute = ({ navigation, setUser, user }) => {
+const HomeRoute = ({ navigation, route , setUser, user }) => {
 
     const dispatch = useDispatch();
 
@@ -65,13 +65,14 @@ const HomeRoute = ({ navigation, setUser, user }) => {
                 <Appbar.Content title='Project P!!!' subtitle={user?.result.username} />
                 <Appbar.Action icon='menu' />
             </Appbar>
+            <Text>{route.password}</Text>
             <Card style={styles.card}>
                 <Card.Title title='Hello there!' subtitle='What do you think of this picture?' />
                 <Card.Content>
                     
                 </Card.Content>
                 <Card.Cover 
-                    source={require('../../../assets/black-cat-icon-18776.png')} 
+                    source={{ uri: user?.result.photoUrl }} 
                     style={styles.cardimg}
                 />
                 <Card.Actions style={styles.cardactions}>

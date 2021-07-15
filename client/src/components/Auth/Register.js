@@ -88,12 +88,15 @@ const Register = ({ navigation }) => {
 
         try {
             setIsLoading(true);
+
             const result = await UserRegister({
                 username,
                 password,
                 email,
+                photoUrl: '',
             });
             if (result) navigation.goBack('Login');
+            
             setIsLoading(false);
             setUsername('');
             setEmail('');

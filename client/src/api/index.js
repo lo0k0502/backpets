@@ -11,12 +11,14 @@ API.interceptors.request.use(async (req) => {
         req.headers.Authorization = `Bearer ${userInfo.token}`;
     }
     return req;
-})
+});
 
 //auth
+export const GoogleLogin = (payload) => API.post('/auth/googlelogin', payload);
 export const UserLogin = (payload) => API.post('/auth/login', payload);
 export const UserRegister = (payload) => API.post('/auth/register', payload);
 
 //user
+export const fetchUserByEmail = (payload) => API.post('/user/fetchbyemail', payload);
 export const fetchAllUsers = () => API.get('/user/fetchall');
 export const deleteUser = (payload) => API.post('/user/delete', payload);

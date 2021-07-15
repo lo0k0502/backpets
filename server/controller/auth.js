@@ -24,8 +24,23 @@ export const Login = async (req, res) => {
       res.status(400).json({ message: '錯誤' });
     }
 };
+export const GoogleLogin = async (req, res) => {
+    const { username } = req.body;
+    try {
+      const existUser = await User.findOne({ username });
+      
+      const token = jwt.sign(
+        { username: existUser.username },
+        process.env.ACCESS_TOKEN_SECRET,
+      );
+      res.status(200).json({ result: existUser, token });
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({ message: '錯誤' });
+    }
+};
 export const Register = async (req, res) => {
-  const { username, password, email } = req.body;
+  const { username, password, email, photoUrl } = req.body;
   try {
     console.log({ username, password, email });
     console.log(await User.find());
@@ -42,6 +57,7 @@ export const Register = async (req, res) => {
       username,
       password: hashedPassword,
       email,
+      photoUrl,
     });
     res.status(200).json({ result });
   } catch (error) {
