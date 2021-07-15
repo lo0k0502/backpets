@@ -11,7 +11,7 @@ import Store from './StoreRoute';
 
 const Tabs = createBottomTabNavigator();
 
-const BottomNavigation = () => {
+const BottomNavigation = ({ isLogin }) => {
     const [user, setUser] = useState(null);
 
     const dispatch = useDispatch();
@@ -53,7 +53,7 @@ const BottomNavigation = () => {
                     ),
                 }}
             >
-                {props => <HomeRoute {...props} setUser={setUser} user={user} />}
+                {props => <HomeRoute {...props} setUser={setUser} user={user} isLogin={isLogin} />}
             </Tabs.Screen>
             <Tabs.Screen 
                 name='Map'

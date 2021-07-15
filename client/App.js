@@ -61,11 +61,11 @@ const DevOptions = ({ navigation }) => {
   );
 };
 
-const LoginDrawer = () => {
+const LoginDrawer = ({ isLogin }) => {
   return (
     <Drawers.Navigator>
       <Drawers.Screen name='Login'>
-        {props => <Login {...props} />}
+        {props => <Login {...props} isLogin={isLogin} />}
       </Drawers.Screen>
       <Drawers.Screen name='DevOptions'>
         {props => <DevOptions {...props} />}
@@ -97,7 +97,7 @@ export default function App() {
             screenOptions={{ headerShown: false }}
           >
             <Stacks.Screen name='LoginDrawer' options={{ title: 'Login' }}>
-              {props => <LoginDrawer {...props} />}
+              {props => <LoginDrawer {...props} isLogin={isLogin} />}
             </Stacks.Screen>
             <Stacks.Screen name='Register'>
               {props => <Register {...props} />}
@@ -106,7 +106,7 @@ export default function App() {
               {props => <DeleteUser {...props} />}
             </Stacks.Screen>
             <Stacks.Screen name='Home'>
-              {props => <BottomNavigation {...props} />}
+              {props => <BottomNavigation {...props} isLogin={isLogin} />}
             </Stacks.Screen>
             <Stacks.Screen name='AllUsers'>
               {props => <AllUsers {...props} />}

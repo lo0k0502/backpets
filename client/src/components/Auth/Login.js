@@ -9,6 +9,7 @@ import { loginUser, googleLogin } from '../../redux/userReducer';
 import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from '@env';
 import { fetchUserByEmail, UserRegister } from '../../api';
 import genPassword from '../../utils/randomPassword';
+import { useEffect } from 'react';
 
 
 const styles = StyleSheet.create({
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const Login = ({ navigation }) => {
+const Login = ({ navigation, isLogin }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -73,6 +74,12 @@ const Login = ({ navigation }) => {
     const[googleLoginLoading, setGoogleLoginLoading] = useState(false);
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (isLogin) {
+            navigation.navigate('Home');
+        }
+    }, []);
 
     const checkUsername = (text) => {
         setUsername(text);
