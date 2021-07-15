@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
+import MapView from 'react-native-maps';
 
 const styles = StyleSheet.create({
     root: {
@@ -11,13 +12,17 @@ const styles = StyleSheet.create({
     body: {
 
     },
+    map: {
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+    },
 });
 
 const MapRoute = () => {
     
     return (
         <View style={styles.root}>
-            <Text>Map</Text>
+            <MapView style={style.map}/>
         </View>
     )
 };
