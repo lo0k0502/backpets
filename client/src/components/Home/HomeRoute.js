@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, AsyncStorage, Alert } from 'react-native';
+import { StyleSheet, Text, View, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FAB, Card, Button, Appbar } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../redux/userReducer';
