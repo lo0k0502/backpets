@@ -10,6 +10,15 @@ export const fetchAllUsers = async (req, res) => {
     const result = await User.find();
     return res.status(200).json({ result });
 };
+export const updateUser = async (req, res) => {
+    // const { username, password } = req.body;
+    try {
+        console.log(req);
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ message: '錯誤' });
+    }
+};
 export const deleteUser = async (req, res) => {
     const { username } = req.body;
     try {

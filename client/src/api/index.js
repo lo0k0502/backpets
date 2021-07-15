@@ -21,4 +21,5 @@ export const UserRegister = (payload) => API.post('/auth/register', payload);
 //user
 export const fetchUserByEmail = (payload) => API.post('/user/fetchbyemail', payload);
 export const fetchAllUsers = () => API.get('/user/fetchall');
+export const updateUser = (payload) => API.post('/update', payload);
 export const deleteUser = (payload) => API.post('/user/delete', payload);

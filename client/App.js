@@ -92,7 +92,10 @@ export default function App() {
           translucent
         />
         <NavigationContainer>
-          <Stacks.Navigator initialRouteName={isLogin ? 'Home' : 'LoginDrawer'}>
+          <Stacks.Navigator 
+            initialRouteName={isLogin ? 'Home' : 'LoginDrawer'}
+            screenOptions={{ headerShown: false }}
+          >
             <Stacks.Screen name='LoginDrawer' options={{ title: 'Login' }}>
               {props => <LoginDrawer {...props} />}
             </Stacks.Screen>

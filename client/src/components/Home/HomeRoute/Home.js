@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FAB, Card, Button, Appbar } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
-import { logout } from '../../redux/userReducer';
+import { logout } from '../../../redux/userReducer';
 
 const styles = StyleSheet.create({
     root: {
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const HomeRoute = ({ navigation, route , setUser, user }) => {
+const Home = ({ navigation, route , setUser, user }) => {
 
     const dispatch = useDispatch();
 
@@ -63,7 +63,7 @@ const HomeRoute = ({ navigation, route , setUser, user }) => {
         <View style={styles.root}>
             <Appbar style={styles.appbar}>
                 <Appbar.Content title='Project P!!!' subtitle={user?.result.username} />
-                <Appbar.Action icon='menu' />
+                <Appbar.Action icon='menu' onPress={() => navigation.push('UpdateProfile')} />
             </Appbar>
             <Text>{route.password}</Text>
             <Card style={styles.card}>
@@ -90,7 +90,7 @@ const HomeRoute = ({ navigation, route , setUser, user }) => {
             </Button>
             <FAB style={styles.fab} icon='plus' />
         </View>
-    )
+    );
 };
 
-export default HomeRoute;
+export default Home;

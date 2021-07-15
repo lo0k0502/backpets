@@ -5,7 +5,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useDispatch } from 'react-redux';
 import { setState } from '../../redux/userReducer';
 
-import Home from './HomeRoute';
+import HomeRoute from './HomeRoute/HomeRoute';
 import Map from './MapRoute';
 import Store from './StoreRoute';
 
@@ -46,14 +46,14 @@ const BottomNavigation = () => {
             }}
         >
             <Tabs.Screen 
-                name='Home' 
+                name='HomeRoute' 
                 options={{
                     tabBarIcon: ({ color, size }) => (
                       <Icons name='home' color={color} size={size} />
                     ),
                 }}
             >
-                {props => <Home {...props} setUser={setUser} user={user} />}
+                {props => <HomeRoute {...props} setUser={setUser} user={user} />}
             </Tabs.Screen>
             <Tabs.Screen 
                 name='Map'
