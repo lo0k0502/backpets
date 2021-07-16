@@ -41,7 +41,7 @@ const BottomNavigation = ({ navigation, setIsLogin, isLogin }) => {
         let interval = null;
         interval = setInterval(() => {
             setSeconds(seconds + 1);
-        }, 300000);
+        }, 60000);
 
 
         return () => clearInterval(interval);
