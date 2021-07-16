@@ -98,14 +98,15 @@ export const RefreshToken = (req, res) => {
   if (!refreshToken) return res.sendStatus(401);
   if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
   
-  jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (error) => {
+  jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, async (error) => {
     if (error) {
       try {
-        console.log('expired refreshing');
         const { username } = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+        const existUser = await User.findOne({ username });
+
         const newAccessToken = generateToken({ username });
-        console.log('refreshed');
-        return res.status(200).json({ accessToken: newAccessToken });
+        return res.status(200).json({ result: existUser, accessToken: newAccessToken, refreshToken });
       } catch (error) {
         console.log(error);
         res.status(400).json({ message: '錯誤' });

@@ -72,17 +72,16 @@ const Home = ({ navigation, route, setUser, user, setIsLogin, isLogin }) => {
     return (
         <View style={styles.root}>
             <Appbar style={styles.appbar}>
-                <Appbar.Content title='Project P!!!' subtitle={user?.result.username} />
+                <Appbar.Content title='Project P!!!' subtitle={user?.result?.username} />
                 <Appbar.Action icon='menu' onPress={() => navigation.push('Profile')} />
             </Appbar>
-            <Text>{route.params?.password}</Text>
             <Card style={styles.card}>
                 <Card.Title title='Hello there!' subtitle='What do you think of this picture?' />
                 <Card.Content>
                     
                 </Card.Content>
                 <Card.Cover 
-                    source={{ uri: user?.result.photoUrl }} 
+                    source={{ uri: user?.result?.photoUrl }} 
                     style={styles.cardimg}
                 />
                 <Card.Actions style={styles.cardactions}>

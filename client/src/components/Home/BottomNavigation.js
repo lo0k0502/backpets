@@ -15,6 +15,8 @@ const Tabs = createBottomTabNavigator();
 const BottomNavigation = ({ navigation, setIsLogin, isLogin }) => {
     const [user, setUser] = useState(null);
 
+    const [seconds, setSeconds] = useState(0);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -27,17 +29,23 @@ const BottomNavigation = ({ navigation, setIsLogin, isLogin }) => {
                     accessToken: userInfo.accessToken, 
                     refreshToken: userInfo.refreshToken,
                 }));
-                const result = 
-                    await dispatch(tokenRefresh({ 
-                        accessToken: userInfo.accessToken, 
-                        refreshToken: userInfo.refreshToken, 
-                    }));
-                unwrapResult(result);
+                await dispatch(tokenRefresh({ 
+                    accessToken: userInfo.accessToken, 
+                    refreshToken: userInfo.refreshToken, 
+                }));
             }
         };
 
         fetch();
-    }, []);
+
+        let interval = null;
+        interval = setInterval(() => {
+            setSeconds(seconds + 1);
+        }, 300000);
+
+
+        return () => clearInterval(interval);
+    }, [seconds]);
 
     return (
         <Tabs.Navigator 

@@ -63,19 +63,27 @@ export const userSlice = createSlice({
       AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
     },
     [googleLogin.fulfilled]: (state, action) => {
-      state.information = action.payload.result;
-      state.accessToken = action.payload.accessToken;
-      state.refreshToken = action.payload.refreshToken;
-      if (action.payload.isFirst) 
+      const result = action.payload.result;
+      const accessToken = action.payload.accessToken;
+      const refreshToken = action.payload.refreshToken
+      state.information = result;
+      state.accessToken = accessToken;
+      state.refreshToken = refreshToken;
+      if (action.payload.isFirst) {
         Alert.alert('Safety alert', 
           'Your password is now set to 10 zeroes, we highly recommend you to change your password immediately!!', 
           [{ text: 'OK' }],
         );
-      AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
+      }
+      AsyncStorage.setItem('userInfo', JSON.stringify({ result, accessToken, refreshToken }));
     },
     [tokenRefresh.fulfilled]: (state, action) => {
-      state.accessToken = action.payload.accessToken;
-      AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
+      if (action.payload.accessToken) {
+        state.accessToken = action.payload.accessToken;
+        AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
+      } else {
+        console.log('While refreshing', action.payload.message);
+      }
     },
   },
 });
