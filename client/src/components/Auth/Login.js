@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Image, Pressable, Text } from 'react-native';
+import { View, StyleSheet, Image, Pressable, Text, Alert } from 'react-native';
 import { TextInput, Button, Divider, HelperText } from 'react-native-paper';
 import * as Google from 'expo-google-app-auth';
 import { useDispatch } from 'react-redux';
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const Login = ({ navigation, isLogin }) => {
+const Login = ({ navigation, setIsLogin, isLogin }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -101,7 +101,8 @@ const Login = ({ navigation, isLogin }) => {
 
             const result = await dispatch(loginUser({ username, password }));
             unwrapResult(result);
-            navigation.navigate('Home');
+            setIsLogin(true);
+            navigation.push('Home');
 
             setIsLoading(false);
             setLoginLoading(false);
@@ -130,33 +131,25 @@ const Login = ({ navigation, isLogin }) => {
                 .then(async ({ type, user }) => {
                     if (type === 'success') {
                         const { email, familyName, givenName, photoUrl } = user;
-                        const res = await fetchUserByEmail({ email });
-                        if (res.data.result) {
-                            const result = await dispatch(googleLogin({ 
-                                username: res.data.result.username, 
-                            }));
-                            unwrapResult(result);
-                            navigation.navigate('Home');
-                        } else {
-                            const password = genPassword(10, true, true, false);
-                            const rst = await UserRegister({
-                                username: familyName + givenName,
-                                password,
-                                email,
-                                photoUrl,
-                            });
-                            const result = await dispatch(googleLogin({ 
-                                username: rst.data.result.username, 
-                            }));
-                            unwrapResult(result);
-                            navigation.navigate('Home', { password });
-                        }
+
+                        const result = await dispatch(googleLogin({ 
+                            username: familyName + givenName,
+                            email,
+                            photoUrl, 
+                        }));
+                        unwrapResult(result);
+                        Alert.alert('Safety alert', 
+                            'Your password is now set to 10 zeroes, we highly recommend you to change your password immediately!!', 
+                            [{ text: 'Yes' }],
+                        );
+
+                        setIsLogin(true);
+                        setIsLoading(false);
+                        setGoogleLoginLoading(false);
+                        navigation.push('Home');
                     }
                 })
                 .catch(error => console.log(error));
-
-            setIsLoading(false);
-            setGoogleLoginLoading(false);
         } catch (error) {
             setIsLoading(false);
             setGoogleLoginLoading(false);

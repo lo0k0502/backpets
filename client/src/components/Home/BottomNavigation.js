@@ -3,7 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useDispatch } from 'react-redux';
-import { setState } from '../../redux/userReducer';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { tokenRefresh, setState } from '../../redux/userReducer';
 
 import HomeRoute from './HomeRoute/HomeRoute';
 import Map from './MapRoute';
@@ -11,7 +12,7 @@ import Store from './StoreRoute';
 
 const Tabs = createBottomTabNavigator();
 
-const BottomNavigation = ({ isLogin }) => {
+const BottomNavigation = ({ navigation, setIsLogin, isLogin }) => {
     const [user, setUser] = useState(null);
 
     const dispatch = useDispatch();
@@ -19,9 +20,22 @@ const BottomNavigation = ({ isLogin }) => {
     useEffect(() => {
         const fetch = async () => {
             const userInfo = JSON.parse(await AsyncStorage.getItem('userInfo'));
-            setUser(userInfo);
-            if (userInfo) dispatch(setState({ userInfo: userInfo.result, token: userInfo.token }));
+            if (userInfo) {
+                setUser(userInfo);
+                dispatch(setState({ 
+                    userInfo: userInfo.result, 
+                    accessToken: userInfo.accessToken, 
+                    refreshToken: userInfo.refreshToken,
+                }));
+                const result = 
+                    await dispatch(tokenRefresh({ 
+                        accessToken: userInfo.accessToken, 
+                        refreshToken: userInfo.refreshToken, 
+                    }));
+                unwrapResult(result);
+            }
         };
+
         fetch();
     }, []);
 
@@ -53,7 +67,7 @@ const BottomNavigation = ({ isLogin }) => {
                     ),
                 }}
             >
-                {props => <HomeRoute {...props} setUser={setUser} user={user} isLogin={isLogin} />}
+                {props => <HomeRoute {...props} setUser={setUser} user={user} setIsLogin={setIsLogin} isLogin={isLogin} />}
             </Tabs.Screen>
             <Tabs.Screen 
                 name='Map'

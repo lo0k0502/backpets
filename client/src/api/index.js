@@ -8,7 +8,7 @@ const API = axios.create({ baseURL: SERVERURL });
 API.interceptors.request.use(async (req) => {
     const userInfo = await AsyncStorage.getItem('userInfo')
     if (userInfo) {
-        req.headers.Authorization = `Bearer ${userInfo.token}`;
+        req.headers.Authorization = `Bearer ${userInfo.accessToken}`;
     }
     return req;
 });
@@ -17,6 +17,8 @@ API.interceptors.request.use(async (req) => {
 export const GoogleLogin = (payload) => API.post('/auth/googlelogin', payload);
 export const UserLogin = (payload) => API.post('/auth/login', payload);
 export const UserRegister = (payload) => API.post('/auth/register', payload);
+export const Logout = (payload) => API.delete('/auth/logout', payload);
+export const RefreshToken = (payload) => API.post('/auth/refreshtoken', payload);
 
 //user
 export const fetchUserByEmail = (payload) => API.post('/user/fetchbyemail', payload);

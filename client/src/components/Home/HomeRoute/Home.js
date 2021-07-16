@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FAB, Card, Button, Appbar } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
+import { Logout } from '../../../api';
 import { logout } from '../../../redux/userReducer';
 
 const styles = StyleSheet.create({
@@ -37,7 +38,8 @@ const styles = StyleSheet.create({
     },
 });
 
-const Home = ({ navigation, route , setUser, user, isLogin }) => {
+const Home = ({ navigation, route, setUser, user, setIsLogin, isLogin }) => {
+    console.log(route);
 
     const dispatch = useDispatch();
     
@@ -50,10 +52,12 @@ const Home = ({ navigation, route , setUser, user, isLogin }) => {
 
     const handleLogout = async () => {
         try {
-            await AsyncStorage.removeItem('userInfo');
+            const logOutRes = await Logout({ refreshToken: user.result.refreshToken });
+            const removeInfoRes = await AsyncStorage.removeItem('userInfo');
             dispatch(logout());
             setUser(null);
-            navigation.goBack('Login');
+            setIsLogin(false);
+            navigation.navigate('Login');
         } catch (error) {
             console.log(error);
         }
@@ -72,7 +76,7 @@ const Home = ({ navigation, route , setUser, user, isLogin }) => {
                 <Appbar.Content title='Project P!!!' subtitle={user?.result.username} />
                 <Appbar.Action icon='menu' onPress={() => navigation.push('Profile')} />
             </Appbar>
-            <Text>{route.password}</Text>
+            <Text>{route.params?.password}</Text>
             <Card style={styles.card}>
                 <Card.Title title='Hello there!' subtitle='What do you think of this picture?' />
                 <Card.Content>

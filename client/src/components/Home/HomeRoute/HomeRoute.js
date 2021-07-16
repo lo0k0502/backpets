@@ -6,11 +6,11 @@ import Profile from './Profile';
 
 const HomeStack = createStackNavigator();
 
-const HomeRoute = ({ setUser, user, isLogin }) => {
+const HomeRoute = ({ setUser, user, setIsLogin, isLogin }) => {
     return (
         <HomeStack.Navigator>
             <HomeStack.Screen name='Home' options={{ headerShown: false }}>
-                {props => <Home {...props} setUser={setUser} user={user} isLogin={isLogin} />}
+                {props => <Home {...props} setUser={setUser} user={user} setIsLogin={setIsLogin} isLogin={isLogin} />}
             </HomeStack.Screen>
             <HomeStack.Screen name='Profile'>
                 {props => <Profile {...props} user={user} />}

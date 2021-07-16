@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
     modifybtn: {
         width: 85,
         height: 22,
-        // backgroundColor: 'lightgray',
     },
 });
 

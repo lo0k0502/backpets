@@ -61,11 +61,11 @@ const DevOptions = ({ navigation }) => {
   );
 };
 
-const LoginDrawer = ({ isLogin }) => {
+const LoginDrawer = ({ setIsLogin, isLogin }) => {
   return (
     <Drawers.Navigator>
       <Drawers.Screen name='Login'>
-        {props => <Login {...props} isLogin={isLogin} />}
+        {props => <Login {...props} setIsLogin={setIsLogin} isLogin={isLogin} />}
       </Drawers.Screen>
       <Drawers.Screen name='DevOptions'>
         {props => <DevOptions {...props} />}
@@ -78,8 +78,11 @@ export default function App() {
   const [isLogin, setIsLogin] = useState(false);
 
   useEffect(() => {
-    setIsLogin(AsyncStorage.getItem('useInfo') ? true : false);
-  }, [AsyncStorage.getItem('userInfo')]);
+    const check = async () => {
+      setIsLogin(await AsyncStorage.getItem('useInfo') ? true : false);
+    };
+    check();
+  }, []);
 
   return (
     <Provider store={store}>
@@ -94,10 +97,9 @@ export default function App() {
         <NavigationContainer>
           <Stacks.Navigator 
             initialRouteName={isLogin ? 'Home' : 'LoginDrawer'}
-            screenOptions={{ headerShown: false }}
           >
             <Stacks.Screen name='LoginDrawer' options={{ title: 'Login' }}>
-              {props => <LoginDrawer {...props} isLogin={isLogin} />}
+              {props => <LoginDrawer {...props} setIsLogin={setIsLogin} isLogin={isLogin} />}
             </Stacks.Screen>
             <Stacks.Screen name='Register'>
               {props => <Register {...props} />}
@@ -105,8 +107,8 @@ export default function App() {
             <Stacks.Screen name='DeleteUser'>
               {props => <DeleteUser {...props} />}
             </Stacks.Screen>
-            <Stacks.Screen name='Home'>
-              {props => <BottomNavigation {...props} isLogin={isLogin} />}
+            <Stacks.Screen name='Home' options={{ headerShown: false }}>
+              {props => <BottomNavigation {...props} setIsLogin={setIsLogin} isLogin={isLogin} />}
             </Stacks.Screen>
             <Stacks.Screen name='AllUsers'>
               {props => <AllUsers {...props} />}

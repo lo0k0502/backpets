@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { UserLogin, GoogleLogin, UserRegister } from '../api';
+import { UserLogin, GoogleLogin, RefreshToken } from '../api';
 
 export const loginUser = createAsyncThunk(
   'user/login',
@@ -15,64 +15,62 @@ export const loginUser = createAsyncThunk(
 );
 export const googleLogin = createAsyncThunk(
   'user/googlelogin',
-  async ({ username }, { rejectWithValue }) => {
+  async ({ username, email, photoUrl }, { rejectWithValue }) => {
     try {
-      const response = await GoogleLogin({ username });
+      const response = await GoogleLogin({ username, email, photoUrl });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
 );
-// export const registerUser = createAsyncThunk(
-//   'user/register',
-//   async ({ username, password, email }, { rejectWithValue }) => {
-//     try {
-//       const response = await UserRegister({ username, passwor, email });
-//       return response.data;
-//     } catch (error) {
-//       return rejectWithValue(error.response.data);
-//     }
-//   }
-// );
+export const tokenRefresh = createAsyncThunk(
+  'user/refreshtoken',
+  async ({ accessToken, refreshToken }, { rejectWithValue }) => {
+    try {
+      const response = await RefreshToken({ accessToken, refreshToken });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
     information: null,
-    token: null,
+    accessToken: null,
+    refreshToken: null,
   },
   reducers: {
     logout: (state) => {
       state.information = null;
-      state.token = null;
+      state.accessToken = null;
+      state.refreshToken = null;
     },
     setState: (state, action) => {
       state.information = action.payload.userInfo;
-      state.token = action.payload.token;
+      state.accessToken = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
     },
   },
   extraReducers: {
     [loginUser.fulfilled]: (state, action) => {
-      const info = action.payload.result;
-      const token = action.payload.token;
-      state.information = info;
-      state.token = token;
+      state.information = action.payload.result;
+      state.accessToken = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
       AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
     },
     [googleLogin.fulfilled]: (state, action) => {
-      const info = action.payload.result;
-      const token = action.payload.token;
-      state.information = info;
-      state.token = token;
+      state.information = action.payload.result;
+      state.accessToken = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
       AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
     },
-    // [registerUser.fulfilled]: (state, action) => {
-    //   const info = action.payload.result;
-    //   const token = action.payload.token;
-    //   state.information = info;
-    //   state.token = token;
-    //   AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
-    // },
+    [tokenRefresh.fulfilled]: (state, action) => {
+      state.accessToken = action.payload.accessToken;
+      AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
+    },
   },
 });
 export const { logout, setState } = userSlice.actions;

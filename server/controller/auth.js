@@ -5,6 +5,16 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+let refreshTokens = [];
+
+const generateToken = ({ username }) => {
+  return jwt.sign(
+    { username },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: '30m' },
+  );
+};
+
 export const Login = async (req, res) => {
     const { username, password } = req.body;
     try {
@@ -14,26 +24,40 @@ export const Login = async (req, res) => {
       const isCorrect = await bcrypt.compare(password, existUser.password);
       if (!isCorrect) return res.status(400).json({ message: '密碼錯誤' });
       
-      const token = jwt.sign(
+      const accessToken = generateToken({ username: existUser.username })
+      const refreshToken = jwt.sign(
         { username: existUser.username },
-        process.env.ACCESS_TOKEN_SECRET,
+        process.env.REFRESH_TOKEN_SECRET,
       );
-      res.status(200).json({ result: existUser, token });
+      refreshTokens.push(refreshToken);
+      res.status(200).json({ result: existUser, accessToken, refreshToken });
     } catch (error) {
       console.log(error);
       res.status(400).json({ message: '錯誤' });
     }
 };
 export const GoogleLogin = async (req, res) => {
-    const { username } = req.body;
+    const { username, email, photoUrl } = req.body;
     try {
-      const existUser = await User.findOne({ username });
+      let existUser = await User.findOne({ username });
+
+      if (!existUser) {
+        const hashedPassword = await bcrypt.hash('0000000000', 10);
+        existUser = await User.create({
+          username,
+          password: hashedPassword,
+          email,
+          photoUrl,
+        });
+      }
       
-      const token = jwt.sign(
+      const accessToken = generateToken({ username: existUser.username })
+      const refreshToken = jwt.sign(
         { username: existUser.username },
-        process.env.ACCESS_TOKEN_SECRET,
+        process.env.REFRESH_TOKEN_SECRET,
       );
-      res.status(200).json({ result: existUser, token });
+      refreshTokens.push(refreshToken);
+      res.status(200).json({ result: existUser, accessToken, refreshToken });
     } catch (error) {
       console.log(error);
       res.status(400).json({ message: '錯誤' });
@@ -42,8 +66,6 @@ export const GoogleLogin = async (req, res) => {
 export const Register = async (req, res) => {
   const { username, password, email, photoUrl } = req.body;
   try {
-    console.log({ username, password, email });
-    console.log(await User.find());
     const existUser = await User.findOne({ username });
     if (existUser)
       return res.status(400).json({ message: '用戶名已被使用!' });
@@ -64,4 +86,31 @@ export const Register = async (req, res) => {
     console.log(error);
     res.status(400).json({ message: '錯誤' });
   }
+};
+export const Logout = (req, res) => {
+  refreshTokens = refreshTokens.filter(token => token !== req.body.refreshToken);
+  return res.sendStatus(204);
+};
+
+export const RefreshToken = (req, res) => {
+  const { accessToken, refreshToken } = req.body;
+  if (!refreshToken) return res.sendStatus(401);
+  if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
+  
+  jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (error) => {
+    if (error) {
+      try {
+        console.log('expired refreshing');
+        const { username } = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+        const newAccessToken = generateToken({ username });
+        console.log('refreshed');
+        return res.status(200).json({ accessToken: newAccessToken });
+      } catch (error) {
+        console.log(error);
+        res.status(400).json({ message: '錯誤' });
+      }
+    } else {
+      return res.status(200).json({ message: 'AccessToken still available' });
+    }
+  });
 };
