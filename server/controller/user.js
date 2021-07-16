@@ -20,7 +20,9 @@ export const updateUserPassword = async (req, res) => {
         const isCorrect = await bcrypt.compare(password, existUser.password);
         if (!isCorrect) return res.status(400).json({ message: '密碼錯誤' });
 
-        
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const result = await User.findOneAndUpdate({ username }, { password: hashedPassword });
+        return res.status(200).json({ result });
     } catch (error) {
         console.log(error);
         res.status(400).json({ message: '錯誤' });

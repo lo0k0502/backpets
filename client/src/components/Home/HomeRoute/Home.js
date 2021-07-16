@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
 });
 
 const Home = ({ navigation, route, setUser, user, setIsLogin, isLogin }) => {
-    console.log(route);
 
     const dispatch = useDispatch();
     

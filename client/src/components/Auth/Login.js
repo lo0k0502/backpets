@@ -138,16 +138,14 @@ const Login = ({ navigation, setIsLogin, isLogin }) => {
                             photoUrl, 
                         }));
                         unwrapResult(result);
-                        Alert.alert('Safety alert', 
-                            'Your password is now set to 10 zeroes, we highly recommend you to change your password immediately!!', 
-                            [{ text: 'Yes' }],
-                        );
 
                         setIsLogin(true);
                         setIsLoading(false);
                         setGoogleLoginLoading(false);
                         navigation.push('Home');
                     }
+                    setIsLoading(false);
+                    setGoogleLoginLoading(false);
                 })
                 .catch(error => console.log(error));
         } catch (error) {

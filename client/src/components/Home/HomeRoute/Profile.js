@@ -33,9 +33,14 @@ const styles = StyleSheet.create({
         width: 85,
         height: 22,
     },
+    updatepasswordbtn: {
+        color: 'white',
+        backgroundColor: 'red',
+        margin: 20,
+    },
 });
 
-const Profile = ({ user }) => {
+const Profile = ({ navigation, user }) => {
     return (
         <View style={styles.root}>
             <Text style={styles.title}>
@@ -75,6 +80,13 @@ const Profile = ({ user }) => {
                     modify
                 </Button>
             </View>
+            <Button
+                mode='contained'
+                style={styles.updatepasswordbtn}
+                onPress={() => navigation.push('ChangePassword')}
+            >
+                Change Password
+            </Button>
         </View>
     );
 };

@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Home from './Home';
 import Profile from './Profile';
+import ChangePassword from './ChangePassword';
 
 const HomeStack = createStackNavigator();
 
@@ -14,6 +15,9 @@ const HomeRoute = ({ setUser, user, setIsLogin, isLogin }) => {
             </HomeStack.Screen>
             <HomeStack.Screen name='Profile'>
                 {props => <Profile {...props} user={user} />}
+            </HomeStack.Screen>
+            <HomeStack.Screen name='ChangePassword'>
+                {props => <ChangePassword {...props} user={user} />}
             </HomeStack.Screen>
         </HomeStack.Navigator>
     );

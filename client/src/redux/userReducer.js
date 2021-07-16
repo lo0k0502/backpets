@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserLogin, GoogleLogin, RefreshToken } from '../api';
 
@@ -65,6 +66,11 @@ export const userSlice = createSlice({
       state.information = action.payload.result;
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
+      if (action.payload.isFirst) 
+        Alert.alert('Safety alert', 
+          'Your password is now set to 10 zeroes, we highly recommend you to change your password immediately!!', 
+          [{ text: 'OK' }],
+        );
       AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
     },
     [tokenRefresh.fulfilled]: (state, action) => {

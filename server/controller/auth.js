@@ -40,8 +40,9 @@ export const GoogleLogin = async (req, res) => {
     const { username, email, photoUrl } = req.body;
     try {
       let existUser = await User.findOne({ username });
-
+      let isFirst = false;
       if (!existUser) {
+        isFirst = !isFirst;
         const hashedPassword = await bcrypt.hash('0000000000', 10);
         existUser = await User.create({
           username,
@@ -57,7 +58,7 @@ export const GoogleLogin = async (req, res) => {
         process.env.REFRESH_TOKEN_SECRET,
       );
       refreshTokens.push(refreshToken);
-      res.status(200).json({ result: existUser, accessToken, refreshToken });
+      res.status(200).json({ result: existUser, accessToken, refreshToken, isFirst });
     } catch (error) {
       console.log(error);
       res.status(400).json({ message: '錯誤' });
