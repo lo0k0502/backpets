@@ -19,4 +19,5 @@ mongoose
         app.listen(port, () => console.log(`server is running on ${port}`));
     });
 
+mongoose.set("useFindAndModify", false);
 mongoose.connection.on('connected', () => console.log('db connected'));

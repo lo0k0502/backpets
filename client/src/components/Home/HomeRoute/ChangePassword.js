@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Alert } from 'react-native';
 import { Button, TextInput, HelperText } from 'react-native-paper';
 import { updateUserPassword } from '../../../api';
 
@@ -25,12 +25,15 @@ const styles = StyleSheet.create({
     submitbtn: {
         width: '60%',
         height: 50,
+        backgroundColor: 'red',
         marginTop: 50,
         elevation: 5,
     },
 });
 
-const ChangePassword = ({ user }) => {
+const ChangePassword = ({ user, navigation }) => {
+    const [isLoading, setIsLoading] = useState(false);
+
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
 
@@ -57,14 +60,22 @@ const ChangePassword = ({ user }) => {
         if (oldPasswordErrorMsg || newPasswordErrorMsg) return;
 
         try {
+            setIsLoading(true);
             const result = 
                 await updateUserPassword({ 
                     username: user.result.username, 
                     password: oldPassword,
                     newPassword, 
                 });
+            if (result) {
+                Alert.alert('Success!!', 'Password Successfully Updated!!', [
+                    { text: 'OK', onPress: () => navigation.goBack() }
+                ]);
+            }
+            setIsLoading(false);
         } catch (error) {
-            console.log(error.response.data);
+            setIsLoading(false);
+            console.log('Changing password', error.response.data.message);
             setErrorMsg(error.response.data.message);
         }
     };
@@ -77,7 +88,7 @@ const ChangePassword = ({ user }) => {
             <HelperText
                 type='error'
                 style={{ 
-                    fontSize: 16, 
+                    fontSize: 20, 
                     marginBottom: -20,
                 }}
             >
@@ -88,6 +99,7 @@ const ChangePassword = ({ user }) => {
                 placeholder='Old Password'
                 placeholderTextColor='gray'
                 error={oldPasswordErrorMsg}
+                disabled={isLoading}
                 style={styles.input}
                 onChangeText={(text) => checkOldPassword(text)}
             />
@@ -102,6 +114,7 @@ const ChangePassword = ({ user }) => {
                 placeholder='New Password'
                 placeholderTextColor='gray'
                 error={newPasswordErrorMsg}
+                disabled={isLoading}
                 style={styles.input}
                 onChangeText={(text) => checkNewPassword(text)}
             />
@@ -113,6 +126,8 @@ const ChangePassword = ({ user }) => {
             </HelperText>
             <Button
                 mode='contained'
+                disabled={isLoading}
+                loading={isLoading}
                 style={styles.submitbtn}
                 contentStyle={{ width: '100%', height: '100%' }}
                 onPress={handleSubmit}

@@ -111,6 +111,7 @@ const Login = ({ navigation, setIsLogin, isLogin }) => {
         } catch (error) {
             setIsLoading(false);
             setLoginLoading(false);
+            console.log('Logging in', error.message);
             setErrorMsg(error.message);
         }
     };

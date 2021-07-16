@@ -6,7 +6,7 @@ export const SERVERURL = 'http://192.168.1.103:5001';
 const API = axios.create({ baseURL: SERVERURL });
 
 API.interceptors.request.use(async (req) => {
-    const userInfo = await AsyncStorage.getItem('userInfo')
+    const userInfo = JSON.parse(await AsyncStorage.getItem('userInfo'));
     if (userInfo) {
         req.headers.Authorization = `Bearer ${userInfo.accessToken}`;
     }
@@ -24,5 +24,5 @@ export const RefreshToken = (payload) => API.post('/auth/refreshtoken', payload)
 export const fetchUserByEmail = (payload) => API.post('/user/fetchbyemail', payload);
 export const fetchAllUsers = () => API.get('/user/fetchall');
 export const updateUserPassword = (payload) => API.post('/user/updatepassword', payload);
-export const updateUser = (payload) => API.post('/update', payload);
+export const updateUser = (payload) => API.post('/user/update', payload);
 export const deleteUser = (payload) => API.post('/user/delete', payload);
