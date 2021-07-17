@@ -1,10 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FAB, Card, Button, Appbar } from 'react-native-paper';
-import { useDispatch } from 'react-redux';
-import { Logout } from '../../../api';
-import { logout } from '../../../redux/userReducer';
 
 const styles = StyleSheet.create({
     root: {
@@ -38,28 +34,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const Home = ({ navigation, setUser, user, checkLogin }) => {
-
-    const dispatch = useDispatch();
-
-    const handleLogout = async () => {
-        try {
-            const logOutRes = await Logout({ refreshToken: user.result.refreshToken });
-            const removeInfoRes = await AsyncStorage.removeItem('userInfo');
-            dispatch(logout());
-            setUser(null);
-            checkLogin();
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    const logoutAlert = () => {
-        Alert.alert('Logging out', 'Are you sure you want to log out?', [
-            { text: 'Yes', onPress: handleLogout },
-            { text: 'No' },
-        ]);
-    };
+const Home = ({ navigation, user, logoutback }) => {
     
     return (
         <View style={styles.root}>
@@ -85,7 +60,7 @@ const Home = ({ navigation, setUser, user, checkLogin }) => {
             <Button 
                 mode='contained' 
                 style={{ width: '50%' }}
-                onPress={logoutAlert}
+                onPress={logoutback}
             >
                 Logout
             </Button>

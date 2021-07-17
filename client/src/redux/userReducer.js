@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { UserLogin, GoogleLogin, RefreshToken } from '../api';
+import { UserLogin, GoogleLogin, RefreshToken, Logout } from '../api';
 
 export const loginUser = createAsyncThunk(
   'user/login',
@@ -25,6 +25,16 @@ export const googleLogin = createAsyncThunk(
     }
   }
 );
+export const logoutUser = createAsyncThunk(
+  'user/logout',
+  async ({ refreshToken }, { rejectWithValue }) => {
+    try {
+      await Logout({ refreshToken });
+    } catch (error) {
+      rejectWithValue(error);
+    }
+  }
+)
 export const tokenRefresh = createAsyncThunk(
   'user/refreshtoken',
   async ({ accessToken, refreshToken }, { rejectWithValue }) => {
@@ -44,11 +54,6 @@ export const userSlice = createSlice({
     refreshToken: null,
   },
   reducers: {
-    logout: (state) => {
-      state.information = null;
-      state.accessToken = null;
-      state.refreshToken = null;
-    },
     setState: (state, action) => {
       state.information = action.payload.userInfo;
       state.accessToken = action.payload.accessToken;
@@ -77,16 +82,23 @@ export const userSlice = createSlice({
       }
       AsyncStorage.setItem('userInfo', JSON.stringify({ result, accessToken, refreshToken }));
     },
+    [logoutUser.fulfilled]: (state) => {
+      state.information = null;
+      state.accessToken = null;
+      state.refreshToken = null;
+      AsyncStorage.removeItem('userInfo');
+    },
     [tokenRefresh.fulfilled]: (state, action) => {
       if (action.payload.accessToken) {
         state.accessToken = action.payload.accessToken;
         AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
-      } else {
-        console.log('While refreshing', action.payload.message);
+      }
+      if (action.payload.message) {
+        console.log('While refreshing:', action.payload.message);
       }
     },
   },
 });
-export const { logout, setState } = userSlice.actions;
+export const { setState } = userSlice.actions;
 export default userSlice.reducer;
 export const selectUser = (state) => state.user;

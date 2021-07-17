@@ -4,7 +4,6 @@ import { TextInput, Button, Divider, HelperText } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import * as Google from 'expo-google-app-auth';
 import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from '@env';
-import { unwrapResult } from '@reduxjs/toolkit';
 
 import { loginUser, googleLogin } from '../../redux/userReducer';
 
@@ -87,49 +86,49 @@ const Login = ({ navigation }) => {
             return;
         }
 
+        setLoginLoading(true);
+
         try {
-            setLoginLoading(true);
+            await dispatch(loginUser({ username, password }));
 
-            const result = await dispatch(loginUser({ username, password }));
-            unwrapResult(result);
-
-            console.log('going home');
-            navigation.navigate('Home');
-            setLoginLoading(false);
             setUsername('');
             setPassword('');
+            setErrorMsg('');
         } catch (error) {
-            setLoginLoading(false);
-            console.log('Logging in', error.message);
+            console.log('While logging in:', error.message);
             setErrorMsg(error.message);
         }
+
+        setLoginLoading(false);
     };
 
-    const handleGoogleLogin = () => {
+    const handleGoogleLogin = async () => {
         setGoogleLoginLoading(true);
         
-        Google
-            .logInAsync({
-                androidClientId: GOOGLE_ANDROID_CLIENT_ID,
-                iosClientId: GOOGLE_IOS_CLIENT_ID,
-                scopes: ['profile', 'email'],
-            })
-            .then(async ({ type, user }) => {
-                if (type === 'success') {
-                    const { email, familyName, givenName, photoUrl } = user;
+        try {
+            const { type, user } = await Google.logInAsync({ 
+                androidClientId: GOOGLE_ANDROID_CLIENT_ID, 
+                iosClientId: GOOGLE_IOS_CLIENT_ID, 
+                scopes: ['profile', 'email'], 
+            });
+            if (type === 'success') {
+                const { email, familyName, givenName, photoUrl } = user;
+    
+                await dispatch(googleLogin({ 
+                    username: familyName + givenName,
+                    email,
+                    photoUrl, 
+                }));
 
-                    const result = await dispatch(googleLogin({ 
-                        username: familyName + givenName,
-                        email,
-                        photoUrl, 
-                    }));
-                    unwrapResult(result);
+                setUsername('');
+                setPassword('');
+                setErrorMsg('');
+            }
+        } catch (error) {
+            console.log('While google logging in:', error.message);
+            setErrorMsg(error.message);
+        }
 
-                    navigation.navigate('Home');
-                }
-                setGoogleLoginLoading(false);
-            })
-            .catch(error => console.log('While google logging in', error));
         setGoogleLoginLoading(false);
     };
 

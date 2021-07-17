@@ -77,14 +77,19 @@ const Register = ({ navigation }) => {
     };
 
     const handleSubmit = async () => {
-        if (!username || !email || !password) {
+        if (!username 
+            || !email 
+            || !password 
+            || usernameErrorMsg 
+            || emailErrorMsg 
+            || passwordErrorMsg 
+            || confirmPasswordErrorMsg) {
             if (!username) setUsernameErrorMsg('Must not be null!');
             if (!email) setEmailErrorMsg('Must not be null!');
             if (!password) setPasswordErrorMsg('Must not be null!');
             if (!confirmPassword) setConfirmPasswordErrorMsg('Must not be null!');
             return;
         }
-        if (usernameErrorMsg || emailErrorMsg || passwordErrorMsg || confirmPasswordErrorMsg) return;
 
         try {
             setIsLoading(true);
@@ -102,6 +107,7 @@ const Register = ({ navigation }) => {
             setEmail('');
             setPassword('');
             setConfirmPassword('');
+            setErrorMsg('');
         } catch (error) {
             setIsLoading(false);
             setErrorMsg(error.response.data.message);

@@ -52,12 +52,11 @@ const ChangePassword = ({ user, navigation }) => {
     };
 
     const handleSubmit = async () => {
-        if (!oldPassword || !newPassword) {
+        if (!oldPassword || !newPassword || oldPasswordErrorMsg || newPasswordErrorMsg) {
             if (!oldPassword) setOldPasswordErrorMsg('Must not be null!');
             if (!newPassword) setNewPasswordErrorMsg('Must not be null!');
             return
         }
-        if (oldPasswordErrorMsg || newPasswordErrorMsg) return;
 
         try {
             setIsLoading(true);
@@ -73,6 +72,9 @@ const ChangePassword = ({ user, navigation }) => {
                 ]);
             }
             setIsLoading(false);
+            setOldPassword('');
+            setNewPassword('');
+            setErrorMsg('');
         } catch (error) {
             setIsLoading(false);
             console.log('Changing password', error.response.data.message);

@@ -106,7 +106,13 @@ export const RefreshToken = (req, res) => {
         const existUser = await User.findOne({ username });
 
         const newAccessToken = generateToken({ username });
-        return res.status(200).json({ result: existUser, accessToken: newAccessToken, refreshToken });
+        return res.status(200).json({ 
+          result: existUser, 
+          accessToken: 
+          newAccessToken, 
+          refreshToken, 
+          message: 'AccessToken refreshed!' 
+        });
       } catch (error) {
         console.log(error);
         res.status(400).json({ message: '錯誤' });

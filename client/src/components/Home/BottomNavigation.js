@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useDispatch } from 'react-redux';
-import { tokenRefresh, setState } from '../../redux/userReducer';
+import { tokenRefresh, setState, logoutUser } from '../../redux/userReducer';
 
 import HomeRoute from './HomeRoute/HomeRoute';
 import Map from './MapRoute';
@@ -14,56 +15,82 @@ const Tabs = createBottomTabNavigator();
 
 const BottomNavigation = ({ navigation }) => {
     const [user, setUser] = useState(null);
+    const [loggingOut, setLoggingOut] = useState(true);
 
-    const [checkLoginSeconds, setCheckLoginSeconds] = useState(0);
     const [refreshSeconds, setRefreshSeconds] = useState(0);
+
+    const dispatch = useDispatch();
+
+    useFocusEffect(useCallback(() => {
+        navigation.addListener('beforeRemove', async e => {
+            e.preventDefault();
+            if (await AsyncStorage.getItem('userInfo')) logoutAlert()
+                else navigation.dispatch(e.data.action);
+        });
+    }, [navigation]));
+
+    const handleLogout = async () => {
+        try {
+            const { result: refreshToken } = JSON.parse(await AsyncStorage.getItem('userInfo'));
+            await dispatch(logoutUser({ refreshToken }));
+            setUser(null);
+            checkLogin();
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const logoutAlert = () => {
+        Alert.alert('Logging out', 'Are you sure you want to log out?', [
+            { text: 'Yes', onPress: handleLogout },
+            { text: 'No' },
+        ]);
+    };
     
     const checkLogin = async () => {
         if (!await AsyncStorage.getItem('userInfo')) {
-            console.log('Unlogged in, going back...');
-            navigation.goBack();
+            console.log('Not logged in, going back...');
+            navigation.popToTop();
         }
     };
+    
+    const fetch = async () => {
+        const userInfo = JSON.parse(await AsyncStorage.getItem('userInfo'));
+
+        setUser(userInfo);
+        dispatch(setState({ 
+            userInfo: userInfo.result, 
+            accessToken: userInfo.accessToken, 
+            refreshToken: userInfo.refreshToken,
+        }));
+        await dispatch(tokenRefresh({ 
+            accessToken: userInfo.accessToken, 
+            refreshToken: userInfo.refreshToken, 
+        }));
+    };
+
+    // const [s, setS] = useState(0);
+    // useFocusEffect(useCallback(() => {
+    //     let interval1 = null;
+    //     interval1 = setInterval(() => {
+    //         setS(s + 1);
+    //     }, 1000);
+
+    //     console.log('user:', user);
+    //     return () => clearInterval(interval);
+    // }, [s]));
     
     let interval = null;
     useFocusEffect(useCallback(() => {
         interval = setInterval(() => {
-            setCheckLoginSeconds(checkLoginSeconds === 1000 ? 0 : checkLoginSeconds + 1);
-        }, 1000);
-
-        checkLogin();
-    
-        return () => clearInterval(interval);
-    }, [checkLoginSeconds]));
-
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        let interval = null;
-        interval = setInterval(() => {
             setRefreshSeconds(refreshSeconds === 1000 ? 0 : refreshSeconds + 1);
         }, 60000);
 
-        const fetch = async () => {
-            const userInfo = JSON.parse(await AsyncStorage.getItem('userInfo'));
-            if (userInfo) {
-                setUser(userInfo);
-                dispatch(setState({ 
-                    userInfo: userInfo.result, 
-                    accessToken: userInfo.accessToken, 
-                    refreshToken: userInfo.refreshToken,
-                }));
-                await dispatch(tokenRefresh({ 
-                    accessToken: userInfo.accessToken, 
-                    refreshToken: userInfo.refreshToken, 
-                }));
-            }
-        };
-
+        checkLogin();
         fetch();
 
         return () => clearInterval(interval);
-    }, [refreshSeconds]);
+    }, [refreshSeconds]));
 
     return (
         <Tabs.Navigator 
@@ -93,7 +120,7 @@ const BottomNavigation = ({ navigation }) => {
                     ),
                 }}
             >
-                {props => <HomeRoute {...props} setUser={setUser} user={user} checkLogin={checkLogin} />}
+                {props => <HomeRoute {...props} setUser={setUser} user={user} checkLogin={checkLogin} logoutback={() => navigation.goBack()} />}
             </Tabs.Screen>
             <Tabs.Screen 
                 name='Map'
