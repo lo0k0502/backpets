@@ -99,7 +99,7 @@ const Login = ({ navigation }) => {
             setErrorMsg(error.message);
         }
 
-        setLoginLoading(false);
+        setTimeout(() => setLoginLoading(false), 1000);
     };
 
     const handleGoogleLogin = async () => {
@@ -129,7 +129,7 @@ const Login = ({ navigation }) => {
             setErrorMsg(error.message);
         }
 
-        setGoogleLoginLoading(false);
+        setTimeout(() => setGoogleLoginLoading(false), 1000);
     };
 
     return (
