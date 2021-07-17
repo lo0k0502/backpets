@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useState, useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button, Avatar } from 'react-native-paper';
 
@@ -29,15 +30,14 @@ const styles = StyleSheet.create({
 
 const Profile = ({ navigation }) => {
     const [user, setUser] = useState(null);
-    const [canFetch, setCanFetch] = useState(true);
+
     const fetch = async () => {
         setUser(JSON.parse(await AsyncStorage.getItem('userInfo')));
     };
-    useEffect(() => {
-        if (canFetch) fetch();
-
-        return () => setCanFetch(false);
-    }, [user]);
+    
+    useFocusEffect(useCallback(() => {
+        fetch();
+    }, [user]));
 
     return (
         <View style={styles.root}>

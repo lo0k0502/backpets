@@ -7,7 +7,7 @@ dotenv.config();
 
 let refreshTokens = [];
 
-const generateToken = ({ username }) => {
+export const generateToken = ({ username }) => {
   return jwt.sign(
     { username },
     process.env.ACCESS_TOKEN_SECRET,

@@ -1,5 +1,6 @@
 import User from '../model/user.js';
 import bcrypt from 'bcryptjs';
+import { generateToken } from './auth.js';
 
 export const fetchUserByEmail = async (req, res) => {
     const { email } = req.body;
@@ -42,7 +43,9 @@ export const updateUserProfile = async (req, res) => {
         existUser.username = newUsername;
         existUser.email = email;
         const result = await existUser.save();
-        return res.status(200).json({ result });
+
+        const accessToken = generateToken({ username: result.username })
+        return res.status(200).json({ result, accessToken });
     } catch (error) {
         console.log(error);
         res.status(400).json({ message: '錯誤' });

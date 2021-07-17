@@ -82,25 +82,22 @@ const EditProfile = ({ navigation }) => {
             console.log('updating');
             const curPhotoUrl = await JSON.parse(await AsyncStorage.getItem('userInfo')).result.photoUrl;
             const curUsername = JSON.parse(await AsyncStorage.getItem('userInfo')).result.username;
-            const result = await dispatch(updateProfile({ 
+            await dispatch(updateProfile({ 
                 photoUrl: curPhotoUrl, 
                 username: curUsername, 
                 newUsername: username, 
                 email, 
             }));
-            unwrapResult(result);
-            if (result) {
-                Alert.alert('Success!!', 'Profile Successfully Updated!!', [
-                    { text: 'OK', onPress: () => navigation.goBack() }
-                ]);
-            }
+            Alert.alert('Success!!', `Profile Successfully Updated!!`, [
+                { text: 'OK', onPress: () => navigation.pop(1) }
+            ]);
 
             setPhotoUrl('');
             setUsername('');
             setEmail('');
         } catch (error) {
-            console.log('Updating:', error?.message);
-            setErrorMsg(error?.message);
+            console.log('Updating:', error);
+            setErrorMsg(error.message);
         }
 
         setIsLoading(false);

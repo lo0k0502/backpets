@@ -31,13 +31,10 @@ export const userSlice = createSlice({
       }
     },
     [googleLogin.fulfilled]: (state, action) => {
-      const result = action.payload.result;
-      const accessToken = action.payload.accessToken;
-      const refreshToken = action.payload.refreshToken
-      state.information = result;
-      state.accessToken = accessToken;
-      state.refreshToken = refreshToken;
-      AsyncStorage.setItem('userInfo', JSON.stringify({ result, accessToken, refreshToken }));
+      state.information = action.payload.result;
+      state.accessToken = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
+      AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
       if (action.payload.isFirst) {
         Alert.alert('Safety alert', 
           'Your password is now set to 10 zeroes, we highly recommend you to change your password immediately!!', 
@@ -66,10 +63,9 @@ export const userSlice = createSlice({
       }
     },
     [updateProfile.fulfilled]: (state, action) => {
-      console.log('get result');
       if (action.payload.result) {
         state.information = action.payload.result;
-        console.log('update success');
+        state.accessToken = action.payload.accessToken;
         AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
       }
       if (action.payload.message) {
