@@ -15,26 +15,26 @@ const Tabs = createBottomTabNavigator();
 const BottomNavigation = ({ navigation }) => {
     const [user, setUser] = useState(null);
 
-    const [checkSeconds, setCheckSeconds] = useState(0);
+    const [checkLoginSeconds, setCheckLoginSeconds] = useState(0);
     const [refreshSeconds, setRefreshSeconds] = useState(0);
-
+    
+    const checkLogin = async () => {
+        if (!await AsyncStorage.getItem('userInfo')) {
+            console.log('Unlogged in, going back...');
+            navigation.goBack();
+        }
+    };
+    
+    let interval = null;
     useFocusEffect(useCallback(() => {
-        let interval = null;
         interval = setInterval(() => {
-            setCheckSeconds(checkSeconds === 1000 ? 0 : checkSeconds + 1);
+            setCheckLoginSeconds(checkLoginSeconds === 1000 ? 0 : checkLoginSeconds + 1);
         }, 1000);
 
-        const check = async () => {
-            if (!await AsyncStorage.getItem('userInfo')) {
-                console.log('Unlogged in, going back...');
-                navigation.goBack();
-            }
-        };
-        
-        check();
+        checkLogin();
     
         return () => clearInterval(interval);
-    }, [checkSeconds]));
+    }, [checkLoginSeconds]));
 
     const dispatch = useDispatch();
 
@@ -93,7 +93,7 @@ const BottomNavigation = ({ navigation }) => {
                     ),
                 }}
             >
-                {props => <HomeRoute {...props} setUser={setUser} user={user} />}
+                {props => <HomeRoute {...props} setUser={setUser} user={user} checkLogin={checkLogin} />}
             </Tabs.Screen>
             <Tabs.Screen 
                 name='Map'

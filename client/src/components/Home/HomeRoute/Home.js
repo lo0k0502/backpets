@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const Home = ({ navigation, setUser, user }) => {
+const Home = ({ navigation, setUser, user, checkLogin }) => {
 
     const dispatch = useDispatch();
 
@@ -48,7 +48,7 @@ const Home = ({ navigation, setUser, user }) => {
             const removeInfoRes = await AsyncStorage.removeItem('userInfo');
             dispatch(logout());
             setUser(null);
-            navigation.navigate('Login');
+            checkLogin();
         } catch (error) {
             console.log(error);
         }

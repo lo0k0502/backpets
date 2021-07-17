@@ -59,32 +59,25 @@ const LoginDrawer = () => {
 };
 
 const AuthRoute = ({ navigation }) => {
-    const [seconds, setSeconds] = useState(0);
-
-    const initRender = useRef(true);
-
+    const [checkUnLoginSeconds, setcheckUnLoginSeconds] = useState(0);
+    
+    const checkUnLogin = async () => {
+        if (await AsyncStorage.getItem('userInfo')) {
+            console.log('Logged in, going to Home...');
+            navigation.navigate('Home');
+        }
+    };
+        
+    let interval = null;
     useFocusEffect(useCallback(() => {
-        let interval = null;
         interval = setInterval(() => {
-            setSeconds(seconds === 1000 ? 0 : seconds + 1);
+            setcheckUnLoginSeconds(checkUnLoginSeconds === 1000 ? 0 : checkUnLoginSeconds + 1);
         }, 1000);
         
-        if (initRender.current) {
-            initRender.current = false;
-            return () => clearInterval(interval);
-        }
-        
-        const check = async () => {
-            if (await AsyncStorage.getItem('userInfo')) {
-                console.log('Logged in, going to Home...');
-                navigation.navigate('Home');
-            }
-        };
-            
-        check();
+        checkUnLogin();
 
         return () => clearInterval(interval);
-    }, [seconds]));
+    }, [checkUnLoginSeconds]));
 
     return (
         <AuhtStacks.Navigator>

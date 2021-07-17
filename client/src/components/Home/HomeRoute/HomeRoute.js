@@ -7,11 +7,11 @@ import ChangePassword from './ChangePassword';
 
 const HomeStack = createStackNavigator();
 
-const HomeRoute = ({ setUser, user }) => {
+const HomeRoute = ({ setUser, user, checkLogin }) => {
     return (
         <HomeStack.Navigator>
             <HomeStack.Screen name='Home' options={{ headerShown: false }}>
-                {props => <Home {...props} setUser={setUser} user={user} />}
+                {props => <Home {...props} setUser={setUser} user={user} checkLogin={checkLogin} />}
             </HomeStack.Screen>
             <HomeStack.Screen name='Profile'>
                 {props => <Profile {...props} user={user} />}
