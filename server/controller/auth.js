@@ -39,7 +39,7 @@ export const Login = async (req, res) => {
 export const GoogleLogin = async (req, res) => {
     const { username, email, photoUrl } = req.body;
     try {
-      let existUser = await User.findOne({ username });
+      let existUser = await User.findOne({ email });
       let isFirst = false;
       if (!existUser) {
         isFirst = !isFirst;

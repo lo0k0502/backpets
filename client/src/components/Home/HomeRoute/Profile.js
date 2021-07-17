@@ -15,24 +15,10 @@ const styles = StyleSheet.create({
         marginTop: -50,
         marginBottom: 50,
     },
-    imgrow: {
-        flexDirection: 'column',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderRadius: 10,
-        paddingLeft: 5,
-        margin: 10,
-    },
-    row: {
-        flexDirection: 'row',
-        borderWidth: 1,
-        borderRadius: 10,
-        paddingLeft: 5,
-        margin: 10,
-    },
-    modifybtn: {
-        width: 85,
-        height: 22,
+    editbtn: {
+        color: 'white',
+        backgroundColor: 'dodgerblue',
+        marginTop: 20,
     },
     updatepasswordbtn: {
         color: 'white',
@@ -43,12 +29,14 @@ const styles = StyleSheet.create({
 
 const Profile = ({ navigation }) => {
     const [user, setUser] = useState(null);
-
+    const [canFetch, setCanFetch] = useState(true);
+    const fetch = async () => {
+        setUser(JSON.parse(await AsyncStorage.getItem('userInfo')));
+    };
     useEffect(() => {
-        const fetch = async () => {
-            setUser(JSON.parse(await AsyncStorage.getItem('userInfo')));
-        };
-        fetch();
+        if (canFetch) fetch();
+
+        return () => setCanFetch(false);
     }, [user]);
 
     return (
@@ -56,40 +44,20 @@ const Profile = ({ navigation }) => {
             <Text style={styles.title}>
                 Profile
             </Text>
-            <View style={styles.imgrow}>
-                <Avatar.Image source={{ uri: user?.result.photoUrl }} />
-                <Button 
-                    compact
-                    style={styles.modifybtn}
-                    contentStyle={{ width: '100%', height: '100%', }}
-                >
-                    modify
-                </Button>
-            </View>
-            <View style={styles.row}>
-                <Text>
-                    {user?.result.username}
-                </Text>
-                <Button 
-                    compact
-                    style={styles.modifybtn}
-                    contentStyle={{ width: '100%', height: '100%', }}
-                >
-                    modify
-                </Button>
-            </View>
-            <View style={styles.row}>
-                <Text>
-                    {user?.result.email}
-                </Text>
-                <Button 
-                    compact
-                    style={styles.modifybtn}
-                    contentStyle={{ width: '100%', height: '100%', }}
-                >
-                    modify
-                </Button>
-            </View>
+            <Avatar.Image source={{ uri: user?.result.photoUrl }} />
+            <Text>
+                {user?.result.username}
+            </Text>
+            <Text>
+                {user?.result.email}
+            </Text>
+            <Button
+                mode='contained'
+                style={styles.editbtn}
+                onPress={() => navigation.navigate('EditProfile')}
+            >
+                Edit Profile
+            </Button>
             <Button
                 mode='contained'
                 style={styles.updatepasswordbtn}

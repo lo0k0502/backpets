@@ -24,5 +24,5 @@ export const RefreshToken = (payload) => API.post('/auth/refreshtoken', payload)
 export const fetchUserByEmail = (payload) => API.post('/user/fetchbyemail', payload);
 export const fetchAllUsers = () => API.get('/user/fetchall');
 export const updateUserPassword = (payload) => API.post('/user/updatepassword', payload);
-export const updateUser = (payload) => API.post('/user/update', payload);
+export const updateUserProfile = (payload) => API.post('/user/updateprofile', payload);
 export const deleteUser = (payload) => API.post('/user/delete', payload);

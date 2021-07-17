@@ -28,10 +28,21 @@ export const updateUserPassword = async (req, res) => {
         res.status(400).json({ message: '錯誤' });
     }
 };
-export const updateUser = async (req, res) => {
-    // const { username, password } = req.body;
+export const updateUserProfile = async (req, res) => {
+    const { photoUrl, username, newUsername, email } = req.body;
     try {
-        console.log(req);
+        console.log(photoUrl, username, newUsername, email);
+        const existUser = await User.findOne({ username });
+        if (!existUser) return res.status(400).json({ message: '用戶不存在' });
+
+        const usedUser = await User.findOne({ username: newUsername });
+        if (usedUser) return res.status(400).json({ message: '用戶名已被使用!' });
+
+        existUser.photoUrl = photoUrl;
+        existUser.username = newUsername;
+        existUser.email = email;
+        const result = await existUser.save();
+        return res.status(200).json({ result });
     } catch (error) {
         console.log(error);
         res.status(400).json({ message: '錯誤' });
@@ -43,9 +54,8 @@ export const deleteUser = async (req, res) => {
         const existUser = await User.findOne({ username });
         if (!existUser) return res.status(400).json({ message: '用戶不存在' });
 
-        User.deleteOne({ username }).then(() => {
-            return res.status(200).json({ success: true });
-        });
+        await User.deleteOne({ username });
+        return res.status(200).json({ success: true });
     } catch (error) {
         console.log(error);
         res.status(400).json({ message: '錯誤' });

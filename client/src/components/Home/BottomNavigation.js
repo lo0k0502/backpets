@@ -5,7 +5,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useDispatch } from 'react-redux';
-import { tokenRefresh, setState, logoutUser } from '../../redux/userReducer';
+import { tokenRefresh, logoutUser } from '../../redux/userReducer';
+import { setState } from '../../redux/userSlice';
 
 import HomeRoute from './HomeRoute/HomeRoute';
 import Map from './MapRoute';
@@ -105,7 +106,7 @@ const BottomNavigation = ({ navigation }) => {
                     ),
                 }}
             >
-                {props => <HomeRoute {...props} logoutback={() => navigation.goBack()} />}
+                {props => <HomeRoute {...props} logoutback={() => navigation.goBack()} fetch={fetch} />}
             </Tabs.Screen>
             <Tabs.Screen 
                 name='Map'

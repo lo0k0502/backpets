@@ -5,7 +5,7 @@ import {
     fetchAllUsers, 
     updateUserPassword,
     deleteUser, 
-    updateUser 
+    updateUserProfile 
 } from '../controller/user.js';
 
 const router = Router();
@@ -13,7 +13,7 @@ const router = Router();
 router.post('/fetchbyemail', fetchUserByEmail);
 router.get('/fetchall', fetchAllUsers);
 router.post('/updatepassword', auth, updateUserPassword);
-router.post('/update', auth, updateUser);
+router.post('/updateprofile', auth, updateUserProfile);
 router.post('/delete', deleteUser);
 
 export default router;

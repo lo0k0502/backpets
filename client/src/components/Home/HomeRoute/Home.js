@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const Home = ({ navigation, logoutback }) => {
+const Home = ({ navigation, logoutback, fetch }) => {
     
     return (
         <View style={styles.root}>
@@ -59,10 +59,17 @@ const Home = ({ navigation, logoutback }) => {
             <Text>{}</Text>
             <Button 
                 mode='contained' 
-                style={{ width: '50%' }}
+                style={{ width: '50%', margin: 20 }}
                 onPress={logoutback}
             >
                 Logout
+            </Button>
+            <Button 
+                mode='contained' 
+                style={{ width: '50%', margin: 20 }}
+                onPress={fetch}
+            >
+                Fetch
             </Button>
             <FAB style={styles.fab} icon='plus' />
         </View>
