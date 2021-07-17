@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useDispatch } from 'react-redux';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { tokenRefresh, setState } from '../../redux/userReducer';
 
 import HomeRoute from './HomeRoute/HomeRoute';
@@ -12,14 +12,38 @@ import Store from './StoreRoute';
 
 const Tabs = createBottomTabNavigator();
 
-const BottomNavigation = ({ navigation, setIsLogin, isLogin }) => {
+const BottomNavigation = ({ navigation }) => {
     const [user, setUser] = useState(null);
 
-    const [seconds, setSeconds] = useState(0);
+    const [checkSeconds, setCheckSeconds] = useState(0);
+    const [refreshSeconds, setRefreshSeconds] = useState(0);
+
+    useFocusEffect(useCallback(() => {
+        let interval = null;
+        interval = setInterval(() => {
+            setCheckSeconds(checkSeconds === 1000 ? 0 : checkSeconds + 1);
+        }, 1000);
+
+        const check = async () => {
+            if (!await AsyncStorage.getItem('userInfo')) {
+                console.log('Unlogged in, going back...');
+                navigation.goBack();
+            }
+        };
+        
+        check();
+    
+        return () => clearInterval(interval);
+    }, [checkSeconds]));
 
     const dispatch = useDispatch();
 
     useEffect(() => {
+        let interval = null;
+        interval = setInterval(() => {
+            setRefreshSeconds(refreshSeconds === 1000 ? 0 : refreshSeconds + 1);
+        }, 60000);
+
         const fetch = async () => {
             const userInfo = JSON.parse(await AsyncStorage.getItem('userInfo'));
             if (userInfo) {
@@ -38,14 +62,8 @@ const BottomNavigation = ({ navigation, setIsLogin, isLogin }) => {
 
         fetch();
 
-        let interval = null;
-        interval = setInterval(() => {
-            setSeconds(seconds + 1);
-        }, 60000);
-
-
         return () => clearInterval(interval);
-    }, [seconds]);
+    }, [refreshSeconds]);
 
     return (
         <Tabs.Navigator 
@@ -75,7 +93,7 @@ const BottomNavigation = ({ navigation, setIsLogin, isLogin }) => {
                     ),
                 }}
             >
-                {props => <HomeRoute {...props} setUser={setUser} user={user} setIsLogin={setIsLogin} isLogin={isLogin} />}
+                {props => <HomeRoute {...props} setUser={setUser} user={user} />}
             </Tabs.Screen>
             <Tabs.Screen 
                 name='Map'

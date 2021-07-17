@@ -83,7 +83,7 @@ const Profile = ({ navigation, user }) => {
             <Button
                 mode='contained'
                 style={styles.updatepasswordbtn}
-                onPress={() => navigation.push('ChangePassword')}
+                onPress={() => navigation.navigate('ChangePassword')}
             >
                 Change Password
             </Button>

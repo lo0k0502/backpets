@@ -1,19 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, SafeAreaView, Platform, View, Text } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button } from 'react-native-paper';
+import { StyleSheet, SafeAreaView, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Provider } from 'react-redux';
 import store from './src/redux/store';
 
-import Login from './src/components/Auth/Login';
 import BottomNavigation from './src/components/Home/BottomNavigation';
-import Register from './src/components/Auth/Register';
 import DeleteUser from './src/components/DevOptions/DeleteUser';
 import AllUsers from './src/components/DevOptions/AllUsers';
+import AuthRoute from './src/components/Auth/AuthRoute';
 
 const styles = StyleSheet.create({
   container: {
@@ -26,63 +22,8 @@ const styles = StyleSheet.create({
 });
 
 const Stacks = createStackNavigator();
-const Drawers = createDrawerNavigator();
-
-const DevOptions = ({ navigation }) => {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Button 
-        mode='outlined' 
-        icon='account-off'
-        uppercase={false}
-        onPress={() => navigation.navigate('DeleteUser')}
-        style={{ margin: 10, }}
-      >
-        Delete User
-      </Button>
-      <Button 
-        mode='outlined' 
-        icon='account-multiple'
-        uppercase={false}
-        onPress={() => navigation.navigate('AllUsers')}
-        style={{ margin: 10, }}
-      >
-        All Users
-      </Button>
-      <Button 
-        mode='contained' 
-        uppercase={false}
-        onPress={() => navigation.goBack('Login')}
-        style={{ margin: 10, }}
-      >
-        Go Back
-      </Button>
-    </View>
-  );
-};
-
-const LoginDrawer = ({ setIsLogin, isLogin }) => {
-  return (
-    <Drawers.Navigator>
-      <Drawers.Screen name='Login'>
-        {props => <Login {...props} setIsLogin={setIsLogin} isLogin={isLogin} />}
-      </Drawers.Screen>
-      <Drawers.Screen name='DevOptions'>
-        {props => <DevOptions {...props} />}
-      </Drawers.Screen>
-    </Drawers.Navigator>
-  );
-};
 
 export default function App() {
-  const [isLogin, setIsLogin] = useState(false);
-
-  useEffect(() => {
-    const check = async () => {
-      setIsLogin(await AsyncStorage.getItem('useInfo') ? true : false);
-    };
-    check();
-  }, []);
 
   return (
     <Provider store={store}>
@@ -95,20 +36,15 @@ export default function App() {
           translucent
         />
         <NavigationContainer>
-          <Stacks.Navigator 
-            initialRouteName={isLogin ? 'Home' : 'LoginDrawer'}
-          >
-            <Stacks.Screen name='LoginDrawer' options={{ title: 'Login' }}>
-              {props => <LoginDrawer {...props} setIsLogin={setIsLogin} isLogin={isLogin} />}
-            </Stacks.Screen>
-            <Stacks.Screen name='Register'>
-              {props => <Register {...props} />}
+          <Stacks.Navigator>
+            <Stacks.Screen name='AuthRoute' options={{ headerShown: false }}>
+              {props => <AuthRoute {...props} />}
             </Stacks.Screen>
             <Stacks.Screen name='DeleteUser'>
               {props => <DeleteUser {...props} />}
             </Stacks.Screen>
             <Stacks.Screen name='Home' options={{ headerShown: false }}>
-              {props => <BottomNavigation {...props} setIsLogin={setIsLogin} isLogin={isLogin} />}
+              {props => <BottomNavigation {...props} />}
             </Stacks.Screen>
             <Stacks.Screen name='AllUsers'>
               {props => <AllUsers {...props} />}

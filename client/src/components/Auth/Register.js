@@ -95,7 +95,7 @@ const Register = ({ navigation }) => {
                 email,
                 photoUrl: '',
             });
-            if (result) navigation.goBack('Login');
+            if (result) navigation.goBack();
             
             setIsLoading(false);
             setUsername('');

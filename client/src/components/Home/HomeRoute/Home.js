@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FAB, Card, Button, Appbar } from 'react-native-paper';
@@ -38,16 +38,9 @@ const styles = StyleSheet.create({
     },
 });
 
-const Home = ({ navigation, route, setUser, user, setIsLogin, isLogin }) => {
+const Home = ({ navigation, setUser, user }) => {
 
     const dispatch = useDispatch();
-    
-
-    useEffect(() => {
-        if (!isLogin) {
-            navigation.navigate('Login');
-        }
-    }, []);
 
     const handleLogout = async () => {
         try {
@@ -55,7 +48,6 @@ const Home = ({ navigation, route, setUser, user, setIsLogin, isLogin }) => {
             const removeInfoRes = await AsyncStorage.removeItem('userInfo');
             dispatch(logout());
             setUser(null);
-            setIsLogin(false);
             navigation.navigate('Login');
         } catch (error) {
             console.log(error);
@@ -73,7 +65,7 @@ const Home = ({ navigation, route, setUser, user, setIsLogin, isLogin }) => {
         <View style={styles.root}>
             <Appbar style={styles.appbar}>
                 <Appbar.Content title='Project P!!!' subtitle={user?.result?.username} />
-                <Appbar.Action icon='menu' onPress={() => navigation.push('Profile')} />
+                <Appbar.Action icon='menu' onPress={() => navigation.navigate('Profile')} />
             </Appbar>
             <Card style={styles.card}>
                 <Card.Title title='Hello there!' subtitle='What do you think of this picture?' />
