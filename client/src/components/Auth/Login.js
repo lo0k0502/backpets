@@ -91,15 +91,18 @@ const Login = ({ navigation }) => {
         try {
             await dispatch(loginUser({ username, password }));
 
-            setUsername('');
-            setPassword('');
-            setErrorMsg('');
+            
+            setTimeout(() => {
+                setLoginLoading(false);
+                setUsername('');
+                setPassword('');
+                setErrorMsg('');
+            }, 1000);
         } catch (error) {
+            setLoginLoading(false)
             console.log('While logging in:', error.message);
             setErrorMsg(error.message);
         }
-
-        setTimeout(() => setLoginLoading(false), 1000);
     };
 
     const handleGoogleLogin = async () => {
