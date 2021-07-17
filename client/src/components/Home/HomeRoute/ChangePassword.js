@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Alert } from 'react-native';
 import { Button, TextInput, HelperText } from 'react-native-paper';
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const ChangePassword = ({ user, navigation }) => {
+const ChangePassword = ({  navigation }) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const [oldPassword, setOldPassword] = useState('');
@@ -58,11 +59,13 @@ const ChangePassword = ({ user, navigation }) => {
             return
         }
 
+        setIsLoading(true);
+        
         try {
-            setIsLoading(true);
+            const { result: { username } } = JSON.parse(await AsyncStorage.getItem('userInfo'));
             const result = 
                 await updateUserPassword({ 
-                    username: user.result.username, 
+                    username: username, 
                     password: oldPassword,
                     newPassword, 
                 });

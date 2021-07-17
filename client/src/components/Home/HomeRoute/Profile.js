@@ -1,4 +1,5 @@
-import React from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button, Avatar } from 'react-native-paper';
 
@@ -40,7 +41,16 @@ const styles = StyleSheet.create({
     },
 });
 
-const Profile = ({ navigation, user }) => {
+const Profile = ({ navigation }) => {
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const fetch = async () => {
+            setUser(JSON.parse(await AsyncStorage.getItem('userInfo')));
+        };
+        fetch();
+    }, [user]);
+
     return (
         <View style={styles.root}>
             <Text style={styles.title}>

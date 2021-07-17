@@ -14,8 +14,6 @@ import Store from './StoreRoute';
 const Tabs = createBottomTabNavigator();
 
 const BottomNavigation = ({ navigation }) => {
-    const [user, setUser] = useState(null);
-    const [loggingOut, setLoggingOut] = useState(true);
 
     const [refreshSeconds, setRefreshSeconds] = useState(0);
 
@@ -33,7 +31,6 @@ const BottomNavigation = ({ navigation }) => {
         try {
             const { result: refreshToken } = JSON.parse(await AsyncStorage.getItem('userInfo'));
             await dispatch(logoutUser({ refreshToken }));
-            setUser(null);
             checkLogin();
         } catch (error) {
             console.log(error);
@@ -57,7 +54,6 @@ const BottomNavigation = ({ navigation }) => {
     const fetch = async () => {
         const userInfo = JSON.parse(await AsyncStorage.getItem('userInfo'));
 
-        setUser(userInfo);
         dispatch(setState({ 
             userInfo: userInfo.result, 
             accessToken: userInfo.accessToken, 
@@ -68,17 +64,6 @@ const BottomNavigation = ({ navigation }) => {
             refreshToken: userInfo.refreshToken, 
         }));
     };
-
-    // const [s, setS] = useState(0);
-    // useFocusEffect(useCallback(() => {
-    //     let interval1 = null;
-    //     interval1 = setInterval(() => {
-    //         setS(s + 1);
-    //     }, 1000);
-
-    //     console.log('user:', user);
-    //     return () => clearInterval(interval);
-    // }, [s]));
     
     let interval = null;
     useFocusEffect(useCallback(() => {
@@ -120,7 +105,7 @@ const BottomNavigation = ({ navigation }) => {
                     ),
                 }}
             >
-                {props => <HomeRoute {...props} setUser={setUser} user={user} checkLogin={checkLogin} logoutback={() => navigation.goBack()} />}
+                {props => <HomeRoute {...props} logoutback={() => navigation.goBack()} />}
             </Tabs.Screen>
             <Tabs.Screen 
                 name='Map'

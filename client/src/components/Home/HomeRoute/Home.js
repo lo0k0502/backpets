@@ -34,12 +34,12 @@ const styles = StyleSheet.create({
     },
 });
 
-const Home = ({ navigation, user, logoutback }) => {
+const Home = ({ navigation, logoutback }) => {
     
     return (
         <View style={styles.root}>
             <Appbar style={styles.appbar}>
-                <Appbar.Content title='Project P!!!' subtitle={user?.result?.username} />
+                <Appbar.Content title='Project P!!!' subtitle='P!!!' />
                 <Appbar.Action icon='menu' onPress={() => navigation.navigate('Profile')} />
             </Appbar>
             <Card style={styles.card}>
@@ -48,7 +48,7 @@ const Home = ({ navigation, user, logoutback }) => {
                     
                 </Card.Content>
                 <Card.Cover 
-                    source={{ uri: user?.result?.photoUrl }} 
+                    source={{ uri: 'https://picsum.photos/700' }} 
                     style={styles.cardimg}
                 />
                 <Card.Actions style={styles.cardactions}>
