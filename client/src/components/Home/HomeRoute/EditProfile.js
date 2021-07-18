@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, View, Text, Alert } from 'react-native';
-import { Button, HelperText, TextInput } from 'react-native-paper';
+import { Avatar, Button, HelperText, IconButton, TextInput } from 'react-native-paper';
+import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
 
 import { updateProfile } from '../../../redux/userReducer';
-import { unwrapResult } from '@reduxjs/toolkit';
 
 const styles = StyleSheet.create({
     root: {
@@ -49,6 +49,21 @@ const EditProfile = ({ navigation }) => {
 
     const dispatch = useDispatch();
 
+    const fetch = async () => {
+        const result = JSON.parse(await AsyncStorage.getItem('userInfo')).result;
+        setUsername(result.username);
+        setEmail(result.email);
+        setPhotoUrl(result.photoUrl);
+    };
+
+    const [s, setS] = useState(true);
+    useFocusEffect(useCallback(() => {
+        if (s) {
+            setS(false);
+            fetch();
+        }
+    }, [s]));
+
     const checkUsername = (text) => {
         setUsername(text);
         setUsernameErrorMsg(text ? '' : 'Must not be null!');
@@ -79,9 +94,6 @@ const EditProfile = ({ navigation }) => {
         setIsLoading(true);
 
         try {
-            console.log('updating');
-            const curPhotoUrl = await JSON.parse(await AsyncStorage.getItem('userInfo')).result.photoUrl;
-            const curUsername = JSON.parse(await AsyncStorage.getItem('userInfo')).result.username;
             await dispatch(updateProfile({ 
                 photoUrl: curPhotoUrl, 
                 username: curUsername, 
@@ -117,6 +129,19 @@ const EditProfile = ({ navigation }) => {
             >
                 {errorMsg}
             </HelperText>
+            <Avatar.Image 
+                source={{ uri: photoUrl }} 
+                size={100}
+            />
+            <Button 
+                mode='contained'
+                uppercase={false}
+                color='dodgerblue'
+                style={{ margin: 10, width: 100, height: 40 }}
+                contentStyle={{ width: '100%', height: '100%' }}
+            >
+                Change
+            </Button>
             <TextInput
                 mode='outlined'
                 placeholder='Username'

@@ -107,6 +107,8 @@ const Login = ({ navigation }) => {
 
     const handleGoogleLogin = async () => {
         setGoogleLoginLoading(true);
+        setUsernameErrorMsg('');
+        setPasswordErrorMsg('');
         
         try {
             const { type, user } = await Google.logInAsync({ 
