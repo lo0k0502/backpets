@@ -37,7 +37,7 @@ const Profile = ({ navigation }) => {
     
     useFocusEffect(useCallback(() => {
         fetch();
-    }, []));
+    }, [navigation]));
 
     return (
         <View style={styles.root}>

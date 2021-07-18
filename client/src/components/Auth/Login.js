@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const Login = ({ navigation }) => {
+const Login = ({ navigation, checkUnLogin }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -90,19 +90,17 @@ const Login = ({ navigation }) => {
 
         try {
             await dispatch(loginUser({ username, password }));
-
+            checkUnLogin();
             
-            setTimeout(() => {
-                setLoginLoading(false);
-                setUsername('');
-                setPassword('');
-                setErrorMsg('');
-            }, 1000);
+            setUsername('');
+            setPassword('');
+            setErrorMsg('');
         } catch (error) {
-            setLoginLoading(false)
             console.log('While logging in:', error.message);
             setErrorMsg(error.message);
         }
+        
+        setLoginLoading(false);
     };
 
     const handleGoogleLogin = async () => {
@@ -124,6 +122,7 @@ const Login = ({ navigation }) => {
                     email,
                     photoUrl, 
                 }));
+                checkUnLogin();
 
                 setUsername('');
                 setPassword('');
@@ -134,7 +133,7 @@ const Login = ({ navigation }) => {
             setErrorMsg(error.message);
         }
 
-        setTimeout(() => setGoogleLoginLoading(false), 1000);
+        setGoogleLoginLoading(false);
     };
 
     return (

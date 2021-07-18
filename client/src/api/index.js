@@ -17,7 +17,7 @@ API.interceptors.request.use(async (req) => {
 export const GoogleLogin = (payload) => API.post('/auth/googlelogin', payload);
 export const UserLogin = (payload) => API.post('/auth/login', payload);
 export const UserRegister = (payload) => API.post('/auth/register', payload);
-export const Logout = (payload) => API.delete('/auth/logout', payload);
+export const Logout = (payload) => API.post('/auth/logout', payload);
 export const RefreshToken = (payload) => API.post('/auth/refreshtoken', payload);
 
 //user

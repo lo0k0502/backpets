@@ -36,8 +36,10 @@ export const updateUserProfile = async (req, res) => {
         const existUser = await User.findOne({ username });
         if (!existUser) return res.status(400).json({ message: '用戶不存在' });
 
-        const usedUser = await User.findOne({ username: newUsername });
-        if (usedUser) return res.status(400).json({ message: '用戶名已被使用!' });
+        if (username !== newUsername) {
+            const usedUser = await User.findOne({ username: newUsername });
+            if (usedUser) return res.status(400).json({ message: '用戶名已被使用!' });
+        }
 
         existUser.photoUrl = photoUrl;
         existUser.username = newUsername;

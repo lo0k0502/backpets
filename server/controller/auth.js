@@ -30,7 +30,8 @@ export const Login = async (req, res) => {
         process.env.REFRESH_TOKEN_SECRET,
       );
       refreshTokens.push(refreshToken);
-      res.status(200).json({ result: existUser, accessToken, refreshToken });
+      console.log('User login, refreshTokens:', refreshTokens);
+      return res.status(200).json({ result: existUser, accessToken, refreshToken });
     } catch (error) {
       console.log(error);
       res.status(400).json({ message: '錯誤' });
@@ -58,7 +59,8 @@ export const GoogleLogin = async (req, res) => {
         process.env.REFRESH_TOKEN_SECRET,
       );
       refreshTokens.push(refreshToken);
-      res.status(200).json({ result: existUser, accessToken, refreshToken, isFirst });
+      console.log('User login, refreshTokens:', refreshTokens);
+      return res.status(200).json({ result: existUser, accessToken, refreshToken, isFirst });
     } catch (error) {
       console.log(error);
       res.status(400).json({ message: '錯誤' });
@@ -82,7 +84,7 @@ export const Register = async (req, res) => {
       email,
       photoUrl,
     });
-    res.status(200).json({ result });
+    return res.status(200).json({ result });
   } catch (error) {
     console.log(error);
     res.status(400).json({ message: '錯誤' });
@@ -90,13 +92,15 @@ export const Register = async (req, res) => {
 };
 export const Logout = (req, res) => {
   refreshTokens = refreshTokens.filter(token => token !== req.body.refreshToken);
+  console.log('User logout, refreshTokens:', refreshTokens);
   return res.sendStatus(204);
 };
 
 export const RefreshToken = (req, res) => {
   const { accessToken, refreshToken } = req.body;
-  if (!refreshToken) return res.sendStatus(401);
-  if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
+
+  if (!refreshToken) return res.status(400).json({ message: 'Refresh token is null!' });
+  if (!refreshTokens.includes(refreshToken)) return res.status(400).json({ message: 'Refresh token is not in list!' });
   
   jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, async (error) => {
     if (error) {

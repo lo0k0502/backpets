@@ -7,7 +7,7 @@ const router = Router();
 router.post('/login', Login);
 router.post('/googlelogin', GoogleLogin);
 router.post('/register', Register);
-router.delete('/logout', Logout);
+router.post('/logout', Logout);
 router.post('/refreshtoken', RefreshToken);
 
 export default router;

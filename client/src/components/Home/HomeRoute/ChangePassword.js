@@ -1,8 +1,12 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, View, Text, Alert } from 'react-native';
 import { Button, TextInput, HelperText } from 'react-native-paper';
+import { useDispatch } from 'react-redux';
 import { updateUserPassword } from '../../../api';
+import { useFocusEffect } from '@react-navigation/core';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { tokenRefresh } from '../../../redux/userReducer';
 
 const styles = StyleSheet.create({
     root: {
@@ -38,9 +42,27 @@ const ChangePassword = ({  navigation }) => {
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
 
+    const [oldPasswordSecure, setOldPasswordSecure] = useState(true);
+    const [newPasswordSecure, setNewPasswordSecure] = useState(true);
+
     const [errorMsg, setErrorMsg] = useState('');
     const [oldPasswordErrorMsg, setOldPasswordErrorMsg] = useState('');
     const [newPasswordErrorMsg, setNewPasswordErrorMsg] = useState('');
+
+    const dispatch = useDispatch();
+
+    const checkToken = async () => {
+        const user = JSON.parse(await AsyncStorage.getItem('userInfo'));
+        
+        await dispatch(tokenRefresh({ 
+            accessToken: user.accessToken, 
+            refreshToken: user.refreshToken, 
+        }));
+    };
+
+    useFocusEffect(useCallback(() => {
+        checkToken();
+    }, [navigation]));
 
     const checkOldPassword = (text) => {
         setOldPassword(text);
@@ -70,7 +92,7 @@ const ChangePassword = ({  navigation }) => {
                     newPassword, 
                 });
             if (result) {
-                Alert.alert('Success!!', 'Password Successfully Updated!!', [
+                Alert.alert('Success!!', 'Password Successfully Updated!!\nGoing back...', [
                     { text: 'OK', onPress: () => navigation.goBack() }
                 ]);
             }
@@ -80,7 +102,7 @@ const ChangePassword = ({  navigation }) => {
             setErrorMsg('');
         } catch (error) {
             setIsLoading(false);
-            console.log('Changing password', error.response.data.message);
+            console.log('Changing password:', error.response.data.message);
             setErrorMsg(error.response.data.message);
         }
     };
@@ -105,8 +127,15 @@ const ChangePassword = ({  navigation }) => {
                 placeholderTextColor='gray'
                 error={oldPasswordErrorMsg}
                 disabled={isLoading}
+                secureTextEntry={oldPasswordSecure}
                 style={styles.input}
                 onChangeText={(text) => checkOldPassword(text)}
+                right={
+                    <TextInput.Icon 
+                        name={oldPasswordSecure ? 'eye-off' : 'eye'} 
+                        onPress={() => setOldPasswordSecure(!oldPasswordSecure)}
+                    />
+                }
             />
             <HelperText 
                 type='error' 
@@ -120,8 +149,15 @@ const ChangePassword = ({  navigation }) => {
                 placeholderTextColor='gray'
                 error={newPasswordErrorMsg}
                 disabled={isLoading}
+                secureTextEntry={newPasswordSecure}
                 style={styles.input}
                 onChangeText={(text) => checkNewPassword(text)}
+                right={
+                    <TextInput.Icon 
+                        name={newPasswordSecure ? 'eye-off' : 'eye'} 
+                        onPress={() => setNewPasswordSecure(!newPasswordSecure)}
+                    />
+                }
             />
             <HelperText 
                 type='error' 

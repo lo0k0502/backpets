@@ -45,11 +45,11 @@ const DevOptions = ({ navigation }) => {
   );
 };
 
-const LoginDrawer = () => {
+const LoginDrawer = ({ checkUnLogin }) => {
   return (
     <Drawers.Navigator>
       <Drawers.Screen name='Login'>
-        {props => <Login {...props} />}
+        {props => <Login {...props} checkUnLogin={checkUnLogin} />}
       </Drawers.Screen>
       <Drawers.Screen name='DevOptions'>
         {props => <DevOptions {...props} />}
@@ -59,36 +59,28 @@ const LoginDrawer = () => {
 };
 
 const AuthRoute = ({ navigation }) => {
-    const [checkUnLoginSeconds, setcheckUnLoginSeconds] = useState(0);
     
-    const checkUnLogin = async () => {
-        if (await AsyncStorage.getItem('userInfo')) {
-            console.log('Logged in, going to Home...');
-            navigation.navigate('Home');
-        }
-    };
-        
-    let interval = null;
-    useFocusEffect(useCallback(() => {
-        interval = setInterval(() => {
-            setcheckUnLoginSeconds(checkUnLoginSeconds === 1000 ? 0 : checkUnLoginSeconds + 1);
-        }, 1000);
-        
-        checkUnLogin();
+  useFocusEffect(useCallback(() => {
+    checkUnLogin();
+  }, [navigation]));
 
-        return () => clearInterval(interval);
-    }, [checkUnLoginSeconds]));
+  const checkUnLogin = async () => {
+    if (await AsyncStorage.getItem('userInfo')) {
+      console.log('Logged in, going to Home...');
+      navigation.navigate('Home');
+    }
+  };
 
-    return (
-        <AuhtStacks.Navigator>
-            <AuhtStacks.Screen name='Login'>
-                {props => <LoginDrawer {...props} />}
-            </AuhtStacks.Screen>
-            <AuhtStacks.Screen name='Register'>
-                {props => <Register {...props} />}
-            </AuhtStacks.Screen>
-        </AuhtStacks.Navigator>
-    );
+  return (
+    <AuhtStacks.Navigator>
+      <AuhtStacks.Screen name='Login'>
+        {props => <LoginDrawer {...props} checkUnLogin={checkUnLogin} />}
+      </AuhtStacks.Screen>
+      <AuhtStacks.Screen name='Register'>
+        {props => <Register {...props} />}
+      </AuhtStacks.Screen>
+    </AuhtStacks.Navigator>
+  );
 };
 
 export default AuthRoute;

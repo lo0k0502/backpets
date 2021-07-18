@@ -16,9 +16,12 @@ const Tabs = createBottomTabNavigator();
 
 const BottomNavigation = ({ navigation }) => {
 
-    const [refreshSeconds, setRefreshSeconds] = useState(0);
-
     const dispatch = useDispatch();
+    
+    useFocusEffect(useCallback(() => {
+        checkLogin();
+        fetch();
+    }, [navigation]));
 
     useFocusEffect(useCallback(() => {
         navigation.addListener('beforeRemove', async e => {
@@ -30,7 +33,7 @@ const BottomNavigation = ({ navigation }) => {
 
     const handleLogout = async () => {
         try {
-            const { result: refreshToken } = JSON.parse(await AsyncStorage.getItem('userInfo'));
+            const { refreshToken } = JSON.parse(await AsyncStorage.getItem('userInfo'));
             await dispatch(logoutUser({ refreshToken }));
             checkLogin();
         } catch (error) {
@@ -65,18 +68,6 @@ const BottomNavigation = ({ navigation }) => {
             refreshToken: userInfo.refreshToken, 
         }));
     };
-    
-    let interval = null;
-    useFocusEffect(useCallback(() => {
-        interval = setInterval(() => {
-            setRefreshSeconds(refreshSeconds === 1000 ? 0 : refreshSeconds + 1);
-        }, 60000);
-
-        checkLogin();
-        fetch();
-
-        return () => clearInterval(interval);
-    }, [refreshSeconds]));
 
     return (
         <Tabs.Navigator 
