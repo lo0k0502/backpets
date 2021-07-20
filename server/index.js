@@ -1,23 +1,38 @@
+import express from 'express';
+import cors from 'cors';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-import app from './server.js';
 
-dotenv.config();
+import auth from './routes/auth.js';
+import user from './routes/user.js';
+import upload from './routes/upload.js';
+
+import('dotenv').then(module => module.config());
 
 const port = process.env.PORT || 8001;
 
-mongoose
-    .connect(process.env.DB_URI, {
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+try {
+    await mongoose.connect(process.env.DB_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-    })
-    .catch((err) => {
-        console.log(err.stack);
-        process.exit(1);
-    })
-    .then(async (client) => {
-        app.listen(port, () => console.log(`server is running on ${port}`));
+        useFindAndModify: false,
     });
+    console.log('db connected');
 
-mongoose.set("useFindAndModify", false);
+    app.use('/auth', auth);
+    app.use('/user', user);
+    app.use('/file', upload)
+
+    app.use('*', (req, res) => res.status(404).json({ error: 'not found' }));
+
+    app.listen(port, () => console.log(`server is running on port ${port}`));
+} catch (error) {
+    console.log(error);
+    console.log('Cannot connect to db');
+    process.exit(1);
+}
+
 mongoose.connection.on('connected', () => console.log('db connected'));

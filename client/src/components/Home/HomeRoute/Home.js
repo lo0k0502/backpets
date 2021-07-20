@@ -44,11 +44,8 @@ const Home = ({ navigation, logoutback, fetch }) => {
             </Appbar>
             <Card style={styles.card}>
                 <Card.Title title='Hello there!' subtitle='What do you think of this picture?' />
-                <Card.Content>
-                    
-                </Card.Content>
                 <Card.Cover 
-                    source={{ uri: 'https://picsum.photos/700' }} 
+                    source={{ uri: 'http://192.168.1.103:5001/file/c8d49b3477d25baf073fbcf0ae17a13b' }} 
                     style={styles.cardimg}
                 />
                 <Card.Actions style={styles.cardactions}>
