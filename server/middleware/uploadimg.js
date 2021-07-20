@@ -3,7 +3,7 @@ import GridFsStorage from 'multer-gridfs-storage';
 import moment from 'moment';
 
 const storage = new GridFsStorage({
-    url: 'mongodb://localhost:27017/photos',
+    url: process.env.DB_URI,
     file: (req, file) => {
         return { filename:`${moment().valueOf()}-${file.originalname}` };
     },

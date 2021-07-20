@@ -8,6 +8,7 @@ import { requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaType
 
 import { tokenRefresh, updateProfile } from '../../../redux/userReducer';
 import { deleteAvatar, uploadAvatar } from '../../../api';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const styles = StyleSheet.create({
     root: {
@@ -47,7 +48,7 @@ const EditProfile = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isImgLoading, setIsImgLoading] = useState(false);
 
-    const [photoUrl, setPhotoUrl] = useState('1');
+    const [photoUrl, setPhotoUrl] = useState('');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     
@@ -87,44 +88,7 @@ const EditProfile = ({ navigation }) => {
         if (!result) result = getPendingResultAsync();
 
         if (!result.cancelled) {
-            let formData = new FormData();
-            const filename = result.uri.split('/').pop();
-            const mediatype = filename.split('.').pop();
-            let type = null;
-            switch (mediatype) {
-                case 'jpg': 
-                    type = 'image/jpeg';
-                    break;
-                case 'jpeg': 
-                    type = 'image/jpeg';
-                    break;
-                case 'png': 
-                    type = 'image/jpeg';
-                    break;
-                default:
-                    setIsLoading(false);
-                    setPhotoUrlErrorMsg('Selected file is not an image');
-                    return;
-            }
-            formData.append('avatar', {
-                uri: result.uri,
-                name: filename,
-                type,
-            });
-            
-            try {
-                const { data } = await uploadAvatar(formData);
-                if (data) {
-                    setPhotoUrl(data.imgUrl);
-                    setPhotoUrlErrorMsg('');
-                    Alert.alert('Success!!', `Avatar Successfully Updated!!`, [
-                        { text: 'OK' }
-                    ]);
-                }
-            } catch (error) {
-                setIsImgLoading(false);
-                setPhotoUrlErrorMsg(error.response.data.message);
-            }
+            setPhotoUrl(result.uri);
         }
 
         setIsImgLoading(false);
@@ -163,19 +127,61 @@ const EditProfile = ({ navigation }) => {
         setIsLoading(true);
 
         try {
-            await dispatch(updateProfile({ 
-                photoUrl,
+            let sendPhotoUrl = photoUrl;
+            if (photoUrl !== result.photoUrl) {
+                let formData = new FormData();
+                const filename = photoUrl.split('/').pop();
+                const mediatype = filename.split('.').pop();
+                let type = null;
+                switch (mediatype) {
+                    case 'jpg': 
+                        type = 'image/jpeg';
+                        break;
+                    case 'jpeg': 
+                        type = 'image/jpeg';
+                        break;
+                    case 'png': 
+                        type = 'image/jpeg';
+                        break;
+                    default:
+                        setIsLoading(false);
+                        setPhotoUrlErrorMsg('Selected file is not an image');
+                        return;
+                }
+                formData.append('avatar', {
+                    uri: photoUrl,
+                    name: filename,
+                    type,
+                });
+    
+                const { data } = await uploadAvatar(formData);
+                if (data) {
+                    sendPhotoUrl = data.imgUrl;
+                    if (result.photoUrl.split('/')[2] === '192.168.1.103:5001')
+                        await deleteAvatar(result.photoUrl.split('/').pop());
+                }
+            }
+
+            const res = await dispatch(updateProfile({ 
+                photoUrl: sendPhotoUrl,
                 username: result.username, 
                 newUsername: username, 
                 email, 
             }));
-            // if (photoUrl === result.photoUrl) await deleteAvatar(result.photoUrl.split('/').pop());
+            unwrapResult(res);
             Alert.alert('Success!!', `Profile Successfully Updated!!\nGoing back...`, [
                 { text: 'OK', onPress: () => navigation.pop(1) }
             ]);
         } catch (error) {
-            console.log('Updating:', error.message);
-            setErrorMsg(error.message);
+            setIsLoading(false);
+            if (error.message) {
+                console.log('Updating:', error.message);
+                setErrorMsg(error.message);
+            }
+            if (error.response.data.message) {
+                console.log('while uploading photo:', error.response.data.message)
+                setPhotoUrlErrorMsg(error.response.data.message);
+            }
         }
 
         setIsLoading(false);
@@ -194,10 +200,7 @@ const EditProfile = ({ navigation }) => {
             >
                 {errorMsg}
             </HelperText>
-            <Avatar.Image 
-                source={{ uri: photoUrl }} 
-                size={100}
-            />
+            {photoUrl ? <Avatar.Image source={{ uri: photoUrl }} size={100} style={{ backgroundColor: 'white' }} /> : null}
             <HelperText 
                 type='error' 
                 style={styles.helpertext}

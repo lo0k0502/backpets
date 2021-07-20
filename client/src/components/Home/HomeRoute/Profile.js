@@ -44,7 +44,11 @@ const Profile = ({ navigation }) => {
             <Text style={styles.title}>
                 Profile
             </Text>
-            <Avatar.Image source={{ uri: user?.result.photoUrl }} />
+            <Avatar.Image 
+                source={{ uri: user?.result.photoUrl }} 
+                size={150}
+                style={{ backgroundColor: 'white' }}
+            />
             <Text>
                 {user?.result.username}
             </Text>
