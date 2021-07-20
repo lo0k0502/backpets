@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaTypeOptions, getPendingResultAsync, getMediaLibraryPermissionsAsync } from 'expo-image-picker';
 
 import { tokenRefresh, updateProfile } from '../../../redux/userReducer';
+import { deleteAvatar, uploadAvatar } from '../../../api';
 
 const styles = StyleSheet.create({
     root: {
@@ -73,11 +74,8 @@ const EditProfile = ({ navigation }) => {
         fetch();
     }, [navigation]));
 
-    //Not done yet!!
     const handleChangeImg = async () => {
         setIsImgLoading(true);
-        setTimeout(() => setIsImgLoading(false), 1000);
-        return;
         let permissionResult = await requestMediaLibraryPermissionsAsync();
         if (permissionResult.canAskAgain) permissionResult = await requestMediaLibraryPermissionsAsync();
         let result = await launchImageLibraryAsync({
@@ -85,14 +83,51 @@ const EditProfile = ({ navigation }) => {
             allowsEditing: true,
             aspect: [ 1, 1 ],
             quality: 1,
-            base64: true,
         });
         if (!result) result = getPendingResultAsync();
 
-        console.log(result.height);
         if (!result.cancelled) {
-            setPhotoUrl('data:image/jpeg;base64,' + result.base64);
+            let formData = new FormData();
+            const filename = result.uri.split('/').pop();
+            const mediatype = filename.split('.').pop();
+            let type = null;
+            switch (mediatype) {
+                case 'jpg': 
+                    type = 'image/jpeg';
+                    break;
+                case 'jpeg': 
+                    type = 'image/jpeg';
+                    break;
+                case 'png': 
+                    type = 'image/jpeg';
+                    break;
+                default:
+                    setIsLoading(false);
+                    setPhotoUrlErrorMsg('Selected file is not an image');
+                    return;
+            }
+            formData.append('avatar', {
+                uri: result.uri,
+                name: filename,
+                type,
+            });
+            
+            try {
+                const { data } = await uploadAvatar(formData);
+                if (data) {
+                    setPhotoUrl(data.imgUrl);
+                    setPhotoUrlErrorMsg('');
+                    Alert.alert('Success!!', `Avatar Successfully Updated!!`, [
+                        { text: 'OK' }
+                    ]);
+                }
+            } catch (error) {
+                setIsImgLoading(false);
+                setPhotoUrlErrorMsg(error.response.data.message);
+            }
         }
+
+        setIsImgLoading(false);
     };
 
     const checkUsername = (text) => {
@@ -110,13 +145,11 @@ const EditProfile = ({ navigation }) => {
     };
 
     const handleSubmit = async () => {
-        if (!photoUrl
-            || !username
+        if (!username
             || !email
-            || photoUrlErrorMsg
             || usernameErrorMsg
+            || photoUrlErrorMsg
             || emailErrorMsg) {
-            if (!photoUrl) setPhotoUrlErrorMsg('Must not be null!');
             if (!username) setUsernameErrorMsg('Must not be null!');
             if (!email) setEmailErrorMsg('Must not be null!');
             return;
@@ -131,11 +164,12 @@ const EditProfile = ({ navigation }) => {
 
         try {
             await dispatch(updateProfile({ 
-                photoUrl, 
+                photoUrl,
                 username: result.username, 
                 newUsername: username, 
                 email, 
             }));
+            // if (photoUrl === result.photoUrl) await deleteAvatar(result.photoUrl.split('/').pop());
             Alert.alert('Success!!', `Profile Successfully Updated!!\nGoing back...`, [
                 { text: 'OK', onPress: () => navigation.pop(1) }
             ]);
@@ -164,6 +198,12 @@ const EditProfile = ({ navigation }) => {
                 source={{ uri: photoUrl }} 
                 size={100}
             />
+            <HelperText 
+                type='error' 
+                style={styles.helpertext}
+            >
+                {photoUrlErrorMsg}
+            </HelperText>
             <Button 
                 mode='contained'
                 disabled={isImgLoading || isLoading}

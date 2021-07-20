@@ -5,13 +5,11 @@ import moment from 'moment';
 const storage = new GridFsStorage({
     url: 'mongodb://localhost:27017/photos',
     file: (req, file) => {
-        return { 
-            bucketName: 'avatar',
-            filename:`${moment().valueOf()}-${file.originalname}`, 
-        };
+        return { filename:`${moment().valueOf()}-${file.originalname}` };
     },
+    root: 'avatar',
 });
 
-const uploadimg = multer({ storage }).single('file');
+const uploadimg = multer({ storage }).single('avatar');
 
 export default uploadimg;

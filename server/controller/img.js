@@ -1,11 +1,15 @@
-import { createReadStream } from 'fs';
 import mongoose from 'mongoose';
+import User from '../model/user.js';
+
 let gfs;
 
-const conn = mongoose.connection;
-conn.once('open', () => {
-    gfs = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: 'avatar' });
+const conn = await mongoose.createConnection('mongodb://localhost:27017/photos', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
 });
+
+gfs = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: 'avatar' });
 
 export const upload = (req, res) => {
     setTimeout(() => {
@@ -13,7 +17,8 @@ export const upload = (req, res) => {
         if (req.file.mimetype !== 'image/jpeg'
             && req.file.mimetype !== 'image/png') 
             return res.status(400).json({ message: 'Not an image!!' });
-        const imgUrl = `http://localhost:5001/file/${req.file.filename}`;
+        const imgUrl = `http://192.168.1.103:5001/avatar/${req.file.filename}`;
+
         return res.status(200).json({ imgUrl });
     }, 500);
 };

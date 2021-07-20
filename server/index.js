@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 
 import auth from './routes/auth.js';
 import user from './routes/user.js';
-import upload from './routes/upload.js';
+import avatar from './routes/avatar.js';
 
 import('dotenv').then(module => module.config());
 
@@ -24,7 +24,7 @@ try {
 
     app.use('/auth', auth);
     app.use('/user', user);
-    app.use('/file', upload)
+    app.use('/avatar', avatar);
 
     app.use('*', (req, res) => res.status(404).json({ error: 'not found' }));
 
