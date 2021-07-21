@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 import { View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/core';
@@ -65,16 +65,13 @@ const AuthRoute = ({ navigation }) => {
   }, [navigation]));
 
   const checkUnLogin = async () => {
-    if (await AsyncStorage.getItem('userInfo')) {
-      console.log('Logged in, going to Home...');
-      navigation.navigate('Home');
-    }
+    if (await AsyncStorage.getItem('userInfo')) await AsyncStorage.removeItem('userInfo');
   };
 
   return (
     <AuhtStacks.Navigator>
       <AuhtStacks.Screen name='Login'>
-        {props => <LoginDrawer {...props} checkUnLogin={checkUnLogin} />}
+        {props => <LoginDrawer {...props} />}
       </AuhtStacks.Screen>
       <AuhtStacks.Screen name='Register'>
         {props => <Register {...props} />}

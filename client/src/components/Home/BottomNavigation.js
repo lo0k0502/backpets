@@ -11,6 +11,7 @@ import { setState } from '../../redux/userSlice';
 import HomeRoute from './HomeRoute/HomeRoute';
 import Map from './MapRoute';
 import Store from './StoreRoute';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const Tabs = createBottomTabNavigator();
 
@@ -34,8 +35,9 @@ const BottomNavigation = ({ navigation }) => {
     const handleLogout = async () => {
         try {
             const { refreshToken } = JSON.parse(await AsyncStorage.getItem('userInfo'));
-            await dispatch(logoutUser({ refreshToken }));
-            checkLogin();
+            const result = await dispatch(logoutUser({ refreshToken }));
+            const unwrapedResult = unwrapResult(result);
+            if (unwrapedResult) checkLogin();
         } catch (error) {
             console.log(error);
         }

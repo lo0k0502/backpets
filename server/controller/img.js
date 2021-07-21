@@ -31,7 +31,6 @@ export const get = async (req, res) => {
         res.status(400).json({ message: 'Getting error' });
     }
 };
-
 export const del = async (req, res) => {
     try {
         const file = (await gfs.find({ filename: req.params.filename }).toArray())[0];
