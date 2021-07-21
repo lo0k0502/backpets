@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, StyleSheet, Image, Pressable, Text } from 'react-native';
 import { TextInput, Button, Divider, HelperText } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import * as Google from 'expo-google-app-auth';
+import { useFocusEffect } from '@react-navigation/native';
 import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from '@env';
 
 import { loginUser, googleLogin } from '../../redux/userReducer';
@@ -79,6 +80,12 @@ const Login = ({ navigation }) => {
         setPassword(text);
         setPasswordErrorMsg(text ? '' : 'Must not be null!');
     };
+
+    useFocusEffect(useCallback(() => {
+        setErrorMsg('');
+        setUsernameErrorMsg('');
+        setPasswordErrorMsg('');
+    }, []));
 
     const handleLogin = async () => {
         if (!username || !password || usernameErrorMsg || passwordErrorMsg) {

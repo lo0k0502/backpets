@@ -1,7 +1,9 @@
-import User from '../model/user.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+
+import User from '../model/user.js';
+import genPassword from '../utils/randomPassword.js';
 
 dotenv.config();
 
@@ -41,10 +43,10 @@ export const GoogleLogin = async (req, res) => {
     const { username, email, photoUrl } = req.body;
     try {
       let existUser = await User.findOne({ email });
-      let isFirst = false;
+      let firstPassword = null;
       if (!existUser) {
-        isFirst = !isFirst;
-        const hashedPassword = await bcrypt.hash('0000000000', 10);
+        firstPassword = genPassword(10, true, true, false);
+        const hashedPassword = await bcrypt.hash(firstPassword, 10);
         existUser = await User.create({
           username,
           password: hashedPassword,
@@ -60,7 +62,7 @@ export const GoogleLogin = async (req, res) => {
       );
       refreshTokens.push(refreshToken);
       console.log('User login, refreshTokens:', refreshTokens);
-      return res.status(200).json({ result: existUser, accessToken, refreshToken, isFirst });
+      return res.status(200).json({ result: existUser, accessToken, refreshToken, firstPassword });
     } catch (error) {
       console.log(error);
       res.status(400).json({ message: '錯誤' });

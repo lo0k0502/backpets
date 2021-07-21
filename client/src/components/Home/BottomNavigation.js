@@ -35,9 +35,8 @@ const BottomNavigation = ({ navigation }) => {
     const handleLogout = async () => {
         try {
             const { refreshToken } = JSON.parse(await AsyncStorage.getItem('userInfo'));
-            const result = await dispatch(logoutUser({ refreshToken }));
-            const unwrapedResult = unwrapResult(result);
-            if (unwrapedResult) checkLogin();
+            await dispatch(logoutUser({ refreshToken }));
+            checkLogin();
         } catch (error) {
             console.log(error);
         }

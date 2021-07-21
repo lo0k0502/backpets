@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Alert } from 'react-native';
+import { Alert, Clipboard } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginUser, googleLogin, logoutUser, tokenRefresh, updateProfile } from './userReducer';
 
@@ -35,10 +35,15 @@ export const userSlice = createSlice({
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
       AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
-      if (action.payload.isFirst) {
+      if (action.payload.firstPassword) {
+        const firstPassword = action.payload.firstPassword;
+        console.log(firstPassword)
         Alert.alert('Safety alert', 
-          'Your password is now set to 10 zeroes, we highly recommend you to change your password immediately!!', 
-          [{ text: 'OK' }],
+          `Your password is now set to ${firstPassword}.\nClick the button bellow to copy to clipboard.`, 
+            [{ text: 'Copy', style: 'default', onPress: () => {
+              Clipboard.setString(firstPassword);
+              Alert.alert('', 'Password Copyed!!');
+            } }, ]
         );
       } else if (action.payload.result) {
         Alert.alert('Welcome Back!', 
