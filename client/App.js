@@ -38,16 +38,16 @@ export default function App() {
         <NavigationContainer>
           <Stacks.Navigator>
             <Stacks.Screen name='AuthRoute' options={{ headerShown: false }}>
-              {props => <AuthRoute {...props} />}
+            {props => <AuthRoute {...props} />}
             </Stacks.Screen>
             <Stacks.Screen name='DeleteUser'>
-              {props => <DeleteUser {...props} />}
+            {props => <DeleteUser {...props} />}
             </Stacks.Screen>
             <Stacks.Screen name='Home' options={{ headerShown: false }}>
-              {props => <BottomNavigation {...props} />}
+            {props => <BottomNavigation {...props} />}
             </Stacks.Screen>
             <Stacks.Screen name='AllUsers'>
-              {props => <AllUsers {...props} />}
+            {props => <AllUsers {...props} />}
             </Stacks.Screen>
           </Stacks.Navigator>
         </NavigationContainer>

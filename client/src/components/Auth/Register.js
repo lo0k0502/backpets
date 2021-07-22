@@ -56,7 +56,7 @@ const Register = ({ navigation }) => {
         setEmailErrorMsg(text ? '' : 'Must not be null!');
         if (!text) return;
 
-        let validAddress = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+        let validAddress = /^\w+((-\w+)|(\.\w+))*\@\w+((\.|-)\w+)*\.[A-z]+$/;
         setEmailErrorMsg(validAddress.test(text) ? '' : 'Email address invalid!');
     };
 

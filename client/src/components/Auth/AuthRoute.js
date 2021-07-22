@@ -49,10 +49,10 @@ const LoginDrawer = ({ checkUnLogin }) => {
   return (
     <Drawers.Navigator>
       <Drawers.Screen name='Login'>
-        {props => <Login {...props} checkUnLogin={checkUnLogin} />}
+      {props => <Login {...props} checkUnLogin={checkUnLogin} />}
       </Drawers.Screen>
       <Drawers.Screen name='DevOptions'>
-        {props => <DevOptions {...props} />}
+      {props => <DevOptions {...props} />}
       </Drawers.Screen>
     </Drawers.Navigator>
   );
@@ -71,10 +71,10 @@ const AuthRoute = ({ navigation }) => {
   return (
     <AuhtStacks.Navigator>
       <AuhtStacks.Screen name='Login'>
-        {props => <LoginDrawer {...props} />}
+      {props => <LoginDrawer {...props} />}
       </AuhtStacks.Screen>
       <AuhtStacks.Screen name='Register'>
-        {props => <Register {...props} />}
+      {props => <Register {...props} />}
       </AuhtStacks.Screen>
     </AuhtStacks.Navigator>
   );

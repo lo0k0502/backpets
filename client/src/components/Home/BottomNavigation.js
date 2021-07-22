@@ -98,7 +98,7 @@ const BottomNavigation = ({ navigation }) => {
                     ),
                 }}
             >
-                {props => <HomeRoute {...props} logoutback={() => navigation.goBack()} fetch={fetch} />}
+            {props => <HomeRoute {...props} logoutback={() => navigation.goBack()} fetch={fetch} />}
             </Tabs.Screen>
             <Tabs.Screen 
                 name='Map'
@@ -108,7 +108,7 @@ const BottomNavigation = ({ navigation }) => {
                     ),
                 }}
             >
-                {props => <Map {...props} />}
+            {props => <Map {...props} />}
             </Tabs.Screen>
             <Tabs.Screen 
                 name='Store'
@@ -118,7 +118,7 @@ const BottomNavigation = ({ navigation }) => {
                     ),
                 }}
             >
-                {props => <Store {...props} />}
+            {props => <Store {...props} />}
             </Tabs.Screen>
         </Tabs.Navigator>
     );
