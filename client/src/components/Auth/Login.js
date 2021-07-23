@@ -126,6 +126,7 @@ const Login = ({ navigation }) => {
                 iosClientId: GOOGLE_IOS_CLIENT_ID, 
                 scopes: ['profile', 'email'], 
             });
+            console.log(type, user)
             if (type === 'success') {
                 const { email, familyName, givenName, photoUrl } = user;
     
@@ -202,7 +203,7 @@ const Login = ({ navigation }) => {
             >
                 Login
             </Button>
-            <Button
+            {/* <Button
                 mode='contained'
                 icon={require('../../../assets/GoogleIconG.png')}
                 disabled={loginLoading || googleLoginLoading}
@@ -212,7 +213,7 @@ const Login = ({ navigation }) => {
                 onPress={handleGoogleLogin}
             >
                 Google Login
-            </Button>
+            </Button> */}
             <Divider style={styles.divider} />
             <View style={styles.signupmsg}>
                 <Text>

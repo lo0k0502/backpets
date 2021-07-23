@@ -20,6 +20,7 @@ export const generateToken = ({ username }) => {
 export const Login = async (req, res) => {
     const { username, password } = req.body;
     try {
+      console.log('Logging in', username);
       const existUser = await User.findOne({ username });
       if (!existUser) return res.status(400).json({ message: '用戶不存在' });
       
@@ -42,6 +43,7 @@ export const Login = async (req, res) => {
 export const GoogleLogin = async (req, res) => {
     const { username, email, photoUrl } = req.body;
     try {
+      console.log('Google logging in:', username);
       let existUser = await User.findOne({ email });
       let firstPassword = null;
       if (!existUser) {
