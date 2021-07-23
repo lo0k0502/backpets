@@ -53,7 +53,6 @@ const Home = ({ navigation, logoutback, fetch }) => {
                     <Button icon='thumb-down' color='#ff8000'>Not OK</Button>
                 </Card.Actions>
             </Card>
-            <Text>{}</Text>
             <Button 
                 mode='contained' 
                 style={{ width: '50%', margin: 20 }}
