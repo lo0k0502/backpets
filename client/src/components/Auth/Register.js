@@ -98,7 +98,7 @@ const Register = ({ navigation }) => {
                 username,
                 password,
                 email,
-                photoUrl: '',
+                photoUrl: 'https://picsum.photos/200',
             });
             if (result) navigation.goBack();
             

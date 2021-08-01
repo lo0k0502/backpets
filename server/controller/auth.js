@@ -116,8 +116,7 @@ export const RefreshToken = (req, res) => {
         const newAccessToken = generateToken({ username });
         return res.status(200).json({ 
           result: existUser, 
-          accessToken: 
-          newAccessToken, 
+          accessToken: newAccessToken, 
           refreshToken, 
           message: 'AccessToken refreshed!' 
         });
