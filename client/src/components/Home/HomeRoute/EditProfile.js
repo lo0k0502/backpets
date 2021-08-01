@@ -157,7 +157,7 @@ const EditProfile = ({ navigation }) => {
                 const { data } = await uploadAvatar(formData);
                 if (data) {
                     sendPhotoUrl = data.imgUrl;
-                    if (result.photoUrl.split('/')[2] === '192.168.1.103:5001')
+                    if (result.photoUrl.split('/')[2] === '192.168.1.103:8000')
                         await deleteAvatar(result.photoUrl.split('/').pop());
                 }
             }

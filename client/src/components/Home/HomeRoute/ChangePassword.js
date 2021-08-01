@@ -85,12 +85,11 @@ const ChangePassword = ({  navigation }) => {
         
         try {
             const { result: { username } } = JSON.parse(await AsyncStorage.getItem('userInfo'));
-            const result = 
-                await updateUserPassword({ 
-                    username: username, 
-                    password: oldPassword,
-                    newPassword, 
-                });
+            const result = await updateUserPassword({ 
+                username: username, 
+                password: oldPassword,
+                newPassword, 
+            });
             if (result) {
                 Alert.alert('Success!!', 'Password Successfully Updated!!\nGoing back...', [
                     { text: 'OK', onPress: () => navigation.goBack() }

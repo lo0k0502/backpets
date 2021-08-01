@@ -6,6 +6,7 @@ import { AppService } from '../services/app.service';
 import { UserModule } from './user.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth.module';
+import { FileModule } from './file.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { AuthModule } from './auth.module';
     MongooseModule.forRoot(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, }),
     UserModule,
     AuthModule,
+    FileModule,
     GraphQLModule.forRoot({
       autoSchemaFile: 'src/schema.gql',
       sortSchema: true,

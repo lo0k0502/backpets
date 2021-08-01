@@ -4,6 +4,7 @@ import { Response } from 'express';
 import { UserType } from 'src/DTOs/user.dto';
 import { UserService } from 'src/services/user.service';
 import { refreshTokens, addRefreshToken, deleteRefreshToken } from 'src/refreshTokens';
+import { hash, compare } from 'bcrypt';
 
 @Controller('user')
 export class UserController {
@@ -66,6 +67,24 @@ export class UserController {
             addRefreshToken(newRefreshToken);
             
             return res.status(200).json({ result, accessToken, refreshToken: newRefreshToken });
+        } catch (error) {
+            console.log(error);
+            return res.status(400).json({ message: '錯誤' });
+        }
+    }
+
+    @Post('updatepassword')
+    async UpdatePassword(@Body() { username, password, newPassword }, @Res() res: Response) {
+        try {
+            const existUser = await this.userService.findOne({ username });
+            if (!existUser) return res.status(400).json({ message: '用戶不存在' });
+            
+            const isCorrect = await compare(password, existUser.password);
+            if (!isCorrect) return res.status(400).json({ message: '密碼錯誤' });
+    
+            const hashedPassword = await hash(newPassword, 10);
+            const result = await this.userService.updateOne({ username }, { password: hashedPassword });
+            return res.status(200).json({ result });
         } catch (error) {
             console.log(error);
             return res.status(400).json({ message: '錯誤' });
