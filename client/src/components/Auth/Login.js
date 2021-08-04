@@ -59,10 +59,10 @@ const styles = StyleSheet.create({
 });
 
 const Login = ({ navigation }) => {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const [usernameErrorMsg, setUsernameErrorMsg] = useState('');
+    const [emailErrorMsg, setEmailErrorMsg] = useState('');
     const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
 
@@ -71,9 +71,9 @@ const Login = ({ navigation }) => {
 
     const dispatch = useDispatch();
 
-    const checkUsername = (text) => {
-        setUsername(text);
-        setUsernameErrorMsg(text ? '' : 'Must not be null!');
+    const checkEmail = (text) => {
+        setEmail(text);
+        setEmailErrorMsg(text ? '' : 'Must not be null!');
     };
 
     const checkPassword = (text) => {
@@ -83,13 +83,13 @@ const Login = ({ navigation }) => {
 
     useFocusEffect(useCallback(() => {
         setErrorMsg('');
-        setUsernameErrorMsg('');
+        setEmailErrorMsg('');
         setPasswordErrorMsg('');
     }, []));
 
     const handleLogin = async () => {
-        if (!username || !password || usernameErrorMsg || passwordErrorMsg) {
-            if (!username) setUsernameErrorMsg('Must not be null!');
+        if (!email || !password || emailErrorMsg || passwordErrorMsg) {
+            if (!email) setEmailErrorMsg('Must not be null!');
             if (!password) setPasswordErrorMsg('Must not be null!');
             return;
         }
@@ -97,13 +97,13 @@ const Login = ({ navigation }) => {
         setLoginLoading(true);
 
         try {
-            const result = await dispatch(loginUser({ username, password }));
+            const result = await dispatch(loginUser({ email, password }));
             const unwrapedResult = unwrapResult(result);
 
             if (unwrapedResult) {
                 console.log('Logged in, going to Home...');
                 navigation.navigate('Home');
-                setUsername('');
+                setEmail('');
                 setPassword('');
                 setErrorMsg('');
             }
@@ -117,7 +117,7 @@ const Login = ({ navigation }) => {
 
     const handleGoogleLogin = async () => {
         setGoogleLoginLoading(true);
-        setUsernameErrorMsg('');
+        setEmailErrorMsg('');
         setPasswordErrorMsg('');
         
         try {
@@ -140,7 +140,7 @@ const Login = ({ navigation }) => {
                 if (unwrapedResult) {
                     console.log('Logged in, going to Home...');
                     navigation.navigate('Home');
-                    setUsername('');
+                    setEmail('');
                     setPassword('');
                     setErrorMsg('');
                 }
@@ -164,18 +164,18 @@ const Login = ({ navigation }) => {
             </HelperText>
             <TextInput 
                 mode='outlined'
-                placeholder='Username'
+                placeholder='Email'
                 placeholderTextColor='gray'
                 outlineColor='black'
                 underlineColor='black'
-                error={usernameErrorMsg}
+                error={emailErrorMsg}
                 disabled={loginLoading || googleLoginLoading}
-                value={username}
+                value={email}
                 style={styles.input}
-                onChangeText={(text) => checkUsername(text)}
+                onChangeText={(text) => checkEmail(text)}
             />
             <HelperText type='error'>
-                {usernameErrorMsg}
+                {emailErrorMsg}
             </HelperText>
             <TextInput 
                 mode='outlined'

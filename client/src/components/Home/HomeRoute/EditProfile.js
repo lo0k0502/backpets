@@ -64,7 +64,7 @@ const EditProfile = ({ navigation }) => {
         setUsername(user.result.username);
         setEmail(user.result.email);
         setPhotoUrl(user.result.photoUrl);
-        
+
         await dispatch(tokenRefresh({ 
             accessToken: user.accessToken, 
             refreshToken: user.refreshToken, 
@@ -118,7 +118,7 @@ const EditProfile = ({ navigation }) => {
             if (!email) setEmailErrorMsg('Must not be null!');
             return;
         }
-        const { result } = JSON.parse(await AsyncStorage.getItem('userInfo'));
+        const { result, refreshToken } = JSON.parse(await AsyncStorage.getItem('userInfo'));
         if (username === result.username && email === result.email && photoUrl === result.photoUrl) {
             setErrorMsg('Please change at least one profile!!');
             return;
@@ -157,7 +157,7 @@ const EditProfile = ({ navigation }) => {
                 const { data } = await uploadAvatar(formData);
                 if (data) {
                     sendPhotoUrl = data.imgUrl;
-                    if (result.photoUrl.split('/')[2] === '192.168.1.103:5001')
+                    if (result.photoUrl.split('/')[2] === '192.168.1.103:8000')
                         await deleteAvatar(result.photoUrl.split('/').pop());
                 }
             }
@@ -167,10 +167,11 @@ const EditProfile = ({ navigation }) => {
                 username: result.username, 
                 newUsername: username, 
                 email, 
+                refreshToken,
             }));
             unwrapResult(res);
             Alert.alert('Success!!', `Profile Successfully Updated!!\nGoing back...`, [
-                { text: 'OK', onPress: () => navigation.pop(1) }
+                { text: 'OK', onPress: () => navigation.goBack() }
             ]);
         } catch (error) {
             setIsLoading(false);

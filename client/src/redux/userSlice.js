@@ -60,8 +60,14 @@ export const userSlice = createSlice({
     },
     [tokenRefresh.fulfilled]: (state, action) => {
       if (action.payload.accessToken) {
+        state.information = action.payload.result;
         state.accessToken = action.payload.accessToken;
-        AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
+        state.refreshToken = action.payload.refreshToken;
+        AsyncStorage.setItem('userInfo', JSON.stringify({
+          result: action.payload.result,
+          accessToken: action.payload.accessToken,
+          refreshToken: action.payload.refreshToken,
+        }));
       }
       if (action.payload.message) {
         console.log('While refreshing:', action.payload.message);
@@ -71,7 +77,12 @@ export const userSlice = createSlice({
       if (action.payload.result) {
         state.information = action.payload.result;
         state.accessToken = action.payload.accessToken;
-        AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
+        state.refreshToken = action.payload.refreshToken;
+        AsyncStorage.setItem('userInfo', JSON.stringify({
+          result: action.payload.result,
+          accessToken: action.payload.accessToken,
+          refreshToken: action.payload.refreshToken,
+        }));
       }
       if (action.payload.message) {
         console.log('While updating:', action.payload.message);

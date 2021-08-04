@@ -3,9 +3,9 @@ import { UserLogin, GoogleLogin, RefreshToken, Logout, updateUserProfile } from 
 
 export const loginUser = createAsyncThunk(
     'user/login',
-    async ({ username, password }, { rejectWithValue }) => {
+    async ({ email, password }, { rejectWithValue }) => {
         try {
-            const response = await UserLogin({ username, password });
+            const response = await UserLogin({ email, password });
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);
@@ -46,9 +46,9 @@ export const tokenRefresh = createAsyncThunk(
 );
 export const updateProfile = createAsyncThunk(
     'user/updateprofile',
-    async ({ photoUrl, username, newUsername, email }, {rejectWithValue}) => {
+    async ({ photoUrl, username, newUsername, email, refreshToken }, {rejectWithValue}) => {
         try {
-            const response = await updateUserProfile({ photoUrl, username, newUsername, email });
+            const response = await updateUserProfile({ photoUrl, username, newUsername, email, refreshToken });
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);

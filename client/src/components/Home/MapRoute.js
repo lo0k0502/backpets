@@ -1,7 +1,8 @@
-import React from 'react';
-import { StyleSheet, View, PermissionsAndroid, Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, PermissionsAndroid, Button } from 'react-native';
 import MapView, { Marker, MarkerAnimated, PROVIDER_GOOGLE } from 'react-native-maps';
-// import Geolocation from 'react-native-geolocation-service';
+import Constants from 'expo-constants';
+import * as Location from 'expo-location';
 
 const styles = StyleSheet.create({
     root: {
@@ -18,85 +19,70 @@ const styles = StyleSheet.create({
     },     
 });
 
-const hasLocationPermission = async () => {
-    try {
-        const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            console.log("Success");
-            MapRoute
-        } else {
-            console.log("Denied");
+
+export default function App() {
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+  
+    useEffect(() => {
+      (async () => {
+        if (Platform.OS === 'android' && !Constants.isDevice) {
+          setErrorMsg(
+            'Oops, this will not work on Snack in an Android emulator. Try it on your device!'
+          );
+          return;
         }
-    } catch (err) {
-        console.warn(err);
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          setErrorMsg('Permission to access location was denied');
+          return;
+        }
+  
+        let location = await Location.getCurrentPositionAsync({});
+        setLocation(location);
+      })();
+    }, []);
+  
+    let text = 'Waiting..';
+    if (errorMsg) {
+      text = errorMsg;
+    } else if (location) {
+      text = JSON.stringify(location);
+      currentLatitude = location.coords.latitude;
+      currentLongitude = location.coords.longitude;
     }
-}
-
-const MapRoute = () => {
-
-    // if (hasLocationPermission) {
-    //     Geolocation.getCurrentPosition(
-    //         (position) => {
-    //             console.log(position);
-    //         },
-    //         (error) => {
-    //             // See error code charts below.
-    //             console.log(error.code, error.message);
-    //         },
-    //         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-    //     );
-    // }
-    
-    // const currentLatitude = 
-    // navigator.geolocation.getCurrentPosition(())
-    //     const currentLongitude = ;
-    
+  
     return (
-        
         <View style={styles.root}>
-            <MapView 
-            provider = { PROVIDER_GOOGLE }
-            style = { styles.map }
-            initialRegion = {{
-                latitude: 23.5582878215,
-                longitude: 120.471845313,
-                latitudeDelta: 0.0122,
-                longitudeDelta: 0.003,
-            }}
-            showsUserLocation={true}
-            followsUserLocation={true}
-            onPress = {(e) => 
-                <Marker
-                coordinate = {{
-                    latitude: e.nativeEvent.coordinate.latitude,
-                    longitude: e.nativeEvent.coordinate.longitude,
+        <MapView 
+        provider = { PROVIDER_GOOGLE }
+        style = { styles.map }
+        initialRegion = {{
+            latitude: currentLatitude,
+            longitude: currentLongitude,
+            latitudeDelta: 0.0122,
+            longitudeDelta: 0.003,
+        }}
+        showsUserLocation={true}
+        followsUserLocation={true}
+        onPress = {(e) => 
+            <Marker
+            coordinate = {{
+                latitude: e.nativeEvent.coordinate.latitude,
+                longitude: e.nativeEvent.coordinate.longitude,
 
-                }} 
-                />}
-            >
-                <Marker draggable
-                coordinate = {{
-                    latitude: 23.560043,
-                    longitude: 120.469031,
-                }} 
-                title = {'花花'}
-                />
-                
-            </MapView>
-        </View>
-    )
-};
-
-const AskingPermission = () => {
-    return (
-        <View style = { styles.root }>
-            <Button title = "request Permissions" 
-            onPress={hasLocationPermission}
+            }} 
+            />}
+        >
+            <Marker draggable
+            coordinate = {{
+                latitude: 23.560043,
+                longitude: 120.469031,
+            }} 
+            title = {'花花'}
             />
-        </View>
-    )
+            
+        </MapView>
+    </View>
+    );
 }
-
-export default AskingPermission;
