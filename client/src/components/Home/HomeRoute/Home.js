@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const Home = ({ navigation, logoutback, fetch }) => {
+const Home = ({ navigation }) => {
     
     return (
         <View style={styles.root}>
@@ -57,13 +57,6 @@ const Home = ({ navigation, logoutback, fetch }) => {
                     <Button icon='thumb-down' color='#ff8000'>Not OK</Button>
                 </Card.Actions>
             </Card>
-            <Button 
-                mode='contained' 
-                style={{ width: '50%', margin: 20 }}
-                onPress={fetch}
-            >
-                Fetch
-            </Button>
             <FAB style={styles.fab} icon='plus' />
         </View>
     );

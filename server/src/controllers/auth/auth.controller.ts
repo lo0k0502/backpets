@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
 import { hash, compare } from 'bcrypt';
 import { Response } from 'express';
 import { UserService } from 'src/services/user.service';
-import { UserType } from 'src/DTOs/user.dto';
+import { User } from 'src/models/user.schema';
 import { JwtService } from '@nestjs/jwt';
 import { refreshTokens, addRefreshToken, deleteRefreshToken } from 'src/refreshTokens';
 
@@ -14,7 +14,7 @@ export class AuthController {
   ) {}
 
   @Post('register')
-  async Register(@Body() { username, password, email, photoUrl }: UserType, @Res() res: Response) {
+  async Register(@Body() { username, password, email }: User, @Res() res: Response) {
       try {
         const existUser = await this.userService.findOne({ username });
         if (existUser)
@@ -39,7 +39,7 @@ export class AuthController {
   }
 
   @Post('login')
-  async Login(@Body() { email, password }: UserType, @Res() res: Response) {
+  async Login(@Body() { email, password }: User, @Res() res: Response) {
     try {
       const existUser = await this.userService.findOne({ email });
       if (!existUser) return res.status(400).json({ message: '用戶不存在' });

@@ -52,7 +52,7 @@ const BottomNavigation = ({ navigation }) => {
     const checkLogin = async () => {
         if (!await AsyncStorage.getItem('userInfo')) {
             console.log('Not logged in, going back...');
-            navigation.popToTop();
+            navigation.goBack();
         }
     };
     
@@ -98,7 +98,7 @@ const BottomNavigation = ({ navigation }) => {
                     ),
                 }}
             >
-            {props => <HomeRoute {...props} logoutback={() => navigation.goBack()} fetch={fetch} />}
+            {props => <HomeRoute {...props} logoutback={() => navigation.goBack()} />}
             </Tabs.Screen>
             <Tabs.Screen 
                 name='Map'

@@ -72,9 +72,11 @@ const Profile = ({ navigation }) => {
             <Button
                 icon='chevron-left'
                 mode='contained'
+                uppercase={0}
                 style={styles.editbtn}
                 onPress={() => navigation.goBack()}
             >
+                Go Back
             </Button>
         </View>
     );

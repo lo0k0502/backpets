@@ -34,6 +34,11 @@ const styles = StyleSheet.create({
         marginTop: 50,
         elevation: 5,
     },
+    backbtn: {
+        color: 'white',
+        backgroundColor: 'dodgerblue',
+        marginTop: 20,
+    },
 });
 
 const ChangePassword = ({  navigation }) => {
@@ -173,6 +178,15 @@ const ChangePassword = ({  navigation }) => {
                 onPress={handleSubmit}
             >
                 Submit
+            </Button>
+            <Button
+                icon='chevron-left'
+                mode='contained'
+                uppercase={0}
+                style={styles.backbtn}
+                onPress={() => navigation.goBack()}
+            >
+                Go Back
             </Button>
         </View>
     );

@@ -98,7 +98,6 @@ const Register = ({ navigation }) => {
                 username,
                 password,
                 email,
-                photoUrl: '',
             });
             if (result) navigation.goBack();
             

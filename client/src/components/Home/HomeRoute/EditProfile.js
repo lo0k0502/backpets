@@ -39,8 +39,13 @@ const styles = StyleSheet.create({
         width: '60%',
         height: 50,
         backgroundColor: 'dodgerblue',
-        marginTop: 50,
+        marginTop: 20,
         elevation: 5,
+    },
+    backbtn: {
+        color: 'white',
+        backgroundColor: 'dodgerblue',
+        marginTop: 20,
     },
 });
 
@@ -119,10 +124,10 @@ const EditProfile = ({ navigation }) => {
             return;
         }
         const { result, refreshToken } = JSON.parse(await AsyncStorage.getItem('userInfo'));
-        if (username === result.username && email === result.email && photoUrl === result.photoUrl) {
-            setErrorMsg('Please change at least one profile!!');
-            return;
-        }
+        // if (username === result.username && email === result.email && photoUrl === result.photoUrl) {
+        //     setErrorMsg('Please change at least one profile!!');
+        //     return;
+        // }
 
         setIsLoading(true);
 
@@ -261,6 +266,15 @@ const EditProfile = ({ navigation }) => {
                 onPress={handleSubmit}
             >
                 Submit
+            </Button>
+            <Button
+                icon='chevron-left'
+                mode='contained'
+                uppercase={0}
+                style={styles.backbtn}
+                onPress={() => navigation.goBack()}
+            >
+                Go Back
             </Button>
         </View>
     );

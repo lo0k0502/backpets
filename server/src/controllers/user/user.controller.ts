@@ -40,9 +40,8 @@ export class UserController {
             const existUser = await this.userService.findOne({ username });
             if (!existUser) return res.status(400).json({ message: '用戶不存在' });
     
-            if (username !== newUsername) 
-                if (await this.userService.findOne({ username: newUsername })) 
-                    return res.status(400).json({ message: '用戶名已被使用!' });
+            if (username !== newUsername && await this.userService.findOne({ username: newUsername })) 
+                return res.status(400).json({ message: '用戶名已被使用!' });
 
             const result = await this.userService.updateOne({ username }, { 
                 username: newUsername, 

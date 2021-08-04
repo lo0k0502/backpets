@@ -9,11 +9,11 @@ import DrawerContent from './DrawerContent';
 
 const HomeDrawer = createDrawerNavigator();
 
-const HomeRoute = ({ logoutback, fetch }) => {
+const HomeRoute = ({ logoutback }) => {
     return (
-        <HomeDrawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
+        <HomeDrawer.Navigator drawerContent={props => <DrawerContent {...props} logoutback={logoutback} />}>
             <HomeDrawer.Screen name='Home' options={{ headerShown: false }}>
-            {props => <Home {...props} logoutback={logoutback} fetch={fetch} />}
+            {props => <Home {...props} />}
             </HomeDrawer.Screen>
             <HomeDrawer.Screen name='Profile'>
             {props => <Profile {...props} />}
