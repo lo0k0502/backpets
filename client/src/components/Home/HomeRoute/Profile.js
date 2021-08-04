@@ -69,6 +69,13 @@ const Profile = ({ navigation }) => {
             >
                 Change Password
             </Button>
+            <Button
+                icon='chevron-left'
+                mode='contained'
+                style={styles.editbtn}
+                onPress={() => navigation.goBack()}
+            >
+            </Button>
         </View>
     );
 };

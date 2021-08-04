@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Alert } from 'react-native';
-import { FAB, Card, Button, Appbar } from 'react-native-paper';
+import { FAB, Card, Button, Appbar, Avatar, Paragraph } from 'react-native-paper';
 
 const styles = StyleSheet.create({
     root: {
@@ -39,13 +39,17 @@ const Home = ({ navigation, logoutback, fetch }) => {
     return (
         <View style={styles.root}>
             <Appbar style={styles.appbar}>
+                <Appbar.Action icon='menu' onPress={() => navigation.toggleDrawer()} />
                 <Appbar.Content title='Project P!!!' subtitle='P!!!' />
-                <Appbar.Action icon='menu' onPress={() => navigation.navigate('Profile')} />
+                {/*<Appbar.Action icon='menu' onPress={() => navigation.openDrawer()} />*/}
             </Appbar>
             <Card style={styles.card}>
-                <Card.Title title='Hello there!' subtitle='What do you think of this picture?' />
+                <Card.Title title='Mr.P' subtitle='1分鐘前' left={props => <Avatar.Icon {...props} icon="folder" />} />
+                <Card.Content>
+                    <Paragraph>協尋我家的小橘貓</Paragraph>
+                </Card.Content>
                 <Card.Cover 
-                    source={{ uri: 'http://192.168.1.103:5001/file/c8d49b3477d25baf073fbcf0ae17a13b' }} 
+                    source={{ uri: 'https://picsum.photos/300' }} 
                     style={styles.cardimg}
                 />
                 <Card.Actions style={styles.cardactions}>
@@ -53,13 +57,6 @@ const Home = ({ navigation, logoutback, fetch }) => {
                     <Button icon='thumb-down' color='#ff8000'>Not OK</Button>
                 </Card.Actions>
             </Card>
-            <Button 
-                mode='contained' 
-                style={{ width: '50%', margin: 20 }}
-                onPress={logoutback}
-            >
-                Logout
-            </Button>
             <Button 
                 mode='contained' 
                 style={{ width: '50%', margin: 20 }}

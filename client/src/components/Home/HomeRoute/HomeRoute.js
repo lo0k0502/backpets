@@ -1,29 +1,30 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import Home from './Home';
 import Profile from './Profile';
 import ChangePassword from './ChangePassword';
 import EditProfile from './EditProfile';
+import DrawerContent from './DrawerContent';
 
-const HomeStack = createStackNavigator();
+const HomeDrawer = createDrawerNavigator();
 
 const HomeRoute = ({ logoutback, fetch }) => {
     return (
-        <HomeStack.Navigator>
-            <HomeStack.Screen name='Home' options={{ headerShown: false }}>
+        <HomeDrawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
+            <HomeDrawer.Screen name='Home' options={{ headerShown: false }}>
             {props => <Home {...props} logoutback={logoutback} fetch={fetch} />}
-            </HomeStack.Screen>
-            <HomeStack.Screen name='Profile'>
+            </HomeDrawer.Screen>
+            <HomeDrawer.Screen name='Profile'>
             {props => <Profile {...props} />}
-            </HomeStack.Screen>
-            <HomeStack.Screen name='EditProfile' options={{ title:'Edit Profile' }}>
+            </HomeDrawer.Screen>
+            <HomeDrawer.Screen name='EditProfile' options={{ title:'Edit Profile' }}>
             {props => <EditProfile {...props} />}
-            </HomeStack.Screen>
-            <HomeStack.Screen name='ChangePassword' options={{ title: 'Change Password' }}>
+            </HomeDrawer.Screen>
+            <HomeDrawer.Screen name='ChangePassword' options={{ title: 'Change Password' }}>
             {props => <ChangePassword {...props} />}
-            </HomeStack.Screen>
-        </HomeStack.Navigator>
+            </HomeDrawer.Screen>
+        </HomeDrawer.Navigator>
     );
 };
 
