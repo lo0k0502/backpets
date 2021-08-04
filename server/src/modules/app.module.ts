@@ -7,6 +7,7 @@ import { UserModule } from './user.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth.module';
 import { FileModule } from './file.module';
+import { PostModule } from './post.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { FileModule } from './file.module';
     UserModule,
     AuthModule,
     FileModule,
+    PostModule,
     GraphQLModule.forRoot({
       autoSchemaFile: 'src/schema.gql',
       sortSchema: true,

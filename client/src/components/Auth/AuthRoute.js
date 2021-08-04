@@ -5,9 +5,12 @@ import { useFocusEffect } from '@react-navigation/core';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux';
 
 import Login from './Login';
 import Register from './Register';
+import { tokenRefresh } from '../../redux/userReducer';
+import { setState } from '../../redux/userSlice';
 
 const AuhtStacks = createStackNavigator();
 const Drawers = createDrawerNavigator();
@@ -59,13 +62,19 @@ const LoginDrawer = ({ checkUnLogin }) => {
 };
 
 const AuthRoute = ({ navigation }) => {
+
+  const dispatch = useDispatch();
     
   useFocusEffect(useCallback(() => {
     checkUnLogin();
   }, [navigation]));
 
   const checkUnLogin = async () => {
-    if (await AsyncStorage.getItem('userInfo')) await AsyncStorage.removeItem('userInfo');
+    const userInfo = await AsyncStorage.getItem('userInfo');
+    if (userInfo) {
+      console.log('Logged in, going to Home...');
+      navigation.navigate('Home');
+    }
   };
 
   return (

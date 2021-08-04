@@ -1,6 +1,9 @@
-import React from 'react';
-import { StyleSheet, Text, View, Alert } from 'react-native';
-import { FAB, Card, Button, Appbar, Avatar, Paragraph } from 'react-native-paper';
+import React, { useState, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import { StyleSheet, Text, View, Alert, ScrollView } from 'react-native';
+import { FAB, Card, Button, Appbar, Avatar, Paragraph, Title } from 'react-native-paper';
+import { fetchAllPosts } from '../../../api';
+import moment from 'moment';
 
 const styles = StyleSheet.create({
     root: {
@@ -10,6 +13,7 @@ const styles = StyleSheet.create({
     appbar: {
         backgroundColor: 'white',
         elevation: 0,
+        zIndex: 10,
     },
     card: {
         margin: 20,
@@ -17,8 +21,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     cardimg: {
+        width: 300,
         height: 300,
         backgroundColor: '#ff8000',
+        alignSelf: 'center',
     },
     cardactions: {
         justifyContent: 'flex-end',
@@ -35,30 +41,40 @@ const styles = StyleSheet.create({
 });
 
 const Home = ({ navigation }) => {
+    const [posts, setPosts] = useState([]);
+
+    const fetch = async () => {
+        setPosts((await fetchAllPosts()).data.result)
+    };
+
+    useFocusEffect(useCallback(() => {
+        fetch();
+    }, []));
     
     return (
-        <View style={styles.root}>
+        <ScrollView style={styles.root}>
             <Appbar style={styles.appbar}>
                 <Appbar.Action icon='menu' onPress={() => navigation.toggleDrawer()} />
                 <Appbar.Content title='Project P!!!' subtitle='P!!!' />
-                {/*<Appbar.Action icon='menu' onPress={() => navigation.openDrawer()} />*/}
             </Appbar>
-            <Card style={styles.card}>
-                <Card.Title title='Mr.P' subtitle='1分鐘前' left={props => <Avatar.Icon {...props} icon="folder" />} />
-                <Card.Content>
-                    <Paragraph>協尋我家的小橘貓</Paragraph>
-                </Card.Content>
-                <Card.Cover 
-                    source={{ uri: 'https://picsum.photos/300' }} 
-                    style={styles.cardimg}
-                />
-                <Card.Actions style={styles.cardactions}>
-                    <Button icon='thumb-up' color='#ff8000'>OK</Button>
-                    <Button icon='thumb-down' color='#ff8000'>Not OK</Button>
-                </Card.Actions>
-            </Card>
-            <FAB style={styles.fab} icon='plus' />
-        </View>
+            <Button
+                icon='plus'
+                color='dodgerblue'
+                onPress={() => {}}
+            >
+                Post
+            </Button>
+            {posts.map(post => 
+                <Card style={styles.card} key={post._id}>
+                    <Card.Title title={post.username} subtitle={moment(post.post_time).fromNow()} left={props => <Avatar.Icon {...props} icon="folder" />} />
+                    <Card.Content>
+                        <Title>{post.title}</Title>
+                        <Paragraph>{post.content}</Paragraph>
+                        {post.photoUrl ? <Card.Cover source={{ uri: post.photoUrl }} style={styles.cardimg}/> : null}
+                    </Card.Content>
+                </Card>
+            )}
+        </ScrollView>
     );
 };
 

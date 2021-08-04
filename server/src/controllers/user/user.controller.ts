@@ -14,7 +14,7 @@ export class UserController {
     ) {}
 
     @Get('fetchall')
-    async FetchAllUsers(@Res() res) {
+    async FetchAllUsers(@Res() res: Response) {
         const result = await this.userService.findAll();
         return res.status(200).json({ result });
     }

@@ -21,7 +21,6 @@ export const Logout = (payload) => API.post('/auth/logout', payload);
 export const RefreshToken = (payload) => API.post('/auth/refreshtoken', payload);
 
 //user
-export const fetchUserByEmail = (payload) => API.post('/user/fetchbyemail', payload);
 export const fetchAllUsers = () => API.get('/user/fetchall');
 export const updateUserPassword = (payload) => API.post('/user/updatepassword', payload);
 export const updateUserProfile = (payload) => API.post('/user/updateprofile', payload);
@@ -33,4 +32,8 @@ export const uploadAvatar = (payload) => API.post('/avatar/upload', payload, {
         'Content-Type': 'multipart/form-data',
     },
 });
-export const deleteAvatar = (filename) => API.delete(`/avatar/${filename}`)
+export const deleteAvatar = (filename) => API.delete(`/avatar/${filename}`);
+
+//post
+export const AddPost = (payload) => API.post('/post/add', payload);
+export const fetchAllPosts = () => API.get('/post/fetchall');
