@@ -9,6 +9,7 @@ import { requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaType
 import { tokenRefresh, updateProfile } from '../../../redux/userReducer';
 import { deleteAvatar, uploadAvatar } from '../../../api';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { BASE_URL } from '@env';
 
 const styles = StyleSheet.create({
     root: {
@@ -162,7 +163,7 @@ const EditProfile = ({ navigation }) => {
                 const { data } = await uploadAvatar(formData);
                 if (data) {
                     sendPhotoUrl = data.imgUrl;
-                    if (result.photoUrl.split('/')[2] === '192.168.1.103:8000')
+                    if (result.photoUrl.split('/')[2] === `http://${BASE_URL}:8000`)
                         await deleteAvatar(result.photoUrl.split('/').pop());
                 }
             }

@@ -29,7 +29,7 @@ export class AuthController {
           username,
           password: hashedPassword,
           email,
-          photoUrl: 'http://192.168.1.103:8000/avatar/1627857508344-black-cat-icon-6.jpg',
+          photoUrl: `http://${process.env.BASE_URL}:8000/avatar/1627857508344-black-cat-icon-6.jpg`,
         });
         return res.status(200).json({ result });
       } catch (error) {

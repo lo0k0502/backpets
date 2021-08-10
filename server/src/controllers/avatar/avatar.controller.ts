@@ -23,7 +23,7 @@ export class AvatarController {
             && file.mimetype !== 'image/png') 
             return res.status(400).json({ message: 'Not an image!!' });
         console.log(file)
-        const imgUrl = `http://192.168.1.103:8000/avatar/${file.filename}`;
+        const imgUrl = `http://${process.env.BASE_URL}:8000/avatar/${file.filename}`;
     
         return res.status(200).json({ imgUrl });
     }
