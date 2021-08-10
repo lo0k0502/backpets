@@ -11,6 +11,7 @@ import Login from './Login';
 import Register from './Register';
 import { tokenRefresh } from '../../redux/userReducer';
 import { setState } from '../../redux/userSlice';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const AuhtStacks = createStackNavigator();
 const Drawers = createDrawerNavigator();
@@ -70,10 +71,25 @@ const AuthRoute = ({ navigation }) => {
   }, [navigation]));
 
   const checkUnLogin = async () => {
-    const userInfo = await AsyncStorage.getItem('userInfo');
-    if (userInfo) {
+    const userInfo = JSON.parse(await AsyncStorage.getItem('userInfo'));
+    if (!userInfo) return await AsyncStorage.removeItem('userInfo');
+    
+    try {
+      await dispatch(tokenRefresh({ 
+        accessToken: userInfo.accessToken, 
+        refreshToken: userInfo.refreshToken, 
+      }));
+      dispatch(setState({ 
+          userInfo: userInfo.result, 
+          accessToken: userInfo.accessToken, 
+          refreshToken: userInfo.refreshToken,
+      }));
+
       console.log('Logged in, going to Home...');
       navigation.navigate('Home');
+    } catch (error) {
+      console.log(error.message);
+      await AsyncStorage.removeItem('userInfo');
     }
   };
 

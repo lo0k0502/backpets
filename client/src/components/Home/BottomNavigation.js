@@ -20,7 +20,6 @@ const BottomNavigation = ({ navigation }) => {
     const dispatch = useDispatch();
     
     useFocusEffect(useCallback(() => {
-        checkLogin();
         fetch();
     }, [navigation]));
 
@@ -36,7 +35,10 @@ const BottomNavigation = ({ navigation }) => {
         try {
             const { refreshToken } = JSON.parse(await AsyncStorage.getItem('userInfo'));
             await dispatch(logoutUser({ refreshToken }));
-            checkLogin();
+            if (!await AsyncStorage.getItem('userInfo')) {
+                console.log('Not logged in, going back...');
+                navigation.goBack();
+            }
         } catch (error) {
             console.log(error);
         }
@@ -49,25 +51,26 @@ const BottomNavigation = ({ navigation }) => {
         ]);
     };
     
-    const checkLogin = async () => {
-        if (!await AsyncStorage.getItem('userInfo')) {
+    const fetch = async () => {
+        const userInfo = JSON.parse(await AsyncStorage.getItem('userInfo'));
+        if (!userInfo) {
             console.log('Not logged in, going back...');
             navigation.goBack();
         }
-    };
-    
-    const fetch = async () => {
-        const userInfo = JSON.parse(await AsyncStorage.getItem('userInfo'));
 
         dispatch(setState({ 
             userInfo: userInfo.result, 
             accessToken: userInfo.accessToken, 
             refreshToken: userInfo.refreshToken,
         }));
-        await dispatch(tokenRefresh({ 
-            accessToken: userInfo.accessToken, 
-            refreshToken: userInfo.refreshToken, 
-        }));
+        try {
+            await dispatch(tokenRefresh({ 
+                accessToken: userInfo.accessToken, 
+                refreshToken: userInfo.refreshToken, 
+            }));
+        } catch (error) {
+            console.log(error.message);
+        }
     };
 
     return (

@@ -79,8 +79,8 @@ export class AuthController {
 
   @Post('refreshtoken')
   async RefreshToken(@Body() { accessToken, refreshToken }, @Res() res: Response) {
-    if (!refreshToken) return res.status(200).json({ message: 'Refresh token is null!' });
-    if (!refreshTokens.includes(refreshToken)) return res.status(200).json({ message: 'Refresh token is not in list!' });
+    if (!refreshToken) return res.status(400).json({ message: 'Refresh token is null!' });
+    if (!refreshTokens.includes(refreshToken)) return res.status(400).json({ message: 'Refresh token is not in list!' });
     
     try {
       await this.jwtService.verifyAsync(accessToken, { secret: process.env.ACCESS_TOKEN_SECRET });

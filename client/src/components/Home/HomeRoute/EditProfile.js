@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
 import { requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaTypeOptions, getPendingResultAsync, getMediaLibraryPermissionsAsync } from 'expo-image-picker';
 
-import { tokenRefresh, updateProfile } from '../../../redux/userReducer';
+import { updateProfile } from '../../../redux/userReducer';
 import { deleteAvatar, uploadAvatar } from '../../../api';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { BASE_URL } from '@env';
@@ -70,16 +70,11 @@ const EditProfile = ({ navigation }) => {
         setUsername(user.result.username);
         setEmail(user.result.email);
         setPhotoUrl(user.result.photoUrl);
-
-        await dispatch(tokenRefresh({ 
-            accessToken: user.accessToken, 
-            refreshToken: user.refreshToken, 
-        }));
     };
 
     useFocusEffect(useCallback(() => {
         fetch();
-    }, [navigation]));
+    }, []));
 
     const handleChangeImg = async () => {
         setIsImgLoading(true);

@@ -1,12 +1,8 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, Alert } from 'react-native';
 import { Button, TextInput, HelperText } from 'react-native-paper';
-import { useDispatch } from 'react-redux';
 import { updateUserPassword } from '../../../api';
-import { useFocusEffect } from '@react-navigation/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import { tokenRefresh } from '../../../redux/userReducer';
 
 const styles = StyleSheet.create({
     root: {
@@ -53,21 +49,6 @@ const ChangePassword = ({  navigation }) => {
     const [errorMsg, setErrorMsg] = useState('');
     const [oldPasswordErrorMsg, setOldPasswordErrorMsg] = useState('');
     const [newPasswordErrorMsg, setNewPasswordErrorMsg] = useState('');
-
-    const dispatch = useDispatch();
-
-    const checkToken = async () => {
-        const user = JSON.parse(await AsyncStorage.getItem('userInfo'));
-        
-        await dispatch(tokenRefresh({ 
-            accessToken: user.accessToken, 
-            refreshToken: user.refreshToken, 
-        }));
-    };
-
-    useFocusEffect(useCallback(() => {
-        checkToken();
-    }, [navigation]));
 
     const checkOldPassword = (text) => {
         setOldPassword(text);
