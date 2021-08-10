@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { StyleSheet, Text, View, Alert, ScrollView } from 'react-native';
-import { FAB, Card, Button, Appbar, Avatar, Paragraph, Title } from 'react-native-paper';
+import { StyleSheet, ScrollView } from 'react-native';
+import { Card, Button, Avatar, Paragraph, Title } from 'react-native-paper';
 import { fetchAllPosts } from '../../../api';
 import moment from 'moment';
 
@@ -12,8 +12,6 @@ const styles = StyleSheet.create({
     },
     appbar: {
         backgroundColor: 'white',
-        elevation: 0,
-        zIndex: 10,
     },
     card: {
         margin: 20,
@@ -53,10 +51,6 @@ const Home = ({ navigation }) => {
     
     return (
         <ScrollView style={styles.root}>
-            <Appbar style={styles.appbar}>
-                <Appbar.Action icon='menu' onPress={() => navigation.toggleDrawer()} />
-                <Appbar.Content title='Project P!!!' subtitle='P!!!' />
-            </Appbar>
             <Button
                 icon='plus'
                 color='dodgerblue'

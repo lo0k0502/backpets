@@ -7,14 +7,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const styles = StyleSheet.create({
     root: {
         flex: 1,
-        justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'white',
     },
     title: {
         fontSize: 40,
-        marginTop: -50,
-        marginBottom: 50,
+        marginVertical: 50,
     },
     input: {
         width: '60%',
@@ -29,11 +27,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'red',
         marginTop: 50,
         elevation: 5,
-    },
-    backbtn: {
-        color: 'white',
-        backgroundColor: 'dodgerblue',
-        marginTop: 20,
     },
 });
 
@@ -159,15 +152,6 @@ const ChangePassword = ({  navigation }) => {
                 onPress={handleSubmit}
             >
                 Submit
-            </Button>
-            <Button
-                icon='chevron-left'
-                mode='contained'
-                uppercase={0}
-                style={styles.backbtn}
-                onPress={() => navigation.goBack()}
-            >
-                Go Back
             </Button>
         </View>
     );

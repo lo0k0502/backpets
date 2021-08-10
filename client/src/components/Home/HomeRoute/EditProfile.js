@@ -14,14 +14,12 @@ import { BASE_URL } from '@env';
 const styles = StyleSheet.create({
     root: {
         flex: 1,
-        justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'white',
     },
     title: {
         fontSize: 40,
-        marginTop: -50,
-        marginBottom: 50,
+        marginVertical: 50,
     },
     imgchangebtn: { 
         width: 100, 
@@ -42,11 +40,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'dodgerblue',
         marginTop: 20,
         elevation: 5,
-    },
-    backbtn: {
-        color: 'white',
-        backgroundColor: 'dodgerblue',
-        marginTop: 20,
     },
 });
 
@@ -120,10 +113,6 @@ const EditProfile = ({ navigation }) => {
             return;
         }
         const { result, refreshToken } = JSON.parse(await AsyncStorage.getItem('userInfo'));
-        // if (username === result.username && email === result.email && photoUrl === result.photoUrl) {
-        //     setErrorMsg('Please change at least one profile!!');
-        //     return;
-        // }
 
         setIsLoading(true);
 
@@ -262,15 +251,6 @@ const EditProfile = ({ navigation }) => {
                 onPress={handleSubmit}
             >
                 Submit
-            </Button>
-            <Button
-                icon='chevron-left'
-                mode='contained'
-                uppercase={0}
-                style={styles.backbtn}
-                onPress={() => navigation.goBack()}
-            >
-                Go Back
             </Button>
         </View>
     );
