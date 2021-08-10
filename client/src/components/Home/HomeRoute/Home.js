@@ -1,16 +1,14 @@
 import React, { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, ScrollView } from 'react-native';
-import { Card, Button, Avatar, Paragraph, Title } from 'react-native-paper';
+import { Card, Button, Avatar, Paragraph, Title, Portal } from 'react-native-paper';
 import { fetchAllPosts } from '../../../api';
 import moment from 'moment';
+import PostDialog from './PostDialog';
 
 const styles = StyleSheet.create({
     root: {
         flex: 1,
-        backgroundColor: 'white',
-    },
-    appbar: {
         backgroundColor: 'white',
     },
     card: {
@@ -21,7 +19,6 @@ const styles = StyleSheet.create({
     cardimg: {
         width: 300,
         height: 300,
-        backgroundColor: '#ff8000',
         alignSelf: 'center',
     },
     cardactions: {
@@ -40,6 +37,7 @@ const styles = StyleSheet.create({
 
 const Home = ({ navigation }) => {
     const [posts, setPosts] = useState([]);
+    const [postDrawer, setPostDrawer] = useState(false);
 
     const fetch = async () => {
         setPosts((await fetchAllPosts()).data.result)
@@ -52,12 +50,16 @@ const Home = ({ navigation }) => {
     return (
         <ScrollView style={styles.root}>
             <Button
+                mode='contained'
                 icon='plus'
                 color='dodgerblue'
-                onPress={() => {}}
+                onPress={() => setPostDrawer(true)}
             >
                 Post
             </Button>
+            <Portal>
+                <PostDialog visible={postDrawer} close={() => setPostDrawer(false)} />
+            </Portal>
             {posts.map(post => 
                 <Card style={styles.card} key={post._id}>
                     <Card.Title title={post.username} subtitle={moment(post.post_time).fromNow()} left={props => <Avatar.Icon {...props} icon="folder" />} />

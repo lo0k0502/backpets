@@ -14,12 +14,14 @@ import { BASE_URL } from '@env';
 const styles = StyleSheet.create({
     root: {
         flex: 1,
+        justifyContent: 'flex-end',
         alignItems: 'center',
         backgroundColor: 'white',
+        paddingBottom: 100,
     },
     title: {
         fontSize: 40,
-        marginVertical: 50,
+        marginBottom: 50,
     },
     imgchangebtn: { 
         width: 100, 
@@ -218,6 +220,8 @@ const EditProfile = ({ navigation }) => {
                 disabled={isImgLoading || isLoading}
                 value={username}
                 style={styles.input}
+                selectionColor='#666'
+                theme={{ colors: { primary: 'dodgerblue' } }}
                 onChangeText={text => checkUsername(text)}
             />
             <HelperText 
@@ -234,6 +238,8 @@ const EditProfile = ({ navigation }) => {
                 disabled={isImgLoading || isLoading}
                 value={email}
                 style={styles.input}
+                selectionColor='#666'
+                theme={{ colors: { primary: 'dodgerblue' } }}
                 onChangeText={text => checkEmail(text)}
             />
             <HelperText 

@@ -166,12 +166,12 @@ const Login = ({ navigation }) => {
                 mode='outlined'
                 placeholder='Email'
                 placeholderTextColor='gray'
-                outlineColor='black'
-                underlineColor='black'
                 error={emailErrorMsg}
                 disabled={loginLoading || googleLoginLoading}
                 value={email}
                 style={styles.input}
+                selectionColor='#666'
+                theme={{ colors: { primary: 'dodgerblue' } }}
                 onChangeText={(text) => checkEmail(text)}
             />
             <HelperText type='error'>
@@ -181,13 +181,13 @@ const Login = ({ navigation }) => {
                 mode='outlined'
                 placeholder='Password'
                 placeholderTextColor='gray'
-                outlineColor='black'
-                underlineColor='black'
                 error={passwordErrorMsg}
                 disabled={loginLoading || googleLoginLoading}
                 secureTextEntry
                 value={password}
                 style={styles.input}
+                selectionColor='#666'
+                theme={{ colors: { primary: 'dodgerblue' } }}
                 onChangeText={(text) => checkPassword(text)}
             />
             <HelperText type='error'>

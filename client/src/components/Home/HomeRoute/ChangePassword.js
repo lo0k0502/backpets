@@ -7,12 +7,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const styles = StyleSheet.create({
     root: {
         flex: 1,
+        justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'white',
     },
     title: {
         fontSize: 40,
-        marginVertical: 50,
+        marginBottom: 50,
     },
     input: {
         width: '60%',
@@ -107,6 +108,8 @@ const ChangePassword = ({  navigation }) => {
                 disabled={isLoading}
                 secureTextEntry={oldPasswordSecure}
                 style={styles.input}
+                selectionColor='#666'
+                theme={{ colors: { primary: 'red' } }}
                 onChangeText={(text) => checkOldPassword(text)}
                 right={
                     <TextInput.Icon 
@@ -129,6 +132,8 @@ const ChangePassword = ({  navigation }) => {
                 disabled={isLoading}
                 secureTextEntry={newPasswordSecure}
                 style={styles.input}
+                selectionColor='#666'
+                theme={{ colors: { primary: 'red' } }}
                 onChangeText={(text) => checkNewPassword(text)}
                 right={
                     <TextInput.Icon 
