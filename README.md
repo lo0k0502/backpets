@@ -16,7 +16,8 @@ yarn start
 ```
 
 ## Localhost Setting
-Make sure to change your ip in both client and server's ``.env`` file!!```
+Make sure to change your ip in both client and server's ``.env`` file!!
+```
 BASE_URL=Your_IP
 ```
 
