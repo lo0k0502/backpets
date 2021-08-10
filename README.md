@@ -1,6 +1,6 @@
 # ProjectP
 ## Start Up
-> Make sure to yarn install after each pull!!
+Make sure to yarn install after each pull!!
 ```
 git clone https://github.com/lo0k0502/ProjectP.git
 ```
