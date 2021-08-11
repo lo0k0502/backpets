@@ -65,7 +65,7 @@ const Home = ({ navigation }) => {
                 Post
             </Button>
             <Portal>
-                <PostDialog visible={postDrawer} close={() => setPostDrawer(false)} />
+                <PostDialog visible={postDrawer} close={() => setPostDrawer(false)} refresh={fetch} />
             </Portal>
             {posts.map(post => 
                 <Card style={styles.card} key={post._id}>

@@ -1,11 +1,10 @@
 import { getPendingResultAsync, launchImageLibraryAsync, MediaTypeOptions, requestMediaLibraryPermissionsAsync } from 'expo-image-picker';
 import React, { useState } from 'react';
 import { TextInput, Dialog, Button, Card, HelperText } from 'react-native-paper';
-import { BASE_URL } from '@env';
 import { AddPost, uploadAvatar } from '../../../api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default ({ visible, close }) => {
+export default ({ visible, close, refresh }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isImgLoading, setIsImgLoading] = useState(false);
 
@@ -106,6 +105,7 @@ export default ({ visible, close }) => {
     };
 
     const handleClose = () => {
+        refresh();
         close();
         setTitle('');
         setContent('');
