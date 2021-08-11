@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { UserLogin, GoogleLogin, RefreshToken, Logout, updateUserProfile } from '../api';
 
@@ -25,8 +26,9 @@ export const googleLogin = createAsyncThunk(
 );
 export const logoutUser = createAsyncThunk(
     'user/logout',
-    async ({ refreshToken }, { rejectWithValue }) => {
+    async ({ rejectWithValue }) => {
         try {
+            const { refreshToken } = JSON.parse(await AsyncStorage.getItem('userInfo'));
             await Logout({ refreshToken });
         } catch (error) {
             return rejectWithValue(error.response.data);

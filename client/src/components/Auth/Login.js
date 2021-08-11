@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const Login = ({ navigation }) => {
+const Login = ({ navigation, setIsSignIn }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -102,7 +102,7 @@ const Login = ({ navigation }) => {
 
             if (unwrapedResult) {
                 console.log('Logged in, going to Home...');
-                navigation.navigate('Home');
+                setIsSignIn(true);
                 setEmail('');
                 setPassword('');
                 setErrorMsg('');
@@ -172,7 +172,7 @@ const Login = ({ navigation }) => {
                 style={styles.input}
                 selectionColor='#666'
                 theme={{ colors: { primary: 'dodgerblue' } }}
-                onChangeText={(text) => checkEmail(text)}
+                onChangeText={checkEmail}
             />
             <HelperText type='error'>
                 {emailErrorMsg}
@@ -188,7 +188,7 @@ const Login = ({ navigation }) => {
                 style={styles.input}
                 selectionColor='#666'
                 theme={{ colors: { primary: 'dodgerblue' } }}
-                onChangeText={(text) => checkPassword(text)}
+                onChangeText={checkPassword}
             />
             <HelperText type='error'>
                 {passwordErrorMsg}

@@ -37,7 +37,7 @@ const DeleteUser = ({ navigation }) => {
                 disabled={isLoading}
                 style={{ margin: 10, }}
                 value={username}
-                onChangeText={(text) => setUsername(text)}
+                onChangeText={setUsername}
             />
             <Button
                 mode='contained'

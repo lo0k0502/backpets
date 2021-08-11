@@ -110,7 +110,7 @@ const ChangePassword = ({  navigation }) => {
                 style={styles.input}
                 selectionColor='#666'
                 theme={{ colors: { primary: 'red' } }}
-                onChangeText={(text) => checkOldPassword(text)}
+                onChangeText={checkOldPassword}
                 right={
                     <TextInput.Icon 
                         name={oldPasswordSecure ? 'eye-off' : 'eye'} 
@@ -134,7 +134,7 @@ const ChangePassword = ({  navigation }) => {
                 style={styles.input}
                 selectionColor='#666'
                 theme={{ colors: { primary: 'red' } }}
-                onChangeText={(text) => checkNewPassword(text)}
+                onChangeText={checkNewPassword}
                 right={
                     <TextInput.Icon 
                         name={newPasswordSecure ? 'eye-off' : 'eye'} 

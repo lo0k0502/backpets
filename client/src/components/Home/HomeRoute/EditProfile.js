@@ -135,10 +135,11 @@ const EditProfile = ({ navigation }) => {
                     case 'png': 
                         type = 'image/jpeg';
                         break;
-                    default:
+                    default: {
                         setIsLoading(false);
                         setPhotoUrlErrorMsg('Selected file is not an image');
                         return;
+                    }
                 }
                 formData.append('avatar', {
                     uri: photoUrl,
@@ -154,14 +155,13 @@ const EditProfile = ({ navigation }) => {
                 }
             }
 
-            const res = await dispatch(updateProfile({ 
+            await dispatch(updateProfile({ 
                 photoUrl: sendPhotoUrl,
                 username: result.username, 
                 newUsername: username, 
                 email, 
                 refreshToken,
             }));
-            unwrapResult(res);
             Alert.alert('Success!!', `Profile Successfully Updated!!\nGoing back...`, [
                 { text: 'OK', onPress: () => navigation.goBack() }
             ]);
@@ -222,7 +222,7 @@ const EditProfile = ({ navigation }) => {
                 style={styles.input}
                 selectionColor='#666'
                 theme={{ colors: { primary: 'dodgerblue' } }}
-                onChangeText={text => checkUsername(text)}
+                onChangeText={checkUsername}
             />
             <HelperText 
                 type='error' 
@@ -240,7 +240,7 @@ const EditProfile = ({ navigation }) => {
                 style={styles.input}
                 selectionColor='#666'
                 theme={{ colors: { primary: 'dodgerblue' } }}
-                onChangeText={text => checkEmail(text)}
+                onChangeText={checkEmail}
             />
             <HelperText 
                 type='error' 

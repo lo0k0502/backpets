@@ -137,7 +137,7 @@ const Register = ({ navigation }) => {
                 style={styles.input} 
                 selectionColor='#666'
                 theme={{ colors: { primary: 'dodgerblue' } }}
-                onChangeText={(text) => checkUsername(text)}
+                onChangeText={checkUsername}
             />
             <HelperText 
                 type='error' 
@@ -155,7 +155,7 @@ const Register = ({ navigation }) => {
                 style={styles.input} 
                 selectionColor='#666'
                 theme={{ colors: { primary: 'dodgerblue' } }}
-                onChangeText={(text) => checkEmail(text)}
+                onChangeText={checkEmail}
             />
             <HelperText 
                 type='error' 
@@ -174,7 +174,7 @@ const Register = ({ navigation }) => {
                 style={styles.input} 
                 selectionColor='#666'
                 theme={{ colors: { primary: 'dodgerblue' } }}
-                onChangeText={(text) => checkPassword(text)}
+                onChangeText={checkPassword}
                 right={
                     <TextInput.Icon 
                         name={passwordSecure ? 'eye-off' : 'eye'} 
@@ -199,7 +199,7 @@ const Register = ({ navigation }) => {
                 style={styles.input} 
                 selectionColor='#666'
                 theme={{ colors: { primary: 'dodgerblue' } }}
-                onChangeText={(text) => checkConfirmPassword(text)}
+                onChangeText={checkConfirmPassword}
                 right={
                     <TextInput.Icon 
                         name={confirmPasswordSecure ? 'eye-off' : 'eye'} 

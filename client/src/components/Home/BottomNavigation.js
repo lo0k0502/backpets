@@ -15,62 +15,25 @@ import Store from './StoreRoute';
 
 const Tabs = createBottomTabNavigator();
 
-const BottomNavigation = ({ navigation }) => {
+const BottomNavigation = ({ navigation, setIsSignIn }) => {
 
     const dispatch = useDispatch();
     
-    useFocusEffect(useCallback(() => {
-        fetch();
-    }, [navigation]));
-
-    useFocusEffect(useCallback(() => {
-        navigation.addListener('beforeRemove', async e => {
-            e.preventDefault();
-            if (await AsyncStorage.getItem('userInfo')) logoutAlert()
-                else navigation.dispatch(e.data.action);
-        });
-    }, [navigation]));
-
     const handleLogout = async () => {
         try {
-            const { refreshToken } = JSON.parse(await AsyncStorage.getItem('userInfo'));
-            await dispatch(logoutUser({ refreshToken }));
-            if (!await AsyncStorage.getItem('userInfo')) {
-                console.log('Not logged in, going back...');
-                navigation.goBack();
-            }
+            await dispatch(logoutUser({}));
+            console.log('Not logged in, going back...');
+            setIsSignIn(false);
         } catch (error) {
             console.log(error);
         }
     };
-
+    
     const logoutAlert = () => {
         Alert.alert('Logging out', 'Are you sure you want to log out?', [
             { text: 'Yes', onPress: handleLogout },
             { text: 'No' },
         ]);
-    };
-    
-    const fetch = async () => {
-        const userInfo = JSON.parse(await AsyncStorage.getItem('userInfo'));
-        if (!userInfo) {
-            console.log('Not logged in, going back...');
-            navigation.goBack();
-        }
-
-        dispatch(setState({ 
-            userInfo: userInfo.result, 
-            accessToken: userInfo.accessToken, 
-            refreshToken: userInfo.refreshToken,
-        }));
-        try {
-            await dispatch(tokenRefresh({ 
-                accessToken: userInfo.accessToken, 
-                refreshToken: userInfo.refreshToken, 
-            }));
-        } catch (error) {
-            console.log(error.message);
-        }
     };
 
     return (
@@ -102,7 +65,7 @@ const BottomNavigation = ({ navigation }) => {
                         ),
                     }}
                 >
-                {props => <HomeRoute {...props} logoutback={() => navigation.goBack()} />}
+                {props => <HomeRoute {...props} logoutback={logoutAlert} />}
                 </Tabs.Screen>
                 <Tabs.Screen 
                     name='Map'

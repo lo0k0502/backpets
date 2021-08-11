@@ -49,11 +49,11 @@ const DevOptions = ({ navigation }) => {
   );
 };
 
-const LoginDrawer = ({ checkUnLogin }) => {
+const LoginDrawer = ({ checkUnLogin, setIsSignIn }) => {
   return (
     <Drawers.Navigator>
       <Drawers.Screen name='Login'>
-      {props => <Login {...props} checkUnLogin={checkUnLogin} />}
+      {props => <Login {...props} checkUnLogin={checkUnLogin} setIsSignIn={setIsSignIn} />}
       </Drawers.Screen>
       <Drawers.Screen name='DevOptions'>
       {props => <DevOptions {...props} />}
@@ -62,41 +62,12 @@ const LoginDrawer = ({ checkUnLogin }) => {
   );
 };
 
-const AuthRoute = ({ navigation }) => {
-
-  const dispatch = useDispatch();
-    
-  useFocusEffect(useCallback(() => {
-    checkUnLogin();
-  }, [navigation]));
-
-  const checkUnLogin = async () => {
-    const userInfo = JSON.parse(await AsyncStorage.getItem('userInfo'));
-    if (!userInfo) return await AsyncStorage.removeItem('userInfo');
-    
-    try {
-      await dispatch(tokenRefresh({ 
-        accessToken: userInfo.accessToken, 
-        refreshToken: userInfo.refreshToken, 
-      }));
-      dispatch(setState({ 
-          userInfo: userInfo.result, 
-          accessToken: userInfo.accessToken, 
-          refreshToken: userInfo.refreshToken,
-      }));
-
-      console.log('Logged in, going to Home...');
-      navigation.navigate('Home');
-    } catch (error) {
-      console.log(error.message);
-      await AsyncStorage.removeItem('userInfo');
-    }
-  };
+const AuthRoute = ({ navigation, setIsSignIn }) => {
 
   return (
     <AuhtStacks.Navigator>
       <AuhtStacks.Screen name='Login'>
-      {props => <LoginDrawer {...props} />}
+      {props => <LoginDrawer {...props} setIsSignIn={setIsSignIn} />}
       </AuhtStacks.Screen>
       <AuhtStacks.Screen name='Register'>
       {props => <Register {...props} />}

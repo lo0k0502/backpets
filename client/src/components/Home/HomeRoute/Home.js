@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView, View, RefreshControl } from 'react-native';
 import { Card, Button, Avatar, Paragraph, Title, Portal } from 'react-native-paper';
 import { fetchAllPosts } from '../../../api';
 import moment from 'moment';
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     },
     cardimg: {
         width: 300,
-        height: 300,
+        height: 200,
         alignSelf: 'center',
     },
     cardactions: {
@@ -36,6 +36,8 @@ const styles = StyleSheet.create({
 });
 
 const Home = ({ navigation }) => {
+    const [refreshing, setRefreshing] = useState(false);
+
     const [posts, setPosts] = useState([]);
     const [postDrawer, setPostDrawer] = useState(false);
 
@@ -46,9 +48,14 @@ const Home = ({ navigation }) => {
     useFocusEffect(useCallback(() => {
         fetch();
     }, []));
+
+    const handleRefresh = useCallback(() => {
+        setRefreshing(true);
+        fetch().then(() => setRefreshing(false));
+    }, []);
     
     return (
-        <ScrollView style={styles.root}>
+        <ScrollView style={styles.root} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}>
             <Button
                 mode='contained'
                 icon='plus'
@@ -70,6 +77,7 @@ const Home = ({ navigation }) => {
                     </Card.Content>
                 </Card>
             )}
+            <View style={{ height: 50 }}></View>
         </ScrollView>
     );
 };

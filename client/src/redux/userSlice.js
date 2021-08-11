@@ -69,9 +69,7 @@ export const userSlice = createSlice({
           refreshToken: action.payload.refreshToken,
         }));
       }
-      if (action.payload.message) {
-        console.log('While refreshing:', action.payload.message);
-      }
+      console.log('While refreshing:', action.payload.message);
     },
     [updateProfile.fulfilled]: (state, action) => {
       if (action.payload.result) {
