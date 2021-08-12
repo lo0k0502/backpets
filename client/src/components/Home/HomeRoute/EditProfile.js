@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { StyleSheet, View, Text, Alert } from 'react-native';
-import { Avatar, Button, HelperText, IconButton, TextInput } from 'react-native-paper';
+import { Avatar, Button, HelperText, TextInput } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
@@ -8,7 +8,6 @@ import { requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaType
 
 import { updateProfile } from '../../../redux/userReducer';
 import { deleteAvatar, uploadAvatar } from '../../../api';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { BASE_URL } from '@env';
 
 const styles = StyleSheet.create({
@@ -45,7 +44,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const EditProfile = ({ navigation }) => {
+export default ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isImgLoading, setIsImgLoading] = useState(false);
 
@@ -261,5 +260,3 @@ const EditProfile = ({ navigation }) => {
         </View>
     );
 };
-
-export default EditProfile;

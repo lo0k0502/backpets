@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     }
 });
 
-const StoreRoute = () => {
+export default () => {
     
     return (
         <View style={styles.root}>
@@ -18,5 +18,3 @@ const StoreRoute = () => {
         </View>
     )
 };
-
-export default StoreRoute;

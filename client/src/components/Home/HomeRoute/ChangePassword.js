@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const ChangePassword = ({  navigation }) => {
+export default ({  navigation }) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const [oldPassword, setOldPassword] = useState('');
@@ -161,5 +161,3 @@ const ChangePassword = ({  navigation }) => {
         </View>
     );
 };
-
-export default ChangePassword;

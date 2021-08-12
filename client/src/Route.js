@@ -7,9 +7,7 @@ import DeleteUser from './components/DevOptions/DeleteUser';
 import AllUsers from './components/DevOptions/AllUsers';
 import AuthRoute from './components/Auth/AuthRoute';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { setState } from './redux/userSlice';
 import { tokenRefresh } from './redux/userReducer';
-import { unwrapResult } from '@reduxjs/toolkit';
 
 const Stacks = createStackNavigator();
 

@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const Register = ({ navigation }) => {
+export default ({ navigation }) => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -226,5 +226,3 @@ const Register = ({ navigation }) => {
         </View>
     );
 };
-
-export default Register;

@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const Login = ({ navigation, setIsSignIn }) => {
+export default ({ navigation, setIsSignIn }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -239,5 +239,3 @@ const Login = ({ navigation, setIsSignIn }) => {
         </View>
     );
 };
-
-export default Login;

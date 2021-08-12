@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const AllUsers = ({ navigation }) => {
+export default ({ navigation }) => {
     const [allUsers, setAllUsers] = useState([]);
 
     useEffect(() => {
@@ -56,5 +56,3 @@ const AllUsers = ({ navigation }) => {
         </View>
     );
 };
-
-export default AllUsers;

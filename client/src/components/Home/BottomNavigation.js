@@ -1,13 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import { Alert } from 'react-native';
 import { Provider } from 'react-native-paper';
-import { useFocusEffect } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useDispatch } from 'react-redux';
-import { tokenRefresh, logoutUser } from '../../redux/userReducer';
-import { setState } from '../../redux/userSlice';
+import { logoutUser } from '../../redux/userReducer';
 
 import HomeRoute from './HomeRoute/HomeRoute';
 import Map from './MapRoute';
@@ -15,7 +12,7 @@ import Store from './StoreRoute';
 
 const Tabs = createBottomTabNavigator();
 
-const BottomNavigation = ({ navigation, setIsSignIn }) => {
+export default ({ navigation, setIsSignIn }) => {
 
     const dispatch = useDispatch();
     
@@ -91,5 +88,3 @@ const BottomNavigation = ({ navigation, setIsSignIn }) => {
         </Provider>
     );
 };
-
-export default BottomNavigation;

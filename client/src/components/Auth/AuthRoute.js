@@ -1,17 +1,11 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { Button } from 'react-native-paper';
-import { useFocusEffect } from '@react-navigation/core';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useDispatch } from 'react-redux';
 
 import Login from './Login';
 import Register from './Register';
-import { tokenRefresh } from '../../redux/userReducer';
-import { setState } from '../../redux/userSlice';
-import { unwrapResult } from '@reduxjs/toolkit';
 
 const AuhtStacks = createStackNavigator();
 const Drawers = createDrawerNavigator();

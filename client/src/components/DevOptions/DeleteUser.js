@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { Button, HelperText, TextInput } from 'react-native-paper';
 import { deleteUser } from '../../api';
 
-const DeleteUser = ({ navigation }) => {
+export default ({ navigation }) => {
     const [username, setUsername] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
 
@@ -49,5 +49,3 @@ const DeleteUser = ({ navigation }) => {
         </View>
     );
 };
-
-export default DeleteUser;

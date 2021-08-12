@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 });
 
 
-export default function App() {
+export default () => {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
   

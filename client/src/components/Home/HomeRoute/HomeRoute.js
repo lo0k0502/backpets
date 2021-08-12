@@ -9,7 +9,7 @@ import DrawerContent from './DrawerContent';
 
 const HomeDrawer = createDrawerNavigator();
 
-const HomeRoute = ({ logoutback }) => {
+export default ({ logoutback }) => {
     return (
         <HomeDrawer.Navigator 
             drawerContent={props => <DrawerContent {...props} logoutback={logoutback} />} 
@@ -30,5 +30,3 @@ const HomeRoute = ({ logoutback }) => {
         </HomeDrawer.Navigator>
     );
 };
-
-export default HomeRoute;

@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const Home = ({ navigation }) => {
+export default ({ navigation }) => {
     const [refreshing, setRefreshing] = useState(false);
 
     const [posts, setPosts] = useState([]);
@@ -81,5 +81,3 @@ const Home = ({ navigation }) => {
         </ScrollView>
     );
 };
-
-export default Home;
