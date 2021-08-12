@@ -8,6 +8,7 @@ import AllUsers from './components/DevOptions/AllUsers';
 import AuthRoute from './components/Auth/AuthRoute';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { tokenRefresh } from './redux/userReducer';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const Stacks = createStackNavigator();
 
@@ -20,14 +21,14 @@ export default () => {
       const userInfo = JSON.parse(await AsyncStorage.getItem('userInfo'));
       if (userInfo) {
         try {
-          await dispatch(tokenRefresh({ 
+          unwrapResult(await dispatch(tokenRefresh({ 
             accessToken: userInfo.accessToken, 
             refreshToken: userInfo.refreshToken, 
-          }));
+          })));
           setIsSignIn(true);
         } catch (error) {
           setIsSignIn(false);
-          console.log(error.message);
+          console.log('While refreshing:', error.message);
         }
       } else setIsSignIn(false);
     };

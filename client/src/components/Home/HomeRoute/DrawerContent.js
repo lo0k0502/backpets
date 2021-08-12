@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     },
     profile: { 
         flex: 1, 
-        backgroundColor: 'dodgerblue' ,
+        backgroundColor: 'dodgerblue',
         flexDirection: 'row',
         justifyContent: 'space-around',
         padding: 30,
@@ -32,6 +32,22 @@ export default ({ navigation, logoutback }) => {
         fetch();
     }, []));
 
+    const handleSendEmail = async () => {
+        try {
+            // await sendEmailVerification({
+            //     to: user.result.email,
+            //     subject: 'Email Verification',
+            //     body: 'Someone just register an ProjectP account with this email!!',
+            //     options: {
+            //         cc: 'thomas85514@gmail.com',
+            //         bcc: 'thomas85514@gmail.com',
+            //     },
+            // });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <DrawerContentScrollView style={styles.root}>
             <View style={styles.profile}>
@@ -42,11 +58,11 @@ export default ({ navigation, logoutback }) => {
                 <Avatar.Image 
                     source={{ uri: user?.result.photoUrl }} 
                     size={60}
-                    style={{ backgroundColor: 'white' }}
                 />
             </View>
             <Drawer.Section>
                 <Button
+                    color='dodgerblue'
                     onPress={() => navigation.navigate('EditProfile')}
                 >
                     修改個人資訊
@@ -54,6 +70,7 @@ export default ({ navigation, logoutback }) => {
             </Drawer.Section>
             <Drawer.Section>
                 <Button
+                    color='red'
                     onPress={() => navigation.navigate('ChangePassword')}
                 >
                     修改密碼
@@ -61,6 +78,15 @@ export default ({ navigation, logoutback }) => {
             </Drawer.Section>
             <Drawer.Section>
                 <Button
+                    color='dodgerblue'
+                    onPress={handleSendEmail}
+                >
+                    寄
+                </Button>
+            </Drawer.Section>
+            <Drawer.Section>
+                <Button
+                    color='dodgerblue'
                     onPress={logoutback}
                 >
                     登出

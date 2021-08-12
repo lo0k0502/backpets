@@ -11,7 +11,7 @@ const lowercase = codeArray(97, 122);
 const number = codeArray(48, 57);
 const symbol = codeArray(33, 47).concat(codeArray(58, 64)).concat(codeArray(91, 96)).concat(codeArray(123, 126));
 
-const randomPassword = (length, addUpper, addNum, addSymbol) => {
+export default (length, addUpper, addNum, addSymbol) => {
     let codes = lowercase;
     if (addUpper) codes = codes.concat(uppercase);
     if (addNum) codes = codes.concat(number);
@@ -25,5 +25,3 @@ const randomPassword = (length, addUpper, addNum, addSymbol) => {
     }
     return array.join('');
 };
-
-export default randomPassword;

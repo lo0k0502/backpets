@@ -9,6 +9,7 @@ import { requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaType
 import { updateProfile } from '../../../redux/userReducer';
 import { deleteAvatar, uploadAvatar } from '../../../api';
 import { BASE_URL } from '@env';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const styles = StyleSheet.create({
     root: {
@@ -154,13 +155,13 @@ export default ({ navigation }) => {
                 }
             }
 
-            await dispatch(updateProfile({ 
+            unwrapResult(await dispatch(updateProfile({ 
                 photoUrl: sendPhotoUrl,
                 username: result.username, 
                 newUsername: username, 
                 email, 
                 refreshToken,
-            }));
+            })));
             Alert.alert('Success!!', `Profile Successfully Updated!!\nGoing back...`, [
                 { text: 'OK', onPress: () => navigation.goBack() }
             ]);

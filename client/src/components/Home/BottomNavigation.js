@@ -9,6 +9,7 @@ import { logoutUser } from '../../redux/userReducer';
 import HomeRoute from './HomeRoute/HomeRoute';
 import Map from './MapRoute';
 import Store from './StoreRoute';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const Tabs = createBottomTabNavigator();
 
@@ -18,11 +19,11 @@ export default ({ navigation, setIsSignIn }) => {
     
     const handleLogout = async () => {
         try {
-            await dispatch(logoutUser({}));
+            unwrapResult(await dispatch(logoutUser({})));
             console.log('Not logged in, going back...');
             setIsSignIn(false);
         } catch (error) {
-            console.log(error);
+            console.log('While logging out:', error);
         }
     };
     

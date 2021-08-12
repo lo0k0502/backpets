@@ -97,10 +97,9 @@ export default ({ navigation, setIsSignIn }) => {
         setLoginLoading(true);
 
         try {
-            const result = await dispatch(loginUser({ email, password }));
-            const unwrapedResult = unwrapResult(result);
+            const result = unwrapResult(await dispatch(loginUser({ email, password })));
 
-            if (unwrapedResult) {
+            if (result) {
                 console.log('Logged in, going to Home...');
                 setIsSignIn(true);
                 setEmail('');
@@ -130,14 +129,13 @@ export default ({ navigation, setIsSignIn }) => {
             if (type === 'success') {
                 const { email, familyName, givenName, photoUrl } = user;
     
-                const result = await dispatch(googleLogin({ 
+                const result = unwrapResult(await dispatch(googleLogin({ 
                     username: familyName + givenName,
                     email,
                     photoUrl, 
-                }));
-                const unwrapedResult = unwrapResult(result);
+                })));
 
-                if (unwrapedResult) {
+                if (result) {
                     console.log('Logged in, going to Home...');
                     navigation.navigate('Home');
                     setEmail('');
