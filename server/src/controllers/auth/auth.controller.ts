@@ -5,12 +5,14 @@ import { UserService } from 'src/services/user.service';
 import { User } from 'src/models/user.schema';
 import { JwtService } from '@nestjs/jwt';
 import { refreshTokens, addRefreshToken, deleteRefreshToken } from 'src/refreshTokens';
+import { MailService } from 'src/services/mail.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly mailService: MailService,
   ) {}
 
   @Post('register')
@@ -107,8 +109,20 @@ export class AuthController {
         });
       } catch (error) {
         console.log(error);
-        res.status(400).json({ message: '錯誤' });
+        return res.status(400).json({ message: '錯誤' });
       }
+    }
+  }
+
+  @Post('testemail')
+  async testEmail(@Body() { username, email }: User, @Res() res: Response) {
+    try {
+      await this.mailService.sendEmailVerification({ username, email });
+
+      return res.status(200).json({ message: 'Email Successfully Sent' })
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ message: '錯誤' });
     }
   }
 }

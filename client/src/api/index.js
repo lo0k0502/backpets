@@ -20,6 +20,7 @@ export const UserLogin = (payload) => API.post('/auth/login', payload);
 export const UserRegister = (payload) => API.post('/auth/register', payload);
 export const Logout = (payload) => API.post('/auth/logout', payload);
 export const RefreshToken = (payload) => API.post('/auth/refreshtoken', payload);
+export const sendEmailVerification = (payload) => API.post('/auth/testemail', payload);
 
 //user
 export const fetchAllUsers = () => API.get('/user/fetchall');

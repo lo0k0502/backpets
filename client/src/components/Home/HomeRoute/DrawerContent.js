@@ -4,6 +4,7 @@ import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { useFocusEffect } from '@react-navigation/native';
 import { Text, View, StyleSheet } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { sendEmailVerification } from '../../../api';
 
 const styles = StyleSheet.create({
     root: {
@@ -34,15 +35,14 @@ export default ({ navigation, logoutback }) => {
 
     const handleSendEmail = async () => {
         try {
-            // await sendEmailVerification({
-            //     to: user.result.email,
-            //     subject: 'Email Verification',
-            //     body: 'Someone just register an ProjectP account with this email!!',
-            //     options: {
-            //         cc: 'thomas85514@gmail.com',
-            //         bcc: 'thomas85514@gmail.com',
-            //     },
-            // });
+            const result = await sendEmailVerification({
+                username: user.result.username,
+                email: user.result.email,
+            });
+
+            if (result.data.message) {
+                console.log(result.data.message);
+            }
         } catch (error) {
             console.error(error);
         }
