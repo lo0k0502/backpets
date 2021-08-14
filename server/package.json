@@ -34,6 +34,7 @@
     "express": "^4.17.1",
     "graphql": "^15.5.1",
     "handlebars": "^4.7.7",
+    "hbs": "^4.1.2",
     "moment": "^2.29.1",
     "mongo-gridfs": "^1.1.0",
     "mongoose": "^5.13.5",

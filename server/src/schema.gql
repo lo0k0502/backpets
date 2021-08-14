@@ -16,6 +16,7 @@ type UserType {
   password: String!
   photoUrl: String!
   username: String!
+  verified: Boolean!
 }
 
 input Userinput {
@@ -23,4 +24,5 @@ input Userinput {
   password: String!
   photoUrl: String!
   username: String!
+  verified: Boolean!
 }

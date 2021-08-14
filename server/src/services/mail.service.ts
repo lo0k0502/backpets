@@ -6,8 +6,8 @@ import { User } from 'src/models/user.schema';
 export class MailService {
     constructor(private mailerService: MailerService) {}
 
-    async sendEmailVerification({ username, email }: Partial<User>) {
-        const url = `https://picsum.photos/700`;
+    async sendEmailVerification({ username, email }: Partial<User>, { id }) {
+        const url = `http://localhost:8000/auth/verified/${id}`;
     
         console.log(await this.mailerService.sendMail({
           to: email,

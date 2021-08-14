@@ -10,4 +10,6 @@ export class UserType {
     readonly email: string;
     @Field()
     readonly photoUrl: string;
+    @Field()
+    readonly verified: Boolean;
 }

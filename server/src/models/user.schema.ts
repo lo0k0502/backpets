@@ -16,6 +16,9 @@ export class User {
 
   @Prop()
   photoUrl: string;
+
+  @Prop({ required: true })
+  verified: Boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

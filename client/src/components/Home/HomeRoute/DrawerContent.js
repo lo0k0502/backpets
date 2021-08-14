@@ -1,10 +1,9 @@
 import React, { useState, useCallback } from 'react';
-import { Button, Drawer, Avatar } from "react-native-paper";
+import { Button, Drawer, Avatar, HelperText } from "react-native-paper";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { useFocusEffect } from '@react-navigation/native';
 import { Text, View, StyleSheet } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { sendEmailVerification } from '../../../api';
 
 const styles = StyleSheet.create({
     root: {
@@ -33,21 +32,6 @@ export default ({ navigation, logoutback }) => {
         fetch();
     }, []));
 
-    const handleSendEmail = async () => {
-        try {
-            const result = await sendEmailVerification({
-                username: user.result.username,
-                email: user.result.email,
-            });
-
-            if (result.data.message) {
-                console.log(result.data.message);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     return (
         <DrawerContentScrollView style={styles.root}>
             <View style={styles.profile}>
@@ -74,14 +58,6 @@ export default ({ navigation, logoutback }) => {
                     onPress={() => navigation.navigate('ChangePassword')}
                 >
                     修改密碼
-                </Button>
-            </Drawer.Section>
-            <Drawer.Section>
-                <Button
-                    color='dodgerblue'
-                    onPress={handleSendEmail}
-                >
-                    寄
                 </Button>
             </Drawer.Section>
             <Drawer.Section>

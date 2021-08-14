@@ -1,7 +1,33 @@
-<p>Hey {{ name }},</p>
-<p>Please click below to confirm your email</p>
-<p>
+<style type="text/css">
+#root {
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    background-color: #eee;
+    border-radius: 10px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+a {
+    color: white;
+    font-size: 20px;
+    background: linear-gradient(30deg, aqua, dodgerblue);
+    border-radius: 10px;
+    text-decoration: none;
+    text-align: center;
+    transition: filter 300ms ease;
+    box-shadow: 0 0 10px dodgerblue, 0 0 40px dodgerblue, 0 0 80px dodgerblue;
+    padding: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+</style>
+<div id="root">
+    <h1>Welcome {{ name }}!!!</h1>
+    <h2>Please click below to confirm your email</h2>
     <a href="{{ url }}">Confirm</a>
-</p>
 
-<p>If you did not request this email you can safely ignore it.</p>
+    <h2 style="color: red;">If you didn't request this email, please ignore this and check your recent activities for safety.</h2>
+</div>

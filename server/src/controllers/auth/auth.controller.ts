@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
 import { hash, compare } from 'bcrypt';
 import { Response } from 'express';
 import { UserService } from 'src/services/user.service';
@@ -32,7 +32,13 @@ export class AuthController {
           password: hashedPassword,
           email,
           photoUrl: `http://${process.env.BASE_URL}:8000/avatar/1627857508344-black-cat-icon-6.jpg`,
+          verified: false,
         });
+        await this.mailService.sendEmailVerification({ 
+          username: result.username, 
+          email: result.email,
+        }, { id: result['_id'] });
+        
         return res.status(200).json({ result });
       } catch (error) {
         console.log(error);
@@ -117,9 +123,23 @@ export class AuthController {
   @Post('testemail')
   async testEmail(@Body() { username, email }: User, @Res() res: Response) {
     try {
-      await this.mailService.sendEmailVerification({ username, email });
+      await this.mailService.sendEmailVerification({ username, email }, { id: '6116febd38ee7a84c520cc4b' });
 
       return res.status(200).json({ message: 'Email Successfully Sent' })
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ message: '錯誤' });
+    }
+  }
+
+  @Get('verified/:id')
+  async verifyEmail(@Param() { id }, @Res() res: Response) {
+    try {
+      const existUser = await this.userService.findOne({ _id: id });
+      if (!existUser) return res.status(400).json({ message: '用戶不存在' });
+
+      await this.userService.updateOne({ _id: id }, { verified: true });
+      return res.render('Verified');
     } catch (error) {
       console.log(error);
       return res.status(400).json({ message: '錯誤' });
