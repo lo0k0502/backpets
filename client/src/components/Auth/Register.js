@@ -136,7 +136,7 @@ export default ({ navigation }) => {
                 value={username}
                 style={styles.input} 
                 selectionColor='#666'
-                theme={{ colors: { primary: 'dodgerblue' } }}
+                theme={{ colors: { primary: '#ff8000' } }}
                 onChangeText={checkUsername}
             />
             <HelperText 
@@ -154,7 +154,7 @@ export default ({ navigation }) => {
                 value={email}
                 style={styles.input} 
                 selectionColor='#666'
-                theme={{ colors: { primary: 'dodgerblue' } }}
+                theme={{ colors: { primary: '#ff8000' } }}
                 onChangeText={checkEmail}
             />
             <HelperText 
@@ -173,7 +173,7 @@ export default ({ navigation }) => {
                 value={password}
                 style={styles.input} 
                 selectionColor='#666'
-                theme={{ colors: { primary: 'dodgerblue' } }}
+                theme={{ colors: { primary: '#ff8000' } }}
                 onChangeText={checkPassword}
                 right={
                     <TextInput.Icon 
@@ -198,7 +198,7 @@ export default ({ navigation }) => {
                 value={confirmPassword}
                 style={styles.input} 
                 selectionColor='#666'
-                theme={{ colors: { primary: 'dodgerblue' } }}
+                theme={{ colors: { primary: '#ff8000' } }}
                 onChangeText={checkConfirmPassword}
                 right={
                     <TextInput.Icon 
@@ -215,10 +215,11 @@ export default ({ navigation }) => {
             </HelperText>
             <Button 
                 mode='contained'
-                color='dodgerblue'
+                color='#ff8000'
+                dark
                 loading={isLoading}
                 style={styles.btn}
-                contentStyle={{ width: '100%', height: '100%', }}
+                contentStyle={{ width: '100%', height: '100%' }}
                 onPress={handleSubmit}
             >
                 Sign Up

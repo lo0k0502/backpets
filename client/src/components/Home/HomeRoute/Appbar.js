@@ -1,7 +1,7 @@
 import React from 'react';
 import { Appbar } from 'react-native-paper';
 
-export default ({ scene: { route, descriptor: { navigation } } }) => {
+export default ({ route, navigation }) => {
     const isHome = route.name === 'Home';
     const isPost = route.name === 'Post';
     const isChangePassword = route.name === 'ChangePassword';
@@ -16,9 +16,10 @@ export default ({ scene: { route, descriptor: { navigation } } }) => {
                     isPost ? '' : 
                     isChangePassword ? 'Change Password' :
                     isEditProfile ? 'Edit Profile' : route.name
-                    } 
+                } 
                 subtitle={isHome ? 'P!!!' : ''} 
             />
+            {isPost ? <Appbar.Action icon='dots-horizontal' onPress={() => {}} /> : null}
         </Appbar>
     );
 };

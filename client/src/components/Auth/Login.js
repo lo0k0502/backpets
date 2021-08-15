@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         width: '50%',
         height: 50,
         color: 'white',
-        backgroundColor: 'dodgerblue',
+        backgroundColor: '#ff8000',
         borderRadius: 10,
         elevation: 5,
     },
@@ -169,7 +169,7 @@ export default ({ navigation, setIsSignIn }) => {
                 value={email}
                 style={styles.input}
                 selectionColor='#666'
-                theme={{ colors: { primary: 'dodgerblue' } }}
+                theme={{ colors: { primary: '#ff8000' } }}
                 onChangeText={checkEmail}
             />
             <HelperText type='error'>
@@ -185,7 +185,7 @@ export default ({ navigation, setIsSignIn }) => {
                 value={password}
                 style={styles.input}
                 selectionColor='#666'
-                theme={{ colors: { primary: 'dodgerblue' } }}
+                theme={{ colors: { primary: '#ff8000' } }}
                 onChangeText={checkPassword}
             />
             <HelperText type='error'>
@@ -221,7 +221,7 @@ export default ({ navigation, setIsSignIn }) => {
                     style={styles.signupbtn}
                     onPress={() => navigation.navigate('Register')}
                 >
-                    <Text style={{ color: 'dodgerblue' }}>
+                    <Text style={{ color: '#ff8000' }}>
                         Sign up
                     </Text>
                 </Pressable>

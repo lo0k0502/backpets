@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     imgchangebtn: { 
         width: 100, 
         height: 40, 
-        backgroundColor: 'dodgerblue',
+        backgroundColor: '#ff8000',
         margin: 10, 
     },
     input: {
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     submitbtn: {
         width: '60%',
         height: 50,
-        backgroundColor: 'dodgerblue',
+        backgroundColor: '#ff8000',
         marginTop: 20,
         elevation: 5,
     },
@@ -205,7 +205,8 @@ export default ({ navigation }) => {
                 disabled={isImgLoading || isLoading}
                 loading={isImgLoading}
                 uppercase={false}
-                color='dodgerblue'
+                color='#ff8000'
+                dark
                 style={styles.imgchangebtn}
                 contentStyle={{ width: '100%', height: '100%' }}
                 onPress={handleChangeImg}
@@ -221,7 +222,7 @@ export default ({ navigation }) => {
                 value={username}
                 style={styles.input}
                 selectionColor='#666'
-                theme={{ colors: { primary: 'dodgerblue' } }}
+                theme={{ colors: { primary: '#ff8000' } }}
                 onChangeText={checkUsername}
             />
             <HelperText 
@@ -239,7 +240,7 @@ export default ({ navigation }) => {
                 value={email}
                 style={styles.input}
                 selectionColor='#666'
-                theme={{ colors: { primary: 'dodgerblue' } }}
+                theme={{ colors: { primary: '#ff8000' } }}
                 onChangeText={checkEmail}
             />
             <HelperText 

@@ -123,7 +123,7 @@ export default ({ visible, close, refresh }) => {
                     error={titleErrorMsg}
                     value={title}
                     selectionColor='#666'
-                    theme={{ colors: { primary: 'dodgerblue' } }}
+                    theme={{ colors: { primary: '#ff8000' } }}
                     onChangeText={checkTitle}
                 />
                 <HelperText 
@@ -140,7 +140,7 @@ export default ({ visible, close, refresh }) => {
                     multiline
                     numberOfLines={9}
                     selectionColor='#666'
-                    theme={{ colors: { primary: 'dodgerblue' } }}
+                    theme={{ colors: { primary: '#ff8000' } }}
                     onChangeText={checkContent}
                 />
                 <HelperText 
@@ -151,6 +151,8 @@ export default ({ visible, close, refresh }) => {
                 <Button 
                     mode='contained'
                     icon='plus'
+                    color='#ff8000'
+                    dark
                     disabled={isImgLoading || isLoading}
                     loading={isImgLoading}
                     contentStyle={{ width: '100%', height: '100%' }}
@@ -160,7 +162,6 @@ export default ({ visible, close, refresh }) => {
                         alignSelf: 'center', 
                         marginVertical: 10, 
                     }}
-                    color='dodgerblue'
                     onPress={handleChangeImg}
                 >
                     Add Image
@@ -169,7 +170,7 @@ export default ({ visible, close, refresh }) => {
             </Dialog.Content>
             <Dialog.Actions>
                 <Button 
-                    color='dodgerblue' 
+                    color='#ff8000' 
                     disabled={isLoading}
                     onPress={handleClose}
                 >
@@ -177,7 +178,8 @@ export default ({ visible, close, refresh }) => {
                 </Button>
                 <Button 
                     mode='contained' 
-                    color='dodgerblue'
+                    color='#ff8000'
+                    dark
                     disabled={isLoading}
                     loading={isLoading}
                     onPress={handleSubmit}

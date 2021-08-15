@@ -45,7 +45,7 @@ const DevOptions = ({ navigation }) => {
 
 const LoginDrawer = ({ checkUnLogin, setIsSignIn }) => {
   return (
-    <Drawers.Navigator>
+    <Drawers.Navigator screenOptions={{ headerShown: false }}>
       <Drawers.Screen name='Login'>
       {props => <Login {...props} checkUnLogin={checkUnLogin} setIsSignIn={setIsSignIn} />}
       </Drawers.Screen>
@@ -60,7 +60,7 @@ const AuthRoute = ({ navigation, setIsSignIn }) => {
 
   return (
     <AuhtStacks.Navigator>
-      <AuhtStacks.Screen name='Login'>
+      <AuhtStacks.Screen name='LoginDrawer' options={{ headerShown: false }}>
       {props => <LoginDrawer {...props} setIsSignIn={setIsSignIn} />}
       </AuhtStacks.Screen>
       <AuhtStacks.Screen name='Register'>

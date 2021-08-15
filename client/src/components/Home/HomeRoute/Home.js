@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
-        borderTopWidth: 5,
-        borderTopColor: 'dodgerblue',
+        borderTopWidth: 10,
+        borderTopColor: '#ff8000',
     },
     postaction: {
         width: '100%',
@@ -80,7 +80,8 @@ export default ({ navigation }) => {
             <Button
                 mode='contained'
                 icon='plus'
-                color='dodgerblue'
+                color='#ff8000'
+                dark
                 onPress={() => setPostDrawer(true)}
             >
                 Post
@@ -107,7 +108,7 @@ export default ({ navigation }) => {
                     </Card.Actions>
                 </Card>
             )}
-            <View style={{ height: 50 }}></View>
+            <View style={{ height: 50 }} />
         </ScrollView>
     );
 };

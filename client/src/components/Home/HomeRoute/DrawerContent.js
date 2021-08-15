@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     },
     profile: { 
         flex: 1, 
-        backgroundColor: 'dodgerblue',
+        backgroundColor: '#ff8000',
         flexDirection: 'row',
         justifyContent: 'space-around',
         padding: 30,
@@ -46,15 +46,17 @@ export default ({ navigation, logoutback }) => {
             </View>
             <Drawer.Section>
                 <Button
-                    color='dodgerblue'
+                    color='#ff8000'
                     onPress={() => navigation.navigate('EditProfile')}
                 >
                     修改個人資訊
                 </Button>
             </Drawer.Section>
-            <Drawer.Section>
+            <Drawer.Section style={{ marginVertical: 0 }}>
                 <Button
+                    mode='contained'
                     color='red'
+                    style={{ borderRadius: 0 }}
                     onPress={() => navigation.navigate('ChangePassword')}
                 >
                     修改密碼
@@ -62,7 +64,7 @@ export default ({ navigation, logoutback }) => {
             </Drawer.Section>
             <Drawer.Section>
                 <Button
-                    color='dodgerblue'
+                    color='#ff8000'
                     onPress={logoutback}
                 >
                     登出

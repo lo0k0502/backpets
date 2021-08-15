@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert } from 'react-native';
 import { Provider } from 'react-native-paper';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../../redux/userReducer';
@@ -11,7 +11,7 @@ import Map from './MapRoute';
 import Store from './StoreRoute';
 import { unwrapResult } from '@reduxjs/toolkit';
 
-const Tabs = createBottomTabNavigator();
+const Tabs = createMaterialBottomTabNavigator();
 
 export default ({ navigation, setIsSignIn }) => {
 
@@ -37,30 +37,23 @@ export default ({ navigation, setIsSignIn }) => {
     return (
         <Provider>
             <Tabs.Navigator 
-                tabBarOptions={{
-                    activeBackgroundColor: 'dodgerblue',
-                    activeTintColor: 'white',
-                    style: {
-                        position: 'absolute',
-                        right: 10,
-                        left: 10,
-                        bottom: 0,
-                        borderRadius: 100,
-                    },
-                    tabStyle: {
-                        borderRadius: 100,
-                    },
-                    labelStyle: {
-                        fontSize: 12,
-                    },
+                shifting
+                style={{
+                }}
+                barStyle={{
+                    position: 'absolute',
+                    right: 10,
+                    left: 10,
+                    bottom: 0,
+                    borderRadius: 100,
+                    overflow: 'hidden',
                 }}
             >
                 <Tabs.Screen 
                     name='HomeRoute' 
                     options={{
-                        tabBarIcon: ({ color, size }) => (
-                        <Icons name='home' color={color} size={size} />
-                        ),
+                        tabBarColor: '#ff8000',
+                        tabBarIcon: ({ color }) => <Icons name='home' color={color} size={20} />,
                     }}
                 >
                 {props => <HomeRoute {...props} logoutback={logoutAlert} />}
@@ -68,9 +61,8 @@ export default ({ navigation, setIsSignIn }) => {
                 <Tabs.Screen 
                     name='Map'
                     options={{
-                        tabBarIcon: ({ color, size }) => (
-                        <Icons name='map' color={color} size={size} />
-                        ),
+                        tabBarColor: '#42f587',
+                        tabBarIcon: ({ color }) => <Icons name='map' color={color} size={20} />,
                     }}
                 >
                 {props => <Map {...props} />}
@@ -78,9 +70,8 @@ export default ({ navigation, setIsSignIn }) => {
                 <Tabs.Screen 
                     name='Store'
                     options={{
-                        tabBarIcon: ({ color, size }) => (
-                        <Icons name='store' color={color} size={size} />
-                        ),
+                        tabBarColor: 'dodgerblue',
+                        tabBarIcon: ({ color }) => <Icons name='store' color={color} size={20} />,
                     }}
                 >
                 {props => <Store {...props} />}
