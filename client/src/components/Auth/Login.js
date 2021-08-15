@@ -10,51 +10,10 @@ import { loginUser, googleLogin } from '../../redux/userReducer';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 const styles = StyleSheet.create({
-    root: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white',
-    },
-    img: {
-        width: '30%',
-        height: '30%',
-        marginBottom: 10,
-    },
     input: {
         width: '50%',
         color: 'black',
         backgroundColor: 'white',
-    },
-    loginbtn: {
-        width: '50%',
-        height: 50,
-        color: 'white',
-        backgroundColor: '#ff8000',
-        borderRadius: 10,
-        elevation: 5,
-    },
-    googleloginbtn: {
-        width: '50%',
-        height: 50,
-        color: 'white',
-        backgroundColor: 'green',
-        borderRadius: 10,
-        elevation: 5,
-        marginTop: 10,
-    },
-    divider: {
-        width: '90%',
-        borderColor: 'lightgray',
-        borderWidth: 1,
-        margin: 10,
-    },
-    signupmsg: {
-        flexDirection: 'row',
-    },
-    signupbtn: {
-        marginLeft: 3,
-        marginRight: 3,
     },
 });
 
@@ -152,10 +111,21 @@ export default ({ navigation, setIsSignIn }) => {
     };
 
     return (
-        <View style={styles.root}>
+        <View 
+            style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'white',
+            }}
+        >
             <Image 
                 source={require('../../../assets/rsz_black-cat-icon-6.png')} 
-                style={styles.img}
+                style={{
+                    width: '30%',
+                    height: '28%',
+                    marginBottom: 10,
+                }}
             />
             <HelperText type='error'>
                 {errorMsg}
@@ -195,7 +165,14 @@ export default ({ navigation, setIsSignIn }) => {
                 mode='contained'
                 disabled={loginLoading || googleLoginLoading}
                 loading={loginLoading}
-                style={styles.loginbtn}
+                style={{
+                    width: '50%',
+                    height: 50,
+                    color: 'white',
+                    backgroundColor: '#ff8000',
+                    borderRadius: 10,
+                    elevation: 5,
+                }}
                 contentStyle={{ width: '100%', height: '100%', }}
                 onPress={handleLogin}
             >
@@ -206,19 +183,34 @@ export default ({ navigation, setIsSignIn }) => {
                 icon={require('../../../assets/GoogleIconG.png')}
                 disabled={loginLoading || googleLoginLoading}
                 loading={googleLoginLoading}
-                style={styles.googleloginbtn}
+                style={{
+                    width: '50%',
+                    height: 50,
+                    color: 'white',
+                    backgroundColor: 'green',
+                    borderRadius: 10,
+                    elevation: 5,
+                    marginTop: 10,
+                }}
                 contentStyle={{ width: '100%', height: '100%', }}
                 onPress={handleGoogleLogin}
             >
                 Google Login
             </Button> */}
-            <Divider style={styles.divider} />
-            <View style={styles.signupmsg}>
+            <Divider 
+                style={{
+                    width: '90%',
+                    borderColor: 'lightgray',
+                    borderWidth: 1,
+                    margin: 10,
+                }} 
+            />
+            <View style={{ flexDirection: 'row' }}>
                 <Text>
                     Don't have an account?
                 </Text>
                 <Pressable 
-                    style={styles.signupbtn}
+                    style={{ marginHorizontal: 3 }}
                     onPress={() => navigation.navigate('Register')}
                 >
                     <Text style={{ color: '#ff8000' }}>

@@ -1,4 +1,4 @@
-import { getPendingResultAsync, launchImageLibraryAsync, MediaTypeOptions, requestMediaLibraryPermissionsAsync } from 'expo-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 import React, { useState } from 'react';
 import { TextInput, Dialog, Button, Card, HelperText } from 'react-native-paper';
 import { AddPost, uploadAvatar } from '../../../api';
@@ -27,15 +27,16 @@ export default ({ visible, close, refresh }) => {
 
     const handleChangeImg = async () => {
         setIsImgLoading(true);
-        let permissionResult = await requestMediaLibraryPermissionsAsync();
-        if (permissionResult.canAskAgain) permissionResult = await requestMediaLibraryPermissionsAsync();
-        let result = await launchImageLibraryAsync({
-            mediaTypes: MediaTypeOptions.Images,
+        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (permissionResult.canAskAgain) permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [ 3, 2 ],
             quality: 1,
         });
-        if (!result) result = getPendingResultAsync();
+        if (!result) result = await ImagePicker.getPendingResultAsync();
+        if (!result) return;
 
         if (!result.cancelled) {
             setPhotoUrl(result.uri);

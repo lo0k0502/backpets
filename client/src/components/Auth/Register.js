@@ -4,29 +4,12 @@ import { Button, HelperText, TextInput } from 'react-native-paper';
 import { UserRegister } from '../../api';
 
 const styles = StyleSheet.create({
-    root: {
-        flex: 1,
-        backgroundColor: 'white',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    title: {
-        fontSize: 50,
-        marginTop: -50,
-        marginBottom: 50,
-    },
     input: {
         width: '60%',
         margin: 20,
     },
     helpertext: { 
         marginTop: -20, 
-    },
-    btn: {
-        width: '60%',
-        height: 50,
-        marginTop: 50,
-        elevation: 5,
     },
 });
 
@@ -114,8 +97,21 @@ export default ({ navigation }) => {
     };
 
     return (
-        <View style={styles.root}>
-            <Text style={styles.title}>
+        <View 
+            style={{
+                flex: 1,
+                backgroundColor: 'white',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        >
+            <Text 
+                style={{
+                    fontSize: 50,
+                    marginTop: -50,
+                    marginBottom: 50,
+                }}
+            >
                 Register
             </Text>
             <HelperText
@@ -218,7 +214,12 @@ export default ({ navigation }) => {
                 color='#ff8000'
                 dark
                 loading={isLoading}
-                style={styles.btn}
+                style={{
+                    width: '60%',
+                    height: 50,
+                    marginTop: 50,
+                    elevation: 5,
+                }}
                 contentStyle={{ width: '100%', height: '100%' }}
                 onPress={handleSubmit}
             >

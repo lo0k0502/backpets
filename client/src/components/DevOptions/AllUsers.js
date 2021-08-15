@@ -1,31 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import { fetchAllUsers } from '../../api';
-
-const styles = StyleSheet.create({
-    username: {
-        width: '37%',
-        maxWidth: '37%',
-        marginLeft: 5,
-        paddingLeft: 5,
-        paddingRight: 5,
-        borderWidth: 1,
-        borderRightWidth: 0.5,
-        borderTopLeftRadius: 5,
-        borderBottomLeftRadius: 5,
-    },
-    email: {
-        width: '60%',
-        maxWidth: '60%',
-        marginRight: 5,
-        paddingLeft: 5,
-        paddingRight: 5,
-        borderWidth: 1,
-        borderLeftWidth: 0.5,
-        borderTopRightRadius: 5,
-        borderBottomRightRadius: 5,
-    },
-});
 
 export default ({ navigation }) => {
     const [allUsers, setAllUsers] = useState([]);
@@ -49,8 +24,34 @@ export default ({ navigation }) => {
                         margin: 2,
                     }}
                 >
-                    <Text style={styles.username}>{user.username}</Text>
-                    <Text style={styles.email}>{user.email}</Text>
+                    <Text 
+                        style={{
+                            width: '37%',
+                            maxWidth: '37%',
+                            marginLeft: 5,
+                            paddingHorizontal: 5,
+                            borderWidth: 1,
+                            borderRightWidth: 0.5,
+                            borderTopLeftRadius: 5,
+                            borderBottomLeftRadius: 5,
+                        }}
+                    >
+                        {user.username}
+                    </Text>
+                    <Text 
+                        style={{
+                            width: '60%',
+                            maxWidth: '60%',
+                            marginRight: 5,
+                            paddingHorizontal: 5,
+                            borderWidth: 1,
+                            borderLeftWidth: 0.5,
+                            borderTopRightRadius: 5,
+                            borderBottomRightRadius: 5,
+                        }}
+                    >
+                        {user.email}
+                    </Text>
                 </View>
             ))}
         </View>

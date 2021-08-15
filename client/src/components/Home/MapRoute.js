@@ -4,22 +4,6 @@ import MapView, { Marker, MarkerAnimated, PROVIDER_GOOGLE } from 'react-native-m
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 
-const styles = StyleSheet.create({
-    root: {
-        flex: 1,
-        backgroundColor: 'white',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    body: {
-
-    },
-    map: {
-        ...StyleSheet.absoluteFillObject,
-    },     
-});
-
-
 export default () => {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
@@ -44,6 +28,8 @@ export default () => {
     }, []);
   
     let text = 'Waiting..';
+    let currentLatitude;
+    let currentLongitude;
     if (errorMsg) {
       text = errorMsg;
     } else if (location) {
@@ -53,26 +39,34 @@ export default () => {
     }
   
     return (
-        <View style={styles.root}>
+        <View 
+          style={{
+            flex: 1,
+            backgroundColor: 'white',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
         <MapView 
-        provider = { PROVIDER_GOOGLE }
-        style = { styles.map }
-        initialRegion = {{
-            latitude: currentLatitude,
-            longitude: currentLongitude,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
-        }}
-        showsUserLocation={true}
-        followsUserLocation={true}
-        onPress = {(e) => 
-            <Marker
-            coordinate = {{
-                latitude: e.nativeEvent.coordinate.latitude,
-                longitude: e.nativeEvent.coordinate.longitude,
-
-            }} 
-            />}
+          provider = { PROVIDER_GOOGLE }
+          style = {{
+            ...StyleSheet.absoluteFillObject,
+          }}
+          initialRegion = {{
+              latitude: currentLatitude,
+              longitude: currentLongitude,
+              latitudeDelta: 0.0122,
+              longitudeDelta: 0.003,
+          }}
+          showsUserLocation={true}
+          followsUserLocation={true}
+          onPress = {(e) => 
+              <Marker
+                coordinate = {{
+                  latitude: e.nativeEvent.coordinate.latitude,
+                  longitude: e.nativeEvent.coordinate.longitude,
+                }} 
+              />}
         >
             <Marker draggable
             coordinate = {{
