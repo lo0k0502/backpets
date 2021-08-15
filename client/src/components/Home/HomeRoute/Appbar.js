@@ -3,13 +3,20 @@ import { Appbar } from 'react-native-paper';
 
 export default ({ scene: { route, descriptor: { navigation } } }) => {
     const isHome = route.name === 'Home';
+    const isPost = route.name === 'Post';
+    const isChangePassword = route.name === 'ChangePassword';
+    const isEditProfile = route.name === 'EditProfile';
 
     return (
         <Appbar style={{ backgroundColor: 'white' }}>
             {isHome ? <Appbar.Action icon='menu' onPress={navigation.toggleDrawer} />
                 : <Appbar.Action icon='arrow-left' onPress={navigation.goBack} />}
             <Appbar.Content 
-                title={isHome ? 'ProjectP!!!' : route.name} 
+                title={isHome ? 'ProjectP!!!' : 
+                    isPost ? '' : 
+                    isChangePassword ? 'Change Password' :
+                    isEditProfile ? 'Edit Profile' : route.name
+                    } 
                 subtitle={isHome ? 'P!!!' : ''} 
             />
         </Appbar>

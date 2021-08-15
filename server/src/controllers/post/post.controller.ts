@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Post, Body } from '@nestjs/common';
+import { Controller, Get, Res, Post, Body, Param } from '@nestjs/common';
 import { Response } from 'express';
 import { Post as PostModel } from 'src/models/post.schema';
 import { PostService } from 'src/services/post.service';
@@ -9,8 +9,14 @@ export class PostController {
     constructor(private readonly postService: PostService) {}
 
     @Get('fetchall')
-    async FetchAllUsers(@Res() res: Response) {
+    async FetchAllPosts(@Res() res: Response) {
         const result = await this.postService.findAll();
+        return res.status(200).json({ result });
+    }
+
+    @Get(':postid')
+    async FetchPost(@Param() { postid }, @Res() res: Response) {
+        const result = await this.postService.findOne({ _id: postid });
         return res.status(200).json({ result });
     }
 

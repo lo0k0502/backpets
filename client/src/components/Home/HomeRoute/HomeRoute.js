@@ -6,6 +6,7 @@ import Home from './Home';
 import ChangePassword from './ChangePassword';
 import EditProfile from './EditProfile';
 import DrawerContent from './DrawerContent';
+import Post from './Post';
 
 const HomeDrawer = createDrawerNavigator();
 
@@ -21,11 +22,14 @@ export default ({ logoutback }) => {
             <HomeDrawer.Screen name='Home'>
             {props => <Home {...props} />}
             </HomeDrawer.Screen>
-            <HomeDrawer.Screen name='EditProfile' options={{ title:'Edit Profile' }}>
+            <HomeDrawer.Screen name='EditProfile'>
             {props => <EditProfile {...props} />}
             </HomeDrawer.Screen>
-            <HomeDrawer.Screen name='ChangePassword' options={{ title: 'Change Password' }}>
+            <HomeDrawer.Screen name='ChangePassword'>
             {props => <ChangePassword {...props} />}
+            </HomeDrawer.Screen>
+            <HomeDrawer.Screen name='Post'>
+            {props => <Post {...props} />}
             </HomeDrawer.Screen>
         </HomeDrawer.Navigator>
     );

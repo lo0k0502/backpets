@@ -23,12 +23,6 @@ export const userSlice = createSlice({
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
       AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
-      if (action.payload.result) {
-        Alert.alert('Welcome Back!', 
-          `${action.payload.result.username}, welcome back!`, 
-          [{ text: 'OK' }],
-        );
-      }
     },
     [googleLogin.fulfilled]: (state, action) => {
       state.information = action.payload.result;
@@ -44,11 +38,6 @@ export const userSlice = createSlice({
               Clipboard.setString(firstPassword);
               Alert.alert('', 'Password Copyed!!');
             } }, ]
-        );
-      } else if (action.payload.result) {
-        Alert.alert('Welcome Back!', 
-          `${action.payload.result.username}, welcome back!`, 
-          [{ text: 'OK' }],
         );
       }
     },

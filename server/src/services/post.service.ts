@@ -21,7 +21,7 @@ export class PostService {
     }
   
     async findAll(): Promise<Post[]> {
-      return this.postModel.find().exec();
+      return this.postModel.find().sort({ post_time: -1 }).exec();
     }
   
     async deleteOne(userFilterQuery: FilterQuery<PostDocument>): Promise<Post> {
