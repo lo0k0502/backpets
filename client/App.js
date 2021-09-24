@@ -4,7 +4,7 @@ import { SafeAreaView, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider } from 'react-redux';
 import store from './src/redux/store';
-import Route from './src/Route';
+import Routes from './src/Routes';
 
 export default function App() {
 
@@ -19,7 +19,7 @@ export default function App() {
           translucent
         />
         <NavigationContainer>
-          <Route />
+          <Routes />
         </NavigationContainer>
       </SafeAreaView>
     </Provider>
