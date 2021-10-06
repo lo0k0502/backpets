@@ -1,7 +1,7 @@
 import { Controller, Get, Res, Post, Body, Param } from '@nestjs/common';
 import { Response } from 'express';
-import { Post as PostModel } from 'src/models/post.schema';
-import { PostService } from 'src/services/post.service';
+import { Post as PostModel } from 'src/post/post.schema';
+import { PostService } from './post.service';
 import * as moment from 'moment';
 
 @Controller('post')

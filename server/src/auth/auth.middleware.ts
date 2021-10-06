@@ -19,6 +19,7 @@ export class AuthMiddleware implements NestMiddleware {
             next();
 
         } catch (error) {
+            console.log('AccessToken forbidden!');
             return res.status(400).json({ message: 'Forbidden!' });
         }
     }

@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
-import { UserType } from 'src/DTOs/user.dto';
-import { UserService } from 'src/services/user.service';
+import { UserType } from './user.dto';
+import { UserService } from './user.service';
 import { refreshTokens, addRefreshToken, deleteRefreshToken } from 'src/refreshTokens';
 import { hash, compare } from 'bcrypt';
 

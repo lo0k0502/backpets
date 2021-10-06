@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Param, Post, Delete, Req, Res } from '@nestjs/common';
 import { hash, compare } from 'bcrypt';
 import { Response } from 'express';
-import { UserService } from 'src/services/user.service';
-import { User } from 'src/models/user.schema';
+import { UserService } from '../user/user.service';
+import { User } from 'src/user/user.schema';
 import { JwtService } from '@nestjs/jwt';
 import { refreshTokens, addRefreshToken, deleteRefreshToken } from 'src/refreshTokens';
-import { MailService } from 'src/services/mail.service';
+import { MailService } from '../mail/mail.service';
 
 @Controller('auth')
 export class AuthController {
