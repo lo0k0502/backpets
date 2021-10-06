@@ -6,7 +6,7 @@ import BottomNavigation from './components/Home/BottomNavigation';
 import DeleteUser from './components/DevOptions/DeleteUser';
 import AllUsers from './components/DevOptions/AllUsers';
 import AuthRoute from './components/Auth/AuthRoute';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStorage from 'expo-secure-store';
 import { tokenRefresh } from './redux/userReducer';
 import { unwrapResult } from '@reduxjs/toolkit';
 
@@ -18,14 +18,14 @@ export default () => {
     const dispatch = useDispatch();
   
     const check = async () => {
-      const userInfo = JSON.parse(await AsyncStorage.getItem('userInfo'));
-      if (userInfo) {
+      const tokens = JSON.parse(await SecureStorage.getItemAsync('tokens'));
+      if (tokens) {
         try {
-          unwrapResult(await dispatch(tokenRefresh({ 
-            accessToken: userInfo.accessToken, 
-            refreshToken: userInfo.refreshToken, 
+          const result = unwrapResult(await dispatch(tokenRefresh({ 
+            accessToken: tokens.accessToken, 
+            refreshToken: tokens.refreshToken, 
           })));
-          setIsSignIn(true);
+          if (result) setIsSignIn(true);
         } catch (error) {
           setIsSignIn(false);
           console.log('While refreshing:', error.message);

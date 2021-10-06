@@ -5,14 +5,16 @@ import { Card, Button, Avatar, Paragraph, Title, Portal, TouchableRipple } from 
 import { fetchAllPosts } from '../../../api';
 import moment from 'moment';
 import PostDialog from './PostDialog';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import PostCard from './PostCard';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../../redux/userSlice';
 
 const styles = StyleSheet.create({
     root: {
         flex: 1,
         backgroundColor: 'white',
     },
-    evsuggest: {
+    emailVerifySuggest: {
         backgroundColor: 'rgba(255, 0, 0, 0.2)',
         borderWidth: 3,
         borderColor: 'red',
@@ -50,19 +52,18 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 40,
         bottom: 80,
-        backgroundColor: '#ff8000',
-    },
-});
+            backgroundColor: '#ff8000',
+        },
+    });
 
-export default ({ navigation }) => {
+    export default ({ navigation }) => {
     const [refreshing, setRefreshing] = useState(false);
 
-    const [user, setUser] = useState(null);
+    const user = useSelector(selectUser);
     const [posts, setPosts] = useState([]);
     const [postDrawer, setPostDrawer] = useState(false);
 
     const fetch = async () => {
-        setUser(JSON.parse(await AsyncStorage.getItem('userInfo')));
         setPosts((await fetchAllPosts()).data.result);
     };
 
@@ -86,28 +87,14 @@ export default ({ navigation }) => {
             >
                 Post
             </Button>
-            <View style={[styles.evsuggest, { display: user?.result.verified ? 'none' : 'flex' }]}>
+            <View style={[styles.emailVerifySuggest, { display: user?.verified ? 'none' : 'flex' }]}>
                 <Text style={{ color: 'black' }}>Your email is not verified yet!</Text>
                 <Text style={{ color: 'black' }}>We highly recommed you to verify your email first!</Text>
             </View>
             <Portal>
                 <PostDialog visible={postDrawer} close={() => setPostDrawer(false)} refresh={fetch} />
             </Portal>
-            {posts.map(post => 
-                <Card style={styles.card} key={post._id}>
-                    <TouchableRipple 
-                        style={{ width: '100%' }}
-                        onPress={() => navigation.navigate('Post', { post })}
-                    >
-                        <Card.Title title={post.username} subtitle={moment(post.post_time).fromNow()} left={props => <Avatar.Icon {...props} icon="folder" />} />
-                    </TouchableRipple>
-                    <Card.Actions style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
-                        <Title style={{ marginLeft: 10 }}>{post.title}</Title>
-                        <Paragraph style={{ padding: 10 }}>{post.content}</Paragraph>
-                        {post.photoUrl ? <Card.Cover source={{ uri: post.photoUrl }} style={styles.cardimg}/> : null}
-                    </Card.Actions>
-                </Card>
-            )}
+            {posts.map(post => <PostCard post={post} key={post._id} />)}
             <View style={{ height: 50 }} />
         </ScrollView>
     );

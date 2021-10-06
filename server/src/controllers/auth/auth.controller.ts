@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Delete, Req, Res } from '@nestjs/common';
 import { hash, compare } from 'bcrypt';
 import { Response } from 'express';
 import { UserService } from 'src/services/user.service';
@@ -69,8 +69,7 @@ export class AuthController {
         { secret: process.env.REFRESH_TOKEN_SECRET },
       );
 
-      addRefreshToken(refreshToken)
-      console.log('User login, refreshTokens:', refreshTokens);
+      addRefreshToken(refreshToken);
       return res.status(200).json({ result: existUser, accessToken, refreshToken });
     } catch (error) {
       console.log(error);
@@ -78,10 +77,9 @@ export class AuthController {
     }
   }
 
-  @Post('logout')
-  Logout(@Body() { refreshToken }, @Res() res: Response) {
-    deleteRefreshToken(refreshToken)
-    console.log('User logout, refreshTokens:', refreshTokens);
+  @Delete(':refreshtoken')
+  Logout(@Param() { refreshtoken }, @Res() res: Response) {
+    deleteRefreshToken(refreshtoken);
     return res.sendStatus(200);
   }
 
@@ -104,7 +102,7 @@ export class AuthController {
           { username: existUser.username }, 
           { 
             secret: process.env.ACCESS_TOKEN_SECRET, 
-            expiresIn: '30m' 
+            expiresIn: '30m',
           },
         );
         return res.status(200).json({ 

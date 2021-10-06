@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { UserType } from 'src/DTOs/user.dto';
@@ -19,6 +19,13 @@ export class UserController {
         return res.status(200).json({ result });
     }
 
+    @Get('fetchbyid/:id')
+    async FetchUserById(@Param() { id }, @Res() res: Response) {
+        const existUser = await this.userService.findOne({ _id: id });
+        if (!existUser) return res.status(400).json({ message: '用戶不存在' });
+        return res.status(200).json({ result: existUser });
+    }
+
     @Post('delete')
     async DeleteUser(@Body() { username }: UserType, @Res() res) {
         try {
@@ -36,7 +43,7 @@ export class UserController {
     @Post('updateprofile')
     async UpdateProfile(@Body() { photoUrl, username, newUsername, email, refreshToken }, @Res() res: Response) {
         try {
-            console.log('Updating', photoUrl, username, newUsername, email);
+            console.log('Updating: ', photoUrl, username, newUsername, email);
             const existUser = await this.userService.findOne({ username });
             if (!existUser) return res.status(400).json({ message: '用戶不存在' });
     

@@ -1,34 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Alert, Clipboard } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStorage from 'expo-secure-store';
 import { loginUser, googleLogin, logoutUser, tokenRefresh, updateProfile } from './userReducer';
 
 export const userSlice = createSlice({
   name: 'user',
-  initialState: {
-    information: null,
-    accessToken: null,
-    refreshToken: null,
-  },
-  reducers: {
-    setState: (state, action) => {
-      state.information = action.payload.userInfo;
-      state.accessToken = action.payload.accessToken;
-      state.refreshToken = action.payload.refreshToken;
-    },
-  },
+  initialState: null,
+  reducers: {},
   extraReducers: {
     [loginUser.fulfilled]: (state, action) => {
-      state.information = action.payload.result;
-      state.accessToken = action.payload.accessToken;
-      state.refreshToken = action.payload.refreshToken;
-      AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
+      state = action.payload.result;
+      SecureStorage.setItemAsync('tokens', JSON.stringify({
+        accessToken: action.payload.accessToken,
+        refreshToken: action.payload.refreshToken,
+      }));
     },
     [googleLogin.fulfilled]: (state, action) => {
-      state.information = action.payload.result;
-      state.accessToken = action.payload.accessToken;
-      state.refreshToken = action.payload.refreshToken;
-      AsyncStorage.setItem('userInfo', JSON.stringify(action.payload));
+      state = action.payload.result;
+      SecureStorage.setItemAsync('tokens', JSON.stringify({
+        accessToken: action.payload.accessToken,
+        refreshToken: action.payload.refreshToken,
+      }));
       if (action.payload.firstPassword) {
         const firstPassword = action.payload.firstPassword;
         console.log(firstPassword)
@@ -42,18 +34,13 @@ export const userSlice = createSlice({
       }
     },
     [logoutUser.fulfilled]: (state) => {
-      state.information = null;
-      state.accessToken = null;
-      state.refreshToken = null;
-      AsyncStorage.removeItem('userInfo');
+      state = null;
+      SecureStorage.deleteItemAsync('tokens');
     },
     [tokenRefresh.fulfilled]: (state, action) => {
-      if (action.payload.accessToken) {
-        state.information = action.payload.result;
-        state.accessToken = action.payload.accessToken;
-        state.refreshToken = action.payload.refreshToken;
-        AsyncStorage.setItem('userInfo', JSON.stringify({
-          result: action.payload.result,
+      if (action.payload.result) {
+        state = action.payload.result;
+        SecureStorage.setItemAsync('tokens', JSON.stringify({
           accessToken: action.payload.accessToken,
           refreshToken: action.payload.refreshToken,
         }));
@@ -62,11 +49,8 @@ export const userSlice = createSlice({
     },
     [updateProfile.fulfilled]: (state, action) => {
       if (action.payload.result) {
-        state.information = action.payload.result;
-        state.accessToken = action.payload.accessToken;
-        state.refreshToken = action.payload.refreshToken;
-        AsyncStorage.setItem('userInfo', JSON.stringify({
-          result: action.payload.result,
+        state = action.payload.result;
+        SecureStorage.setItemAsync('tokens', JSON.stringify({
           accessToken: action.payload.accessToken,
           refreshToken: action.payload.refreshToken,
         }));

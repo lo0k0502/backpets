@@ -2,14 +2,15 @@ import React, { useCallback, useState } from 'react';
 import { StyleSheet, View, Text, Alert } from 'react-native';
 import { Avatar, Button, HelperText, TextInput } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useDispatch } from 'react-redux';
+import * as SecureStorage from 'expo-secure-store';
+import { useDispatch, useSelector } from 'react-redux';
 import { requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaTypeOptions, getPendingResultAsync, getMediaLibraryPermissionsAsync } from 'expo-image-picker';
 
 import { updateProfile } from '../../../redux/userReducer';
 import { deleteAvatar, uploadAvatar } from '../../../api';
 import { BASE_URL } from '@env';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { selectUser } from '../../../redux/userSlice';
 
 const styles = StyleSheet.create({
     root: {
@@ -46,12 +47,13 @@ const styles = StyleSheet.create({
 });
 
 export default ({ navigation }) => {
+    const user = useSelector(selectUser);
     const [isLoading, setIsLoading] = useState(false);
     const [isImgLoading, setIsImgLoading] = useState(false);
 
-    const [photoUrl, setPhotoUrl] = useState('');
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
+    const [photoUrl, setPhotoUrl] = useState(user.photoUrl);
+    const [username, setUsername] = useState(user.username);
+    const [email, setEmail] = useState(user.email);
     
     const [errorMsg, setErrorMsg] = useState('');
     const [photoUrlErrorMsg, setPhotoUrlErrorMsg] = useState('');
@@ -59,17 +61,6 @@ export default ({ navigation }) => {
     const [emailErrorMsg, setEmailErrorMsg] = useState('');
 
     const dispatch = useDispatch();
-
-    const fetch = async () => {
-        const user = JSON.parse(await AsyncStorage.getItem('userInfo'));
-        setUsername(user.result.username);
-        setEmail(user.result.email);
-        setPhotoUrl(user.result.photoUrl);
-    };
-
-    useFocusEffect(useCallback(() => {
-        fetch();
-    }, []));
 
     const handleChangeImg = async () => {
         setIsImgLoading(true);
@@ -114,13 +105,13 @@ export default ({ navigation }) => {
             if (!email) setEmailErrorMsg('Must not be null!');
             return;
         }
-        const { result, refreshToken } = JSON.parse(await AsyncStorage.getItem('userInfo'));
+        const { refreshToken } = JSON.parse(await SecureStorage.getItemAsync('tokens'));
 
         setIsLoading(true);
 
         try {
             let sendPhotoUrl = photoUrl;
-            if (photoUrl !== result.photoUrl) {
+            if (photoUrl !== user.photoUrl) {
                 let formData = new FormData();
                 const filename = photoUrl.split('/').pop();
                 const mediatype = filename.split('.').pop();
@@ -150,21 +141,28 @@ export default ({ navigation }) => {
                 const { data } = await uploadAvatar(formData);
                 if (data) {
                     sendPhotoUrl = data.imgUrl;
-                    if (result.photoUrl.split('/')[2] === `http://${BASE_URL}:8000`)
-                        await deleteAvatar(result.photoUrl.split('/').pop());
+                    if (user.photoUrl.split('/')[2] === `http://${BASE_URL}:8000`)
+                        await deleteAvatar(user.photoUrl.split('/').pop());
                 }
             }
 
-            unwrapResult(await dispatch(updateProfile({ 
+            const res = unwrapResult(await dispatch(updateProfile({ 
                 photoUrl: sendPhotoUrl,
-                username: result.username, 
+                username: user.username, 
                 newUsername: username, 
                 email, 
                 refreshToken,
             })));
-            Alert.alert('Success!!', `Profile Successfully Updated!!\nGoing back...`, [
-                { text: 'OK', onPress: () => navigation.goBack() }
-            ]);
+            if (res) {
+                setErrorMsg('');
+                setPhotoUrlErrorMsg('');
+                setUsernameErrorMsg('');
+                setEmailErrorMsg('');
+                setIsLoading(false);
+                Alert.alert('Success!!', `Profile Successfully Updated!!\nGoing back...`, [
+                    { text: 'OK', onPress: () => navigation.goBack() }
+                ]);
+            }
         } catch (error) {
             setIsLoading(false);
             if (error.message) {

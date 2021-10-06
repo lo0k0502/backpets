@@ -2,9 +2,11 @@ import * as ImagePicker from 'expo-image-picker';
 import React, { useState } from 'react';
 import { TextInput, Dialog, Button, Card, HelperText } from 'react-native-paper';
 import { AddPost, uploadAvatar } from '../../../api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../../redux/userSlice';
 
 export default ({ visible, close, refresh }) => {
+    const user = useSelector(selectUser);
     const [isLoading, setIsLoading] = useState(false);
     const [isImgLoading, setIsImgLoading] = useState(false);
 
@@ -14,6 +16,7 @@ export default ({ visible, close, refresh }) => {
 
     const [titleErrorMsg, setTitleErrorMsg] = useState('');
     const [contentErrorMsg, setContentErrorMsg] = useState('');
+    const [photoUrlErrorMsg, setPhotoUrlErrorMsg] = useState('');
 
     const checkTitle = (text) => {
         setTitle(text);
@@ -87,7 +90,7 @@ export default ({ visible, close, refresh }) => {
             }
 
             await AddPost({
-                username: JSON.parse(await AsyncStorage.getItem('userInfo')).result.username,
+                userId: user.userInfo._id.toString(),
                 title,
                 content,
                 photoUrl: sendPhotoUrl,
@@ -167,6 +170,11 @@ export default ({ visible, close, refresh }) => {
                 >
                     Add Image
                 </Button>
+                <HelperText 
+                    type='error' 
+                >
+                    {photoUrlErrorMsg}
+                </HelperText>
                 {photoUrl ? <Card.Cover source={{ uri: photoUrl }} style={{ width: 300, height: 200, alignSelf: 'center' }} /> : null}
             </Dialog.Content>
             <Dialog.Actions>

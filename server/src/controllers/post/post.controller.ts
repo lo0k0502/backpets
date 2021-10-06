@@ -21,10 +21,10 @@ export class PostController {
     }
 
     @Post('add')
-    async AddPost(@Body() { username, title, content, photoUrl }: PostModel, @Res() res: Response) {
+    async AddPost(@Body() { userId, title, content, photoUrl }: PostModel, @Res() res: Response) {
         try {
             const result = await this.postService.create({
-                username,
+                userId,
                 title,
                 content,
                 post_time: moment().valueOf(),

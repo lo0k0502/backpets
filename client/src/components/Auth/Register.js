@@ -6,10 +6,6 @@ import { UserRegister } from '../../api';
 const styles = StyleSheet.create({
     input: {
         width: '60%',
-        margin: 20,
-    },
-    helpertext: { 
-        marginTop: -20, 
     },
 });
 
@@ -108,18 +104,12 @@ export default ({ navigation }) => {
             <Text 
                 style={{
                     fontSize: 50,
-                    marginTop: -50,
-                    marginBottom: 50,
                 }}
             >
                 Register
             </Text>
             <HelperText
                 type='error'
-                style={{ 
-                    fontSize: 16, 
-                    marginBottom: -20,
-                }}
             >
                 {errorMsg}
             </HelperText>
@@ -137,7 +127,6 @@ export default ({ navigation }) => {
             />
             <HelperText 
                 type='error' 
-                style={styles.helpertext}
             >
                 {usernameErrorMsg}
             </HelperText>
@@ -155,7 +144,6 @@ export default ({ navigation }) => {
             />
             <HelperText 
                 type='error' 
-                style={styles.helpertext}
             >
                 {emailErrorMsg}
             </HelperText>
@@ -180,7 +168,6 @@ export default ({ navigation }) => {
             />
             <HelperText 
                 type='error' 
-                style={styles.helpertext}
             >
                 {passwordErrorMsg}
             </HelperText>
@@ -205,7 +192,6 @@ export default ({ navigation }) => {
             />
             <HelperText 
                 type='error' 
-                style={styles.helpertext}
             >
                 {confirmPasswordErrorMsg}
             </HelperText>
@@ -217,7 +203,6 @@ export default ({ navigation }) => {
                 style={{
                     width: '60%',
                     height: 50,
-                    marginTop: 50,
                     elevation: 5,
                 }}
                 contentStyle={{ width: '100%', height: '100%' }}

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, Alert } from 'react-native';
 import { Button, TextInput, HelperText } from 'react-native-paper';
 import { updateUserPassword } from '../../../api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../../redux/userSlice';
 
 const styles = StyleSheet.create({
     root: {
@@ -32,6 +33,7 @@ const styles = StyleSheet.create({
 });
 
 export default ({  navigation }) => {
+    const user = useSelector(selectUser);
     const [isLoading, setIsLoading] = useState(false);
 
     const [oldPassword, setOldPassword] = useState('');
@@ -64,9 +66,9 @@ export default ({  navigation }) => {
         setIsLoading(true);
         
         try {
-            const { result: { username } } = JSON.parse(await AsyncStorage.getItem('userInfo'));
+            const { username } = user;
             const result = await updateUserPassword({ 
-                username: username, 
+                username, 
                 password: oldPassword,
                 newPassword, 
             });

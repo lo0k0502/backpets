@@ -1,9 +1,25 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import moment from 'moment';
 import { ScrollView, View } from 'react-native';
 import { Card, Divider, Paragraph, Subheading, Title, Appbar, Headline, Text, Caption, Avatar } from 'react-native-paper';
+import { fetchUserById } from '../../../api';
 
-export default ({ navigation, route: { params: { post } } }) => {
+export default ({ route: { params: { post } } }) => {
+    const [poster, setPoster] = useState({});
+
+    const fetchPoster = async () => {
+        try {
+            const res = await fetchUserById(post.userId);
+            setPoster(res.data.result);
+        } catch (error) {
+            console.log(error)
+        }
+    };
+    
+    useFocusEffect(useCallback(() => {
+        fetchPoster();
+    }, []));
 
     return (
         <ScrollView 
@@ -16,7 +32,7 @@ export default ({ navigation, route: { params: { post } } }) => {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Avatar.Icon icon='folder' size={50} style={{ margin: 10 }} />
                 <View>
-                    <Title>{post.username}</Title>
+                    <Title>{poster.username}</Title>
                     <Caption>{moment(post.post_time).fromNow()}</Caption>
                 </View>
             </View>

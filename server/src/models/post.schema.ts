@@ -6,7 +6,7 @@ export type PostDocument = Post & Document;
 @Schema()
 export class Post {
   @Prop({ required: true })
-  username: string;
+  userId: string;
 
   @Prop({ required: true })
   title: string;

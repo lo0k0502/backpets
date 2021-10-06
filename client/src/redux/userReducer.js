@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStorage from 'expo-secure-store';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { UserLogin, GoogleLogin, RefreshToken, Logout, updateUserProfile } from '../api';
 
@@ -9,7 +9,7 @@ export const loginUser = createAsyncThunk(
             const response = await UserLogin({ email, password });
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response.data);
+            return rejectWithValue(error);
         }
     }
 );
@@ -26,9 +26,9 @@ export const googleLogin = createAsyncThunk(
 );
 export const logoutUser = createAsyncThunk(
     'user/logout',
-    async ({ rejectWithValue }) => {
+    async ({}, { rejectWithValue }) => {
         try {
-            const { refreshToken } = JSON.parse(await AsyncStorage.getItem('userInfo'));
+            const { refreshToken } = JSON.parse(await SecureStorage.getItemAsync('tokens'));
             await Logout({ refreshToken });
         } catch (error) {
             return rejectWithValue(error.response.data);
@@ -36,7 +36,7 @@ export const logoutUser = createAsyncThunk(
     }
 );
 export const tokenRefresh = createAsyncThunk(
-    'user/refreshtoken',
+    'auth/refreshtoken',
     async ({ accessToken, refreshToken }, { rejectWithValue }) => {
         try {
             const response = await RefreshToken({ accessToken, refreshToken });

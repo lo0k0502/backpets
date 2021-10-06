@@ -66,7 +66,7 @@ export default ({ navigation, setIsSignIn }) => {
                 setErrorMsg('');
             }
         } catch (error) {
-            console.log('While logging in:', error.message);
+            console.log('While logging in:', error);
             setErrorMsg(error.message);
         }
         

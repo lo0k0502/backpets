@@ -1,9 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Button, Drawer, Avatar, HelperText } from "react-native-paper";
-import { DrawerContentScrollView } from "@react-navigation/drawer";
+import { DrawerContentScrollView, useDrawerProgress } from "@react-navigation/drawer";
 import { useFocusEffect } from '@react-navigation/native';
 import { Text, View, StyleSheet } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../../redux/userSlice';
 
 const styles = StyleSheet.create({
     root: {
@@ -22,25 +23,17 @@ const styles = StyleSheet.create({
 });
 
 export default ({ navigation, logoutback }) => {
-    const [user, setUser] = useState(null);
-
-    const fetch = async () => {
-        setUser(JSON.parse(await AsyncStorage.getItem('userInfo')));
-    };
-    
-    useFocusEffect(useCallback(() => {
-        fetch();
-    }, []));
+    const user = useSelector(selectUser);
 
     return (
         <DrawerContentScrollView style={styles.root}>
             <View style={styles.profile}>
                 <View>
-                    <Text style={[styles.text, { fontSize: 25 }]}>{user?.result.username}</Text>
-                    <Text style={[styles.text, { fontSize: 10 }]}>{user?.result.email}</Text>
+                    <Text style={[styles.text, { fontSize: 25 }]}>{user?.username}</Text>
+                    <Text style={[styles.text, { fontSize: 10 }]}>{user?.email}</Text>
                 </View>
                 <Avatar.Image 
-                    source={{ uri: user?.result.photoUrl }} 
+                    source={{ uri: user?.photoUrl }} 
                     size={60}
                 />
             </View>
