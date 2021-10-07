@@ -99,8 +99,7 @@ export class AuthController {
     if (!existUser) return res.status(400).json({ message: 'Refresh token not available!' });
     
     try {
-      const r = await this.jwtService.verifyAsync(accessToken, { secret: process.env.ACCESS_TOKEN_SECRET });
-      console.log(r)
+      await this.jwtService.verifyAsync(accessToken, { secret: process.env.ACCESS_TOKEN_SECRET });
 
       return res.status(200).json({ result: existUser, message: 'AccessToken still available' });
     } catch (error) {

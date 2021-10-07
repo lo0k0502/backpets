@@ -1,4 +1,4 @@
-import * as ImagePicker from 'expo-image-picker';
+import { getMediaLibraryPermissionsAsync, requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaTypeOptions, getPendingResultAsync } from 'expo-image-picker';
 import React, { useState } from 'react';
 import { TextInput, Dialog, Button, Card, HelperText } from 'react-native-paper';
 import { AddPost, uploadAvatar } from '../../../api';
@@ -30,20 +30,28 @@ export default ({ visible, close, refresh }) => {
 
     const handleChangeImg = async () => {
         setIsImgLoading(true);
-        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (permissionResult.canAskAgain) permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+
+        const currentPermission = await getMediaLibraryPermissionsAsync();
+        if (!currentPermission.granted) {
+            let permissionResult = await requestMediaLibraryPermissionsAsync();
+            if (!permissionResult.granted) {
+                Alert.alert('Permission denied!', 'We need your media library permission to add an image to this post!', [{ text: 'Got it!' }]);
+                setIsImgLoading(false);
+                return;
+            }
+        }
+
+        let result = await launchImageLibraryAsync({
+            mediaTypes: MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [ 3, 2 ],
             quality: 1,
         });
-        if (!result) result = await ImagePicker.getPendingResultAsync();
-        if (!result) return setIsImgLoading(false);
 
-        if (!result.cancelled) {
-            setPhotoUrl(result.uri);
-        }
+        if (!result) result = await getPendingResultAsync();
+        if (!result) return setIsImgLoading(false);
+        if (!result.cancelled) setPhotoUrl(result.uri);
+
 
         setIsImgLoading(false);
     };

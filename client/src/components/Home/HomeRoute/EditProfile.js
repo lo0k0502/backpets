@@ -4,7 +4,7 @@ import { Avatar, Button, HelperText, TextInput } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import * as SecureStorage from 'expo-secure-store';
 import { useDispatch, useSelector } from 'react-redux';
-import { requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaTypeOptions, getPendingResultAsync, getMediaLibraryPermissionsAsync } from 'expo-image-picker';
+import { requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaTypeOptions, getPendingResultAsync, getMediaLibraryPermissionsAsync, MediaLibraryPermissionResponse } from 'expo-image-picker';
 
 import { updateProfile } from '../../../redux/userReducer';
 import { deleteAvatar, uploadAvatar } from '../../../api';
@@ -65,19 +65,26 @@ export default ({ navigation }) => {
 
     const handleChangeImg = async () => {
         setIsImgLoading(true);
-        let permissionResult = await requestMediaLibraryPermissionsAsync();
-        if (permissionResult.canAskAgain) permissionResult = await requestMediaLibraryPermissionsAsync();
+
+        const currentPermission = await getMediaLibraryPermissionsAsync();
+        if (!currentPermission.granted) {
+            let permissionResult = await requestMediaLibraryPermissionsAsync();
+            if (!permissionResult.granted) {
+                Alert.alert('Permission denied!', 'We need your media library permission to change avatar!', [{ text: 'Got it!' }]);
+                setIsImgLoading(false);
+                return;
+            }
+        }
+
         let result = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [ 1, 1 ],
             quality: 1,
         });
-        if (!result) result = getPendingResultAsync();
 
-        if (!result.cancelled) {
-            setPhotoUrl(result.uri);
-        }
+        if (!result) result = await getPendingResultAsync();
+        if (!result.cancelled) setPhotoUrl(result.uri);
 
         setIsImgLoading(false);
     };
@@ -114,17 +121,16 @@ export default ({ navigation }) => {
             if (photoUrl !== user.info?.photoUrl) {
                 let formData = new FormData();
                 const filename = photoUrl.split('/').pop();
-                const mediatype = filename.split('.').pop();
-                let type = null;
+                let mediatype = filename.split('.').pop();
                 switch (mediatype) {
                     case 'jpg': 
-                        type = 'image/jpeg';
+                        mediatype = 'image/jpeg';
                         break;
                     case 'jpeg': 
-                        type = 'image/jpeg';
+                        mediatype = 'image/jpeg';
                         break;
                     case 'png': 
-                        type = 'image/jpeg';
+                        mediatype = 'image/png';
                         break;
                     default: {
                         setIsLoading(false);
@@ -135,7 +141,7 @@ export default ({ navigation }) => {
                 formData.append('avatar', {
                     uri: photoUrl,
                     name: filename,
-                    type,
+                    type: mediatype,
                 });
     
                 const { data } = await uploadAvatar(formData);
