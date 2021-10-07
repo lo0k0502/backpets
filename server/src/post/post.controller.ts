@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Res, Post, Body, Param, Delete } from '@nestjs/common';
 import { Response } from 'express';
 import { Post as PostModel } from 'src/post/post.schema';
 import { PostService } from './post.service';
@@ -33,6 +33,20 @@ export class PostController {
             return res.status(200).json({ result });
         } catch (error) {
             console.error(error);
+            return res.status(400).json({ message: '錯誤' });
+        }
+    }
+
+    @Delete(':postid')
+    async DeletePost(@Param() { postid }, @Res() res: Response) {
+        try {
+            const result = await this.postService.findOne({ _id: postid });
+            if (!result) return res.status(400).json({ message: '用戶不存在' });
+    
+            await this.postService.deleteOne({ _id: postid });
+            return res.status(200).json({ success: true });
+        } catch (error) {
+            console.log(error);
             return res.status(400).json({ message: '錯誤' });
         }
     }

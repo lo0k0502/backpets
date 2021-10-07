@@ -24,5 +24,6 @@ export const deleteAvatar = (filename) => API.delete(`/avatar/${filename}`);
 
 //post
 export const AddPost = (payload) => API.post('/post/add', payload);
+export const DeletePost = (postId) => API.delete(`/post/${postId}`);
 export const fetchAllPosts = () => API.get('/post/fetchall');
 export const fetchPost = (postid) => API.get(`/post/${postid}`);

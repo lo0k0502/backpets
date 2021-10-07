@@ -1,5 +1,6 @@
-import { getMediaLibraryPermissionsAsync, requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaTypeOptions, getPendingResultAsync } from 'expo-image-picker';
 import React, { useState } from 'react';
+import { TextInput as NativeTextInput } from 'react-native';
+import { getMediaLibraryPermissionsAsync, requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaTypeOptions, getPendingResultAsync } from 'expo-image-picker';
 import { TextInput, Dialog, Button, Card, HelperText } from 'react-native-paper';
 import { AddPost, uploadAvatar } from '../../../api';
 import { useSelector } from 'react-redux';
@@ -150,8 +151,22 @@ export default ({ visible, close, refresh }) => {
                     error={contentErrorMsg}
                     value={content}
                     multiline
-                    numberOfLines={9}
                     selectionColor='#666'
+                    render={(innerProps) => (
+                        <NativeTextInput
+                            {...innerProps}
+                            style={[
+                            innerProps.style,
+                            innerProps.multiline
+                                ? {
+                                    paddingTop: 8,
+                                    paddingBottom: 8,
+                                    height: 200,
+                                }
+                                : null,
+                            ]}
+                        />
+                    )}
                     theme={{ colors: { primary: '#ff8000' } }}
                     onChangeText={checkContent}
                 />
@@ -169,14 +184,13 @@ export default ({ visible, close, refresh }) => {
                     loading={isImgLoading}
                     contentStyle={{ width: '100%', height: '100%' }}
                     style={{ 
-                        width: 150,
                         height: 40, 
-                        alignSelf: 'center', 
+                        // alignSelf: 'center', 
                         marginVertical: 10, 
                     }}
                     onPress={handleChangeImg}
                 >
-                    Add Image
+                    {photoUrl ? 'Change Image' : 'Add Image'}
                 </Button>
                 <HelperText 
                     type='error' 

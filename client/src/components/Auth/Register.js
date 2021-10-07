@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, Platform } from 'react-native';
 import { Button, HelperText, TextInput } from 'react-native-paper';
 import { UserRegister } from '../../api';
 
 const styles = StyleSheet.create({
     input: {
-        width: '60%',
+        width: '100%',
     },
 });
 
@@ -101,115 +101,118 @@ export default ({ navigation }) => {
                 alignItems: 'center',
             }}
         >
-            <Text 
+            <Text style={{ fontSize: 50 }}>Register</Text>
+            <KeyboardAvoidingView 
+                // behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
+                behavior='padding'
                 style={{
-                    fontSize: 50,
+                    width: '50%',
+                    alignItems: 'center',
                 }}
             >
-                Register
-            </Text>
-            <HelperText
-                type='error'
-            >
-                {errorMsg}
-            </HelperText>
-            <TextInput 
-                mode='outlined'
-                placeholder='Username'
-                placeholderTextColor='gray'
-                error={usernameErrorMsg}
-                disabled={isLoading}
-                value={username}
-                style={styles.input} 
-                selectionColor='#666'
-                theme={{ colors: { primary: '#ff8000' } }}
-                onChangeText={checkUsername}
-            />
-            <HelperText 
-                type='error' 
-            >
-                {usernameErrorMsg}
-            </HelperText>
-            <TextInput 
-                mode='outlined'
-                placeholder='E-mail'
-                placeholderTextColor='gray'
-                error={emailErrorMsg}
-                disabled={isLoading}
-                value={email}
-                style={styles.input} 
-                selectionColor='#666'
-                theme={{ colors: { primary: '#ff8000' } }}
-                onChangeText={checkEmail}
-            />
-            <HelperText 
-                type='error' 
-            >
-                {emailErrorMsg}
-            </HelperText>
-            <TextInput 
-                mode='outlined'
-                placeholder='Password'
-                placeholderTextColor='gray'
-                error={passwordErrorMsg}
-                disabled={isLoading}
-                secureTextEntry={passwordSecure}
-                value={password}
-                style={styles.input} 
-                selectionColor='#666'
-                theme={{ colors: { primary: '#ff8000' } }}
-                onChangeText={checkPassword}
-                right={
-                    <TextInput.Icon 
-                        name={passwordSecure ? 'eye-off' : 'eye'} 
-                        onPress={() => setPasswordSecure(!passwordSecure)}
-                    />
-                }
-            />
-            <HelperText 
-                type='error' 
-            >
-                {passwordErrorMsg}
-            </HelperText>
-            <TextInput 
-                mode='outlined'
-                placeholder='ConfirmPassword'
-                placeholderTextColor='gray'
-                error={confirmPasswordErrorMsg}
-                disabled={isLoading}
-                secureTextEntry={confirmPasswordSecure}
-                value={confirmPassword}
-                style={styles.input} 
-                selectionColor='#666'
-                theme={{ colors: { primary: '#ff8000' } }}
-                onChangeText={checkConfirmPassword}
-                right={
-                    <TextInput.Icon 
-                        name={confirmPasswordSecure ? 'eye-off' : 'eye'} 
-                        onPress={() => setConfirmPasswordSecure(!confirmPasswordSecure)}
-                    />
-                }
-            />
-            <HelperText 
-                type='error' 
-            >
-                {confirmPasswordErrorMsg}
-            </HelperText>
-            <Button 
-                mode='contained'
-                color='#ff8000'
-                dark
-                loading={isLoading}
-                style={{
-                    width: '60%',
-                    height: 50,
-                    elevation: 5,
-                }}
-                contentStyle={{ width: '100%', height: '100%' }}
-                onPress={handleSubmit}
-            >
-                Sign Up
-            </Button>
+                <HelperText
+                    type='error'
+                >
+                    {errorMsg}
+                </HelperText>
+                <TextInput 
+                    mode='outlined'
+                    placeholder='Username'
+                    placeholderTextColor='gray'
+                    error={usernameErrorMsg}
+                    disabled={isLoading}
+                    value={username}
+                    style={styles.input} 
+                    selectionColor='#666'
+                    theme={{ colors: { primary: '#ff8000' } }}
+                    onChangeText={checkUsername}
+                />
+                <HelperText 
+                    type='error' 
+                >
+                    {usernameErrorMsg}
+                </HelperText>
+                <TextInput 
+                    mode='outlined'
+                    placeholder='E-mail'
+                    placeholderTextColor='gray'
+                    error={emailErrorMsg}
+                    disabled={isLoading}
+                    value={email}
+                    style={{ width: '100%' }} 
+                    selectionColor='#666'
+                    theme={{ colors: { primary: '#ff8000' } }}
+                    onChangeText={checkEmail}
+                />
+                <HelperText 
+                    type='error' 
+                >
+                    {emailErrorMsg}
+                </HelperText>
+                <TextInput 
+                    mode='outlined'
+                    placeholder='Password'
+                    placeholderTextColor='gray'
+                    error={passwordErrorMsg}
+                    disabled={isLoading}
+                    secureTextEntry={passwordSecure}
+                    value={password}
+                    style={styles.input} 
+                    selectionColor='#666'
+                    theme={{ colors: { primary: '#ff8000' } }}
+                    onChangeText={checkPassword}
+                    right={
+                        <TextInput.Icon 
+                            name={passwordSecure ? 'eye-off' : 'eye'} 
+                            onPress={() => setPasswordSecure(!passwordSecure)}
+                        />
+                    }
+                />
+                <HelperText 
+                    type='error' 
+                >
+                    {passwordErrorMsg}
+                </HelperText>
+                <TextInput 
+                    mode='outlined'
+                    placeholder='ConfirmPassword'
+                    placeholderTextColor='gray'
+                    error={confirmPasswordErrorMsg}
+                    disabled={isLoading}
+                    secureTextEntry={confirmPasswordSecure}
+                    value={confirmPassword}
+                    style={styles.input} 
+                    selectionColor='#666'
+                    theme={{ colors: { primary: '#ff8000' } }}
+                    onChangeText={checkConfirmPassword}
+                    right={
+                        <TextInput.Icon 
+                            name={confirmPasswordSecure ? 'eye-off' : 'eye'} 
+                            onPress={() => setConfirmPasswordSecure(!confirmPasswordSecure)}
+                        />
+                    }
+                />
+                <HelperText 
+                    type='error' 
+                >
+                    {confirmPasswordErrorMsg}
+                </HelperText>
+                <Button 
+                    mode='contained'
+                    color='#ff8000'
+                    dark
+                    loading={isLoading}
+                    style={{
+                        width: '60%',
+                        height: 50,
+                        elevation: 5,
+                    }}
+                    contentStyle={{ width: '100%', height: '100%' }}
+                    onPress={handleSubmit}
+                >
+                    Sign Up
+                </Button>
+            </KeyboardAvoidingView>
         </View>
     );
 };

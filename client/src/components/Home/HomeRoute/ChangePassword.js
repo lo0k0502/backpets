@@ -73,9 +73,11 @@ export default ({  navigation }) => {
                 newPassword, 
             });
             if (result) {
-                Alert.alert('Success!!', 'Password Successfully Updated!!\nGoing back...', [
-                    { text: 'OK', onPress: () => navigation.goBack() }
-                ]);
+                Alert.alert(
+                    'Success!!', 
+                    'Password Successfully Updated!!\nGoing back...', 
+                    [{ text: 'OK', onPress: () => navigation.goBack() }]
+                );
             }
             setIsLoading(false);
             setOldPassword('');

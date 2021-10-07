@@ -40,6 +40,7 @@ export default ({ logoutback }) => {
                     <HomeStack.Screen 
                         name='Post' 
                         options={{
+                            headerShown: false,
                             ...TransitionPresets.SlideFromRightIOS
                         }}
                     >

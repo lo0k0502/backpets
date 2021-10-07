@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import moment from 'moment';
-import { Card, Avatar, Paragraph, Title, TouchableRipple, Button } from 'react-native-paper';
+import { Card, Avatar, Paragraph, Title, TouchableRipple, Button, IconButton } from 'react-native-paper';
 import { fetchUserById } from '../../../api';
 
 export default ({ post }) => {
@@ -39,7 +39,10 @@ export default ({ post }) => {
                 style={{ width: '100%' }}
                 onPress={() => navigation.navigate('Post', { post })}
             >
-                <Card.Title title={poster.username} subtitle={moment(post.post_time).fromNow()} left={props => <Avatar.Image {...props} source={{ uri: poster.photoUrl }} />} />
+                <Card.Title title={poster.username} 
+                    subtitle={moment(post.post_time).fromNow()} 
+                    left={props => <Avatar.Image {...props} source={{ uri: poster.photoUrl }} />} 
+                />
             </TouchableRipple>
             <Card.Actions style={{ flexDirection: 'column', alignItems: 'flex-start', padding: 0 }}>
                 <Title style={{ marginLeft: 10 }}>{post.title}</Title>

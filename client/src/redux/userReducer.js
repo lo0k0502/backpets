@@ -21,7 +21,7 @@ export const googleLogin = createAsyncThunk(
             const response = await GoogleLogin({ username, email, photoUrl });
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response.data);
+            return rejectWithValue(error);
         }
     }
 );
@@ -33,7 +33,7 @@ export const logoutUser = createAsyncThunk(
             console.log(_id)
             await Logout(_id);
         } catch (error) {
-            return rejectWithValue(error.response?.data);
+            return rejectWithValue(error);
         }
     }
 );
@@ -44,7 +44,7 @@ export const tokenRefresh = createAsyncThunk(
             const response = await RefreshToken({ accessToken, refreshToken });
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response?.data);
+            return rejectWithValue(error);
         }
     }
 );
@@ -55,7 +55,7 @@ export const updateProfile = createAsyncThunk(
             const response = await updateUserProfile({ userId, photoUrl, newUsername, email });
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response?.data);
+            return rejectWithValue(error);
         }
     }
 );

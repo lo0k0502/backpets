@@ -27,7 +27,7 @@ export class UserController {
     }
 
     @Post('delete')
-    async DeleteUser(@Body() { username }: UserType, @Res() res) {
+    async DeleteUser(@Body() { username }: UserType, @Res() res: Response) {
         try {
             const existUser = await this.userService.findOne({ username });
             if (!existUser) return res.status(400).json({ message: '用戶不存在' });

@@ -99,39 +99,33 @@ export class AuthController {
     if (!existUser) return res.status(400).json({ message: 'Refresh token not available!' });
     
     try {
-      await this.jwtService.verifyAsync(accessToken, { secret: process.env.ACCESS_TOKEN_SECRET });
+      const user = await this.jwtService.verifyAsync(refreshToken, { secret: process.env.REFRESH_TOKEN_SECRET });
+      if (!user) return res.status(400).json({ message: 'Refresh token forbidden!' })
 
-      return res.status(200).json({ result: existUser, message: 'AccessToken still available' });
+      const newAccessToken = await this.jwtService.signAsync(
+        { username: existUser.username }, 
+        { 
+          secret: process.env.ACCESS_TOKEN_SECRET, 
+          expiresIn: '1h',
+        },
+      );
+      const newRefreshToken = await this.jwtService.signAsync(
+        { username: existUser.username }, 
+        { secret: process.env.REFRESH_TOKEN_SECRET },
+      );
+
+      const hashedRefreshToken = await hash(newRefreshToken, 10);
+
+      const result = await this.userService.updateOne({ _id: existUser['_id'] }, { refreshToken: hashedRefreshToken });
+      return res.status(200).json({ 
+        result, 
+        accessToken: newAccessToken, 
+        refreshToken: newRefreshToken, 
+        message: 'AccessToken refreshed!', 
+      });
     } catch (error) {
-      try {
-        const user = await this.jwtService.verifyAsync(refreshToken, { secret: process.env.REFRESH_TOKEN_SECRET });
-        if (!user) return res.status(400).json({ message: 'Refresh token forbidden!' })
-
-        const newAccessToken = await this.jwtService.signAsync(
-          { username: existUser.username }, 
-          { 
-            secret: process.env.ACCESS_TOKEN_SECRET, 
-            expiresIn: '30m',
-          },
-        );
-        const newRefreshToken = await this.jwtService.signAsync(
-          { username: existUser.username }, 
-          { secret: process.env.REFRESH_TOKEN_SECRET },
-        );
-
-        const hashedRefreshToken = await hash(newRefreshToken, 10);
-
-        const result = await this.userService.updateOne({ _id: existUser['_id'] }, { refreshToken: hashedRefreshToken });
-        return res.status(200).json({ 
-          result, 
-          accessToken: newAccessToken, 
-          refreshToken: newRefreshToken, 
-          message: 'AccessToken refreshed!', 
-        });
-      } catch (error) {
-        console.log(error);
-        return res.status(400).json({ message: '錯誤' });
-      }
+      console.log(error);
+      return res.status(400).json({ message: '錯誤' });
     }
   }
 
