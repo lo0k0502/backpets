@@ -29,11 +29,11 @@ export default ({ navigation, logoutback }) => {
         <DrawerContentScrollView style={styles.root}>
             <View style={styles.profile}>
                 <View>
-                    <Text style={[styles.text, { fontSize: 25 }]}>{user?.username}</Text>
-                    <Text style={[styles.text, { fontSize: 10 }]}>{user?.email}</Text>
+                    <Text style={[styles.text, { fontSize: 25 }]}>{user.info?.username}</Text>
+                    <Text style={[styles.text, { fontSize: 10 }]}>{user.info?.email}</Text>
                 </View>
                 <Avatar.Image 
-                    source={{ uri: user?.photoUrl }} 
+                    source={{ uri: user.info?.photoUrl }} 
                     size={60}
                 />
             </View>

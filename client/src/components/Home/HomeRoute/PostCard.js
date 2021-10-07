@@ -38,7 +38,7 @@ export default ({ post }) => {
                 style={{ width: '100%' }}
                 onPress={() => navigation.navigate('Post', { post })}
             >
-                <Card.Title title={poster.username} subtitle={moment(post.post_time).fromNow()} left={props => <Avatar.Icon {...props} icon="folder" />} />
+                <Card.Title title={poster.username} subtitle={moment(post.post_time).fromNow()} left={props => <Avatar.Image {...props} source={{ uri: poster.photoUrl }} />} />
             </TouchableRipple>
             <Card.Actions style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
                 <Title style={{ marginLeft: 10 }}>{post.title}</Title>

@@ -21,7 +21,7 @@ export class AuthController {
         const existUser = await this.userService.findOne({ username });
         if (existUser)
           return res.status(400).json({ message: '用戶名已被使用!' });
-        
+
         const existEmail = await this.userService.findOne({ email });
         if (existEmail)
           return res.status(400).json({ message: 'Email已被使用!' });
@@ -32,6 +32,7 @@ export class AuthController {
           password: hashedPassword,
           email,
           photoUrl: `http://${process.env.BASE_URL}:8000/avatar/1627857508344-black-cat-icon-6.jpg`,
+          refreshToken: null,
           verified: false,
         });
         await this.mailService.sendEmailVerification({ 
@@ -69,34 +70,43 @@ export class AuthController {
         { secret: process.env.REFRESH_TOKEN_SECRET },
       );
 
-      addRefreshToken(refreshToken);
-      return res.status(200).json({ result: existUser, accessToken, refreshToken });
+      const hashedRefreshToken = await hash(refreshToken, 10);
+
+      const result = await this.userService.updateOne({ _id: existUser['_id'] }, { refreshToken: hashedRefreshToken });
+
+      return res.status(200).json({ result, accessToken, refreshToken });
     } catch (error) {
       console.log(error);
       return res.status(400).json({ message: '錯誤' });
     }
   }
 
-  @Delete(':refreshtoken')
-  Logout(@Param() { refreshtoken }, @Res() res: Response) {
-    deleteRefreshToken(refreshtoken);
+  @Delete(':userid')
+  async Logout(@Param() { userid }, @Res() res: Response) {
+    await this.userService.updateOne({ _id: userid }, { refreshToken: null });
     return res.sendStatus(200);
   }
 
   @Post('refreshtoken')
   async RefreshToken(@Body() { accessToken, refreshToken }, @Res() res: Response) {
     if (!refreshToken) return res.status(400).json({ message: 'Refresh token is null!' });
-    if (!refreshTokens.includes(refreshToken)) return res.status(400).json({ message: 'Refresh token is not in list!' });
+
+    const allUsers = await this.userService.findAll();
+    const existUser = (await Promise.all(allUsers.map(async user => {
+      if (!user.refreshToken) return null;
+      return (await compare(refreshToken, user.refreshToken)) ? user : null;
+    }))).find(user => user);
+    if (!existUser) return res.status(400).json({ message: 'Refresh token not available!' });
     
     try {
-      await this.jwtService.verifyAsync(accessToken, { secret: process.env.ACCESS_TOKEN_SECRET });
+      const r = await this.jwtService.verifyAsync(accessToken, { secret: process.env.ACCESS_TOKEN_SECRET });
+      console.log(r)
 
-      return res.status(200).json({ message: 'AccessToken still available' });
+      return res.status(200).json({ result: existUser, message: 'AccessToken still available' });
     } catch (error) {
       try {
-        const { username } = await this.jwtService.verifyAsync(refreshToken, { secret: process.env.REFRESH_TOKEN_SECRET });
-
-        const existUser = await this.userService.findOne({ username });
+        const user = await this.jwtService.verifyAsync(refreshToken, { secret: process.env.REFRESH_TOKEN_SECRET });
+        if (!user) return res.status(400).json({ message: 'Refresh token forbidden!' })
 
         const newAccessToken = await this.jwtService.signAsync(
           { username: existUser.username }, 
@@ -105,28 +115,24 @@ export class AuthController {
             expiresIn: '30m',
           },
         );
+        const newRefreshToken = await this.jwtService.signAsync(
+          { username: existUser.username }, 
+          { secret: process.env.REFRESH_TOKEN_SECRET },
+        );
+
+        const hashedRefreshToken = await hash(newRefreshToken, 10);
+
+        const result = await this.userService.updateOne({ _id: existUser['_id'] }, { refreshToken: hashedRefreshToken });
         return res.status(200).json({ 
-          result: existUser, 
+          result, 
           accessToken: newAccessToken, 
-          refreshToken, 
+          refreshToken: newRefreshToken, 
           message: 'AccessToken refreshed!', 
         });
       } catch (error) {
         console.log(error);
         return res.status(400).json({ message: '錯誤' });
       }
-    }
-  }
-
-  @Post('testemail')
-  async testEmail(@Body() { username, email }: User, @Res() res: Response) {
-    try {
-      await this.mailService.sendEmailVerification({ username, email }, { id: '6116febd38ee7a84c520cc4b' });
-
-      return res.status(200).json({ message: 'Email Successfully Sent' })
-    } catch (error) {
-      console.log(error);
-      return res.status(400).json({ message: '錯誤' });
     }
   }
 

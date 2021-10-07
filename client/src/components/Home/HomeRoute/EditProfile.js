@@ -48,12 +48,13 @@ const styles = StyleSheet.create({
 
 export default ({ navigation }) => {
     const user = useSelector(selectUser);
+
     const [isLoading, setIsLoading] = useState(false);
     const [isImgLoading, setIsImgLoading] = useState(false);
 
-    const [photoUrl, setPhotoUrl] = useState(user.photoUrl);
-    const [username, setUsername] = useState(user.username);
-    const [email, setEmail] = useState(user.email);
+    const [photoUrl, setPhotoUrl] = useState(user.info?.photoUrl);
+    const [username, setUsername] = useState(user.info?.username);
+    const [email, setEmail] = useState(user.info?.email);
     
     const [errorMsg, setErrorMsg] = useState('');
     const [photoUrlErrorMsg, setPhotoUrlErrorMsg] = useState('');
@@ -105,13 +106,12 @@ export default ({ navigation }) => {
             if (!email) setEmailErrorMsg('Must not be null!');
             return;
         }
-        const { refreshToken } = JSON.parse(await SecureStorage.getItemAsync('tokens'));
 
         setIsLoading(true);
 
         try {
             let sendPhotoUrl = photoUrl;
-            if (photoUrl !== user.photoUrl) {
+            if (photoUrl !== user.info?.photoUrl) {
                 let formData = new FormData();
                 const filename = photoUrl.split('/').pop();
                 const mediatype = filename.split('.').pop();
@@ -141,17 +141,16 @@ export default ({ navigation }) => {
                 const { data } = await uploadAvatar(formData);
                 if (data) {
                     sendPhotoUrl = data.imgUrl;
-                    if (user.photoUrl.split('/')[2] === `http://${BASE_URL}:8000`)
-                        await deleteAvatar(user.photoUrl.split('/').pop());
+                    if (user.info?.photoUrl.split('/')[2] === `http://${BASE_URL}:8000`)
+                        await deleteAvatar(user.info?.photoUrl.split('/').pop());
                 }
             }
 
             const res = unwrapResult(await dispatch(updateProfile({ 
+                userId: user.info?._id,
                 photoUrl: sendPhotoUrl,
-                username: user.username, 
                 newUsername: username, 
-                email, 
-                refreshToken,
+                email,
             })));
             if (res) {
                 setErrorMsg('');

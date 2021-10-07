@@ -7,6 +7,7 @@ export const loginUser = createAsyncThunk(
     async ({ email, password }, { rejectWithValue }) => {
         try {
             const response = await UserLogin({ email, password });
+            console.log(response)
             return response.data;
         } catch (error) {
             return rejectWithValue(error);
@@ -26,12 +27,13 @@ export const googleLogin = createAsyncThunk(
 );
 export const logoutUser = createAsyncThunk(
     'user/logout',
-    async ({}, { rejectWithValue }) => {
+    async ({}, { rejectWithValue, getState }) => {
         try {
-            const { refreshToken } = JSON.parse(await SecureStorage.getItemAsync('tokens'));
-            await Logout({ refreshToken });
+            const { user: { info: { _id } } } = getState();
+            console.log(_id)
+            await Logout(_id);
         } catch (error) {
-            return rejectWithValue(error.response.data);
+            return rejectWithValue(error.response?.data);
         }
     }
 );
@@ -42,18 +44,18 @@ export const tokenRefresh = createAsyncThunk(
             const response = await RefreshToken({ accessToken, refreshToken });
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response.data);
+            return rejectWithValue(error.response?.data);
         }
     }
 );
 export const updateProfile = createAsyncThunk(
     'user/updateprofile',
-    async ({ photoUrl, username, newUsername, email, refreshToken }, {rejectWithValue}) => {
+    async ({ userId, photoUrl, newUsername, email }, {rejectWithValue}) => {
         try {
-            const response = await updateUserProfile({ photoUrl, username, newUsername, email, refreshToken });
+            const response = await updateUserProfile({ userId, photoUrl, newUsername, email });
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response.data);
+            return rejectWithValue(error.response?.data);
         }
     }
 );

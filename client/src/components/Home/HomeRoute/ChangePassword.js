@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
 
 export default ({  navigation }) => {
     const user = useSelector(selectUser);
+
     const [isLoading, setIsLoading] = useState(false);
 
     const [oldPassword, setOldPassword] = useState('');
@@ -66,9 +67,8 @@ export default ({  navigation }) => {
         setIsLoading(true);
         
         try {
-            const { username } = user;
             const result = await updateUserPassword({ 
-                username, 
+                userId: user.info?._id, 
                 password: oldPassword,
                 newPassword, 
             });

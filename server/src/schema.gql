@@ -23,6 +23,7 @@ input Userinput {
   email: String!
   password: String!
   photoUrl: String!
+  refreshToken: String!
   username: String!
   verified: Boolean!
 }

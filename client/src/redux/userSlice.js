@@ -5,18 +5,20 @@ import { loginUser, googleLogin, logoutUser, tokenRefresh, updateProfile } from 
 
 export const userSlice = createSlice({
   name: 'user',
-  initialState: null,
+  initialState: {
+    info: null,
+  },
   reducers: {},
   extraReducers: {
     [loginUser.fulfilled]: (state, action) => {
-      state = action.payload.result;
+      state.info = action.payload.result;
       SecureStorage.setItemAsync('tokens', JSON.stringify({
         accessToken: action.payload.accessToken,
         refreshToken: action.payload.refreshToken,
       }));
     },
     [googleLogin.fulfilled]: (state, action) => {
-      state = action.payload.result;
+      state.info = action.payload.result;
       SecureStorage.setItemAsync('tokens', JSON.stringify({
         accessToken: action.payload.accessToken,
         refreshToken: action.payload.refreshToken,
@@ -34,12 +36,12 @@ export const userSlice = createSlice({
       }
     },
     [logoutUser.fulfilled]: (state) => {
-      state = null;
+      state.info = null;
       SecureStorage.deleteItemAsync('tokens');
     },
     [tokenRefresh.fulfilled]: (state, action) => {
-      if (action.payload.result) {
-        state = action.payload.result;
+      state.info = action.payload.result;
+      if (action.payload.accessToken) {
         SecureStorage.setItemAsync('tokens', JSON.stringify({
           accessToken: action.payload.accessToken,
           refreshToken: action.payload.refreshToken,
@@ -49,7 +51,7 @@ export const userSlice = createSlice({
     },
     [updateProfile.fulfilled]: (state, action) => {
       if (action.payload.result) {
-        state = action.payload.result;
+        state.info = action.payload.result;
         SecureStorage.setItemAsync('tokens', JSON.stringify({
           accessToken: action.payload.accessToken,
           refreshToken: action.payload.refreshToken,

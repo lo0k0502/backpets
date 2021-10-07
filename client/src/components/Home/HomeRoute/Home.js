@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
             >
                 Post
             </Button>
-            <View style={[styles.emailVerifySuggest, { display: user?.verified ? 'none' : 'flex' }]}>
+            <View style={[styles.emailVerifySuggest, { display: user.info?.verified ? 'none' : 'flex' }]}>
                 <Text style={{ color: 'black' }}>Your email is not verified yet!</Text>
                 <Text style={{ color: 'black' }}>We highly recommed you to verify your email first!</Text>
             </View>

@@ -39,7 +39,7 @@ export default ({ visible, close, refresh }) => {
             quality: 1,
         });
         if (!result) result = await ImagePicker.getPendingResultAsync();
-        if (!result) return;
+        if (!result) return setIsImgLoading(false);
 
         if (!result.cancelled) {
             setPhotoUrl(result.uri);
@@ -90,7 +90,7 @@ export default ({ visible, close, refresh }) => {
             }
 
             await AddPost({
-                userId: user.userInfo._id.toString(),
+                userId: user.info?._id.toString(),
                 title,
                 content,
                 photoUrl: sendPhotoUrl,

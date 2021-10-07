@@ -17,6 +17,9 @@ export class User {
   @Prop()
   photoUrl: string;
 
+  @Prop()
+  refreshToken: string;
+
   @Prop({ required: true })
   verified: Boolean;
 }

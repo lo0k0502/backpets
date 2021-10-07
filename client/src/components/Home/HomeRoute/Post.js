@@ -13,7 +13,7 @@ export default ({ route: { params: { post } } }) => {
             const res = await fetchUserById(post.userId);
             setPoster(res.data.result);
         } catch (error) {
-            console.log(error)
+            console.log('While fetching post: ', error);
         }
     };
     
@@ -30,13 +30,13 @@ export default ({ route: { params: { post } } }) => {
             }}
         >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Avatar.Icon icon='folder' size={50} style={{ margin: 10 }} />
+                <Avatar.Image source={{ uri: poster.photoUrl }} size={50} style={{ margin: 10 }} />
                 <View>
                     <Title>{poster.username}</Title>
                     <Caption>{moment(post.post_time).fromNow()}</Caption>
                 </View>
             </View>
-            <Divider style={{ backgroundColor: 'gray', height: 5, borderRadius: 10 }} />
+            <Divider style={{ backgroundColor: 'gray', height: 2, borderRadius: 10 }} />
             <Headline>{post.title}</Headline>
             <Paragraph style={{ marginVertical: 10 }}>{post.content}</Paragraph>
             {post.photoUrl ? <Card.Cover source={{ uri: post.photoUrl }}/> : null}

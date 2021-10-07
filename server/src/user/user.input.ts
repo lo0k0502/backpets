@@ -11,5 +11,7 @@ export class Userinput {
     @Field()
     readonly photoUrl: string;
     @Field()
+    readonly refreshToken: string;
+    @Field()
     readonly verified: Boolean;
 }
