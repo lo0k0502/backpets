@@ -15,13 +15,13 @@ export const updateUserPassword = (payload) => API.post('/user/updatepassword', 
 export const updateUserProfile = (payload) => API.post('/user/updateprofile', payload);
 export const deleteUser = (payload) => API.post('/user/delete', payload);
 
-//avatar
-export const uploadAvatar = (payload) => API.post('/avatar/upload', payload, {
+//image
+export const uploadImage = (payload) => API.post('/image/upload', payload, {
     headers: {
         'Content-Type': 'multipart/form-data',
     },
 });
-export const deleteAvatar = (filename) => API.delete(`/avatar/${filename}`);
+export const deleteImage = (filename) => API.delete(`/image/${filename}`);
 
 //post
 export const AddPost = (payload) => API.post('/post/add', payload);

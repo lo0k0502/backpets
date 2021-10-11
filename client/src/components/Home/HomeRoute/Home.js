@@ -57,13 +57,13 @@ const styles = StyleSheet.create({
     });
 
     export default ({ navigation }) => {
-    const [refreshing, setRefreshing] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);// State for RefreshControl component
 
     const user = useSelector(selectUser);
     const [posts, setPosts] = useState([]);
-    const [postDrawer, setPostDrawer] = useState(false);
+    const [postDialog, setPostDialog] = useState(false);// Whether posting dialog is open
 
-    const fetch = async () => setPosts((await fetchAllPosts()).data.result);
+    const fetch = async () => setPosts((await fetchAllPosts()).data.result);// Fetch all posts
 
     useFocusEffect(useCallback(() => {
         fetch();
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
                 icon='plus'
                 color='#ff8000'
                 dark
-                onPress={() => setPostDrawer(true)}
+                onPress={() => setPostDialog(true)}
             >
                 Post
             </Button>
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
                 <Text style={{ color: 'black' }}>We highly recommed you to verify your email first!</Text>
             </View>
             <Portal>
-                <PostDialog visible={postDrawer} close={() => setPostDrawer(false)} refresh={fetch} />
+                <PostDialog visible={postDialog} close={() => setPostDialog(false)} refresh={fetch} />
             </Portal>
             {posts.map(post => <PostCard post={post} key={post._id} />)}
             <View style={{ height: 50 }} />

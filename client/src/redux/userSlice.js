@@ -3,6 +3,7 @@ import { Alert, Clipboard } from 'react-native';
 import * as SecureStorage from 'expo-secure-store';
 import { loginUser, googleLogin, logoutUser, tokenRefresh, updateProfile } from './userReducer';
 
+// The redux state instance, contains state control and the configuration when the dispatched function finish its work.
 export const userSlice = createSlice({
   name: 'user',
   initialState: {

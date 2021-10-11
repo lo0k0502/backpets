@@ -11,7 +11,7 @@ import {
 } from 'expo-image-picker';
 
 import { updateProfile } from '../../../redux/userReducer';
-import { deleteAvatar, uploadAvatar } from '../../../api';
+import { deleteImage, uploadImage } from '../../../api';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { selectUser } from '../../../redux/userSlice';
 
@@ -52,8 +52,8 @@ const styles = StyleSheet.create({
 export default ({ navigation }) => {
     const user = useSelector(selectUser);
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [isImgLoading, setIsImgLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);// Whether it is during editing profile, if so, disable inputs and buttons.
+    const [isImgLoading, setIsImgLoading] = useState(false);// Whether it is during image picking, if so, disable inputs and buttons.
 
     const [photoUrl, setPhotoUrl] = useState(user.info?.photoUrl);
     const [username, setUsername] = useState(user.info?.username);
@@ -66,9 +66,11 @@ export default ({ navigation }) => {
 
     const dispatch = useDispatch();
 
+    // Change image
     const handleChangeImg = async () => {
         setIsImgLoading(true);
 
+        // Check if user has granted us to access their media library. If no, ask once.
         const currentPermission = await getMediaLibraryPermissionsAsync();
         if (!currentPermission.granted) {
             let permissionResult = await requestMediaLibraryPermissionsAsync();
@@ -79,6 +81,7 @@ export default ({ navigation }) => {
             }
         }
 
+        // Launch image picker
         let result = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
             allowsEditing: true,
@@ -86,7 +89,11 @@ export default ({ navigation }) => {
             quality: 1,
         });
 
+        // Check if data gets lost, if so, use getPendingResultAsync function.
         if (!result) result = await getPendingResultAsync();
+        if (!result) return setIsImgLoading(false);
+
+        // If the final result is not cancelled, change the current photo url to the result photo's local url.
         if (!result.cancelled) setPhotoUrl(result.uri);
 
         setIsImgLoading(false);
@@ -117,11 +124,15 @@ export default ({ navigation }) => {
             return;
         }
 
+        // Start editing profile
         setIsLoading(true);
 
+        const previousProfile = user;
         try {
             let sendPhotoUrl = photoUrl;
-            if (photoUrl !== user.info?.photoUrl) {
+
+            // Check if the photo is changed, if so, upload it to the database first.
+            if (photoUrl !== previousProfile.info?.photoUrl) {
                 let formData = new FormData();
                 const filename = photoUrl.split('/').pop();
                 let mediatype = filename.split('.').pop();
@@ -141,23 +152,27 @@ export default ({ navigation }) => {
                         return;
                     }
                 }
-                formData.append('avatar', {
+                formData.append('image', {
                     uri: photoUrl,
                     name: filename,
                     type: mediatype,
                 });
     
-                const { data } = await uploadAvatar(formData);
+                const { data } = await uploadImage(formData);
                 if (data) {
                     sendPhotoUrl = data.imgUrl;
-                    if (/^http:\/\/\d+\.\d+\.\d+\.\d+:8000$/.test(user.info?.photoUrl.split('/')[2])) {
-                        await deleteAvatar(user.info?.photoUrl.split('/').pop());
+
+                    // If the previous avatar is in our database and it's not the default avatar, delete it.
+                    if (previousProfile.info?.photoUrl !== 'http://172.16.88.94:8000/image/1633975665652-black-cat-icon-6.png' 
+                        && /^http:\/\/\d+\.\d+\.\d+\.\d+:8000$/.test(previousProfile.info?.photoUrl.split('/')[2])) {
+                        await deleteImage(previousProfile.info?.photoUrl.split('/').pop());
                     }
                 }
             }
 
+            // Update profile
             unwrapResult(await dispatch(updateProfile({ 
-                userId: user.info?._id,
+                userId: previousProfile.info?._id,
                 photoUrl: sendPhotoUrl,
                 newUsername: username, 
                 email,

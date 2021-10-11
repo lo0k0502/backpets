@@ -32,7 +32,7 @@ export class AuthController {
           username,
           password: hashedPassword,
           email,
-          photoUrl: `http://${process.env.BASE_URL}:8000/avatar/1627857508344-black-cat-icon-6.jpg`,
+          photoUrl: `http://${process.env.BASE_URL}:8000/image/1627857508344-black-cat-icon-6.jpg`,
           refreshToken: null,
           verified: false,
         });

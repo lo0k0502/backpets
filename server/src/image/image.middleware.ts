@@ -14,7 +14,7 @@ export class GridFsMulterConfigService implements MulterOptionsFactory {
                 useNewUrlParser: true,
             },
             file: (req, file) => {
-                return { filename:`${moment().valueOf()}-${file.originalname}`, bucketName: 'avatar' };
+                return { filename:`${moment().valueOf()}-${file.originalname}`, bucketName: 'image' };
             },
         });
     }

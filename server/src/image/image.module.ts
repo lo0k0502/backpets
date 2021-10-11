@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
-import { AvatarController } from 'src/avatar/avatar.controller';
-import { GridFsMulterConfigService } from './avatar.middleware';
+import { ImageController } from './image.controller';
+import { GridFsMulterConfigService } from './image.middleware';
 
 @Module({
   imports: [
@@ -9,7 +9,7 @@ import { GridFsMulterConfigService } from './avatar.middleware';
       useClass: GridFsMulterConfigService,
     }),
   ],
-  controllers: [AvatarController],
+  controllers: [ImageController],
   providers: [GridFsMulterConfigService],
 })
 export class FileModule {}

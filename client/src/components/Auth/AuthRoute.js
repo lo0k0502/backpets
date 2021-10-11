@@ -11,6 +11,7 @@ import ForgetPassword from './ForgetPassword';
 const AuhtStacks = createStackNavigator();
 const Drawers = createDrawerNavigator();
 
+// Development options, will be deleted when this project is in production.
 const DevOptions = ({ navigation }) => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -44,6 +45,7 @@ const DevOptions = ({ navigation }) => {
   );
 };
 
+// Contains the login route and the development options route.
 const LoginDrawer = ({ checkUnLogin, setIsSignIn }) => {
   return (
     <Drawers.Navigator screenOptions={{ headerShown: false }}>
@@ -57,8 +59,8 @@ const LoginDrawer = ({ checkUnLogin, setIsSignIn }) => {
   );
 };
 
+// Contains authorization related routes.
 const AuthRoute = ({ navigation, setIsSignIn }) => {
-
   return (
     <AuhtStacks.Navigator>
       <AuhtStacks.Screen name='LoginDrawer' options={{ headerShown: false }}>

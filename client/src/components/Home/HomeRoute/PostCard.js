@@ -7,14 +7,15 @@ import { fetchUserById } from '../../../api';
 export default ({ post }) => {
     const navigation = useNavigation();
     const [poster, setPoster] = useState({});
-    
+
+    // Fetch the poster of this post
     useFocusEffect(useCallback(() => {
         (async () => {
             try {
                 const res = await fetchUserById(post.userId);
                 setPoster(res.data.result);
             } catch (error) {
-                console.log(error);
+                console.log(error.response.data.message);
             }
         })()
     }, []));

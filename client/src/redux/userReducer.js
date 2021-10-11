@@ -2,12 +2,13 @@ import * as SecureStorage from 'expo-secure-store';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { UserLogin, GoogleLogin, RefreshToken, Logout, updateUserProfile } from '../api';
 
+// All requests that will affect redux state or SecureStorage should be configured by redux, 
+// so you should dispatch these function rather than request them directly using axios.
 export const loginUser = createAsyncThunk(
     'user/login',
     async ({ email, password }, { rejectWithValue }) => {
         try {
             const response = await UserLogin({ email, password });
-            console.log(response)
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);
@@ -30,7 +31,6 @@ export const logoutUser = createAsyncThunk(
     async ({}, { rejectWithValue, getState }) => {
         try {
             const { user: { info: { _id } } } = getState();
-            console.log(_id)
             await Logout(_id);
         } catch (error) {
             return rejectWithValue(error.response.data);

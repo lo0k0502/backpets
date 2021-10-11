@@ -12,17 +12,19 @@ export default ({ navigation, route: { params: { post } } }) => {
     const [poster, setPoster] = useState({});
     const [menuOpen, setMenuOpen] = useState(false);
     
+    // Fetch the poster of this post
     useFocusEffect(useCallback(() => {
         (async () => {
             try {
                 const res = await fetchUserById(post.userId);
                 setPoster(res.data.result);
             } catch (error) {
-                console.log('While fetching post: ', error);
+                console.log('While fetching poster: ', error.response.data.message);
             }
         })();
     }, []));
 
+    // Share this post's link (Not finished yet)
     const sharePost = async () => {
         await Share.share({
             message: 'ProjectP | A Great App',
@@ -30,6 +32,7 @@ export default ({ navigation, route: { params: { post } } }) => {
         });
     };
 
+    // Delete this post. Only the poster can see this function
     const deletePost = async () => {
         Alert.alert(
             'DELETING POST!',
@@ -49,7 +52,7 @@ export default ({ navigation, route: { params: { post } } }) => {
                                 );
                             }
                         } catch (error) {
-                            console.log(error);
+                            console.log(error.response.data.message);
                         }
                     }
                 }

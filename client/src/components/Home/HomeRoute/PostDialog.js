@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { TextInput as NativeTextInput } from 'react-native';
 import { getMediaLibraryPermissionsAsync, requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaTypeOptions, getPendingResultAsync } from 'expo-image-picker';
 import { TextInput, Dialog, Button, Card, HelperText } from 'react-native-paper';
-import { AddPost, uploadAvatar } from '../../../api';
+import { AddPost, uploadImage } from '../../../api';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
 
 export default ({ visible, close, refresh }) => {
     const user = useSelector(selectUser);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isImgLoading, setIsImgLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
+    const [isImgLoading, setIsImgLoading] = useState(false);// Whether it is during image picking, if so, disable inputs and buttons. 
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -18,6 +18,15 @@ export default ({ visible, close, refresh }) => {
     const [titleErrorMsg, setTitleErrorMsg] = useState('');
     const [contentErrorMsg, setContentErrorMsg] = useState('');
     const [photoUrlErrorMsg, setPhotoUrlErrorMsg] = useState('');
+
+    // Close the dailog with configuration
+    const handleClose = () => {
+        refresh();
+        close();
+        setTitle('');
+        setContent('');
+        setPhotoUrl('');
+    };
 
     const checkTitle = (text) => {
         setTitle(text);
@@ -29,9 +38,11 @@ export default ({ visible, close, refresh }) => {
         setContentErrorMsg(text ? '' : 'Must not be null!!');
     };
 
+    // Change image
     const handleChangeImg = async () => {
         setIsImgLoading(true);
 
+        // Check if user has granted us to access their media library. If no, ask once.
         const currentPermission = await getMediaLibraryPermissionsAsync();
         if (!currentPermission.granted) {
             let permissionResult = await requestMediaLibraryPermissionsAsync();
@@ -42,6 +53,7 @@ export default ({ visible, close, refresh }) => {
             }
         }
 
+        // Launch image picker
         let result = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
             allowsEditing: true,
@@ -49,8 +61,11 @@ export default ({ visible, close, refresh }) => {
             quality: 1,
         });
 
+        // Check if data gets lost, if so, use getPendingResultAsync function.
         if (!result) result = await getPendingResultAsync();
         if (!result) return setIsImgLoading(false);
+
+        // If the final result is not cancelled, change the current photo url to the result photo's local url.
         if (!result.cancelled) setPhotoUrl(result.uri);
 
 
@@ -64,10 +79,13 @@ export default ({ visible, close, refresh }) => {
             return;
         }
         
+        // Start posting
         setIsLoading(true);
         
         try {
             let sendPhotoUrl = photoUrl;
+
+            // Check if the photo is added, if so, upload it to the database first.
             if (photoUrl) {
                 let formData = new FormData();
                 const filename = photoUrl.split('/').pop();
@@ -88,16 +106,17 @@ export default ({ visible, close, refresh }) => {
                         return;
                     }
                 }
-                formData.append('avatar', {
+                formData.append('image', {
                     uri: photoUrl,
                     name: filename,
                     type,
                 });
                 
-                const { data: { imgUrl } } = await uploadAvatar(formData);
+                const { data: { imgUrl } } = await uploadImage(formData);
                 sendPhotoUrl = imgUrl;
             }
 
+            // Add the post
             await AddPost({
                 userId: user.info?._id.toString(),
                 title,
@@ -105,7 +124,7 @@ export default ({ visible, close, refresh }) => {
                 photoUrl: sendPhotoUrl,
             });
 
-            handleClose();
+            handleClose();// Close the dialog
         } catch (error) {
             setIsLoading(false);
             if (error.response.data.message) {
@@ -115,14 +134,6 @@ export default ({ visible, close, refresh }) => {
         }
 
         setIsLoading(false);
-    };
-
-    const handleClose = () => {
-        refresh();
-        close();
-        setTitle('');
-        setContent('');
-        setPhotoUrl('');
     };
 
     return (

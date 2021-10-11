@@ -17,19 +17,21 @@ export default ({ navigation, setIsSignIn }) => {
 
     const dispatch = useDispatch();
     
-    const handleLogout = async () => {
-        try {
-            unwrapResult(await dispatch(logoutUser({})));
-            console.log('Not logged in, going back...');
-            setIsSignIn(false);
-        } catch (error) {
-            console.log('While logging out:', error);
-        }
-    };
-    
-    const logoutAlert = () => {
+    // Logout with alert
+    const logout = () => {
         Alert.alert('Logging out', 'Are you sure you want to log out?', [
-            { text: 'Yes', onPress: handleLogout },
+            { 
+                text: 'Yes', 
+                onPress: async () => {
+                    try {
+                        unwrapResult(await dispatch(logoutUser({})));
+                        console.log('Not logged in, going back...');
+                        setIsSignIn(false);
+                    } catch (error) {
+                        console.log('While logging out:', error);
+                    }
+                },
+            },
             { text: 'No' },
         ]);
     };
@@ -56,7 +58,7 @@ export default ({ navigation, setIsSignIn }) => {
                         tabBarIcon: ({ color }) => <Icons name='home' color={color} size={20} />,
                     }}
                 >
-                {props => <HomeRoute {...props} logoutback={logoutAlert} />}
+                {props => <HomeRoute {...props} logoutback={logout} />}
                 </Tabs.Screen>
                 <Tabs.Screen 
                     name='Map'

@@ -21,9 +21,9 @@ export default ({ navigation }) => {
             setErrorMsg('');
             Alert.alert('Success!', 'Reset password email sent!\nGoing back...', [{ text: 'OK', onPress: () => navigation.goBack() }]);
         } catch (error) {
-            console.log(error.response?.data?.message);
+            console.log(error.response.data.message);
             setIsLoading(false);
-            setErrorMsg(error.response?.data?.message);
+            setErrorMsg(error.response.data.message);
         }
     };
 
