@@ -6,6 +6,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import Login from './Login';
 import Register from './Register';
+import ForgetPassword from './ForgetPassword';
 
 const AuhtStacks = createStackNavigator();
 const Drawers = createDrawerNavigator();
@@ -65,6 +66,9 @@ const AuthRoute = ({ navigation, setIsSignIn }) => {
       </AuhtStacks.Screen>
       <AuhtStacks.Screen name='Register'>
       {props => <Register {...props} />}
+      </AuhtStacks.Screen>
+      <AuhtStacks.Screen name='ForgetPassword'>
+      {props => <ForgetPassword {...props} />}
       </AuhtStacks.Screen>
     </AuhtStacks.Navigator>
   );

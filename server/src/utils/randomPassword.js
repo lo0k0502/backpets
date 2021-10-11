@@ -11,7 +11,14 @@ const lowercase = codeArray(97, 122);
 const number = codeArray(48, 57);
 const symbol = codeArray(33, 47).concat(codeArray(58, 64)).concat(codeArray(91, 96)).concat(codeArray(123, 126));
 
-export default (length, addUpper, addNum, addSymbol) => {
+/**
+ * @param {Number} length length of the random password
+ * @param {Boolean} addUpper whether uppercase letters should be included
+ * @param {Boolean} addNum whether numbers should be included
+ * @param {Boolean} addSymbol whether symbols should be included
+ * @returns {String}
+ */
+export default (length, addUpper = false, addNum = false, addSymbol = false) => {
     let codes = lowercase;
     if (addUpper) codes = codes.concat(uppercase);
     if (addNum) codes = codes.concat(number);

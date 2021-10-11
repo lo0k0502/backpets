@@ -3,7 +3,6 @@ import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { UserType } from './user.dto';
 import { UserService } from './user.service';
-import { refreshTokens, addRefreshToken, deleteRefreshToken } from 'src/refreshTokens';
 import { hash, compare } from 'bcrypt';
 
 @Controller('user')

@@ -19,4 +19,18 @@ export class MailService {
           },
         }));
     }
+
+    async sendResetPasswordEmail({ username, email }: Partial<User>, { id }) {
+      const url = `http://${process.env.BASE_URL}:8000/auth/resetpassword/${id}`;
+
+      console.log(await this.mailerService.sendMail({
+        to: email,
+        subject: 'Password reset request',
+        template: './resetPassword',
+        context: {
+          username,
+          url,
+        },
+      }));
+    }
 };

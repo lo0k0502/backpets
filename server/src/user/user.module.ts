@@ -23,6 +23,7 @@ export class UserModule implements NestModule {
         .forRoutes(
             { path: 'user/updateprofile', method: RequestMethod.POST },
             { path: 'user/updatepassword', method: RequestMethod.POST },
+            { path: 'user/fetchbyid', method: RequestMethod.GET },
         );
     };
 }

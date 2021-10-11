@@ -6,6 +6,7 @@ export const GoogleLogin = (payload) => API.post('/auth/googlelogin', payload);
 export const UserRegister = (payload) => API.post('/auth/register', payload);
 export const Logout = (userId) => API.delete(`/auth/${userId}`);
 export const RefreshToken = (payload) => API.post('/auth/refreshtoken', payload);
+export const SendResetPasswordEmail = (payload) => API.post('/auth/resetpassword', payload);
 
 //user
 export const fetchAllUsers = () => API.get('/user/fetchall');

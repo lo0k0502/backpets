@@ -4,8 +4,8 @@ import { Response } from 'express';
 import { UserService } from '../user/user.service';
 import { User } from 'src/user/user.schema';
 import { JwtService } from '@nestjs/jwt';
-import { refreshTokens, addRefreshToken, deleteRefreshToken } from 'src/refreshTokens';
 import { MailService } from '../mail/mail.service';
+import randomPassword from '../utils/randomPassword';
 
 @Controller('auth')
 export class AuthController {
@@ -129,8 +129,44 @@ export class AuthController {
     }
   }
 
+  @Post('resetpassword')
+  async ResetPassword(@Body() { email }, @Res() res: Response) {
+    const existUser = await this.userService.findOne({ email });
+    if (!existUser) return res.status(400).json({ message: '用戶不存在' });
+
+    try {
+      await this.mailService.sendResetPasswordEmail({ 
+        username: existUser.username, 
+        email: existUser.email,
+      }, { id: existUser['_id'] });
+      return res.status(200).json({ message: 'success' });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ message: '錯誤' });
+    }
+  }
+
+  @Get('resetpassword/:id')
+  async ResetPasswordPage(@Param() { id }, @Res() res: Response) {
+    try {
+      const existUser = await this.userService.findOne({ _id: id });
+      if (!existUser) return res.status(400).json({ message: '用戶不存在' });
+
+      const newPassword = randomPassword(10, true, true, true);
+      console.log(newPassword)
+
+      const hashedPassword = await hash(newPassword, 10);
+      await this.userService.updateOne({ _id: id }, { password: hashedPassword });
+      return res.render('ResetPassword', { newPassword: newPassword });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ message: '錯誤' });
+    }
+  }
+
+
   @Get('verified/:id')
-  async verifyEmail(@Param() { id }, @Res() res: Response) {
+  async VerifyEmail(@Param() { id }, @Res() res: Response) {
     try {
       const existUser = await this.userService.findOne({ _id: id });
       if (!existUser) return res.status(400).json({ message: '用戶不存在' });

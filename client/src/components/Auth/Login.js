@@ -56,15 +56,12 @@ export default ({ navigation, setIsSignIn }) => {
         setLoginLoading(true);
 
         try {
-            const result = unwrapResult(await dispatch(loginUser({ email, password })));
-
-            if (result) {
-                console.log('Logged in, going to Home...');
-                setIsSignIn(true);
-                setEmail('');
-                setPassword('');
-                setErrorMsg('');
-            }
+            unwrapResult(await dispatch(loginUser({ email, password })));
+            console.log('Logged in, going to Home...');
+            setIsSignIn(true);
+            setEmail('');
+            setPassword('');
+            setErrorMsg('');
         } catch (error) {
             console.log('While logging in:', error);
             setErrorMsg(error.message);
@@ -88,19 +85,17 @@ export default ({ navigation, setIsSignIn }) => {
             if (type === 'success') {
                 const { email, familyName, givenName, photoUrl } = user;
     
-                const result = unwrapResult(await dispatch(googleLogin({ 
+                unwrapResult(await dispatch(googleLogin({ 
                     username: familyName + givenName,
                     email,
                     photoUrl, 
                 })));
 
-                if (result) {
-                    console.log('Logged in, going to Home...');
-                    navigation.navigate('Home');
-                    setEmail('');
-                    setPassword('');
-                    setErrorMsg('');
-                }
+                console.log('Logged in, going to Home...');
+                navigation.navigate('Home');
+                setEmail('');
+                setPassword('');
+                setErrorMsg('');
             }
         } catch (error) {
             console.log('While google logging in:', error.message);
@@ -171,7 +166,7 @@ export default ({ navigation, setIsSignIn }) => {
                     color: 'white',
                     backgroundColor: '#ff8000',
                     borderRadius: 10,
-                    elevation: 5,
+                    elevation: 3,
                 }}
                 contentStyle={{ width: '100%', height: '100%', }}
                 onPress={handleLogin}
@@ -197,6 +192,14 @@ export default ({ navigation, setIsSignIn }) => {
             >
                 Google Login
             </Button> */}
+            <Pressable 
+                style={{ marginTop: 5 }}
+                onPress={() => navigation.navigate('ForgetPassword')}
+            >
+                <Text style={{ color: '#ff8000' }}>
+                    Forget password?
+                </Text>
+            </Pressable>
             <Divider 
                 style={{
                     width: '90%',

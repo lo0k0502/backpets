@@ -156,22 +156,20 @@ export default ({ navigation }) => {
                 }
             }
 
-            const res = unwrapResult(await dispatch(updateProfile({ 
+            unwrapResult(await dispatch(updateProfile({ 
                 userId: user.info?._id,
                 photoUrl: sendPhotoUrl,
                 newUsername: username, 
                 email,
             })));
-            if (res) {
-                setErrorMsg('');
-                setPhotoUrlErrorMsg('');
-                setUsernameErrorMsg('');
-                setEmailErrorMsg('');
-                setIsLoading(false);
-                Alert.alert('Success!!', `Profile Successfully Updated!!\nGoing back...`, [
-                    { text: 'OK', onPress: () => navigation.goBack() }
-                ]);
-            }
+            setErrorMsg('');
+            setPhotoUrlErrorMsg('');
+            setUsernameErrorMsg('');
+            setEmailErrorMsg('');
+            setIsLoading(false);
+            Alert.alert('Success!!', `Profile Successfully Updated!!\nGoing back...`, [
+                { text: 'OK', onPress: () => navigation.goBack() }
+            ]);
         } catch (error) {
             setIsLoading(false);
             if (error.message) {
