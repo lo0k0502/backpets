@@ -1,14 +1,17 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, Alert } from 'react-native';
 import { Avatar, Button, HelperText, TextInput } from 'react-native-paper';
-import { useFocusEffect } from '@react-navigation/native';
-import * as SecureStorage from 'expo-secure-store';
 import { useDispatch, useSelector } from 'react-redux';
-import { requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaTypeOptions, getPendingResultAsync, getMediaLibraryPermissionsAsync, MediaLibraryPermissionResponse } from 'expo-image-picker';
+import { 
+    requestMediaLibraryPermissionsAsync, 
+    launchImageLibraryAsync, 
+    MediaTypeOptions, 
+    getPendingResultAsync, 
+    getMediaLibraryPermissionsAsync 
+} from 'expo-image-picker';
 
 import { updateProfile } from '../../../redux/userReducer';
 import { deleteAvatar, uploadAvatar } from '../../../api';
-import { BASE_URL } from '@env';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { selectUser } from '../../../redux/userSlice';
 
@@ -147,8 +150,9 @@ export default ({ navigation }) => {
                 const { data } = await uploadAvatar(formData);
                 if (data) {
                     sendPhotoUrl = data.imgUrl;
-                    if (user.info?.photoUrl.split('/')[2] === `http://${BASE_URL}:8000`)
+                    if (/^http:\/\/\d+\.\d+\.\d+\.\d+:8000$/.test(user.info?.photoUrl.split('/')[2])) {
                         await deleteAvatar(user.info?.photoUrl.split('/').pop());
+                    }
                 }
             }
 

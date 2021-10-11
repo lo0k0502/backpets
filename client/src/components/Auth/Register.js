@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, View, Platform } from 'react-native';
 import { Button, HelperText, TextInput } from 'react-native-paper';
 import { UserRegister } from '../../api';
+import { useStateWithValidation } from '../../hooks'
 
 const styles = StyleSheet.create({
     input: {
@@ -10,63 +11,23 @@ const styles = StyleSheet.create({
 });
 
 export default ({ navigation }) => {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [username, setUsername, isUsernameValid] = useStateWithValidation('');
+    const [email, setEmail, isEmailValid] = useStateWithValidation('', value => /^\w+((-\w+)|(\.\w+))*\@\w+((\.|-)\w+)*\.[A-z]+$/.test(value));
+    const [password, setPassword, isPasswordValid] = useStateWithValidation('', value => value.length >= 8);
+    const [confirmPassword, setConfirmPassword, isConfirmPasswordValid] = useStateWithValidation('', value => value === password);
     const [passwordSecure, setPasswordSecure] = useState(true);
     const [confirmPasswordSecure, setConfirmPasswordSecure] = useState(true);
-
-    const [usernameErrorMsg, setUsernameErrorMsg] = useState('');
-    const [emailErrorMsg, setEmailErrorMsg] = useState('');
-    const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
-    const [confirmPasswordErrorMsg, setConfirmPasswordErrorMsg] = useState('');
 
     const [errorMsg, setErrorMsg] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    const checkUsername = (text) => {
-        setUsername(text);
-        setUsernameErrorMsg(text ? '' : 'Must not be null!');
-    };
-
-    const checkEmail = (text) => {
-        setEmail(text);
-        setEmailErrorMsg(text ? '' : 'Must not be null!');
-        if (!text) return;
-
-        let validAddress = /^\w+((-\w+)|(\.\w+))*\@\w+((\.|-)\w+)*\.[A-z]+$/;
-        setEmailErrorMsg(validAddress.test(text) ? '' : 'Email address invalid!');
-    };
-
-    const checkPassword = (text) => {
-        setPassword(text);
-        setPasswordErrorMsg(text ? '' : 'Must not be null!');
-        if (!text) return;
-
-        setPasswordErrorMsg(text.length >= 8 ? '' : 'Must be at least 8 letters!');
-    };
-
-    const checkConfirmPassword = (text) => {
-        setConfirmPassword(text);
-        setConfirmPasswordErrorMsg(text ? '' : 'Must not be null!');
-        if (!text) return;
-        
-        setConfirmPasswordErrorMsg(text === password ? '' : 'Not the same as password!');
-    };
-
     const handleSubmit = async () => {
         if (!username 
             || !email 
-            || !password 
-            || usernameErrorMsg 
-            || emailErrorMsg 
-            || passwordErrorMsg 
-            || confirmPasswordErrorMsg) {
-            if (!username) setUsernameErrorMsg('Must not be null!');
-            if (!email) setEmailErrorMsg('Must not be null!');
-            if (!password) setPasswordErrorMsg('Must not be null!');
-            if (!confirmPassword) setConfirmPasswordErrorMsg('Must not be null!');
+            || !password) {
+            if (!username) setUsername('');
+            if (!email) setEmail('');
+            if (!password) setPassword('');
             return;
         }
 
@@ -110,57 +71,51 @@ export default ({ navigation }) => {
                     alignItems: 'center',
                 }}
             >
-                <HelperText
-                    type='error'
-                >
+                <HelperText type='error'>
                     {errorMsg}
                 </HelperText>
                 <TextInput 
                     mode='outlined'
                     placeholder='Username'
                     placeholderTextColor='gray'
-                    error={usernameErrorMsg}
+                    error={!isUsernameValid}
                     disabled={isLoading}
                     value={username}
                     style={styles.input} 
                     selectionColor='#666'
                     theme={{ colors: { primary: '#ff8000' } }}
-                    onChangeText={checkUsername}
+                    onChangeText={text => setUsername(text)}
                 />
-                <HelperText 
-                    type='error' 
-                >
-                    {usernameErrorMsg}
+                <HelperText type='error'>
+                    {!isUsernameValid ? 'Must not be null!' : null}
                 </HelperText>
                 <TextInput 
                     mode='outlined'
                     placeholder='E-mail'
                     placeholderTextColor='gray'
-                    error={emailErrorMsg}
+                    error={!isEmailValid}
                     disabled={isLoading}
                     value={email}
                     style={{ width: '100%' }} 
                     selectionColor='#666'
                     theme={{ colors: { primary: '#ff8000' } }}
-                    onChangeText={checkEmail}
+                    onChangeText={text => setEmail(text)}
                 />
-                <HelperText 
-                    type='error' 
-                >
-                    {emailErrorMsg}
+                <HelperText type='error'>
+                    {!isEmailValid ? 'Email is not valid!' : null}
                 </HelperText>
                 <TextInput 
                     mode='outlined'
                     placeholder='Password'
                     placeholderTextColor='gray'
-                    error={passwordErrorMsg}
+                    error={!isPasswordValid}
                     disabled={isLoading}
                     secureTextEntry={passwordSecure}
                     value={password}
                     style={styles.input} 
                     selectionColor='#666'
                     theme={{ colors: { primary: '#ff8000' } }}
-                    onChangeText={checkPassword}
+                    onChangeText={text => setPassword(text)}
                     right={
                         <TextInput.Icon 
                             name={passwordSecure ? 'eye-off' : 'eye'} 
@@ -168,23 +123,21 @@ export default ({ navigation }) => {
                         />
                     }
                 />
-                <HelperText 
-                    type='error' 
-                >
-                    {passwordErrorMsg}
+                <HelperText type='error'>
+                    {!isPasswordValid ? 'Must be at least 8 letters!' : null}
                 </HelperText>
                 <TextInput 
                     mode='outlined'
                     placeholder='ConfirmPassword'
                     placeholderTextColor='gray'
-                    error={confirmPasswordErrorMsg}
+                    error={!isConfirmPasswordValid}
                     disabled={isLoading}
                     secureTextEntry={confirmPasswordSecure}
                     value={confirmPassword}
                     style={styles.input} 
                     selectionColor='#666'
                     theme={{ colors: { primary: '#ff8000' } }}
-                    onChangeText={checkConfirmPassword}
+                    onChangeText={text => setConfirmPassword(text)}
                     right={
                         <TextInput.Icon 
                             name={confirmPasswordSecure ? 'eye-off' : 'eye'} 
@@ -192,10 +145,8 @@ export default ({ navigation }) => {
                         />
                     }
                 />
-                <HelperText 
-                    type='error' 
-                >
-                    {confirmPasswordErrorMsg}
+                <HelperText type='error'>
+                    {!isConfirmPasswordValid ? 'Not the same as password!' : null}
                 </HelperText>
                 <Button 
                     mode='contained'

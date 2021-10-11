@@ -6,11 +6,10 @@ export default ({ navigation }) => {
     const [allUsers, setAllUsers] = useState([]);
 
     useEffect(() => {
-        const fetch = async () => {
+        (async () => {
             const res = await fetchAllUsers();
             setAllUsers(res.data.result);
-        };
-        fetch();
+        })();
     }, []);
 
     return (

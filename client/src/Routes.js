@@ -18,24 +18,22 @@ export default () => {
   
     const dispatch = useDispatch();
   
-    const check = async () => {
-      const tokens = JSON.parse(await SecureStorage.getItemAsync('tokens'));
-      if (tokens) {
-        try {
-          const result = unwrapResult(await dispatch(tokenRefresh({ 
-            accessToken: tokens.accessToken, 
-            refreshToken: tokens.refreshToken, 
-          })));
-          if (result) setIsSignIn(true);
-        } catch (error) {
-          setIsSignIn(false);
-          console.log('While refreshing:', error.message);
-        }
-      } else setIsSignIn(false);
-    };
-  
     useEffect(() => {
-      check();
+      (async () => {
+        const tokens = JSON.parse(await SecureStorage.getItemAsync('tokens'));
+        if (tokens) {
+          try {
+            const result = unwrapResult(await dispatch(tokenRefresh({ 
+              accessToken: tokens.accessToken, 
+              refreshToken: tokens.refreshToken, 
+            })));
+            if (result) setIsSignIn(true);
+          } catch (error) {
+            setIsSignIn(false);
+            console.log('While refreshing:', error.message);
+          }
+        } else setIsSignIn(false);
+      })();
     }), [];
 
     return (

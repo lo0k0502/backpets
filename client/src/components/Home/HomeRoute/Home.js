@@ -63,9 +63,7 @@ const styles = StyleSheet.create({
     const [posts, setPosts] = useState([]);
     const [postDrawer, setPostDrawer] = useState(false);
 
-    const fetch = async () => {
-        setPosts((await fetchAllPosts()).data.result);
-    };
+    const fetch = async () => setPosts((await fetchAllPosts()).data.result);
 
     useFocusEffect(useCallback(() => {
         fetch();
@@ -73,7 +71,8 @@ const styles = StyleSheet.create({
 
     const handleRefresh = useCallback(() => {
         setRefreshing(true);
-        fetch().then(() => setRefreshing(false));
+        fetch()
+            .then(() => setRefreshing(false));
     }, []);
     
     return (

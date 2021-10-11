@@ -11,18 +11,16 @@ export default ({ navigation, route: { params: { post } } }) => {
     const user = useSelector(selectUser);
     const [poster, setPoster] = useState({});
     const [menuOpen, setMenuOpen] = useState(false);
-
-    const fetchPoster = async () => {
-        try {
-            const res = await fetchUserById(post.userId);
-            setPoster(res.data.result);
-        } catch (error) {
-            console.log('While fetching post: ', error);
-        }
-    };
     
     useFocusEffect(useCallback(() => {
-        fetchPoster();
+        (async () => {
+            try {
+                const res = await fetchUserById(post.userId);
+                setPoster(res.data.result);
+            } catch (error) {
+                console.log('While fetching post: ', error);
+            }
+        })();
     }, []));
 
     const sharePost = async () => {

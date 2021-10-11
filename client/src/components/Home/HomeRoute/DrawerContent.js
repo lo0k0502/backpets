@@ -1,7 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { Button, Drawer, Avatar, HelperText } from "react-native-paper";
-import { DrawerContentScrollView, useDrawerProgress } from "@react-navigation/drawer";
-import { useFocusEffect } from '@react-navigation/native';
+import React from 'react';
+import { Button, Drawer, Avatar } from "react-native-paper";
+import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { Text, View, StyleSheet } from "react-native";
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
