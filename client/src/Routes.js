@@ -14,10 +14,13 @@ import { unwrapResult } from '@reduxjs/toolkit';
 const Stacks = createStackNavigator();
 
 export default () => {
-    const [isSignin, setIsSignIn] = useState(null);
+    const [isSignin, setIsSignIn] = useState(null);// Controls what page should be displayed. null is splash page, false is login page, true is home page.
   
     const dispatch = useDispatch();
   
+    // If local SecureStorage has token, try to refresh it.
+    // If fail or has no token, display login page;
+    // If refreshed, display home page.
     useEffect(() => {
       (async () => {
         const tokens = JSON.parse(await SecureStorage.getItemAsync('tokens'));
