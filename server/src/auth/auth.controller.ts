@@ -1,18 +1,19 @@
 import { Body, Controller, Get, Param, Post, Delete, Req, Res } from '@nestjs/common';
 import { hash, compare } from 'bcrypt';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { UserService } from '../user/user.service';
 import { User } from 'src/user/user.schema';
-import { JwtService } from '@nestjs/jwt';
 import { MailService } from '../mail/mail.service';
 import randomPassword from '../utils/randomPassword';
+import { AuthService } from './auth.service';
+import { addResetTokenUser, deleteResetTokenUser, resetTokenUsers } from 'src/refreshTokens';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly userService: UserService,
-    private readonly jwtService: JwtService,
     private readonly mailService: MailService,
+    private readonly authService: AuthService,
   ) {}
 
   @Post('register')
@@ -58,17 +59,8 @@ export class AuthController {
       const isCorrect = await compare(password, existUser.password);
       if (!isCorrect) return res.status(400).json({ message: '密碼錯誤' });
       
-      const accessToken = await this.jwtService.signAsync(
-        { username: existUser.username }, 
-        { 
-          secret: process.env.ACCESS_TOKEN_SECRET, 
-          expiresIn: '30m' 
-        },
-      );
-      const refreshToken = await this.jwtService.signAsync(
-        { username: existUser.username }, 
-        { secret: process.env.REFRESH_TOKEN_SECRET },
-      );
+      const accessToken = await this.authService.signAccessTokenAsync(existUser);
+      const refreshToken = await this.authService.signRefreshTokenAsync(existUser);
 
       const hashedRefreshToken = await hash(refreshToken, 10);
 
@@ -84,11 +76,11 @@ export class AuthController {
   @Delete(':userid')
   async Logout(@Param() { userid }, @Res() res: Response) {
     await this.userService.updateOne({ _id: userid }, { refreshToken: null });
-    return res.sendStatus(200);
+    return res.status(200).json({ message: 'success' });
   }
 
   @Post('refreshtoken')
-  async RefreshToken(@Body() { accessToken, refreshToken }, @Res() res: Response) {
+  async RefreshToken(@Body() { refreshToken }, @Res() res: Response) {
     if (!refreshToken) return res.status(400).json({ message: 'Refresh token is null!' });
 
     const allUsers = await this.userService.findAll();
@@ -99,20 +91,11 @@ export class AuthController {
     if (!existUser) return res.status(400).json({ message: 'Refresh token not available!' });
     
     try {
-      const user = await this.jwtService.verifyAsync(refreshToken, { secret: process.env.REFRESH_TOKEN_SECRET });
-      if (!user) return res.status(400).json({ message: 'Refresh token forbidden!' })
+      const user = await this.authService.verifyRefreshTokenAsync(refreshToken);
+      if (!user) return res.status(400).json({ message: 'Refresh token forbidden!' });
 
-      const newAccessToken = await this.jwtService.signAsync(
-        { username: existUser.username }, 
-        { 
-          secret: process.env.ACCESS_TOKEN_SECRET, 
-          expiresIn: '1h',
-        },
-      );
-      const newRefreshToken = await this.jwtService.signAsync(
-        { username: existUser.username }, 
-        { secret: process.env.REFRESH_TOKEN_SECRET },
-      );
+      const newAccessToken = await this.authService.signAccessTokenAsync(existUser);
+      const newRefreshToken = await this.authService.signRefreshTokenAsync(existUser);
 
       const hashedRefreshToken = await hash(newRefreshToken, 10);
 
@@ -130,15 +113,25 @@ export class AuthController {
   }
 
   @Post('resetpassword')
-  async ResetPassword(@Body() { email }, @Res() res: Response) {
+  async ResetPassword(@Body() { email }, @Req() req: Request, @Res() res: Response) {
     const existUser = await this.userService.findOne({ email });
     if (!existUser) return res.status(400).json({ message: '用戶不存在' });
 
     try {
-      await this.mailService.sendResetPasswordEmail({ 
+      const resetToken = await this.authService.signAccessTokenAsync(existUser, '5m');
+
+      await this.mailService.sendResetPasswordEmail({
         username: existUser.username, 
         email: existUser.email,
-      }, { id: existUser['_id'] });
+      }, { resetToken });
+      
+      const hashedResetToken = await hash(resetToken, 15);
+
+      addResetTokenUser({
+        username: existUser.username,
+        email: existUser.email,
+        resetToken: hashedResetToken,
+      });
       return res.status(200).json({ message: 'success' });
     } catch (error) {
       console.log(error);
@@ -146,21 +139,27 @@ export class AuthController {
     }
   }
 
-  @Get('resetpassword/:id')
-  async ResetPasswordPage(@Param() { id }, @Res() res: Response) {
+  @Get('resetpassword/:token')
+  async ResetPasswordPage(@Param() { token }, @Res() res: Response) {
     try {
-      const existUser = await this.userService.findOne({ _id: id });
-      if (!existUser) return res.status(400).json({ message: '用戶不存在' });
+      if (!token) return res.redirect('/notfound');
+      const resetTokenUser = resetTokenUsers.find(async user => await compare(token, user.resetToken));
+      if (!resetTokenUser) return res.redirect('/notfound');
+      
+      await this.authService.verifyAccessTokenAsync(token);
+
+      const existUser = await this.userService.findOne({ username: resetTokenUser.username, email: resetTokenUser.email });
+      if (!existUser) return res.redirect('/notfound');
+
+      deleteResetTokenUser(resetTokenUser);
 
       const newPassword = randomPassword(10, true, true, true);
-      console.log(newPassword)
-
       const hashedPassword = await hash(newPassword, 10);
-      await this.userService.updateOne({ _id: id }, { password: hashedPassword });
+      await this.userService.updateOne({ _id: existUser }, { password: hashedPassword });
       return res.render('ResetPassword', { newPassword: newPassword });
     } catch (error) {
       console.log(error);
-      return res.status(400).json({ message: '錯誤' });
+      return res.redirect('/notfound');
     }
   }
 
@@ -169,13 +168,13 @@ export class AuthController {
   async VerifyEmail(@Param() { id }, @Res() res: Response) {
     try {
       const existUser = await this.userService.findOne({ _id: id });
-      if (!existUser) return res.status(400).json({ message: '用戶不存在' });
+      if (!existUser) return res.redirect('/notfound');
 
       await this.userService.updateOne({ _id: id }, { verified: true });
       return res.render('Verified');
     } catch (error) {
       console.log(error);
-      return res.status(400).json({ message: '錯誤' });
+      return res.redirect('/notfound');
     }
   }
 }

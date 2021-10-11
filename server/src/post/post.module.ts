@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AuthService } from 'src/auth/auth.service';
 import { AuthMiddleware } from '../auth/auth.middleware';
 import { PostController } from './post.controller';
 import { Post, PostSchema } from './post.schema';
@@ -12,7 +13,7 @@ import { PostService } from './post.service';
     JwtModule.register({}),
   ],
   controllers: [PostController],
-  providers: [PostService],
+  providers: [PostService, AuthService],
   exports: [PostService],
 })
 export class PostModule implements NestModule {

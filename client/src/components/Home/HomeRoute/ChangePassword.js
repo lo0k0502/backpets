@@ -68,7 +68,7 @@ export default ({  navigation }) => {
         
         try {
             const result = await updateUserPassword({ 
-                userId: user.info?._id, 
+                email: user.info?.email, 
                 password: oldPassword,
                 newPassword, 
             });

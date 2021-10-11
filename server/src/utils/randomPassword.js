@@ -13,10 +13,10 @@ const symbol = codeArray(33, 47).concat(codeArray(58, 64)).concat(codeArray(91, 
 
 /**
  * @param {Number} length length of the random password
- * @param {Boolean} addUpper whether uppercase letters should be included
- * @param {Boolean} addNum whether numbers should be included
- * @param {Boolean} addSymbol whether symbols should be included
- * @returns {String}
+ * @param {boolean} addUpper whether uppercase letters should be included
+ * @param {boolean} addNum whether numbers should be included
+ * @param {boolean} addSymbol whether symbols should be included
+ * @returns {string}
  */
 export default (length, addUpper = false, addNum = false, addSymbol = false) => {
     let codes = lowercase;

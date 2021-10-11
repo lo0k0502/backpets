@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
  * @param {any} initialValue initial value
  * @param {Function} validationFunction returns true if valid
  * @function changeState
- * @returns {[any, Function, Boolean, Boolean]} An array contains state, setState function, is valid boolean and is empty boolean
+ * @returns {[any, Function, boolean, boolean]} An array contains state, setState function, is valid boolean and is empty boolean
  */
 export const useStateWithValidation = (initialValue, validationFunction = state => !!state) => {
     const [state, setState] = useState(initialValue);

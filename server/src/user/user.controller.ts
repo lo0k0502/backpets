@@ -1,15 +1,15 @@
 import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { UserType } from './user.dto';
 import { UserService } from './user.service';
 import { hash, compare } from 'bcrypt';
+import { AuthService } from 'src/auth/auth.service';
 
 @Controller('user')
 export class UserController {
     constructor(
         private readonly userService: UserService,
-        private readonly jwtService: JwtService,
+        private readonly authService: AuthService,
     ) {}
 
     @Get('fetchall')
@@ -48,26 +48,18 @@ export class UserController {
     
             if (existUser.username !== newUsername && await this.userService.findOne({ username: newUsername })) 
                 return res.status(400).json({ message: '用戶名已被使用!' });
-    
-            const accessToken = await this.jwtService.signAsync(
-                { username: newUsername }, 
-                { 
-                    secret: process.env.ACCESS_TOKEN_SECRET, 
-                    expiresIn: '30m',
-                },
-            );
-            const newRefreshToken = await this.jwtService.signAsync(
-                { username: newUsername }, 
-                { secret: process.env.REFRESH_TOKEN_SECRET },
-            );
 
-            const hashedRefreshToken = await hash(newRefreshToken, 10);
-            const result = await this.userService.updateOne({ _id: userId }, { 
+            const updatedOnceUser = await this.userService.updateOne({ _id: userId }, { 
                 username: newUsername, 
                 email,
                 photoUrl,
-                refreshToken: hashedRefreshToken,
             });
+    
+            const accessToken = await this.authService.signAccessTokenAsync(updatedOnceUser);
+            const newRefreshToken = await this.authService.signRefreshTokenAsync(updatedOnceUser);
+
+            const hashedRefreshToken = await hash(newRefreshToken, 10);
+            const result = await this.userService.updateOne({ _id: userId }, { refreshToken: hashedRefreshToken });
             
             return res.status(200).json({ result, accessToken, refreshToken: newRefreshToken });
         } catch (error) {
@@ -77,16 +69,16 @@ export class UserController {
     }
 
     @Post('updatepassword')
-    async UpdatePassword(@Body() { userId, password, newPassword }, @Res() res: Response) {
+    async UpdatePassword(@Body() { email, password, newPassword }, @Res() res: Response) {
         try {
-            const existUser = await this.userService.findOne({ _id: userId });
+            const existUser = await this.userService.findOne({ email });
             if (!existUser) return res.status(400).json({ message: '用戶不存在' });
             
             const isCorrect = await compare(password, existUser.password);
             if (!isCorrect) return res.status(400).json({ message: '密碼錯誤' });
     
             const hashedPassword = await hash(newPassword, 10);
-            const result = await this.userService.updateOne({ _id: userId }, { password: hashedPassword });
+            const result = await this.userService.updateOne({ email }, { password: hashedPassword });
             return res.status(200).json({ result });
         } catch (error) {
             console.log(error);

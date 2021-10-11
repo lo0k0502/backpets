@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from '../auth/auth.module';
 import { FileModule } from '../avatar/avatar.module';
 import { PostModule } from '../post/post.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -22,5 +23,6 @@ import { PostModule } from '../post/post.module';
       sortSchema: true,
     }),
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

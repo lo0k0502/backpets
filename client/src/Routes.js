@@ -21,10 +21,9 @@ export default () => {
     useEffect(() => {
       (async () => {
         const tokens = JSON.parse(await SecureStorage.getItemAsync('tokens'));
-        if (tokens) {
+        if (tokens?.refreshToken) {
           try {
             unwrapResult(await dispatch(tokenRefresh({ 
-              accessToken: tokens.accessToken, 
               refreshToken: tokens.refreshToken, 
             })));
             setIsSignIn(true);
