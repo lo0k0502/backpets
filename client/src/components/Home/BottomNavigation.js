@@ -46,7 +46,7 @@ export default ({ navigation, setIsSignIn }) => {
                     position: 'absolute',
                     right: 10,
                     left: 10,
-                    bottom: 0,
+                    bottom: 5,
                     borderRadius: 100,
                     overflow: 'hidden',
                 }}
