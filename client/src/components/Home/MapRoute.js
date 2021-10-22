@@ -44,31 +44,24 @@ export default () => {
         }
       }
     >
-      
+
     <MapView 
       style = {{
         ...StyleSheet.absoluteFillObject,
       }}
 
-      initialRegion = {{
+      region = {{
         latitude: currentLatitude,
         longitude: currentLongitude,
         latitudeDelta: 0.0122,
         longitudeDelta: 0.003,
       }}
-
+      
       showsUserLocation={true}
       followsUserLocation={true}
-      onPress = { (e) => 
-        <Marker
-          coordinate = {{
-            latitude: e.nativeEvent.coordinate.latitude,
-            longitude: e.nativeEvent.coordinate.longitude,
-          }} 
-        />}
-      >
+    >
 
-      <Marker draggable
+      <Marker
       coordinate = {{
           latitude: 23.560043,
           longitude: 120.469031,
