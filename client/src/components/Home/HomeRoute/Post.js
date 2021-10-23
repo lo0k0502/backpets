@@ -1,11 +1,34 @@
 import React, { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import moment from 'moment';
-import { Alert, ScrollView, View, Share } from 'react-native';
+import { Alert, ScrollView, View, Share, StyleSheet } from 'react-native';
 import { Card, Divider, Paragraph, Subheading, Title, Appbar, Headline, Text, Caption, Avatar, Menu } from 'react-native-paper';
 import { DeletePost, fetchUserById } from '../../../api';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
+
+const styles = StyleSheet.create({
+    appbar: {
+        backgroundColor: 'white',
+    },
+    scrollView: {
+        flex: 1, 
+        backgroundColor: 'white', 
+        paddingHorizontal: 20,
+    },
+    momentView: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    imageDivider: { 
+        backgroundColor: 'gray',
+        height: 2, 
+        borderRadius: 10, 
+    },
+    p: { 
+        marginVertical: 10,
+    },
+});
 
 export default ({ navigation, route: { params: { post } } }) => {
     const user = useSelector(selectUser);
@@ -62,7 +85,7 @@ export default ({ navigation, route: { params: { post } } }) => {
 
     return (
         <>
-            <Appbar style={{ backgroundColor: 'white' }}>
+            <Appbar style={ styles.appbar }>
                 <Appbar.Action icon='arrow-left' onPress={navigation.goBack} />
                 <Appbar.Content />
                 <Menu
@@ -87,22 +110,18 @@ export default ({ navigation, route: { params: { post } } }) => {
                 </Menu>
             </Appbar>
             <ScrollView 
-                style={{ 
-                    flex: 1, 
-                    backgroundColor: 'white', 
-                    paddingHorizontal: 20,
-                }}
+                style={ styles.scrollView }
             >
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={ styles.momentView }>
                     <Avatar.Image source={{ uri: poster.photoUrl }} size={50} style={{ margin: 10 }} />
                     <View>
                         <Title>{poster.username}</Title>
                         <Caption>{moment(post.post_time).fromNow()}</Caption>
                     </View>
                 </View>
-                <Divider style={{ backgroundColor: 'gray', height: 2, borderRadius: 10 }} />
+                <Divider style={ styles.imageDivider } />
                 <Headline>{post.title}</Headline>
-                <Paragraph style={{ marginVertical: 10 }}>{post.content}</Paragraph>
+                <Paragraph style={ styles.p }>{post.content}</Paragraph>
                 {post.photoUrl ? <Card.Cover source={{ uri: post.photoUrl }}/> : null}
             </ScrollView>
         </>

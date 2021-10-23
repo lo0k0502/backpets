@@ -1,10 +1,28 @@
 import React, { useState } from 'react';
-import { TextInput as NativeTextInput } from 'react-native';
+import { TextInput as NativeTextInput, StyleSheet } from 'react-native';
 import { getMediaLibraryPermissionsAsync, requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaTypeOptions, getPendingResultAsync } from 'expo-image-picker';
 import { TextInput, Dialog, Button, Card, HelperText } from 'react-native-paper';
 import { AddPost, uploadImage } from '../../../api';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
+
+const styles = StyleSheet.create({
+    innerPropNav: {
+        paddingTop: 8,
+        paddingBottom: 8,
+        height: 200,
+    },
+    imageButton: { 
+        height: 40, 
+        // alignSelf: 'center', 
+        marginVertical: 10, 
+    },
+    photoCard: { 
+        width: 300, 
+        height: 200, 
+        alignSelf: 'center',
+    },
+});
 
 export default ({ visible, close, refresh }) => {
     const user = useSelector(selectUser);
@@ -169,11 +187,7 @@ export default ({ visible, close, refresh }) => {
                             style={[
                             innerProps.style,
                             innerProps.multiline
-                                ? {
-                                    paddingTop: 8,
-                                    paddingBottom: 8,
-                                    height: 200,
-                                }
+                                ? styles.innerPropNav
                                 : null,
                             ]}
                         />
@@ -194,11 +208,7 @@ export default ({ visible, close, refresh }) => {
                     disabled={isImgLoading || isLoading}
                     loading={isImgLoading}
                     contentStyle={{ width: '100%', height: '100%' }}
-                    style={{ 
-                        height: 40, 
-                        // alignSelf: 'center', 
-                        marginVertical: 10, 
-                    }}
+                    style={ styles.imageButton }
                     onPress={handleChangeImg}
                 >
                     {photoUrl ? 'Change Image' : 'Add Image'}
@@ -208,7 +218,7 @@ export default ({ visible, close, refresh }) => {
                 >
                     {photoUrlErrorMsg}
                 </HelperText>
-                {photoUrl ? <Card.Cover source={{ uri: photoUrl }} style={{ width: 300, height: 200, alignSelf: 'center' }} /> : null}
+                {photoUrl ? <Card.Cover source={{ uri: photoUrl }} style={ styles.photoCard } /> : null}
             </Dialog.Content>
             <Dialog.Actions>
                 <Button 

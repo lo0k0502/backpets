@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useDispatch } from 'react-redux';
-
 import BottomNavigation from './components/Home/BottomNavigation';
 import DeleteUser from './components/DevOptions/DeleteUser';
 import AllUsers from './components/DevOptions/AllUsers';
@@ -10,6 +9,17 @@ import AuthRoute from './components/Auth/AuthRoute';
 import * as SecureStorage from 'expo-secure-store';
 import { tokenRefresh } from './redux/userReducer';
 import { unwrapResult } from '@reduxjs/toolkit';
+
+const styles = StyleSheet.create({
+  view: { 
+    flex: 1, 
+    backgroundColor: 'white',
+  },
+  viewImage: { 
+    width: '100%', 
+    height: '100%',
+  },
+});
 
 const Stacks = createStackNavigator();
 
@@ -43,8 +53,8 @@ export default () => {
         {isSignin === null ? (
           <Stacks.Screen name='Splash' options={{ headerShown: false }}>
           {props => (
-            <View {...props} style={{ flex: 1, backgroundColor: 'white' }}>
-              <Image source={require('../assets/blackcat.png')} style={{ width: '100%', height: '100%' }} />
+            <View {...props} style={ styles.view }>
+              <Image source={require('../assets/blackcat.png')} style={ styles.viewImage } />
             </View>
           )}
           </Stacks.Screen>
