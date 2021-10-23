@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, Text, View, PermissionsAndroid, Button } from 'react-native';
 import MapView, { Marker, MarkerAnimated } from 'react-native-maps';
 import Constants from 'expo-constants';
@@ -10,7 +11,7 @@ export default () => {
   let currentLatitude = 0;
   let currentLongitude = 0;
 
-  useEffect(() =>
+  useFocusEffect(useCallback(() => {
   	(async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
@@ -20,8 +21,8 @@ export default () => {
 
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
-    })
-  )
+    })();
+  }, []));
 
   let text = 'Waiting..';
   if (errorMsg) {
