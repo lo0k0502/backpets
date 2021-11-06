@@ -42,11 +42,9 @@ export default () => {
         const tokens = JSON.parse(await SecureStorage.getItemAsync('tokens'));
         if (tokens?.refreshToken) {
           try {
-            let currentPermission = await Location.getForegroundPermissionsAsync();
-            if (currentPermission.status !== 'granted') {
-              let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                setErrorMsg('We need your location premission to load the app!');
+            if ((await Location.getForegroundPermissionsAsync()).status !== 'granted') {
+              if ((await Location.requestForegroundPermissionsAsync()).status !== 'granted') {
+                setErrorMsg('We need your location permission to load the app!');
                 return;
               }
             }
@@ -55,6 +53,7 @@ export default () => {
               refreshToken: tokens.refreshToken, 
             })));
 
+            console.log('Already logged in, going to Home...');
             setIsSignIn(true);
           } catch (error) {
             setIsSignIn(false);

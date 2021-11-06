@@ -57,13 +57,9 @@ export default ({ navigation, setIsSignIn }) => {
         setLoginLoading(true);
 
         try {
-            let currentPermission = await Location.getForegroundPermissionsAsync();
-            console.log(currentPermission)
-            if (currentPermission.status !== 'granted') {
-                let { status } = await Location.requestForegroundPermissionsAsync();
-                console.log(status)
-                if (status !== 'granted') {
-                    setErrorMsg('We need your location premission to load the app!');
+            if ((await Location.getForegroundPermissionsAsync()).status !== 'granted') {
+                if ((await Location.requestForegroundPermissionsAsync()).status !== 'granted') {
+                    setErrorMsg('We need your location permission to load the app!');
                     setLoginLoading(false);
                     return;
                 }
