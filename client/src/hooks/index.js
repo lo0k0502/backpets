@@ -1,4 +1,5 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import * as Location from 'expo-location';
 
 /**
  * @param {any} initialValue initial value
@@ -18,4 +19,31 @@ export const useStateWithValidation = (initialValue, validationFunction = state 
     }, [validationFunction]);
 
     return [state, changeState, isValid, isEmpty];
+};
+
+/**
+ * @returns {{ location: object, currentLatitude: number, currentLongitude: number }}
+ */
+export const useCurrentLocation = () => {
+    const [location, setLocation] = useState(null);
+    let currentLatitude = 0;
+    let currentLongitude = 0;
+  
+    useEffect(() => {
+        (async () => {
+            let locationResult = await Location.getCurrentPositionAsync({});
+            setLocation(locationResult);
+        })();
+    }, []);
+  
+    if (location) {
+        currentLatitude = location.coords.latitude;
+        currentLongitude = location.coords.longitude;
+    }
+
+    return {
+        location,
+        currentLatitude,
+        currentLongitude,
+    };
 };

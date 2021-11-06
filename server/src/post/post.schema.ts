@@ -17,6 +17,9 @@ export class Post {
   @Prop({ required: true })
   post_time: number;
 
+  // @Prop({ required: true })
+  // location: object;
+
   @Prop()
   photoUrl: string;
 }
