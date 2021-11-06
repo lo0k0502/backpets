@@ -13,48 +13,32 @@ export default () => {
 
   useFocusEffect(useCallback(() => {
   	(async () => {
-      let currentPermission = await Location.getForegroundPermissionsAsync();
-      if (currentPermission.status !== 'granted') {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
-          return;
-        }
-      }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
+      let locationResult = await Location.getCurrentPositionAsync({});
+      setLocation(locationResult);
     })();
   }, []));
 
-  let text = 'Waiting..';
-  if (errorMsg) {
-    text = errorMsg;
-  } 
-  else if (location) {
-    //text = JSON.stringify(location);
-    currentLatitude = Number(location.coords.latitude);
-    currentLongitude = Number(location.coords.longitude);
+  if (location) {
+    currentLatitude = location.coords.latitude;
+    currentLongitude = location.coords.longitude;
   }
   
   return (
     <View 
-      style = {
-        {
-          flex: 1,
-          backgroundColor: 'white',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }
-      }
+      style = {{
+        flex: 1,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
     >
 
     <MapView 
-      style = {{
+      style={{
         ...StyleSheet.absoluteFillObject,
       }}
 
-      region = {{
+      region={{
         latitude: currentLatitude,
         longitude: currentLongitude,
         latitudeDelta: 0.0122,
@@ -66,11 +50,11 @@ export default () => {
     >
 
       <Marker
-      coordinate = {{
-          latitude: 23.560043,
-          longitude: 120.469031,
-      }} 
-      title = {'花花'}
+        coordinate={{
+            latitude: 23.560043,
+            longitude: 120.469031,
+        }} 
+        title='花花'
       />
         
     </MapView>

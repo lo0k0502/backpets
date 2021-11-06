@@ -23,6 +23,7 @@
     "expo-location": "^12.1.2",
     "expo-secure-store": "~10.2.0",
     "expo-status-bar": "~1.0.4",
+    "fiction-expo-restart": "^1.1.0",
     "moment": "^2.29.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",

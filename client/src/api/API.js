@@ -1,8 +1,9 @@
 import axios from 'axios';
 import * as SecureStorage from 'expo-secure-store';
-import { BASE_URL } from '@env';
+import env from '../../env';
 
-export const SERVERURL = `http://${BASE_URL}:8000`;
+console.log('IP: ', env.BASE_URL)
+export const SERVERURL = `http://${env.BASE_URL}:8000`;
 console.log('Server URL: ', SERVERURL)
 const API = axios.create({ baseURL: SERVERURL });
 

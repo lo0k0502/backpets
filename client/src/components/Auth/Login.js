@@ -4,7 +4,8 @@ import { TextInput, Button, Divider, HelperText } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import * as Google from 'expo-google-app-auth';
 import { useFocusEffect } from '@react-navigation/native';
-import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from '@env';
+import * as Location from 'expo-location';
+import env from '../../../env';
 
 import { loginUser, googleLogin } from '../../redux/userReducer';
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -56,12 +57,26 @@ export default ({ navigation, setIsSignIn }) => {
         setLoginLoading(true);
 
         try {
+            let currentPermission = await Location.getForegroundPermissionsAsync();
+            console.log(currentPermission)
+            if (currentPermission.status !== 'granted') {
+                let { status } = await Location.requestForegroundPermissionsAsync();
+                console.log(status)
+                if (status !== 'granted') {
+                    setErrorMsg('We need your location premission to load the app!');
+                    setLoginLoading(false);
+                    return;
+                }
+            }
+            
             unwrapResult(await dispatch(loginUser({ email, password })));
-            console.log('Logged in, going to Home...');
-            setIsSignIn(true);
+
             setEmail('');
             setPassword('');
             setErrorMsg('');
+
+            console.log('Logged in, going to Home...');
+            setIsSignIn(true);
         } catch (error) {
             console.log('While logging in:', error);
             setErrorMsg(error.message);
@@ -77,8 +92,8 @@ export default ({ navigation, setIsSignIn }) => {
         
         try {
             const { type, user } = await Google.logInAsync({ 
-                androidClientId: GOOGLE_ANDROID_CLIENT_ID, 
-                iosClientId: GOOGLE_IOS_CLIENT_ID, 
+                androidClientId: env.GOOGLE_ANDROID_CLIENT_ID, 
+                iosClientId: env.GOOGLE_IOS_CLIENT_ID, 
                 scopes: ['profile', 'email'], 
             });
             console.log(type, user)

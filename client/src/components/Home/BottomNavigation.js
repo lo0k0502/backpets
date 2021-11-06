@@ -52,15 +52,6 @@ export default ({ navigation, setIsSignIn }) => {
                 }}
             >
                 <Tabs.Screen 
-                    name='HomeRoute' 
-                    options={{
-                        tabBarColor: '#ff8000',
-                        tabBarIcon: ({ color }) => <Icons name='home' color={color} size={20} />,
-                    }}
-                >
-                {props => <HomeRoute {...props} logoutback={logout} />}
-                </Tabs.Screen>
-                <Tabs.Screen 
                     name='Map'
                     options={{
                         tabBarColor: '#42f587',
@@ -68,6 +59,15 @@ export default ({ navigation, setIsSignIn }) => {
                     }}
                 >
                 {props => <Map {...props} />}
+                </Tabs.Screen>
+                <Tabs.Screen 
+                    name='HomeRoute' 
+                    options={{
+                        tabBarColor: '#ff8000',
+                        tabBarIcon: ({ color }) => <Icons name='home' color={color} size={20} />,
+                    }}
+                >
+                {props => <HomeRoute {...props} logoutback={logout} />}
                 </Tabs.Screen>
                 <Tabs.Screen 
                     name='Store'
