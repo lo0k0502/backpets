@@ -4,6 +4,7 @@ import { Button, TextInput, HelperText } from 'react-native-paper';
 import { updateUserPassword } from '../../../api';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
+import { useStateWithValidation } from '../../../hooks';
 
 const styles = StyleSheet.create({
     root: {
@@ -33,34 +34,22 @@ const styles = StyleSheet.create({
 });
 
 export default ({  navigation }) => {
-    const user = useSelector(selectUser);
-
     const [isLoading, setIsLoading] = useState(false);
-
-    const [oldPassword, setOldPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');
+    
+    const [oldPassword, setOldPassword, isOldPasswordValid] = useStateWithValidation('');
+    const [newPassword, setNewPassword, isNewPasswordValid] = useStateWithValidation('', value => value.length >= 8);
 
     const [oldPasswordSecure, setOldPasswordSecure] = useState(true);
     const [newPasswordSecure, setNewPasswordSecure] = useState(true);
 
     const [errorMsg, setErrorMsg] = useState('');
-    const [oldPasswordErrorMsg, setOldPasswordErrorMsg] = useState('');
-    const [newPasswordErrorMsg, setNewPasswordErrorMsg] = useState('');
 
-    const checkOldPassword = (text) => {
-        setOldPassword(text);
-        setOldPasswordErrorMsg(text ? '' : 'Must not be null!')
-    };
-
-    const checkNewPassword = (text) => {
-        setNewPassword(text);
-        setNewPasswordErrorMsg(text.length >= 8 ? '' : 'Must be at least 8 letters!')
-    };
-
+    const user = useSelector(selectUser);
+    
     const handleSubmit = async () => {
-        if (!oldPassword || !newPassword || oldPasswordErrorMsg || newPasswordErrorMsg) {
-            if (!oldPassword) setOldPasswordErrorMsg('Must not be null!');
-            if (!newPassword) setNewPasswordErrorMsg('Must not be null!');
+        if (!oldPassword || !newPassword) {
+            if (!oldPassword) setOldPassword('');
+            if (!newPassword) setNewPassword('');
             return
         }
 
@@ -108,13 +97,13 @@ export default ({  navigation }) => {
                 mode='outlined'
                 placeholder='Old Password'
                 placeholderTextColor='gray'
-                error={oldPasswordErrorMsg}
+                error={!isOldPasswordValid}
                 disabled={isLoading}
                 secureTextEntry={oldPasswordSecure}
                 style={styles.input}
                 selectionColor='#666'
                 theme={{ colors: { primary: 'red' } }}
-                onChangeText={checkOldPassword}
+                onChangeText={text => setOldPassword(text)}
                 right={
                     <TextInput.Icon 
                         name={oldPasswordSecure ? 'eye-off' : 'eye'} 
@@ -126,19 +115,19 @@ export default ({  navigation }) => {
                 type='error' 
                 style={styles.helpertext}
             >
-                {oldPasswordErrorMsg}
+                {isOldPasswordValid ? '' : 'Must not be null!'}
             </HelperText>
             <TextInput
                 mode='outlined'
                 placeholder='New Password'
                 placeholderTextColor='gray'
-                error={newPasswordErrorMsg}
+                error={!isNewPasswordValid}
                 disabled={isLoading}
                 secureTextEntry={newPasswordSecure}
                 style={styles.input}
                 selectionColor='#666'
                 theme={{ colors: { primary: 'red' } }}
-                onChangeText={checkNewPassword}
+                onChangeText={text => setNewPassword(text)}
                 right={
                     <TextInput.Icon 
                         name={newPasswordSecure ? 'eye-off' : 'eye'} 
@@ -150,7 +139,7 @@ export default ({  navigation }) => {
                 type='error' 
                 style={styles.helpertext}
             >
-                {newPasswordErrorMsg}
+                {isNewPasswordValid ? '' : 'Must be at least 8 letters!'}
             </HelperText>
             <Button
                 mode='contained'

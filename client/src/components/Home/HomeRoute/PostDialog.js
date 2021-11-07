@@ -5,6 +5,7 @@ import { TextInput, Dialog, Button, Card, HelperText } from 'react-native-paper'
 import { AddPost, uploadImage } from '../../../api';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
+import { useCurrentLocation } from '../../../hooks';
 
 const styles = StyleSheet.create({
     innerPropNav: {
@@ -24,7 +25,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ({ visible, close, refresh }) => {
+export default ({ visible, close, refreshPosts }) => {
     const user = useSelector(selectUser);
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
     const [isImgLoading, setIsImgLoading] = useState(false);// Whether it is during image picking, if so, disable inputs and buttons. 
@@ -37,9 +38,11 @@ export default ({ visible, close, refresh }) => {
     const [contentErrorMsg, setContentErrorMsg] = useState('');
     const [photoUrlErrorMsg, setPhotoUrlErrorMsg] = useState('');
 
+    const { currentLatitude, currentLongitude } = useCurrentLocation();
+
     // Close the dailog with configuration
     const handleClose = () => {
-        refresh();
+        refreshPosts();
         close();
         setTitle('');
         setContent('');
@@ -140,6 +143,10 @@ export default ({ visible, close, refresh }) => {
                 title,
                 content,
                 photoUrl: sendPhotoUrl,
+                location: { 
+                    latitude: currentLatitude, 
+                    longitude: currentLongitude, 
+                },
             });
 
             handleClose();// Close the dialog

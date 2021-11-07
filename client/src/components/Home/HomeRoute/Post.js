@@ -1,11 +1,21 @@
-import React, { useState, useCallback } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
+import React, { useState } from 'react';
 import moment from 'moment';
 import { Alert, ScrollView, View, Share, StyleSheet } from 'react-native';
-import { Card, Divider, Paragraph, Subheading, Title, Appbar, Headline, Text, Caption, Avatar, Menu } from 'react-native-paper';
-import { DeletePost, fetchUserById } from '../../../api';
+import { 
+    Card, 
+    Divider, 
+    Paragraph, 
+    Title, 
+    Appbar, 
+    Headline, 
+    Caption, 
+    Avatar, 
+    Menu,
+} from 'react-native-paper';
+import { DeletePost } from '../../../api';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
+import { usePoster } from '../../../hooks';
 
 const styles = StyleSheet.create({
     appbar: {
@@ -31,21 +41,9 @@ const styles = StyleSheet.create({
 });
 
 export default ({ navigation, route: { params: { post } } }) => {
-    const user = useSelector(selectUser);
-    const [poster, setPoster] = useState({});
     const [menuOpen, setMenuOpen] = useState(false);
-    
-    // Fetch the poster of this post
-    useFocusEffect(useCallback(() => {
-        (async () => {
-            try {
-                const res = await fetchUserById(post.userId);
-                setPoster(res.data.result);
-            } catch (error) {
-                console.log('While fetching poster: ', error.response.data.message);
-            }
-        })();
-    }, []));
+    const user = useSelector(selectUser);
+    const poster = usePoster(post);
 
     // Share this post's link (Not finished yet)
     const sharePost = async () => {
@@ -71,7 +69,13 @@ export default ({ navigation, route: { params: { post } } }) => {
                                 Alert.alert(
                                     'Success!!',
                                     'Successfully deleted post!!\nGoing back...',
-                                    [{ text: 'OK', onPress: () => navigation.goBack() }]
+                                    [{ 
+                                        text: 'OK', 
+                                        onPress: () => {
+                                            setMenuOpen(false);
+                                            navigation.goBack();
+                                        },
+                                    }]
                                 );
                             }
                         } catch (error) {

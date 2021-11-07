@@ -21,7 +21,7 @@ export class PostController {
     }
 
     @Post('add')
-    async AddPost(@Body() { userId, title, content, photoUrl }: PostModel, @Res() res: Response) {
+    async AddPost(@Body() { userId, title, content, photoUrl, location }: PostModel, @Res() res: Response) {
         try {
             const result = await this.postService.create({
                 userId,
@@ -29,6 +29,7 @@ export class PostController {
                 content,
                 post_time: moment().valueOf(),
                 photoUrl,
+                location,
             })
             return res.status(200).json({ result });
         } catch (error) {

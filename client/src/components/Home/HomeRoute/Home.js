@@ -1,13 +1,11 @@
 import React, { useState, useCallback } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, ScrollView, View, RefreshControl, Text } from 'react-native';
-import { Card, Button, Avatar, Paragraph, Title, Portal, TouchableRipple } from 'react-native-paper';
-import { fetchAllPosts } from '../../../api';
-import moment from 'moment';
+import { Button, Portal } from 'react-native-paper';
 import PostDialog from './PostDialog';
 import PostCard from './PostCard';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
+import { usePosts } from '../../../hooks';
 
 const styles = StyleSheet.create({
     root: {
@@ -58,21 +56,14 @@ const styles = StyleSheet.create({
 
     export default ({ navigation }) => {
     const [refreshing, setRefreshing] = useState(false);// State for RefreshControl component
-
-    const user = useSelector(selectUser);
-    const [posts, setPosts] = useState([]);
     const [postDialog, setPostDialog] = useState(false);// Whether posting dialog is open
 
-    const fetch = async () => setPosts((await fetchAllPosts()).data.result);// Fetch all posts
-
-    useFocusEffect(useCallback(() => {
-        fetch();
-    }, []));
+    const user = useSelector(selectUser);
+    const { posts, refreshPosts } = usePosts();
 
     const handleRefresh = useCallback(() => {
         setRefreshing(true);
-        fetch()
-            .then(() => setRefreshing(false));
+        refreshPosts().then(() => setRefreshing(false));
     }, []);
     
     return (
@@ -91,7 +82,7 @@ const styles = StyleSheet.create({
                 <Text style={{ color: 'black' }}>We highly recommed you to verify your email first!</Text>
             </View>
             <Portal>
-                <PostDialog visible={postDialog} close={() => setPostDialog(false)} refresh={fetch} />
+                <PostDialog visible={postDialog} close={() => setPostDialog(false)} refreshPosts={refreshPosts} />
             </Portal>
             {posts.map(post => <PostCard post={post} key={post._id} />)}
             <View style={{ height: 50 }} />

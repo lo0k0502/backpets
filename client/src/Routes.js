@@ -34,8 +34,8 @@ export default () => {
   
     const dispatch = useDispatch();
   
-    // If local SecureStorage has token, try to refresh it.
-    // If fail or has no token, display login page;
+    // If local SecureStorage has token, check for location permission and try to refresh it.
+    // If failed or has no token, display login page;
     // If refreshed, display home page.
     useEffect(() => {
       (async () => {
@@ -53,7 +53,6 @@ export default () => {
               refreshToken: tokens.refreshToken, 
             })));
 
-            console.log('Already logged in, going to Home...');
             setIsSignIn(true);
           } catch (error) {
             setIsSignIn(false);

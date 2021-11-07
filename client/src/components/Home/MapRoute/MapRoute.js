@@ -1,39 +1,27 @@
-import React, { useState, useCallback } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
-import { StyleSheet, Text, View, PermissionsAndroid, Button } from 'react-native';
-import MapView, { Marker, MarkerAnimated } from 'react-native-maps';
-import { useCurrentLocation } from '../../hooks';
-import Constants from 'expo-constants';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
+import { useCurrentLocation, usePosts } from '../../../hooks';
+import Post from '../HomeRoute/Post';
 
 export default () => {
   const { currentLatitude, currentLongitude } = useCurrentLocation();
+  const { posts } = usePosts();
   
   return (
-    <View 
-      style = {{
-        flex: 1,
-        backgroundColor: 'white',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-
     <MapView 
       style={{
         ...StyleSheet.absoluteFillObject,
       }}
-
       region={{
         latitude: currentLatitude,
         longitude: currentLongitude,
         latitudeDelta: 0.0122,
         longitudeDelta: 0.003,
       }}
-      
       showsUserLocation={true}
       followsUserLocation={true}
     >
-
       <Marker
         coordinate={{
             latitude: 23.560043,
@@ -41,8 +29,16 @@ export default () => {
         }} 
         title='花花'
       />
-        
+      {posts.map(post => (
+        <Marker
+          coordinate={{
+            latitude: post.location.latitude,
+            longitude: post.location.longitude,
+          }}
+          title={post.title}
+          key={post._id}
+        />
+      ))}
     </MapView>
-    </View>
   );
 }

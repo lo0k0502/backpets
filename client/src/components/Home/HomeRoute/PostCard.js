@@ -1,9 +1,9 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import { StyleSheet } from 'react-native';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { Card, Avatar, Paragraph, Title, TouchableRipple, Button, IconButton } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import { Card, Avatar, Paragraph, Title, TouchableRipple, Button } from 'react-native-paper';
 import moment from 'moment';
-import { fetchUserById } from '../../../api';
+import { usePoster } from '../../../hooks';
 
 const styles = StyleSheet.create({
     card: {
@@ -31,19 +31,7 @@ const styles = StyleSheet.create({
 
 export default ({ post }) => {
     const navigation = useNavigation();
-    const [poster, setPoster] = useState({});
-
-    // Fetch the poster of this post
-    useFocusEffect(useCallback(() => {
-        (async () => {
-            try {
-                const res = await fetchUserById(post.userId);
-                setPoster(res.data.result);
-            } catch (error) {
-                console.log(error.response.data.message);
-            }
-        })()
-    }, []));
+    const poster = usePoster(post);
 
     return (
         <Card style={ styles.card }>

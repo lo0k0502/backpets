@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import * as Location from 'expo-location';
+import { fetchAllPosts, fetchUserById } from '../api';
+import { useFocusEffect } from '@react-navigation/core';
 
 /**
  * @param {any} initialValue initial value
@@ -22,7 +24,7 @@ export const useStateWithValidation = (initialValue, validationFunction = state 
 };
 
 /**
- * @returns {{ location: object, currentLatitude: number, currentLongitude: number }}
+ * @returns {{ location: Object, currentLatitude: number, currentLongitude: number }}
  */
 export const useCurrentLocation = () => {
     const [location, setLocation] = useState(null);
@@ -35,7 +37,7 @@ export const useCurrentLocation = () => {
             setLocation(locationResult);
         })();
     }, []);
-  
+    
     if (location) {
         currentLatitude = location.coords.latitude;
         currentLongitude = location.coords.longitude;
@@ -46,4 +48,41 @@ export const useCurrentLocation = () => {
         currentLatitude,
         currentLongitude,
     };
+};
+
+export const usePosts = () => {
+    const [posts, setPosts] = useState([]);
+
+    const fetchPosts = async () => setPosts((await fetchAllPosts()).data.result);// Fetch all posts
+
+    useFocusEffect(useCallback(() => {
+        fetchPosts();
+    }, []));
+
+    return {
+        posts,
+        refreshPosts: fetchPosts,
+    };
+};
+
+/**
+ * @param {Object} post
+ * @returns {Object}
+ */
+export const usePoster = (post) => {
+    const [poster, setPoster] = useState({});
+
+    // Fetch the poster of this post
+    useEffect(() => {
+        (async () => {
+            try {
+                const res = await fetchUserById(post.userId);
+                setPoster(res.data.result);
+            } catch (error) {
+                console.log('While fetching poster: ', error.response.data.message);
+            }
+        })()
+    }, [post]);
+
+    return poster;
 };

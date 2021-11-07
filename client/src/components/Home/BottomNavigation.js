@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { logoutUser } from '../../redux/userReducer';
 
 import HomeRoute from './HomeRoute/HomeRoute';
-import Map from './MapRoute';
+import Map from './MapRoute/MapRoute';
 import Store from './StoreRoute';
 import { unwrapResult } from '@reduxjs/toolkit';
 

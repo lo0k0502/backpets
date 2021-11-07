@@ -18,7 +18,7 @@
     "@reduxjs/toolkit": "^1.6.0",
     "axios": "^0.21.1",
     "expo": "~42.0.0",
-    "expo-google-app-auth": "^8.2.2",
+    "expo-google-app-auth": "~8.2.5",
     "expo-image-picker": "~10.2.2",
     "expo-location": "^12.1.2",
     "expo-secure-store": "~10.2.0",

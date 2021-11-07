@@ -16,12 +16,15 @@ export class Post {
 
   @Prop({ required: true })
   post_time: number;
-
-  // @Prop({ required: true })
-  // location: object;
-
+  
   @Prop()
   photoUrl: string;
+
+  @Prop({ type: Object, required: true })
+  location: {
+    latitude: number,
+    longitude: number,
+  };
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
