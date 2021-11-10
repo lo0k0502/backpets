@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { UserService } from '../user/user.service';
 import { User } from 'src/user/user.schema';
 import { MailService } from '../mail/mail.service';
-import randomPassword from '../utils/randomPassword';
+import randomString from '../utils/randomString';
 import { AuthService } from './auth.service';
 import { addResetTokenUser, deleteResetTokenUser, resetTokenUsers } from 'src/refreshTokens';
 
@@ -83,21 +83,16 @@ export class AuthController {
   async RefreshToken(@Body() { refreshToken }: User, @Res() res: Response) {
     if (!refreshToken) return res.status(400).json({ message: 'Refresh token is null!' });
 
-    const arrayFromRefreshToken = refreshToken.split('.');
-    if (!arrayFromRefreshToken[arrayFromRefreshToken.length - 1]) return res.status(400).json({ message: 'Refresh token error!' });
-    const refreshTokenSignature = arrayFromRefreshToken[arrayFromRefreshToken.length - 1];
-
-    const existUser = (await Promise.all((await this.userService.findAll()).map(async user => {
-      if (!user.refreshToken) return null;
-      const isSame = await compare(refreshTokenSignature, user.refreshToken);
-      return (isSame) ? user : null;
-    }))).find(user => user);
-
-    if (!existUser) return res.status(400).json({ message: 'Refresh token not available!' });
-
     try {
       const user = await this.authService.verifyRefreshTokenAsync(refreshToken);
       if (!user) return res.status(400).json({ message: 'Refresh token forbidden!' });
+
+      const refreshTokenSignature = refreshToken.split('.')[2];
+
+      const existUser = await this.userService.findOne({ username: user.username, email: user.email });
+
+      if (!existUser) return res.status(400).json({ message: '用戶不存在' });
+      if (!existUser.refreshToken || !(await compare(refreshTokenSignature, existUser.refreshToken))) return res.status(400).json({ message: 'Refresh token not available!' });
 
       const newAccessToken = await this.authService.signAccessTokenAsync(existUser);
       const { refreshToken: newRefreshToken, refreshTokenSignature: newRefreshTokenSignature, } = await this.authService.signRefreshTokenAsync(existUser);
@@ -159,7 +154,7 @@ export class AuthController {
 
       deleteResetTokenUser(resetTokenUser);
 
-      const newPassword = randomPassword(10, true, true, true);
+      const newPassword = randomString(10, true, true, true);
       const hashedPassword = await hash(newPassword, 10);
       await this.userService.updateOne({ _id: existUser }, { password: hashedPassword });
       return res.render('ResetPassword', { newPassword: newPassword });

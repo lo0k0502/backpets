@@ -30,10 +30,7 @@ export class AuthService {
         { secret: process.env.REFRESH_TOKEN_SECRET },
       );
 
-      const arr = refreshToken.split('.');
-      const refreshTokenSignature = arr[arr.length - 1];
-
-      return { refreshToken, refreshTokenSignature };
+      return { refreshToken, refreshTokenSignature: refreshToken.split('.')[2] };
     }
 
     async verifyAccessTokenAsync(accessToken: string) {
