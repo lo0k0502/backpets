@@ -56,10 +56,10 @@ export class UserController {
             });
     
             const accessToken = await this.authService.signAccessTokenAsync(updatedOnceUser);
-            const newRefreshToken = await this.authService.signRefreshTokenAsync(updatedOnceUser);
+            const { refreshToken: newRefreshToken, refreshTokenSignature } = await this.authService.signRefreshTokenAsync(updatedOnceUser);
 
-            const hashedRefreshToken = await hash(newRefreshToken, 10);
-            const result = await this.userService.updateOne({ _id: userId }, { refreshToken: hashedRefreshToken });
+            const hashedRefreshTokenSignature = await hash(refreshTokenSignature, 10);
+            const result = await this.userService.updateOne({ _id: userId }, { refreshToken: hashedRefreshTokenSignature });
             
             return res.status(200).json({ result, accessToken, refreshToken: newRefreshToken });
         } catch (error) {

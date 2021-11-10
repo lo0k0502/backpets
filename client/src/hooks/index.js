@@ -6,7 +6,7 @@ import { useFocusEffect } from '@react-navigation/core';
 /**
  * @param {any} initialValue initial value
  * @param {Function} validationFunction returns true if valid
- * @returns {[any, Function, boolean, boolean]} An array contains state, setState function, is valid boolean and is empty boolean
+ * @returns {[any, Function, Boolean, Boolean]} An array contains state, setState function, is valid boolean and is empty boolean
  */
 export const useStateWithValidation = (initialValue, validationFunction = state => !!state) => {
     const [state, setState] = useState(initialValue);
@@ -24,7 +24,7 @@ export const useStateWithValidation = (initialValue, validationFunction = state 
 };
 
 /**
- * @returns {{ location: Object, currentLatitude: number, currentLongitude: number }}
+ * @returns {{ location: Location.LocationObject, currentLatitude: Number, currentLongitude: Number }}
  */
 export const useCurrentLocation = () => {
     const [location, setLocation] = useState(null);
@@ -50,6 +50,9 @@ export const useCurrentLocation = () => {
     };
 };
 
+/**
+ * @returns {{ post: Object, refreshPosts: Function }}
+ */
 export const usePosts = () => {
     const [posts, setPosts] = useState([]);
 
@@ -85,4 +88,11 @@ export const usePoster = (post) => {
     }, [post]);
 
     return poster;
+};
+
+export default {
+    useStateWithValidation,
+    useCurrentLocation,
+    usePosts,
+    usePoster,
 };

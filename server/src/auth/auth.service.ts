@@ -22,7 +22,7 @@ export class AuthService {
     }
 
     async signRefreshTokenAsync(user: User) {
-        const refreshToken = await this.jwtService.signAsync(
+      const refreshToken = await this.jwtService.signAsync(
         { 
           username: user.username,
           email: user.email,
@@ -30,7 +30,10 @@ export class AuthService {
         { secret: process.env.REFRESH_TOKEN_SECRET },
       );
 
-      return refreshToken;
+      const arr = refreshToken.split('.');
+      const refreshTokenSignature = arr[arr.length - 1];
+
+      return { refreshToken, refreshTokenSignature };
     }
 
     async verifyAccessTokenAsync(accessToken: string) {

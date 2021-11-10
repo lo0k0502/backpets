@@ -1,8 +1,9 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Callout, Marker } from 'react-native-maps';
+import { Headline, Text } from 'react-native-paper';
 import { useCurrentLocation, usePosts } from '../../../hooks';
-import Post from '../HomeRoute/Post';
+import PostCallout from './PostCallout';
 
 export default () => {
   const { currentLatitude, currentLongitude } = useCurrentLocation();
@@ -29,15 +30,23 @@ export default () => {
         }} 
         title='花花'
       />
-      {posts.map(post => (
+      {posts.map((post, index) => (
         <Marker
+          key={index}
           coordinate={{
             latitude: post.location.latitude,
             longitude: post.location.longitude,
           }}
           title={post.title}
-          key={post._id}
-        />
+          description={post.content}
+        >
+          <Callout 
+            tooltip
+            onPress={() => {}}
+          >
+            <PostCallout post={post} />
+          </Callout>
+        </Marker>
       ))}
     </MapView>
   );

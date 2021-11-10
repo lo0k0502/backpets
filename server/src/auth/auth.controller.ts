@@ -60,11 +60,11 @@ export class AuthController {
       if (!isCorrect) return res.status(400).json({ message: '密碼錯誤' });
       
       const accessToken = await this.authService.signAccessTokenAsync(existUser);
-      const refreshToken = await this.authService.signRefreshTokenAsync(existUser);
+      const { refreshToken, refreshTokenSignature } = await this.authService.signRefreshTokenAsync(existUser);
 
-      const hashedRefreshToken = await hash(refreshToken, 10);
+      const hashedRefreshTokenSignature = await hash(refreshTokenSignature, 10);
 
-      const result = await this.userService.updateOne({ _id: existUser['_id'] }, { refreshToken: hashedRefreshToken });
+      const result = await this.userService.updateOne({ _id: existUser['_id'] }, { refreshToken: hashedRefreshTokenSignature });
 
       return res.status(200).json({ result, accessToken, refreshToken });
     } catch (error) {
@@ -80,26 +80,32 @@ export class AuthController {
   }
 
   @Post('refreshtoken')
-  async RefreshToken(@Body() { refreshToken }, @Res() res: Response) {
+  async RefreshToken(@Body() { refreshToken }: User, @Res() res: Response) {
     if (!refreshToken) return res.status(400).json({ message: 'Refresh token is null!' });
 
-    const allUsers = await this.userService.findAll();
-    const existUser = (await Promise.all(allUsers.map(async user => {
+    const arrayFromRefreshToken = refreshToken.split('.');
+    if (!arrayFromRefreshToken[arrayFromRefreshToken.length - 1]) return res.status(400).json({ message: 'Refresh token error!' });
+    const refreshTokenSignature = arrayFromRefreshToken[arrayFromRefreshToken.length - 1];
+
+    const existUser = (await Promise.all((await this.userService.findAll()).map(async user => {
       if (!user.refreshToken) return null;
-      return (await compare(refreshToken, user.refreshToken)) ? user : null;
+      const isSame = await compare(refreshTokenSignature, user.refreshToken);
+      return (isSame) ? user : null;
     }))).find(user => user);
+
     if (!existUser) return res.status(400).json({ message: 'Refresh token not available!' });
-    
+
     try {
       const user = await this.authService.verifyRefreshTokenAsync(refreshToken);
       if (!user) return res.status(400).json({ message: 'Refresh token forbidden!' });
 
       const newAccessToken = await this.authService.signAccessTokenAsync(existUser);
-      const newRefreshToken = await this.authService.signRefreshTokenAsync(existUser);
+      const { refreshToken: newRefreshToken, refreshTokenSignature: newRefreshTokenSignature, } = await this.authService.signRefreshTokenAsync(existUser);
 
-      const hashedRefreshToken = await hash(newRefreshToken, 10);
+      const hashedRefreshTokenSignature = await hash(newRefreshTokenSignature, 10);
 
-      const result = await this.userService.updateOne({ _id: existUser['_id'] }, { refreshToken: hashedRefreshToken });
+      const result = await this.userService.updateOne({ _id: existUser['_id'] }, { refreshToken: hashedRefreshTokenSignature });
+
       return res.status(200).json({ 
         result, 
         accessToken: newAccessToken, 
