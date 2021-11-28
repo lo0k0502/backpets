@@ -18,7 +18,7 @@ export default ({ route, navigation }) => {
             {isHome ? <Appbar.Action icon='menu' onPress={navigation.toggleDrawer} />
                 : <Appbar.Action icon='arrow-left' onPress={navigation.goBack} />}
             <Appbar.Content 
-                title={isHome ? 'ProjectP!!!' : 
+                title={isHome ? 'BackPets!!!' : 
                     isChangePassword ? 'Change Password' :
                     isEditProfile ? 'Edit Profile' : route.name
                 } 

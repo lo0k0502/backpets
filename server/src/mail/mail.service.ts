@@ -11,7 +11,7 @@ export class MailService {
     
         console.log(await this.mailerService.sendMail({
           to: email,
-          subject: 'Welcome to Project App! Confirm your Email',
+          subject: 'Welcome to BackPets App! Confirm your Email',
           template: './confirmation',
           context: {
             username,

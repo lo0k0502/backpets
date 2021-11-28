@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ProjectP",
-    "slug": "ProjectP",
+    "name": "BackPets",
+    "slug": "BackPets",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/blackcat.png",
@@ -17,18 +17,18 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "com.lo0k.projectp",
+      "bundleIdentifier": "com.lo0k.backpets",
       "buildNumber": "1.0.0",
       "supportsTablet": true
     },
     "android": {
-      "package": "com.lo0k.projectp",
+      "package": "com.lo0k.backpets",
       "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "description": "A developing project by a team of college students",
-    "githubUrl": "https://github.com/lo0k0502/ProjectP"
+    "githubUrl": "https://github.com/lo0k0502/backpets"
   }
 }

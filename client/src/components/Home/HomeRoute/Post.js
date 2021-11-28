@@ -48,7 +48,7 @@ export default ({ navigation, route: { params: { post } } }) => {
     // Share this post's link (Not finished yet)
     const sharePost = async () => {
         await Share.share({
-            message: 'ProjectP | A Great App',
+            message: 'BackPets | A Great App',
             url: 'https://www.google.com',
         });
     };

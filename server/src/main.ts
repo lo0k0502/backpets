@@ -12,8 +12,8 @@ async function bootstrap() {
   app.enableCors({ credentials: true });
 
   const config = new DocumentBuilder()
-    .setTitle('ProjectP API')
-    .setDescription('The ProjectP API')
+    .setTitle('BackPets API')
+    .setDescription('The BackPets API')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
