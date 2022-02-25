@@ -28,10 +28,7 @@ export class ImageController {
     @Get(':id')
     async GetImage(@Param() { id }, @Res() res: Response) {
         try {
-            // id = /[0-9A-Fa-f]{6}/g.test(id) ? Types.ObjectId(id) : id;
-            console.log('1', id)
             const image = await this.gfs.findById(id);
-            console.log('1')
             if (!image) return res.status(400).json({ message: 'No such file' });
             const readStream = await this.gfs.readFileStream(image._id.toString());
             readStream.pipe(res);

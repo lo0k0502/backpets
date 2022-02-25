@@ -1,12 +1,12 @@
 import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { createStackNavigator, TransitionPresets, TransitionSpecs } from '@react-navigation/stack';
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 
 import Appbar from './Appbar';
-import Home from './Home';
-import ChangePassword from './ChangePassword';
-import EditProfile from './EditProfile';
-import DrawerContent from './DrawerContent';
+import Home from './HomeTab';
+import ChangePassword from './Drawer/ChangePassword';
+import EditProfile from './Drawer/EditProfile';
+import DrawerContent from './Drawer/DrawerContent';
 import Post from './Post';
 
 const HomeDrawer = createDrawerNavigator();
@@ -14,7 +14,7 @@ const HomeStack = createStackNavigator();
 
 export default ({ logoutback }) => {
     return (
-        <HomeDrawer.Navigator 
+        <HomeDrawer.Navigator
             drawerContent={props => <DrawerContent {...props} logoutback={logoutback} />} 
             screenOptions={{ headerShown: false }}
         >

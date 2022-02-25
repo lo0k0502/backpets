@@ -3,8 +3,8 @@ import { StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Card, Avatar, Paragraph, Title, TouchableRipple, Button } from 'react-native-paper';
 import moment from 'moment';
-import { usePoster } from '../../../hooks';
-import { SERVERURL } from '../../../api/API';
+import { usePoster } from '../../../../hooks';
+import { SERVERURL } from '../../../../api/API';
 
 const styles = StyleSheet.create({
     card: {
@@ -56,7 +56,7 @@ export default ({ post }) => {
                     style={ styles.acceptButton }
                     onPress={() => {}}
                 >
-                    Accept
+                    執行
                 </Button>
             </Card.Actions>
         </Card>

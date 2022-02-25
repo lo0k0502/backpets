@@ -54,6 +54,7 @@ export default ({ navigation, setIsSignIn }) => {
                 <Tabs.Screen 
                     name='Map'
                     options={{
+                        title: '地圖',
                         tabBarColor: '#42f587',
                         tabBarIcon: ({ color }) => <Icons name='map' color={color} size={20} />,
                     }}
@@ -63,6 +64,7 @@ export default ({ navigation, setIsSignIn }) => {
                 <Tabs.Screen 
                     name='HomeRoute' 
                     options={{
+                        title: '首頁',
                         tabBarColor: '#ff8000',
                         tabBarIcon: ({ color }) => <Icons name='home' color={color} size={20} />,
                     }}
@@ -72,6 +74,7 @@ export default ({ navigation, setIsSignIn }) => {
                 <Tabs.Screen 
                     name='Store'
                     options={{
+                        title: '商店',
                         tabBarColor: 'dodgerblue',
                         tabBarIcon: ({ color }) => <Icons name='store' color={color} size={20} />,
                     }}

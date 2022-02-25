@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Alert } from 'react-native';
+import { StyleSheet, View, Alert } from 'react-native';
 import { Avatar, Button, HelperText, TextInput } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
@@ -10,26 +10,24 @@ import {
     getMediaLibraryPermissionsAsync 
 } from 'expo-image-picker';
 
-import { updateProfile } from '../../../redux/userReducer';
-import { deleteImage, uploadImage } from '../../../api';
+import { updateProfile } from '../../../../redux/userReducer';
+import { deleteImage, uploadImage } from '../../../../api';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { selectUser } from '../../../redux/userSlice';
-import { SERVERURL } from '../../../api/API';
+import { selectUser } from '../../../../redux/userSlice';
+import { SERVERURL } from '../../../../api/API';
 
 const styles = StyleSheet.create({
     root: {
         flex: 1,
-        justifyContent: 'flex-end',
+        justifyContent: 'flex-start',
         alignItems: 'center',
         backgroundColor: 'white',
-        paddingBottom: 100,
     },
     title: {
         fontSize: 40,
         marginBottom: 50,
     },
-    imgchangebtn: { 
-        width: 100, 
+    imgchangebtn: {
         height: 40, 
         backgroundColor: '#ff8000',
         margin: 10, 
@@ -183,7 +181,7 @@ export default ({ navigation }) => {
             setUsernameErrorMsg('');
             setEmailErrorMsg('');
             setIsLoading(false);
-            Alert.alert('Success!!', `Profile Successfully Updated!!\nGoing back...`, [
+            Alert.alert('修改成功!!', `回到上一頁...`, [
                 { text: 'OK', onPress: () => navigation.goBack() }
             ]);
         } catch (error) {
@@ -203,9 +201,6 @@ export default ({ navigation }) => {
     
     return (
         <View style={styles.root}>
-            <Text style={styles.title}>
-                Edit Profile
-            </Text>
             <HelperText
                 type='error'
                 style={{ 
@@ -229,10 +224,9 @@ export default ({ navigation }) => {
                 color='#ff8000'
                 dark
                 style={styles.imgchangebtn}
-                contentStyle={{ width: '100%', height: '100%' }}
                 onPress={handleChangeImg}
             >
-                Change
+                更改大頭照
             </Button>
             <TextInput
                 mode='outlined'
@@ -278,7 +272,7 @@ export default ({ navigation }) => {
                 contentStyle={{ width: '100%', height: '100%' }}
                 onPress={handleSubmit}
             >
-                Submit
+                更改
             </Button>
         </View>
     );

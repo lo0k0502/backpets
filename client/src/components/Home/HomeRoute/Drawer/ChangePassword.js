@@ -1,21 +1,18 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Alert } from 'react-native';
 import { Button, TextInput, HelperText } from 'react-native-paper';
-import { updateUserPassword } from '../../../api';
+import { updateUserPassword } from '../../../../api';
 import { useSelector } from 'react-redux';
-import { selectUser } from '../../../redux/userSlice';
-import { useStateWithValidation } from '../../../hooks';
+import { selectUser } from '../../../../redux/userSlice';
+import { useStateWithValidation } from '../../../../hooks';
 
 const styles = StyleSheet.create({
     root: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
         backgroundColor: 'white',
-    },
-    title: {
-        fontSize: 40,
-        marginBottom: 50,
+        paddingTop: 100,
     },
     input: {
         width: '60%',
@@ -38,18 +35,26 @@ export default ({  navigation }) => {
     
     const [oldPassword, setOldPassword, isOldPasswordValid] = useStateWithValidation('');
     const [newPassword, setNewPassword, isNewPasswordValid] = useStateWithValidation('', value => value.length >= 8);
+    const [confirmNewPassword, setConfirmNewPassword, isConfirmNewPasswordValid] = useStateWithValidation('', value => value === newPassword);
 
     const [oldPasswordSecure, setOldPasswordSecure] = useState(true);
     const [newPasswordSecure, setNewPasswordSecure] = useState(true);
+    const [confirmNewPasswordSecure, setConfirmNewPasswordSecure] = useState(true);
 
     const [errorMsg, setErrorMsg] = useState('');
 
     const user = useSelector(selectUser);
     
     const handleSubmit = async () => {
-        if (!oldPassword || !newPassword) {
+        if (!oldPassword
+            || !newPassword
+            || !confirmNewPassword
+            || !isOldPasswordValid
+            || !isNewPasswordValid
+            || !isConfirmNewPasswordValid) {
             if (!oldPassword) setOldPassword('');
             if (!newPassword) setNewPassword('');
+            if (!confirmNewPassword) setConfirmNewPassword('');
             return
         }
 
@@ -63,14 +68,15 @@ export default ({  navigation }) => {
             });
             if (result) {
                 Alert.alert(
-                    'Success!!', 
-                    'Password Successfully Updated!!\nGoing back...', 
+                    '更改成功!!', 
+                    '回到上一頁...', 
                     [{ text: 'OK', onPress: () => navigation.goBack() }]
                 );
             }
             setIsLoading(false);
             setOldPassword('');
             setNewPassword('');
+            setConfirmNewPassword('');
             setErrorMsg('');
         } catch (error) {
             setIsLoading(false);
@@ -81,13 +87,10 @@ export default ({  navigation }) => {
 
     return (
         <View style={styles.root}>
-            <Text style={styles.title}>
-                Change Password
-            </Text>
             <HelperText
                 type='error'
                 style={{ 
-                    fontSize: 20, 
+                    fontSize: 15, 
                     marginBottom: -20,
                 }}
             >
@@ -95,7 +98,7 @@ export default ({  navigation }) => {
             </HelperText>
             <TextInput
                 mode='outlined'
-                placeholder='Old Password'
+                placeholder='舊密碼'
                 placeholderTextColor='gray'
                 error={!isOldPasswordValid}
                 disabled={isLoading}
@@ -115,11 +118,11 @@ export default ({  navigation }) => {
                 type='error' 
                 style={styles.helpertext}
             >
-                {isOldPasswordValid ? '' : 'Must not be null!'}
+                {isOldPasswordValid ? '' : '不可為空!'}
             </HelperText>
             <TextInput
                 mode='outlined'
-                placeholder='New Password'
+                placeholder='新密碼'
                 placeholderTextColor='gray'
                 error={!isNewPasswordValid}
                 disabled={isLoading}
@@ -139,7 +142,31 @@ export default ({  navigation }) => {
                 type='error' 
                 style={styles.helpertext}
             >
-                {isNewPasswordValid ? '' : 'Must be at least 8 letters!'}
+                {isNewPasswordValid ? '' : '必須為8個英文字母或數字以上!'}
+            </HelperText>
+            <TextInput
+                mode='outlined'
+                placeholder='確認新密碼'
+                placeholderTextColor='gray'
+                error={!isConfirmNewPasswordValid}
+                disabled={isLoading}
+                secureTextEntry={confirmNewPasswordSecure}
+                style={styles.input}
+                selectionColor='#666'
+                theme={{ colors: { primary: 'red' } }}
+                onChangeText={text => setConfirmNewPassword(text)}
+                right={
+                    <TextInput.Icon 
+                        name={confirmNewPasswordSecure ? 'eye-off' : 'eye'} 
+                        onPress={() => setConfirmNewPasswordSecure(!confirmNewPasswordSecure)}
+                    />
+                }
+            />
+            <HelperText 
+                type='error' 
+                style={styles.helpertext}
+            >
+                {isConfirmNewPasswordValid ? '' : '與新密碼不相符!'}
             </HelperText>
             <Button
                 mode='contained'

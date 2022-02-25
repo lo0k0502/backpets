@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { TextInput as NativeTextInput, StyleSheet } from 'react-native';
 import { getMediaLibraryPermissionsAsync, requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaTypeOptions, getPendingResultAsync } from 'expo-image-picker';
 import { TextInput, Dialog, Button, Card, HelperText } from 'react-native-paper';
-import { AddPost, uploadImage } from '../../../api';
+import { AddPost, uploadImage } from '../../../../api';
 import { useSelector } from 'react-redux';
-import { selectUser } from '../../../redux/userSlice';
-import { useCurrentLocation } from '../../../hooks';
+import { selectUser } from '../../../../redux/userSlice';
+import { useCurrentLocation } from '../../../../hooks';
+import { ScrollView } from 'react-native';
 
 const styles = StyleSheet.create({
     innerPropNav: {
@@ -47,6 +48,9 @@ export default ({ visible, close, refreshPosts }) => {
         setTitle('');
         setContent('');
         setphotoUrl('');
+        setTitleErrorMsg('');
+        setContentErrorMsg('');
+        setphotoUrlErrorMsg('');
     };
 
     const checkTitle = (text) => {
@@ -164,76 +168,79 @@ export default ({ visible, close, refreshPosts }) => {
     return (
         <Dialog visible={visible} onDismiss={handleClose}>
             <Dialog.Title>Post</Dialog.Title>
-            <Dialog.Content>
-                <TextInput 
-                    mode='outlined'
-                    placeholder='Title'
-                    placeholderTextColor='gray'
-                    error={titleErrorMsg}
-                    value={title}
-                    selectionColor='#666'
-                    theme={{ colors: { primary: '#ff8000' } }}
-                    onChangeText={checkTitle}
-                />
-                <HelperText
-                    type='error'
-                >
-                    {titleErrorMsg}
-                </HelperText>
-                <TextInput 
-                    mode='outlined'
-                    placeholder='Content'
-                    placeholderTextColor='gray'
-                    error={contentErrorMsg}
-                    value={content}
-                    multiline
-                    selectionColor='#666'
-                    render={(innerProps) => (
-                        <NativeTextInput
-                            {...innerProps}
-                            style={[
-                            innerProps.style,
-                            innerProps.multiline
-                                ? styles.innerPropNav
-                                : null,
-                            ]}
-                        />
-                    )}
-                    theme={{ colors: { primary: '#ff8000' } }}
-                    onChangeText={checkContent}
-                />
-                <HelperText 
-                    type='error' 
-                >
-                    {contentErrorMsg}
-                </HelperText>
-                <Button 
-                    mode='contained'
-                    icon='plus'
-                    color='#ff8000'
-                    dark
-                    disabled={isImgLoading || isLoading}
-                    loading={isImgLoading}
-                    contentStyle={{ width: '100%', height: '100%' }}
-                    style={ styles.imageButton }
-                    onPress={handleChangeImg}
-                >
-                    {photoUrl ? 'Change Image' : 'Add Image'}
-                </Button>
-                <HelperText 
-                    type='error' 
-                >
-                    {photoUrlErrorMsg}
-                </HelperText>
-                {photoUrl ? <Card.Cover source={{ uri: photoUrl }} style={ styles.photoCard } /> : null}
+            <Dialog.Content style={{ paddingHorizontal: 0 }}>
+                <ScrollView style={{ height: '80%', paddingHorizontal: 20 }}>
+                    <TextInput 
+                        mode='outlined'
+                        placeholder='標題'
+                        placeholderTextColor='gray'
+                        error={titleErrorMsg}
+                        value={title}
+                        selectionColor='#666'
+                        theme={{ colors: { primary: '#ff8000' } }}
+                        onChangeText={checkTitle}
+                    />
+                    <HelperText
+                        type='error'
+                    >
+                        {titleErrorMsg}
+                    </HelperText>
+                    <TextInput
+                        mode='outlined'
+                        placeholder='內文'
+                        placeholderTextColor='gray'
+                        error={contentErrorMsg}
+                        value={content}
+                        multiline
+                        selectionColor='#666'
+                        render={(innerProps) => (
+                            <NativeTextInput
+                                {...innerProps}
+                                style={[
+                                innerProps.style,
+                                innerProps.multiline
+                                    ? styles.innerPropNav
+                                    : null,
+                                ]}
+                            />
+                        )}
+                        theme={{ colors: { primary: '#ff8000' } }}
+                        onChangeText={checkContent}
+                    />
+                    <HelperText 
+                        type='error' 
+                    >
+                        {contentErrorMsg}
+                    </HelperText>
+                    <Button 
+                        mode='contained'
+                        icon='plus'
+                        color='#ff8000'
+                        dark
+                        disabled={isImgLoading || isLoading}
+                        loading={isImgLoading}
+                        contentStyle={{ width: '100%', height: '100%' }}
+                        style={ styles.imageButton }
+                        onPress={handleChangeImg}
+                    >
+                        {photoUrl ? '更改圖片' : '新增圖片'}
+                    </Button>
+                    <HelperText 
+                        type='error' 
+                    >
+                        {photoUrlErrorMsg}
+                    </HelperText>
+                    {photoUrl ? <Card.Cover source={{ uri: photoUrl }} style={ styles.photoCard } /> : null}
+                </ScrollView>
             </Dialog.Content>
             <Dialog.Actions>
                 <Button 
                     color='#ff8000' 
                     disabled={isLoading}
                     onPress={handleClose}
+                    contentStyle={{ paddingHorizontal: 10 }}
                 >
-                    Cancel
+                    取消
                 </Button>
                 <Button 
                     mode='contained' 
@@ -242,8 +249,9 @@ export default ({ visible, close, refreshPosts }) => {
                     disabled={isLoading}
                     loading={isLoading}
                     onPress={handleSubmit}
+                    contentStyle={{ paddingHorizontal: 10 }}
                 >
-                    Post
+                    發佈
                 </Button>
             </Dialog.Actions>
         </Dialog>

@@ -3,9 +3,8 @@ import { Button, Drawer, Avatar } from "react-native-paper";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { Text, View, StyleSheet } from "react-native";
 import { useSelector } from 'react-redux';
-import { selectUser } from '../../../redux/userSlice';
-import { usePhoto } from '../../../hooks';
-import { SERVERURL } from '../../../api/API';
+import { selectUser } from '../../../../redux/userSlice';
+import { SERVERURL } from '../../../../api/API';
 
 const styles = StyleSheet.create({
     root: {

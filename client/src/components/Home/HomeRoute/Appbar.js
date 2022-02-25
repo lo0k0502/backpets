@@ -18,11 +18,10 @@ export default ({ route, navigation }) => {
             {isHome ? <Appbar.Action icon='menu' onPress={navigation.toggleDrawer} />
                 : <Appbar.Action icon='arrow-left' onPress={navigation.goBack} />}
             <Appbar.Content 
-                title={isHome ? 'BackPets!!!' : 
-                    isChangePassword ? 'Change Password' :
-                    isEditProfile ? 'Edit Profile' : route.name
-                } 
-                subtitle={isHome ? 'P!!!' : ''} 
+                title={isHome ? 'BackPets' : 
+                    isChangePassword ? '更改密碼' :
+                    isEditProfile ? '更改個人資料' : route.name
+                }
             />
         </Appbar>
     );

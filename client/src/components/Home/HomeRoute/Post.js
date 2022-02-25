@@ -99,16 +99,16 @@ export default ({ navigation, route: { params: { post } } }) => {
                     anchor={<Appbar.Action icon='dots-horizontal' onPress={() => setMenuOpen(prev => !prev)} />}
                 >
                     <Menu.Item 
-                        title='Share' 
+                        title='分享' 
                         onPress={() => sharePost()} 
                     />
                     {user.info?._id === poster._id ? (
                         <>
                             <Menu.Item 
-                                title='Delete Post' 
-                                onPress={deletePost} 
+                                title='刪除任務'
+                                onPress={deletePost}
                                 style={{ backgroundColor: 'red' }}
-                                titleStyle={{ color: 'white' }} 
+                                titleStyle={{ color: 'white' }}
                             />
                         </>
                     ) : null}

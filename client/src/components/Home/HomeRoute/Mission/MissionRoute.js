@@ -1,11 +1,11 @@
 import React, { useState, useCallback } from 'react';
 import { StyleSheet, ScrollView, View, RefreshControl, Text } from 'react-native';
 import { Button, Portal } from 'react-native-paper';
-import PostDialog from './PostDialog';
-import PostCard from './PostCard';
+import MissionDialog from './MissionDialog';
+import MissionCard from './MissionCard';
 import { useSelector } from 'react-redux';
-import { selectUser } from '../../../redux/userSlice';
-import { usePosts } from '../../../hooks';
+import { selectUser } from '../../../../redux/userSlice';
+import { usePosts } from '../../../../hooks';
 
 const styles = StyleSheet.create({
     root: {
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
 
     export default ({ navigation }) => {
     const [refreshing, setRefreshing] = useState(false);// State for RefreshControl component
-    const [postDialog, setPostDialog] = useState(false);// Whether posting dialog is open
+    const [missionDialog, setMissionDialog] = useState(false);// Whether posting dialog is open
 
     const user = useSelector(selectUser);
     const { posts, refreshPosts } = usePosts();
@@ -73,18 +73,18 @@ const styles = StyleSheet.create({
                 icon='plus'
                 color='#ff8000'
                 dark
-                onPress={() => setPostDialog(true)}
+                onPress={() => setMissionDialog(true)}
             >
-                Post
+                新增任務
             </Button>
             <View style={[styles.emailVerifySuggest, { display: user.info?.verified ? 'none' : 'flex' }]}>
-                <Text style={{ color: 'black' }}>Your email is not verified yet!</Text>
-                <Text style={{ color: 'black' }}>We highly recommed you to verify your email first!</Text>
+                <Text style={{ color: 'black' }}>你的信箱還未驗證喔!</Text>
+                <Text style={{ color: 'black' }}>我們強烈建議您先驗證您的信箱!</Text>
             </View>
             <Portal>
-                <PostDialog visible={postDialog} close={() => setPostDialog(false)} refreshPosts={refreshPosts} />
+                <MissionDialog visible={missionDialog} close={() => setMissionDialog(false)} refreshPosts={refreshPosts} />
             </Portal>
-            {posts.map(post => <PostCard post={post} key={post._id} />)}
+            {posts.map(post => <MissionCard post={post} key={post._id} />)}
             <View style={{ height: 50 }} />
         </ScrollView>
     );
