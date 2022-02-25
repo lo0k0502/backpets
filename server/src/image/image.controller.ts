@@ -3,7 +3,7 @@ import { InjectConnection } from '@nestjs/mongoose';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes } from '@nestjs/swagger';
 import { Response } from 'express';
-import { Connection } from 'mongoose';
+import { Connection, Types } from 'mongoose';
 import { MongoGridFS } from 'mongo-gridfs';
 
 @Controller('image')
@@ -19,18 +19,20 @@ export class ImageController {
     Upload(@UploadedFile() file, @Res() res: Response) {
         if (!file) return res.status(400).json({ message: 'No file selected' });
         if (file.mimetype !== 'image/jpeg'
-            && file.mimetype !== 'image/png') 
+            && file.mimetype !== 'image/png')
             return res.status(400).json({ message: 'Not an image!!' });
-        console.log(file)
-        const imgUrl = `http://${process.env.BASE_URL}:8000/image/${file.filename}`;
     
-        return res.status(200).json({ imgUrl });
+        return res.status(200).json({ photoId: file.id.toString() });
     }
 
-    @Get(':filename')
-    async GetImage(@Param() { filename }, @Res() res: Response) {
+    @Get(':id')
+    async GetImage(@Param() { id }, @Res() res: Response) {
         try {
-            const image = (await this.gfs.find({ filename }))[0];
+            // id = /[0-9A-Fa-f]{6}/g.test(id) ? Types.ObjectId(id) : id;
+            console.log('1', id)
+            const image = await this.gfs.findById(id);
+            console.log('1')
+            if (!image) return res.status(400).json({ message: 'No such file' });
             const readStream = await this.gfs.readFileStream(image._id.toString());
             readStream.pipe(res);
         } catch (error) {
@@ -39,10 +41,10 @@ export class ImageController {
         }
     }
 
-    @Delete(':filename')
-    async DeleteImage(@Param() { filename }, @Res() res: Response) {
+    @Delete(':id')
+    async DeleteImage(@Param() { id }, @Res() res: Response) {
         try {
-            const image = (await this.gfs.find({ filename }))[0];
+            const image = await this.gfs.findById(id);
             if (!image) return res.status(400).json({ message: 'No such file' });
             await this.gfs.delete(image._id.toString());
             return res.status(200).json({ message: 'Successfully deleted' });

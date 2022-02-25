@@ -14,6 +14,7 @@ import { updateProfile } from '../../../redux/userReducer';
 import { deleteImage, uploadImage } from '../../../api';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { selectUser } from '../../../redux/userSlice';
+import { SERVERURL } from '../../../api/API';
 
 const styles = StyleSheet.create({
     root: {
@@ -55,12 +56,12 @@ export default ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false);// Whether it is during editing profile, if so, disable inputs and buttons.
     const [isImgLoading, setIsImgLoading] = useState(false);// Whether it is during image picking, if so, disable inputs and buttons.
 
-    const [photoUrl, setPhotoUrl] = useState(user.info?.photoUrl);
+    const [photoUrl, setphotoUrl] = useState('');
     const [username, setUsername] = useState(user.info?.username);
     const [email, setEmail] = useState(user.info?.email);
     
     const [errorMsg, setErrorMsg] = useState('');
-    const [photoUrlErrorMsg, setPhotoUrlErrorMsg] = useState('');
+    const [photoUrlErrorMsg, setphotoUrlErrorMsg] = useState('');
     const [usernameErrorMsg, setUsernameErrorMsg] = useState('');
     const [emailErrorMsg, setEmailErrorMsg] = useState('');
 
@@ -94,7 +95,7 @@ export default ({ navigation }) => {
         if (!result) return setIsImgLoading(false);
 
         // If the final result is not cancelled, change the current photo url to the result photo's local url.
-        if (!result.cancelled) setPhotoUrl(result.uri);
+        if (!result.cancelled) setphotoUrl(result.uri);
 
         setIsImgLoading(false);
     };
@@ -129,7 +130,7 @@ export default ({ navigation }) => {
 
         const previousProfile = user;
         try {
-            let sendPhotoUrl = photoUrl;
+            let sendPhotoId;
 
             // Check if the photo is changed, if so, upload it to the database first.
             if (photoUrl !== previousProfile.info?.photoUrl) {
@@ -148,7 +149,7 @@ export default ({ navigation }) => {
                         break;
                     default: {
                         setIsLoading(false);
-                        setPhotoUrlErrorMsg('Selected file is not an image');
+                        setphotoUrlErrorMsg('Selected file is not an image');
                         return;
                     }
                 }
@@ -159,26 +160,26 @@ export default ({ navigation }) => {
                 });
     
                 const { data } = await uploadImage(formData);
-                if (data) {
-                    sendPhotoUrl = data.imgUrl;
+                
+                sendPhotoId = data.photoId;
 
-                    // If the previous avatar is in our database and it's not the default avatar, delete it.
-                    if (previousProfile.info?.photoUrl !== 'http://172.16.88.94:8000/image/1633975665652-black-cat-icon-6.png' 
-                        && /^http:\/\/\d+\.\d+\.\d+\.\d+:8000$/.test(previousProfile.info?.photoUrl.split('/')[2])) {
-                        await deleteImage(previousProfile.info?.photoUrl.split('/').pop());
-                    }
+                // If the previous avatar is in our database and it's not the default avatar, delete it.
+                if (previousProfile.info?.photoId !== '61a2dbeb3a662969fc731434') {
+                    await deleteImage(previousProfile.info?.photoId);
                 }
             }
 
+            if (!sendPhotoId) throw new Error('SendPhotoId is Null!!');
+
             // Update profile
-            unwrapResult(await dispatch(updateProfile({ 
+            unwrapResult(await dispatch(updateProfile({
                 userId: previousProfile.info?._id,
-                photoUrl: sendPhotoUrl,
-                newUsername: username, 
+                photoId: sendPhotoId,
+                newUsername: username,
                 email,
             })));
             setErrorMsg('');
-            setPhotoUrlErrorMsg('');
+            setphotoUrlErrorMsg('');
             setUsernameErrorMsg('');
             setEmailErrorMsg('');
             setIsLoading(false);
@@ -193,7 +194,7 @@ export default ({ navigation }) => {
             }
             if (error.response.data.message) {
                 console.log('while uploading photo:', error.response.data.message)
-                setPhotoUrlErrorMsg(error.response.data.message);
+                setphotoUrlErrorMsg(error.response.data.message);
             }
         }
 
@@ -213,7 +214,7 @@ export default ({ navigation }) => {
             >
                 {errorMsg}
             </HelperText>
-            {photoUrl ? <Avatar.Image source={{ uri: photoUrl }} size={100} style={{ backgroundColor: 'white' }} /> : null}
+            <Avatar.Image source={{ uri: photoUrl ? photoUrl : user.info?.photoId ? `${SERVERURL}/image/${user.info?.photoId}` : null }} size={100} style={{ backgroundColor: 'white' }} />
             <HelperText 
                 type='error' 
                 style={styles.helpertext}

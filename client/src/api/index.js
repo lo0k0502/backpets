@@ -21,7 +21,7 @@ export const uploadImage = (payload) => API.post('/image/upload', payload, {
         'Content-Type': 'multipart/form-data',
     },
 });
-export const deleteImage = (filename) => API.delete(`/image/${filename}`);
+export const deleteImage = (photoId) => API.delete(`/image/${photoId}`);
 
 //post
 export const AddPost = (payload) => API.post('/post/add', payload);

@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from '../user/user.module';
 import { ConfigModule } from '@nestjs/config';
@@ -18,10 +17,6 @@ import { AppController } from './app.controller';
     AuthModule,
     FileModule,
     PostModule,
-    GraphQLModule.forRoot({
-      autoSchemaFile: 'src/schema.gql',
-      sortSchema: true,
-    }),
   ],
   controllers: [AppController],
 })

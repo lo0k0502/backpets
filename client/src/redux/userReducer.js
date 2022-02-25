@@ -17,9 +17,9 @@ export const loginUser = createAsyncThunk(
 );
 export const googleLogin = createAsyncThunk(
     'user/googlelogin',
-    async ({ username, email, photoUrl }, { rejectWithValue }) => {
+    async ({ username, email, photoId }, { rejectWithValue }) => {
         try {
-            const response = await GoogleLogin({ username, email, photoUrl });
+            const response = await GoogleLogin({ username, email, photoId });
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);
@@ -50,9 +50,9 @@ export const tokenRefresh = createAsyncThunk(
 );
 export const updateProfile = createAsyncThunk(
     'user/updateprofile',
-    async ({ userId, photoUrl, newUsername, email }, {rejectWithValue}) => {
+    async ({ userId, photoId, newUsername, email }, {rejectWithValue}) => {
         try {
-            const response = await updateUserProfile({ userId, photoUrl, newUsername, email });
+            const response = await updateUserProfile({ userId, photoId, newUsername, email });
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);

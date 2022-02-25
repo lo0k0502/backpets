@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import { Controller, Get, Res, Post, Body, Param, Delete } from '@nestjs/common';
 import { Response } from 'express';
 import { Post as PostModel } from 'src/post/post.schema';
@@ -21,14 +22,18 @@ export class PostController {
     }
 
     @Post('add')
-    async AddPost(@Body() { userId, title, content, photoUrl, location }: PostModel, @Res() res: Response) {
+    async AddPost(@Body() { userId, title, content, photoId, location }: PostModel, @Res() res: Response) {
         try {
             const result = await this.postService.create({
                 userId,
                 title,
                 content,
+                category: "",
+                variety: "",
+                feature: "",
+                lost_time: "",
                 post_time: moment().valueOf(),
-                photoUrl,
+                photoId: new Types.ObjectId(photoId),
                 location,
             })
             return res.status(200).json({ result });

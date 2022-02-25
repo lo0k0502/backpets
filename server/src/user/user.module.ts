@@ -4,7 +4,6 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { UserController } from "src/user/user.controller";
 import { AuthMiddleware } from "src/auth/auth.middleware";
 import { User, UserSchema } from "src/user/user.schema";
-import { UserResolver } from "./user.resolver";
 import { UserService } from "./user.service";
 import { AuthService } from "src/auth/auth.service";
 
@@ -14,7 +13,7 @@ import { AuthService } from "src/auth/auth.service";
         JwtModule.register({}),
     ],
     controllers: [UserController],
-    providers: [UserResolver, UserService, AuthService],
+    providers: [UserService, AuthService],
     exports: [UserService],
 })
 export class UserModule implements NestModule {

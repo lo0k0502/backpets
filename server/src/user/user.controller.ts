@@ -1,6 +1,7 @@
+import { Types } from 'mongoose';
 import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
-import { UserType } from './user.dto';
+import { User } from './user.schema';
 import { UserService } from './user.service';
 import { hash, compare } from 'bcrypt';
 import { AuthService } from 'src/auth/auth.service';
@@ -26,7 +27,7 @@ export class UserController {
     }
 
     @Post('delete')
-    async DeleteUser(@Body() { username }: UserType, @Res() res: Response) {
+    async DeleteUser(@Body() { username }: Partial<User>, @Res() res: Response) {
         try {
             const existUser = await this.userService.findOne({ username });
             if (!existUser) return res.status(400).json({ message: '用戶不存在' });
@@ -40,9 +41,9 @@ export class UserController {
     } 
 
     @Post('updateprofile')
-    async UpdateProfile(@Body() { userId, photoUrl, newUsername, email }, @Res() res: Response) {
+    async UpdateProfile(@Body() { userId, photoId, newUsername, email }, @Res() res: Response) {
         try {
-            console.log('Updating: ', userId, photoUrl, newUsername, email);
+            console.log('Updating: ', userId, photoId, newUsername, email);
             const existUser = await this.userService.findOne({ _id: userId });
             if (!existUser) return res.status(400).json({ message: '用戶不存在' });
     
@@ -52,7 +53,7 @@ export class UserController {
             const updatedOnceUser = await this.userService.updateOne({ _id: userId }, { 
                 username: newUsername, 
                 email,
-                photoUrl,
+                photoId: new Types.ObjectId(photoId),
             });
     
             const accessToken = await this.authService.signAccessTokenAsync(updatedOnceUser);

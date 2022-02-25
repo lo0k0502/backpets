@@ -7,6 +7,7 @@ import { MailService } from '../mail/mail.service';
 import randomString from '../utils/randomString';
 import { AuthService } from './auth.service';
 import { addResetTokenUser, deleteResetTokenUser, resetTokenUsers } from 'src/refreshTokens';
+import { Types } from 'mongoose';
 
 @Controller('auth')
 export class AuthController {
@@ -32,7 +33,9 @@ export class AuthController {
           username,
           password: hashedPassword,
           email,
-          photoUrl: `http://${process.env.BASE_URL}:8000/image/1638063083434-black-cat-icon-6.jpg`,
+          photoId: new Types.ObjectId('61a2dbeb3a662969fc731434'),
+          points: 0,
+          coupons: [],
           refreshToken: null,
           verified: false,
         });

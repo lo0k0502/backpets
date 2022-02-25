@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export type UserDocument = User & Document;
 
@@ -15,7 +15,13 @@ export class User {
   email: string;
 
   @Prop()
-  photoUrl: string;
+  photoId: Types.ObjectId;
+
+  @Prop()
+  points: number;
+
+  @Prop()
+  coupons: Types.ObjectId[];
 
   @Prop()
   refreshToken: string;

@@ -32,11 +32,11 @@ export default ({ visible, close, refreshPosts }) => {
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [photoUrl, setPhotoUrl] = useState('');
+    const [photoUrl, setphotoUrl] = useState('');
 
     const [titleErrorMsg, setTitleErrorMsg] = useState('');
     const [contentErrorMsg, setContentErrorMsg] = useState('');
-    const [photoUrlErrorMsg, setPhotoUrlErrorMsg] = useState('');
+    const [photoUrlErrorMsg, setphotoUrlErrorMsg] = useState('');
 
     const { currentLatitude, currentLongitude } = useCurrentLocation();
 
@@ -46,7 +46,7 @@ export default ({ visible, close, refreshPosts }) => {
         close();
         setTitle('');
         setContent('');
-        setPhotoUrl('');
+        setphotoUrl('');
     };
 
     const checkTitle = (text) => {
@@ -87,7 +87,7 @@ export default ({ visible, close, refreshPosts }) => {
         if (!result) return setIsImgLoading(false);
 
         // If the final result is not cancelled, change the current photo url to the result photo's local url.
-        if (!result.cancelled) setPhotoUrl(result.uri);
+        if (!result.cancelled) setphotoUrl(result.uri);
 
 
         setIsImgLoading(false);
@@ -104,7 +104,7 @@ export default ({ visible, close, refreshPosts }) => {
         setIsLoading(true);
         
         try {
-            let sendPhotoUrl = photoUrl;
+            let sendPhotoId;
 
             // Check if the photo is added, if so, upload it to the database first.
             if (photoUrl) {
@@ -133,8 +133,8 @@ export default ({ visible, close, refreshPosts }) => {
                     type,
                 });
                 
-                const { data: { imgUrl } } = await uploadImage(formData);
-                sendPhotoUrl = imgUrl;
+                const { data } = await uploadImage(formData);
+                sendPhotoId = data.photoId;
             }
 
             // Add the post
@@ -142,7 +142,7 @@ export default ({ visible, close, refreshPosts }) => {
                 userId: user.info?._id.toString(),
                 title,
                 content,
-                photoUrl: sendPhotoUrl,
+                photoId: sendPhotoId,
                 location: { 
                     latitude: currentLatitude, 
                     longitude: currentLongitude, 
@@ -154,7 +154,7 @@ export default ({ visible, close, refreshPosts }) => {
             setIsLoading(false);
             if (error.response.data.message) {
                 console.log('while uploading photo:', error.response.data.message)
-                setPhotoUrlErrorMsg(error.response.data.message);
+                setphotoUrlErrorMsg(error.response.data.message);
             }
         }
 
@@ -175,8 +175,8 @@ export default ({ visible, close, refreshPosts }) => {
                     theme={{ colors: { primary: '#ff8000' } }}
                     onChangeText={checkTitle}
                 />
-                <HelperText 
-                    type='error' 
+                <HelperText
+                    type='error'
                 >
                     {titleErrorMsg}
                 </HelperText>

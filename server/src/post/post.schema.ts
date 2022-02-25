@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export type PostDocument = Post & Document;
 
@@ -14,11 +14,23 @@ export class Post {
   @Prop({ required: true })
   content: string;
 
+  @Prop()
+  category: string;
+
+  @Prop()
+  variety: string;
+
+  @Prop()
+  feature: string;
+
+  @Prop()
+  lost_time: string;
+
   @Prop({ required: true })
   post_time: number;
   
   @Prop()
-  photoUrl: string;
+  photoId: Types.ObjectId;
 
   @Prop({ type: Object, required: true })
   location: {

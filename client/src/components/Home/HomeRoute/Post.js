@@ -16,6 +16,7 @@ import { DeletePost } from '../../../api';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
 import { usePoster } from '../../../hooks';
+import { SERVERURL } from '../../../api/API';
 
 const styles = StyleSheet.create({
     appbar: {
@@ -117,7 +118,7 @@ export default ({ navigation, route: { params: { post } } }) => {
                 style={ styles.scrollView }
             >
                 <View style={ styles.momentView }>
-                    <Avatar.Image source={{ uri: poster.photoUrl }} size={50} style={{ margin: 10 }} />
+                    <Avatar.Image source={{ uri: poster.photoId ? `${SERVERURL}/image/${poster.photoId}` : null }} size={50} style={{ margin: 10, backgroundColor: 'white' }} />
                     <View>
                         <Title>{poster.username}</Title>
                         <Caption>{moment(post.post_time).fromNow()}</Caption>
@@ -126,7 +127,7 @@ export default ({ navigation, route: { params: { post } } }) => {
                 <Divider style={ styles.imageDivider } />
                 <Headline>{post.title}</Headline>
                 <Paragraph style={ styles.p }>{post.content}</Paragraph>
-                {post.photoUrl ? <Card.Cover source={{ uri: post.photoUrl }}/> : null}
+                {post.photoId ? <Card.Cover source={{ uri: `${SERVERURL}/image/${post.photoId}` }}/> : null}
             </ScrollView>
         </>
     );

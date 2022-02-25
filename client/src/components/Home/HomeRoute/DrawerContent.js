@@ -4,6 +4,8 @@ import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { Text, View, StyleSheet } from "react-native";
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
+import { usePhoto } from '../../../hooks';
+import { SERVERURL } from '../../../api/API';
 
 const styles = StyleSheet.create({
     root: {
@@ -31,10 +33,7 @@ export default ({ navigation, logoutback }) => {
                     <Text style={[styles.text, { fontSize: 25 }]}>{user.info?.username}</Text>
                     <Text style={[styles.text, { fontSize: 10 }]}>{user.info?.email}</Text>
                 </View>
-                <Avatar.Image 
-                    source={{ uri: user.info?.photoUrl }} 
-                    size={60}
-                />
+                <Avatar.Image source={{ uri: user.info?.photoId ? `${SERVERURL}/image/${user.info?.photoId}` : null }} size={60} style={{ backgroundColor: 'white' }} />
             </View>
             <Drawer.Section>
                 <Button
