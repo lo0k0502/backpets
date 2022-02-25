@@ -2,12 +2,12 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import { Headline, Text } from 'react-native-paper';
-import { useCurrentLocation, usePosts } from '../../../hooks';
+import { useCurrentLocation, useMissions } from '../../../hooks';
 import PostCallout from './PostCallout';
 
 export default () => {
   const { currentLatitude, currentLongitude } = useCurrentLocation();
-  const { posts } = usePosts();
+  const { missions } = useMissions();
   
   return (
     <MapView 
@@ -30,21 +30,21 @@ export default () => {
         }} 
         title='花花'
       />
-      {posts.map((post, index) => (
+      {missions.map((mission, index) => (
         <Marker
           key={index}
           coordinate={{
-            latitude: post.location.latitude,
-            longitude: post.location.longitude,
+            latitude: mission.location.latitude,
+            longitude: mission.location.longitude,
           }}
-          title={post.title}
-          description={post.content}
+          title={mission.title}
+          description={mission.content}
         >
           <Callout 
             tooltip
             onPress={() => {}}
           >
-            <PostCallout post={post} />
+            <PostCallout mission={mission} />
           </Callout>
         </Marker>
       ))}

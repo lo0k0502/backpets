@@ -28,6 +28,7 @@ export class ImageController {
     @Get(':id')
     async GetImage(@Param() { id }, @Res() res: Response) {
         try {
+            console.log(id)
             const image = await this.gfs.findById(id);
             if (!image) return res.status(400).json({ message: 'No such file' });
             const readStream = await this.gfs.readFileStream(image._id.toString());
@@ -41,6 +42,7 @@ export class ImageController {
     @Delete(':id')
     async DeleteImage(@Param() { id }, @Res() res: Response) {
         try {
+            console.log('deleting')
             const image = await this.gfs.findById(id);
             if (!image) return res.status(400).json({ message: 'No such file' });
             await this.gfs.delete(image._id.toString());

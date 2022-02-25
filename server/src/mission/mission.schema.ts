@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
-export type PostDocument = Post & Document;
+export type MissionDocument = Mission & Document;
 
 @Schema()
-export class Post {
+export class Mission {
   @Prop({ required: true })
   userId: string;
 
@@ -39,4 +39,4 @@ export class Post {
   };
 }
 
-export const PostSchema = SchemaFactory.createForClass(Post);
+export const MissionSchema = SchemaFactory.createForClass(Mission);

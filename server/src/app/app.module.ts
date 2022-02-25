@@ -4,7 +4,7 @@ import { UserModule } from '../user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from '../auth/auth.module';
 import { FileModule } from '../image/image.module';
-import { PostModule } from '../post/post.module';
+import { MissionModule } from '../mission/mission.module';
 import { AppController } from './app.controller';
 
 @Module({
@@ -16,7 +16,7 @@ import { AppController } from './app.controller';
     UserModule,
     AuthModule,
     FileModule,
-    PostModule,
+    MissionModule,
   ],
   controllers: [AppController],
 })

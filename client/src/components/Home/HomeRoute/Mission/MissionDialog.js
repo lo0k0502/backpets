@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TextInput as NativeTextInput, StyleSheet } from 'react-native';
 import { getMediaLibraryPermissionsAsync, requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaTypeOptions, getPendingResultAsync } from 'expo-image-picker';
 import { TextInput, Dialog, Button, Card, HelperText } from 'react-native-paper';
-import { AddPost, uploadImage } from '../../../../api';
+import { addMission, uploadImage } from '../../../../api';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
 import { useCurrentLocation } from '../../../../hooks';
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ({ visible, close, refreshPosts }) => {
+export default ({ visible, close, refreshMissions }) => {
     const user = useSelector(selectUser);
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
     const [isImgLoading, setIsImgLoading] = useState(false);// Whether it is during image picking, if so, disable inputs and buttons. 
@@ -43,7 +43,7 @@ export default ({ visible, close, refreshPosts }) => {
 
     // Close the dailog with configuration
     const handleClose = () => {
-        refreshPosts();
+        refreshMissions();
         close();
         setTitle('');
         setContent('');
@@ -72,7 +72,7 @@ export default ({ visible, close, refreshPosts }) => {
         if (!currentPermission.granted) {
             let permissionResult = await requestMediaLibraryPermissionsAsync();
             if (!permissionResult.granted) {
-                Alert.alert('Permission denied!', 'We need your media library permission to add an image to this post!', [{ text: 'Got it!' }]);
+                Alert.alert('權限不足!', '我們需要您的許可來存取您的媒體庫!', [{ text: '知道了' }]);
                 setIsImgLoading(false);
                 return;
             }
@@ -142,7 +142,7 @@ export default ({ visible, close, refreshPosts }) => {
             }
 
             // Add the post
-            await AddPost({
+            await addMission({
                 userId: user.info?._id.toString(),
                 title,
                 content,
@@ -167,7 +167,7 @@ export default ({ visible, close, refreshPosts }) => {
 
     return (
         <Dialog visible={visible} onDismiss={handleClose}>
-            <Dialog.Title>Post</Dialog.Title>
+            <Dialog.Title>發佈任務</Dialog.Title>
             <Dialog.Content style={{ paddingHorizontal: 0 }}>
                 <ScrollView style={{ height: '80%', paddingHorizontal: 20 }}>
                     <TextInput 

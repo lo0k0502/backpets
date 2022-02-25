@@ -12,10 +12,10 @@ import {
     Avatar, 
     Menu,
 } from 'react-native-paper';
-import { DeletePost } from '../../../api';
+import { deleteMission } from '../../../api';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
-import { usePoster } from '../../../hooks';
+import { useUser } from '../../../hooks';
 import { SERVERURL } from '../../../api/API';
 
 const styles = StyleSheet.create({
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
 export default ({ navigation, route: { params: { post } } }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const user = useSelector(selectUser);
-    const poster = usePoster(post);
+    const poster = useUser(post.userId);
 
     // Share this post's link (Not finished yet)
     const sharePost = async () => {
@@ -57,19 +57,19 @@ export default ({ navigation, route: { params: { post } } }) => {
     // Delete this post. Only the poster can see this function
     const deletePost = async () => {
         Alert.alert(
-            'DELETING POST!',
-            'Your are deleting your post!\nThis action is irreversible, please think twice before you make your decision!',
+            '您正在刪除任務!',
+            '這個動作無法復原，確定要刪除嗎?',
             [
-                { text: 'Cancel' },
+                { text: '取消' },
                 { 
-                    text: 'DELETE ANYWAY',
+                    text: '確定刪除',
                     style: 'destructive',
                     onPress: async () => {
                         try {
-                            if ((await DeletePost(post._id)).data.success) {
+                            if ((await deleteMission(post._id)).data.success) {
                                 Alert.alert(
-                                    'Success!!',
-                                    'Successfully deleted post!!\nGoing back...',
+                                    '刪除成功!!',
+                                    '回到上一頁...',
                                     [{ 
                                         text: 'OK', 
                                         onPress: () => {

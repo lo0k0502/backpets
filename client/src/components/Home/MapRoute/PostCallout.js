@@ -39,13 +39,13 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ({ post }) => {
+export default ({ mission }) => {
     return (
         <View style={styles.container}>
             <View style={styles.bubble}>
                 <View style={styles.root}>
                     <Text style={{ fontWeight: '900' }}>我家狗不見了</Text>
-                    <Text>{post.content}</Text>
+                    <Text>{mission.content}</Text>
                 </View>
             </View>
             <View style={styles.arrowBorder} />

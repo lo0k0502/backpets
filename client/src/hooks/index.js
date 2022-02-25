@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import * as Location from 'expo-location';
-import { fetchAllPosts, fetchUserById } from '../api';
+import { fetchAllMissions, fetchUserById } from '../api';
 import { useFocusEffect } from '@react-navigation/core';
 
 /**
@@ -51,48 +51,48 @@ export const useCurrentLocation = () => {
 };
 
 /**
- * @returns {{ post: Object, refreshPosts: Function }}
+ * @returns {{ mission: Object, refreshMissions: Function }}
  */
-export const usePosts = () => {
-    const [posts, setPosts] = useState([]);
+export const useMissions = () => {
+    const [missions, setMissions] = useState([]);
 
-    const fetchPosts = async () => setPosts((await fetchAllPosts()).data.result);// Fetch all posts
+    const fetchMissions = async () => setMissions((await fetchAllMissions()).data.result);// Fetch all missions
 
     useFocusEffect(useCallback(() => {
-        fetchPosts();
+        fetchMissions();
     }, []));
 
     return {
-        posts,
-        refreshPosts: fetchPosts,
+        missions,
+        refreshMissions: fetchMissions,
     };
 };
 
 /**
- * @param {Object} post
+ * @param {String} userId
  * @returns {Object}
  */
-export const usePoster = (post) => {
-    const [poster, setPoster] = useState({});
+export const useUser = (userId) => {
+    const [user, setUser] = useState({});
 
-    // Fetch the poster of this post
+    // Fetch the user of this user id
     useEffect(() => {
         (async () => {
             try {
-                const res = await fetchUserById(post.userId);
-                setPoster(res.data.result);
+                const res = await fetchUserById(userId);
+                setUser(res.data.result);
             } catch (error) {
-                console.log('While fetching poster: ', error.response.data.message);
+                console.log('While fetching user: ', error.response.data.message);
             }
         })()
-    }, [post]);
+    }, [userId]);
 
-    return poster;
+    return user;
 };
 
 export default {
     useStateWithValidation,
     useCurrentLocation,
-    usePosts,
-    usePoster,
+    useMissions,
+    useUser,
 };

@@ -23,8 +23,8 @@ export const uploadImage = (payload) => API.post('/image/upload', payload, {
 });
 export const deleteImage = (photoId) => API.delete(`/image/${photoId}`);
 
-//post
-export const AddPost = (payload) => API.post('/post/add', payload);
-export const DeletePost = (postId) => API.delete(`/post/${postId}`);
-export const fetchAllPosts = () => API.get('/post/fetchall');
-export const fetchPost = (postid) => API.get(`/post/${postid}`);
+//mission
+export const addMission = (payload) => API.post('/mission/add', payload);
+export const deleteMission = (missionId) => API.delete(`/mission/${missionId}`);
+export const fetchAllMissions = () => API.get('/mission/fetchall');
+export const fetchMission = (missionid) => API.get(`/mission/${missionid}`);

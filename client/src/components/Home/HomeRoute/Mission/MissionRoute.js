@@ -5,7 +5,7 @@ import MissionDialog from './MissionDialog';
 import MissionCard from './MissionCard';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
-import { usePosts } from '../../../../hooks';
+import { useMissions } from '../../../../hooks';
 
 const styles = StyleSheet.create({
     root: {
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 10,
         borderTopColor: '#ff8000',
     },
-    postaction: {
+    missionaction: {
         width: '100%',
         textAlign: 'left',
         borderRadius: 0,
@@ -56,14 +56,14 @@ const styles = StyleSheet.create({
 
     export default ({ navigation }) => {
     const [refreshing, setRefreshing] = useState(false);// State for RefreshControl component
-    const [missionDialog, setMissionDialog] = useState(false);// Whether posting dialog is open
+    const [missionDialog, setMissionDialog] = useState(false);// Whether mission dialog is open
 
     const user = useSelector(selectUser);
-    const { posts, refreshPosts } = usePosts();
+    const { missions, refreshMissions } = useMissions();
 
     const handleRefresh = useCallback(() => {
         setRefreshing(true);
-        refreshPosts().then(() => setRefreshing(false));
+        refreshMissions().then(() => setRefreshing(false));
     }, []);
     
     return (
@@ -82,9 +82,9 @@ const styles = StyleSheet.create({
                 <Text style={{ color: 'black' }}>我們強烈建議您先驗證您的信箱!</Text>
             </View>
             <Portal>
-                <MissionDialog visible={missionDialog} close={() => setMissionDialog(false)} refreshPosts={refreshPosts} />
+                <MissionDialog visible={missionDialog} close={() => setMissionDialog(false)} refreshMissions={refreshMissions} />
             </Portal>
-            {posts.map(post => <MissionCard post={post} key={post._id} />)}
+            {missions.map(mission => <MissionCard mission={mission} key={mission._id} />)}
             <View style={{ height: 50 }} />
         </ScrollView>
     );

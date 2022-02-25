@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Card, Avatar, Paragraph, Title, TouchableRipple, Button } from 'react-native-paper';
 import moment from 'moment';
-import { usePoster } from '../../../../hooks';
+import { useUser } from '../../../../hooks';
 import { SERVERURL } from '../../../../api/API';
 
 const styles = StyleSheet.create({
@@ -30,25 +30,25 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ({ post }) => {
+export default ({ mission }) => {
     const navigation = useNavigation();
-    const poster = usePoster(post);
+    const poster = useUser(mission.userId);
 
     return (
         <Card style={ styles.card }>
             <TouchableRipple 
                 style={{ width: '100%' }}
-                onPress={() => navigation.navigate('Post', { post })}
+                onPress={() => navigation.navigate('Post', { post: mission })}
             >
                 <Card.Title title={poster.username} 
-                    subtitle={moment(post.post_time).fromNow()} 
+                    subtitle={moment(mission.post_time).fromNow()} 
                     left={props => <Avatar.Image {...props} source={{ uri: poster.photoId ? `${SERVERURL}/image/${poster.photoId}` : null }} style={{ backgroundColor: 'white' }} />} 
                 />
             </TouchableRipple>
             <Card.Actions style={ styles.cardAction }>
-                <Title style={{ marginLeft: 10 }}>{post.title}</Title>
-                <Paragraph style={{ padding: 10 }}>{post.content}</Paragraph>
-                {post.photoId ? <Card.Cover source={{ uri: `${SERVERURL}/image/${post.photoId}` }} style={{ width: 300, height: 200, alignSelf: 'center', marginVertical: 5 }}/> : null}
+                <Title style={{ marginLeft: 10 }}>{mission.title}</Title>
+                <Paragraph style={{ padding: 10 }}>{mission.content}</Paragraph>
+                {mission.photoId ? <Card.Cover source={{ uri: `${SERVERURL}/image/${mission.photoId}` }} style={{ width: 300, height: 200, alignSelf: 'center', marginVertical: 5 }}/> : null}
                 <Button
                     mode='contained'
                     color='#ff8000'
