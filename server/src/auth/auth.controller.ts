@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Delete, Req, Res } from '@nestjs/common';
-import { hash, compare } from 'bcrypt';
+import { hash, compare } from 'bcryptjs';
 import { Request, Response } from 'express';
 import { UserService } from '../user/user.service';
 import { User } from 'src/user/user.schema';
