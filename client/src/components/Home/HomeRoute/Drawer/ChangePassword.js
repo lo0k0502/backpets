@@ -176,7 +176,7 @@ export default ({  navigation }) => {
                 contentStyle={{ width: '100%', height: '100%' }}
                 onPress={handleSubmit}
             >
-                Submit
+                更改
             </Button>
         </View>
     );

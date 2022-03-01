@@ -19,7 +19,7 @@ export default ({ navigation }) => {
             await SendResetPasswordEmail({ email });
             setIsLoading(false);
             setErrorMsg('');
-            Alert.alert('Success!', 'Reset password email sent!\nGoing back...', [{ text: 'OK', onPress: () => navigation.goBack() }]);
+            Alert.alert('成功!', '重設密碼的郵件已寄至您的信箱!\n回到上一頁...', [{ text: 'OK', onPress: () => navigation.goBack() }]);
         } catch (error) {
             console.log(error.response.data.message);
             setIsLoading(false);
@@ -36,7 +36,7 @@ export default ({ navigation }) => {
                 alignItems: 'center',
             }}
         >
-            <Text style={{ fontSize: 20 }}>Please enter your email</Text>
+            <Text style={{ fontSize: 20 }}>請輸入您的電子郵件</Text>
             <KeyboardAvoidingView 
                 // behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
                 behavior='padding'
@@ -61,7 +61,7 @@ export default ({ navigation }) => {
                     onChangeText={text => setEmail(text)}
                 />
                 <HelperText type='error'>
-                    {!isEmailValid ? 'Email is not valid!' : null}
+                    {!isEmailValid ? '無效的電子郵件!' : null}
                 </HelperText>
                 <Button 
                     mode='contained'
@@ -76,7 +76,7 @@ export default ({ navigation }) => {
                     contentStyle={{ width: '100%', height: '100%' }}
                     onPress={handleSubmit}
                 >
-                    Send
+                    確認
                 </Button>
             </KeyboardAvoidingView>
         </View>

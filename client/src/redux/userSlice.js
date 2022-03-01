@@ -27,11 +27,11 @@ export const userSlice = createSlice({
       if (action.payload.firstPassword) {
         const firstPassword = action.payload.firstPassword;
         console.log(firstPassword)
-        Alert.alert('Safety alert', 
-          `Your password is now set to ${firstPassword}.\nClick the button bellow to copy to clipboard.`, 
-            [{ text: 'Copy', style: 'default', onPress: () => {
+        Alert.alert('安全性警告', 
+          `您的密碼已被設定為${firstPassword}.\n點選下方按鈕以複製.`, 
+            [{ text: '複製', style: 'default', onPress: () => {
               Clipboard.setString(firstPassword);
-              Alert.alert('', 'Password Copyed!!');
+              Alert.alert('', '複製成功!!');
             } }, ]
         );
       }

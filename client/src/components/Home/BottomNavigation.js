@@ -13,15 +13,15 @@ import { unwrapResult } from '@reduxjs/toolkit';
 
 const Tabs = createMaterialBottomTabNavigator();
 
-export default ({ navigation, setIsSignIn }) => {
+export default ({ setIsSignIn }) => {
 
     const dispatch = useDispatch();
     
     // Logout with alert
     const logout = () => {
-        Alert.alert('Logging out', 'Are you sure you want to log out?', [
+        Alert.alert('正在登出', '確定要登出嗎?', [
             { 
-                text: 'Yes', 
+                text: '登出', 
                 onPress: async () => {
                     try {
                         unwrapResult(await dispatch(logoutUser({})));
@@ -32,7 +32,7 @@ export default ({ navigation, setIsSignIn }) => {
                     }
                 },
             },
-            { text: 'No' },
+            { text: '取消' },
         ]);
     };
 

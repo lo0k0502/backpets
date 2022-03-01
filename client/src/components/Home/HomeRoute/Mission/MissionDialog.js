@@ -55,12 +55,12 @@ export default ({ visible, close, refreshMissions }) => {
 
     const checkTitle = (text) => {
         setTitle(text);
-        setTitleErrorMsg(text ? '' : 'Must not be null!!');
+        setTitleErrorMsg(text ? '' : '不可為空!!');
     };
 
     const checkContent = (text) => {
         setContent(text);
-        setContentErrorMsg(text ? '' : 'Must not be null!!');
+        setContentErrorMsg(text ? '' : '不可為空!!');
     };
 
     // Change image
@@ -99,8 +99,8 @@ export default ({ visible, close, refreshMissions }) => {
 
     const handleSubmit = async () => {
         if (!title || !content) {
-            if (!title) setTitleErrorMsg('Must not be null!');
-            if (!content) setContentErrorMsg('Must not be null!');
+            if (!title) setTitleErrorMsg('不可為空!');
+            if (!content) setContentErrorMsg('不可為空!');
             return;
         }
         

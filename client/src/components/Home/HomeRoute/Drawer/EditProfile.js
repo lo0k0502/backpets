@@ -74,7 +74,7 @@ export default ({ navigation }) => {
         if (!currentPermission.granted) {
             let permissionResult = await requestMediaLibraryPermissionsAsync();
             if (!permissionResult.granted) {
-                Alert.alert('Permission denied!', 'We need your media library permission to change avatar!', [{ text: 'Got it!' }]);
+                Alert.alert('權限不足!', '我們需要您的許可來存取您的媒體庫!', [{ text: '知道了!' }]);
                 setIsImgLoading(false);
                 return;
             }
@@ -100,16 +100,16 @@ export default ({ navigation }) => {
 
     const checkUsername = (text) => {
         setUsername(text);
-        setUsernameErrorMsg(text ? '' : 'Must not be null!');
+        setUsernameErrorMsg(text ? '' : '不可為空!');
     };
 
     const checkEmail = (text) => {
         setEmail(text);
-        setEmailErrorMsg(text ? '' : 'Must not be null!');
+        setEmailErrorMsg(text ? '' : '不可為空!');
         if (!text) return;
 
         let validAddress = /^\w+((-\w+)|(\.\w+))*\@\w+((\.|-)\w+)*\.[A-z]+$/;
-        setEmailErrorMsg(validAddress.test(text) ? '' : 'Email address invalid!');
+        setEmailErrorMsg(validAddress.test(text) ? '' : '無效的電子郵件!');
     };
 
     const handleSubmit = async () => {
@@ -118,8 +118,8 @@ export default ({ navigation }) => {
             || usernameErrorMsg
             || photoUrlErrorMsg
             || emailErrorMsg) {
-            if (!username) setUsernameErrorMsg('Must not be null!');
-            if (!email) setEmailErrorMsg('Must not be null!');
+            if (!username) setUsernameErrorMsg('不可為空!');
+            if (!email) setEmailErrorMsg('不可為空!');
             return;
         }
 
@@ -147,7 +147,7 @@ export default ({ navigation }) => {
                         break;
                     default: {
                         setIsLoading(false);
-                        setphotoUrlErrorMsg('Selected file is not an image');
+                        setphotoUrlErrorMsg('選取的檔案並非圖檔!');
                         return;
                     }
                 }
@@ -258,7 +258,7 @@ export default ({ navigation }) => {
                 theme={{ colors: { primary: '#ff8000' } }}
                 onChangeText={checkEmail}
             />
-            <HelperText 
+            <HelperText
                 type='error' 
                 style={styles.helpertext}
             >

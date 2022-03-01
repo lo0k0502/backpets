@@ -33,12 +33,12 @@ export default ({ navigation, setIsSignIn }) => {
 
     const checkEmail = (text) => {
         setEmail(text);
-        setEmailErrorMsg(text ? '' : 'Must not be null!');
+        setEmailErrorMsg(text ? '' : '不可為空!');
     };
 
     const checkPassword = (text) => {
         setPassword(text);
-        setPasswordErrorMsg(text ? '' : 'Must not be null!');
+        setPasswordErrorMsg(text ? '' : '不可為空!');
     };
 
     useFocusEffect(useCallback(() => {
@@ -49,8 +49,8 @@ export default ({ navigation, setIsSignIn }) => {
 
     const handleLogin = async () => {
         if (!email || !password || emailErrorMsg || passwordErrorMsg) {
-            if (!email) setEmailErrorMsg('Must not be null!');
-            if (!password) setPasswordErrorMsg('Must not be null!');
+            if (!email) setEmailErrorMsg('不可為空!');
+            if (!password) setPasswordErrorMsg('不可為空!');
             return;
         }
 

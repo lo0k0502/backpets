@@ -87,7 +87,7 @@ export default ({ navigation }) => {
                     onChangeText={text => setUsername(text)}
                 />
                 <HelperText type='error'>
-                    {!isUsernameValid ? 'Must not be null!' : null}
+                    {!isUsernameValid ? '不可為空!' : null}
                 </HelperText>
                 <TextInput 
                     mode='outlined'
