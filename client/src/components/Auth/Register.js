@@ -62,7 +62,7 @@ export default ({ navigation }) => {
                 alignItems: 'center',
             }}
         >
-            <Text style={{ fontSize: 50 }}>Register</Text>
+            <Text style={{ fontSize: 50 }}>註冊</Text>
             <KeyboardAvoidingView 
                 // behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
                 behavior='padding'
@@ -76,7 +76,7 @@ export default ({ navigation }) => {
                 </HelperText>
                 <TextInput 
                     mode='outlined'
-                    placeholder='Username'
+                    placeholder='帳號名稱'
                     placeholderTextColor='gray'
                     error={!isUsernameValid}
                     disabled={isLoading}
@@ -102,11 +102,11 @@ export default ({ navigation }) => {
                     onChangeText={text => setEmail(text)}
                 />
                 <HelperText type='error'>
-                    {!isEmailValid ? 'Email is not valid!' : null}
+                    {!isEmailValid ? '無效的電子郵件!' : null}
                 </HelperText>
                 <TextInput 
                     mode='outlined'
-                    placeholder='Password'
+                    placeholder='密碼'
                     placeholderTextColor='gray'
                     error={!isPasswordValid}
                     disabled={isLoading}
@@ -124,11 +124,11 @@ export default ({ navigation }) => {
                     }
                 />
                 <HelperText type='error'>
-                    {!isPasswordValid ? 'Must be at least 8 letters!' : null}
+                    {!isPasswordValid ? '必須為8個以上的英文字母或數字!' : null}
                 </HelperText>
                 <TextInput 
                     mode='outlined'
-                    placeholder='ConfirmPassword'
+                    placeholder='確認密碼'
                     placeholderTextColor='gray'
                     error={!isConfirmPasswordValid}
                     disabled={isLoading}
@@ -146,7 +146,7 @@ export default ({ navigation }) => {
                     }
                 />
                 <HelperText type='error'>
-                    {!isConfirmPasswordValid ? 'Not the same as password!' : null}
+                    {!isConfirmPasswordValid ? '與新密碼不相符!' : null}
                 </HelperText>
                 <Button 
                     mode='contained'
@@ -161,7 +161,7 @@ export default ({ navigation }) => {
                     contentStyle={{ width: '100%', height: '100%' }}
                     onPress={handleSubmit}
                 >
-                    Sign Up
+                    註冊
                 </Button>
             </KeyboardAvoidingView>
         </View>

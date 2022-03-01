@@ -44,7 +44,7 @@ export default () => {
           try {
             if ((await Location.getForegroundPermissionsAsync()).status !== 'granted') {
               if ((await Location.requestForegroundPermissionsAsync()).status !== 'granted') {
-                setErrorMsg('We need your location permission to load the app!');
+                setErrorMsg('權限不足!我們需要存取位置資訊來運行應用程式!');
                 return;
               }
             }
@@ -71,9 +71,9 @@ export default () => {
               {errorMsg ? (
                 <>
                   <Text style={{ color: 'red', fontWeight: 'bold', margin: 10 }}>{errorMsg}</Text>
-                  <Text>Please check your settings and reload the app</Text>
+                  <Text>請檢查您的權限設定並重新啟動應用程式</Text>
                   <Button onPress={() => Restart()}>
-                    Reload App
+                    重新啟動
                   </Button>
                 </>
               ) : (

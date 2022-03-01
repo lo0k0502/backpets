@@ -142,7 +142,7 @@ export default ({  navigation }) => {
                 type='error' 
                 style={styles.helpertext}
             >
-                {isNewPasswordValid ? '' : '必須為8個英文字母或數字以上!'}
+                {isNewPasswordValid ? '' : '必須為8個以上的英文字母或數字!'}
             </HelperText>
             <TextInput
                 mode='outlined'

@@ -49,7 +49,7 @@ const DevOptions = ({ navigation }) => {
 const LoginDrawer = ({ checkUnLogin, setIsSignIn }) => {
   return (
     <Drawers.Navigator screenOptions={{ headerShown: false }}>
-      <Drawers.Screen name='Login'>
+      <Drawers.Screen name='Login' options={{ title: '登入' }}>
       {props => <Login {...props} checkUnLogin={checkUnLogin} setIsSignIn={setIsSignIn} />}
       </Drawers.Screen>
       <Drawers.Screen name='DevOptions'>
@@ -60,16 +60,16 @@ const LoginDrawer = ({ checkUnLogin, setIsSignIn }) => {
 };
 
 // Contains authorization related routes.
-const AuthRoute = ({ navigation, setIsSignIn }) => {
+const AuthRoute = ({ setIsSignIn }) => {
   return (
     <AuhtStacks.Navigator>
       <AuhtStacks.Screen name='LoginDrawer' options={{ headerShown: false }}>
       {props => <LoginDrawer {...props} setIsSignIn={setIsSignIn} />}
       </AuhtStacks.Screen>
-      <AuhtStacks.Screen name='Register'>
+      <AuhtStacks.Screen name='Register' options={{ title: '註冊' }}>
       {props => <Register {...props} />}
       </AuhtStacks.Screen>
-      <AuhtStacks.Screen name='ForgetPassword'>
+      <AuhtStacks.Screen name='ForgetPassword' options={{ title: '忘記密碼' }}>
       {props => <ForgetPassword {...props} />}
       </AuhtStacks.Screen>
     </AuhtStacks.Navigator>

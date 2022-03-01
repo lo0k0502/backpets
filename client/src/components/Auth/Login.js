@@ -59,7 +59,7 @@ export default ({ navigation, setIsSignIn }) => {
         try {
             if ((await Location.getForegroundPermissionsAsync()).status !== 'granted') {
                 if ((await Location.requestForegroundPermissionsAsync()).status !== 'granted') {
-                    setErrorMsg('We need your location permission to load the app!');
+                    setErrorMsg('權限不足!我們需要存取位置資訊來運行應用程式!');
                     setLoginLoading(false);
                     return;
                 }
@@ -153,7 +153,7 @@ export default ({ navigation, setIsSignIn }) => {
             </HelperText>
             <TextInput 
                 mode='outlined'
-                placeholder='Password'
+                placeholder='密碼'
                 placeholderTextColor='gray'
                 error={passwordErrorMsg}
                 disabled={loginLoading || googleLoginLoading}
@@ -182,7 +182,7 @@ export default ({ navigation, setIsSignIn }) => {
                 contentStyle={{ width: '100%', height: '100%', }}
                 onPress={handleLogin}
             >
-                Login
+                登入
             </Button>
             {/* <Button
                 mode='contained'
@@ -208,7 +208,7 @@ export default ({ navigation, setIsSignIn }) => {
                 onPress={() => navigation.navigate('ForgetPassword')}
             >
                 <Text style={{ color: '#ff8000' }}>
-                    Forget password?
+                    忘記密碼?
                 </Text>
             </Pressable>
             <Divider 
@@ -221,14 +221,14 @@ export default ({ navigation, setIsSignIn }) => {
             />
             <View style={{ flexDirection: 'row' }}>
                 <Text>
-                    Don't have an account?
+                    還沒有帳號?
                 </Text>
                 <Pressable 
                     style={{ marginHorizontal: 3 }}
                     onPress={() => navigation.navigate('Register')}
                 >
                     <Text style={{ color: '#ff8000' }}>
-                        Sign up
+                        註冊
                     </Text>
                 </Pressable>
             </View>
@@ -238,7 +238,7 @@ export default ({ navigation, setIsSignIn }) => {
                 style={{ marginTop: 10, }}
                 onPress={() => navigation.toggleDrawer()}
             >
-                Options
+                選項
             </Button>
         </View>
     );
