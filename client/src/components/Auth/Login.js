@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
         width: '50%',
         color: 'black',
         backgroundColor: 'white',
+        marginBottom: 5,
     },
 });
 
@@ -22,8 +23,6 @@ export default ({ navigation, setIsSignIn }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const [emailErrorMsg, setEmailErrorMsg] = useState('');
-    const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
 
     const [loginLoading, setLoginLoading] = useState(false);
@@ -31,26 +30,12 @@ export default ({ navigation, setIsSignIn }) => {
 
     const dispatch = useDispatch();
 
-    const checkEmail = (text) => {
-        setEmail(text);
-        setEmailErrorMsg(text ? '' : '不可為空!');
-    };
-
-    const checkPassword = (text) => {
-        setPassword(text);
-        setPasswordErrorMsg(text ? '' : '不可為空!');
-    };
-
     useFocusEffect(useCallback(() => {
         setErrorMsg('');
-        setEmailErrorMsg('');
-        setPasswordErrorMsg('');
     }, []));
 
     const handleLogin = async () => {
-        if (!email || !password || emailErrorMsg || passwordErrorMsg) {
-            if (!email) setEmailErrorMsg('不可為空!');
-            if (!password) setPasswordErrorMsg('不可為空!');
+        if (!email || !password) {
             return;
         }
 
@@ -83,8 +68,6 @@ export default ({ navigation, setIsSignIn }) => {
 
     const handleGoogleLogin = async () => {
         setGoogleLoginLoading(true);
-        setEmailErrorMsg('');
-        setPasswordErrorMsg('');
         
         try {
             const { type, user } = await Google.logInAsync({ 
@@ -140,33 +123,25 @@ export default ({ navigation, setIsSignIn }) => {
                 mode='outlined'
                 placeholder='Email'
                 placeholderTextColor='gray'
-                error={emailErrorMsg}
                 disabled={loginLoading || googleLoginLoading}
                 value={email}
                 style={styles.input}
                 selectionColor='#666'
                 theme={{ colors: { primary: '#ff8000' } }}
-                onChangeText={checkEmail}
+                onChangeText={(text) => setEmail(text)}
             />
-            <HelperText type='error'>
-                {emailErrorMsg}
-            </HelperText>
             <TextInput 
                 mode='outlined'
                 placeholder='密碼'
                 placeholderTextColor='gray'
-                error={passwordErrorMsg}
                 disabled={loginLoading || googleLoginLoading}
                 secureTextEntry
                 value={password}
                 style={styles.input}
                 selectionColor='#666'
                 theme={{ colors: { primary: '#ff8000' } }}
-                onChangeText={checkPassword}
+                onChangeText={(text) => setPassword(text)}
             />
-            <HelperText type='error'>
-                {passwordErrorMsg}
-            </HelperText>
             <Button 
                 mode='contained'
                 disabled={loginLoading || googleLoginLoading}
@@ -174,6 +149,7 @@ export default ({ navigation, setIsSignIn }) => {
                 style={{
                     width: '50%',
                     height: 50,
+                    marginVertical: 5,
                     color: 'white',
                     backgroundColor: '#ff8000',
                     borderRadius: 10,
