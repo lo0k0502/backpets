@@ -39,7 +39,11 @@ export default ({ navigation, setIsSignIn }) => {
             return;
         }
 
+        setErrorMsg('1');
+
         setLoginLoading(true);
+
+        setErrorMsg('2');
 
         try {
             if ((await Location.getForegroundPermissionsAsync()).status !== 'granted') {
@@ -49,8 +53,12 @@ export default ({ navigation, setIsSignIn }) => {
                     return;
                 }
             }
+
+            setErrorMsg('3');
             
             unwrapResult(await dispatch(loginUser({ email, password })));
+
+            setErrorMsg('4');
 
             setEmail('');
             setPassword('');
