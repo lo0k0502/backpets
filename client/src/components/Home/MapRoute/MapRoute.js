@@ -23,13 +23,6 @@ export default () => {
       showsUserLocation={true}
       followsUserLocation={true}
     >
-      <Marker
-        coordinate={{
-            latitude: 23.560043,
-            longitude: 120.469031,
-        }} 
-        title='花花'
-      />
       {missions.map((mission, index) => (
         <Marker
           key={index}
