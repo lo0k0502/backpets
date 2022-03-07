@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import * as Google from 'expo-google-app-auth';
 import { useFocusEffect } from '@react-navigation/native';
 import * as Location from 'expo-location';
-import env from '../../../env';
+import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from '@env';
 
 import { loginUser, googleLogin } from '../../redux/userReducer';
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -79,8 +79,8 @@ export default ({ navigation, setIsSignIn }) => {
         
         try {
             const { type, user } = await Google.logInAsync({ 
-                androidClientId: env.GOOGLE_ANDROID_CLIENT_ID, 
-                iosClientId: env.GOOGLE_IOS_CLIENT_ID, 
+                androidClientId: GOOGLE_ANDROID_CLIENT_ID, 
+                iosClientId: GOOGLE_IOS_CLIENT_ID, 
                 scopes: ['profile', 'email'], 
             });
             console.log(type, user)

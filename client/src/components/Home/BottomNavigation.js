@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { logoutUser } from '../../redux/userReducer';
 
 import HomeRoute from './HomeRoute/HomeRoute';
-import Map from './MapRoute/MapRoute';
+import MapRoute from './MapRoute/MapRoute';
 import Store from './StoreRoute';
 import { unwrapResult } from '@reduxjs/toolkit';
 
@@ -59,7 +59,7 @@ export default ({ setIsSignIn }) => {
                         tabBarIcon: ({ color }) => <Icons name='map' color={color} size={20} />,
                     }}
                 >
-                {props => <Map {...props} />}
+                {props => <MapRoute {...props} />}
                 </Tabs.Screen>
                 <Tabs.Screen 
                     name='HomeRoute' 
