@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
         borderTopWidth: 10,
-        borderTopColor: '#ff8000',
+        borderTopColor: '#be9a78',
     },
     missionaction: {
         width: '100%',
@@ -44,17 +44,17 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     cardbtn: {
-        color: '#ff8000',
+        color: '#be9a78',
     },
     fab: {
         position: 'absolute',
         right: 40,
         bottom: 80,
-            backgroundColor: '#ff8000',
+            backgroundColor: '#be9a78',
         },
     });
 
-    export default ({ navigation }) => {
+export default ({ navigation }) => {
     const [refreshing, setRefreshing] = useState(false);// State for RefreshControl component
     const [missionDialog, setMissionDialog] = useState(false);// Whether mission dialog is open
 
@@ -71,8 +71,9 @@ const styles = StyleSheet.create({
             <Button
                 mode='contained'
                 icon='plus'
-                color='#ff8000'
+                color='#be9a78'
                 dark
+                theme={{ roundness: 0 }}
                 onPress={() => setMissionDialog(true)}
             >
                 新增任務

@@ -16,7 +16,7 @@ export default ({ route, navigation }) => {
     return (
         <Appbar style={styles.appbar}>
             {isHome ? <Appbar.Action icon='menu' onPress={navigation.toggleDrawer} />
-                : <Appbar.Action icon='arrow-left' onPress={navigation.goBack} />}
+                : <Appbar.Action icon='arrow-left' onPress={() => isChangePassword || isEditProfile ? navigation.navigate('Profile') : navigation.goBack()} />}
             <Appbar.Content 
                 title={isHome ? 'BackPets' : 
                     isChangePassword ? '更改密碼' :

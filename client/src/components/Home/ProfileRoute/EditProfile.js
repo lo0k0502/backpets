@@ -10,11 +10,11 @@ import {
     getMediaLibraryPermissionsAsync 
 } from 'expo-image-picker';
 
-import { updateProfile } from '../../../../redux/userReducer';
-import { deleteImage, uploadImage } from '../../../../api';
+import { updateProfile } from '../../../redux/userReducer';
+import { deleteImage, uploadImage } from '../../../api';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { selectUser } from '../../../../redux/userSlice';
-import { SERVERURL } from '../../../../api/API';
+import { selectUser } from '../../../redux/userSlice';
+import { SERVERURL } from '../../../api/API';
 
 const styles = StyleSheet.create({
     root: {
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     },
     imgchangebtn: {
         height: 40, 
-        backgroundColor: '#ff8000',
+        backgroundColor: '#be9a78',
         margin: 10, 
     },
     input: {
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     submitbtn: {
         width: '60%',
         height: 50,
-        backgroundColor: '#ff8000',
+        backgroundColor: '#be9a78',
         marginTop: 20,
         elevation: 5,
     },
@@ -221,7 +221,7 @@ export default ({ navigation }) => {
                 disabled={isImgLoading || isLoading}
                 loading={isImgLoading}
                 uppercase={false}
-                color='#ff8000'
+                color='#be9a78'
                 dark
                 style={styles.imgchangebtn}
                 onPress={handleChangeImg}
@@ -237,7 +237,6 @@ export default ({ navigation }) => {
                 value={username}
                 style={styles.input}
                 selectionColor='#666'
-                theme={{ colors: { primary: '#ff8000' } }}
                 onChangeText={checkUsername}
             />
             <HelperText 
@@ -255,7 +254,6 @@ export default ({ navigation }) => {
                 value={email}
                 style={styles.input}
                 selectionColor='#666'
-                theme={{ colors: { primary: '#ff8000' } }}
                 onChangeText={checkEmail}
             />
             <HelperText
@@ -268,6 +266,7 @@ export default ({ navigation }) => {
                 mode='contained'
                 disabled={isImgLoading || isLoading}
                 loading={isLoading}
+                dark
                 style={styles.submitbtn}
                 contentStyle={{ width: '100%', height: '100%' }}
                 onPress={handleSubmit}

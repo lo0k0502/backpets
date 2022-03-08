@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextInput as NativeTextInput, StyleSheet } from 'react-native';
 import { getMediaLibraryPermissionsAsync, requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaTypeOptions, getPendingResultAsync } from 'expo-image-picker';
-import { TextInput, Dialog, Button, Card, HelperText } from 'react-native-paper';
+import { TextInput, Dialog, Button, Card, HelperText, useTheme } from 'react-native-paper';
 import { addMission, uploadImage } from '../../../../api';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
@@ -28,6 +28,8 @@ const styles = StyleSheet.create({
 
 export default ({ visible, close, refreshMissions }) => {
     const user = useSelector(selectUser);
+    const { colors } = useTheme();
+
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
     const [isImgLoading, setIsImgLoading] = useState(false);// Whether it is during image picking, if so, disable inputs and buttons. 
 
@@ -177,7 +179,6 @@ export default ({ visible, close, refreshMissions }) => {
                         error={titleErrorMsg}
                         value={title}
                         selectionColor='#666'
-                        theme={{ colors: { primary: '#ff8000' } }}
                         onChangeText={checkTitle}
                     />
                     <HelperText
@@ -204,7 +205,6 @@ export default ({ visible, close, refreshMissions }) => {
                                 ]}
                             />
                         )}
-                        theme={{ colors: { primary: '#ff8000' } }}
                         onChangeText={checkContent}
                     />
                     <HelperText 
@@ -215,7 +215,7 @@ export default ({ visible, close, refreshMissions }) => {
                     <Button 
                         mode='contained'
                         icon='plus'
-                        color='#ff8000'
+                        color={colors.primary}
                         dark
                         disabled={isImgLoading || isLoading}
                         loading={isImgLoading}
@@ -235,7 +235,7 @@ export default ({ visible, close, refreshMissions }) => {
             </Dialog.Content>
             <Dialog.Actions>
                 <Button 
-                    color='#ff8000' 
+                    color={colors.primary} 
                     disabled={isLoading}
                     onPress={handleClose}
                     contentStyle={{ paddingHorizontal: 10 }}
@@ -244,7 +244,7 @@ export default ({ visible, close, refreshMissions }) => {
                 </Button>
                 <Button 
                     mode='contained' 
-                    color='#ff8000'
+                    color={colors.primary}
                     dark
                     disabled={isLoading}
                     loading={isLoading}

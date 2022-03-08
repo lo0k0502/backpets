@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Alert } from 'react-native';
+import { StyleSheet, View, Alert } from 'react-native';
 import { Button, TextInput, HelperText } from 'react-native-paper';
-import { updateUserPassword } from '../../../../api';
+import { updateUserPassword } from '../../../api';
 import { useSelector } from 'react-redux';
-import { selectUser } from '../../../../redux/userSlice';
-import { useStateWithValidation } from '../../../../hooks';
+import { selectUser } from '../../../redux/userSlice';
+import { useStateWithValidation } from '../../../hooks';
 
 const styles = StyleSheet.create({
     root: {
@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
     submitbtn: {
         width: '60%',
         height: 50,
-        backgroundColor: 'red',
         marginTop: 50,
         elevation: 5,
     },
@@ -172,6 +171,7 @@ export default ({  navigation }) => {
                 mode='contained'
                 disabled={isLoading}
                 loading={isLoading}
+                dark
                 style={styles.submitbtn}
                 contentStyle={{ width: '100%', height: '100%' }}
                 onPress={handleSubmit}

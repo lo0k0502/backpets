@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, Alert } from 'react-native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useDispatch } from 'react-redux';
+import DrawerContent from './components/drawer';
 import BottomNavigation from './components/Home/BottomNavigation';
 import DeleteUser from './components/DevOptions/DeleteUser';
 import AllUsers from './components/DevOptions/AllUsers';
 import AuthRoute from './components/Auth/AuthRoute';
 import * as SecureStorage from 'expo-secure-store';
-import { tokenRefresh } from './redux/userReducer';
+import { logoutUser, tokenRefresh } from './redux/userReducer';
 import { unwrapResult } from '@reduxjs/toolkit';
 import * as Location from 'expo-location';
 import { Button, Text } from 'react-native-paper';
@@ -26,6 +28,7 @@ const styles = StyleSheet.create({
   },
 });
 
+const Drawer = createDrawerNavigator();
 const Stacks = createStackNavigator();
 
 export default () => {
@@ -33,6 +36,25 @@ export default () => {
     const [errorMsg, setErrorMsg] = useState('');
   
     const dispatch = useDispatch();
+    
+    // Logout with alert
+    const logout = () => {
+        Alert.alert('正在登出', '確定要登出嗎?', [
+            { 
+                text: '登出', 
+                onPress: async () => {
+                    try {
+                        unwrapResult(await dispatch(logoutUser({})));
+                        console.log('Not logged in, going back...');
+                        setIsSignIn(false);
+                    } catch (error) {
+                        console.log('While logging out:', error);
+                    }
+                },
+            },
+            { text: '取消' },
+        ]);
+    };
   
     // If local SecureStorage has token, check for location permission and try to refresh it.
     // If failed or has no token, display login page;
@@ -84,7 +106,17 @@ export default () => {
           </Stacks.Screen>
         ) : isSignin ? (
           <Stacks.Screen name='Main'>
-          {props => <BottomNavigation {...props} setIsSignIn={setIsSignIn} />}
+          {props => (
+            <Drawer.Navigator
+              {...props}
+              drawerContent={props => <DrawerContent {...props} logoutback={logout} />} 
+              screenOptions={{ headerShown: false }}
+            >
+              <Drawer.Screen name='BottomNavigation'>
+              {props => <BottomNavigation {...props} />}
+              </Drawer.Screen>
+            </Drawer.Navigator>
+          )}
           </Stacks.Screen>
         ) : (
           <>

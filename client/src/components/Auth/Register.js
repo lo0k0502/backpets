@@ -83,7 +83,6 @@ export default ({ navigation }) => {
                     value={username}
                     style={styles.input} 
                     selectionColor='#666'
-                    theme={{ colors: { primary: '#ff8000' } }}
                     onChangeText={text => setUsername(text)}
                 />
                 <HelperText type='error'>
@@ -98,7 +97,6 @@ export default ({ navigation }) => {
                     value={email}
                     style={{ width: '100%' }} 
                     selectionColor='#666'
-                    theme={{ colors: { primary: '#ff8000' } }}
                     onChangeText={text => setEmail(text)}
                 />
                 <HelperText type='error'>
@@ -114,7 +112,6 @@ export default ({ navigation }) => {
                     value={password}
                     style={styles.input} 
                     selectionColor='#666'
-                    theme={{ colors: { primary: '#ff8000' } }}
                     onChangeText={text => setPassword(text)}
                     right={
                         <TextInput.Icon 
@@ -136,7 +133,6 @@ export default ({ navigation }) => {
                     value={confirmPassword}
                     style={styles.input} 
                     selectionColor='#666'
-                    theme={{ colors: { primary: '#ff8000' } }}
                     onChangeText={text => setConfirmPassword(text)}
                     right={
                         <TextInput.Icon 
@@ -150,7 +146,6 @@ export default ({ navigation }) => {
                 </HelperText>
                 <Button 
                     mode='contained'
-                    color='#ff8000'
                     dark
                     loading={isLoading}
                     style={{

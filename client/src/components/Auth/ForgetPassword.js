@@ -57,7 +57,6 @@ export default ({ navigation }) => {
                     value={email}
                     style={{ width: '100%' }} 
                     selectionColor='#666'
-                    theme={{ colors: { primary: '#ff8000' } }}
                     onChangeText={text => setEmail(text)}
                 />
                 <HelperText type='error'>
@@ -65,7 +64,6 @@ export default ({ navigation }) => {
                 </HelperText>
                 <Button 
                     mode='contained'
-                    color='#ff8000'
                     dark
                     loading={isLoading}
                     style={{

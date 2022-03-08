@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Card, Avatar, Paragraph, Title, TouchableRipple, Button } from 'react-native-paper';
+import { Card, Avatar, Paragraph, Title, TouchableRipple, Button, useTheme } from 'react-native-paper';
 import moment from 'moment';
 import { useUser } from '../../../../hooks';
 import { SERVERURL } from '../../../../api/API';
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
         borderTopWidth: 5,
-        borderTopColor: '#ff8000',
+        borderTopColor: '#be9a78',
         overflow: 'hidden',
     },
     cardAction: { 
@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
 
 export default ({ mission }) => {
     const navigation = useNavigation();
+    const { colors } = useTheme();
     const poster = useUser(mission.userId);
 
     return (
@@ -51,7 +52,7 @@ export default ({ mission }) => {
                 {mission.photoId ? <Card.Cover source={{ uri: `${SERVERURL}/image/${mission.photoId}` }} style={{ width: 300, height: 200, alignSelf: 'center', marginVertical: 5 }}/> : null}
                 <Button
                     mode='contained'
-                    color='#ff8000'
+                    color={colors.primary}
                     dark
                     style={ styles.acceptButton }
                     onPress={() => {}}
