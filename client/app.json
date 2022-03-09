@@ -23,7 +23,10 @@
     },
     "android": {
       "package": "com.lo0k.backpets",
-      "versionCode": 1
+      "versionCode": 1,
+      "googleMaps": {
+        "apiKey": "AIzaSyCbtMIfGFVIDDjD_eN-f6zd83tt-IhY9io"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
