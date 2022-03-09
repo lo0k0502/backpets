@@ -32,11 +32,10 @@ export default ({ navigation }) => {
             style={{
                 flex: 1,
                 backgroundColor: 'white',
-                justifyContent: 'center',
                 alignItems: 'center',
             }}
         >
-            <Text style={{ fontSize: 20 }}>請輸入您的電子郵件</Text>
+            <Text style={{ fontSize: 20, marginTop: '5%' }}>請輸入您的電子郵件</Text>
             <KeyboardAvoidingView 
                 // behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
                 behavior='padding'

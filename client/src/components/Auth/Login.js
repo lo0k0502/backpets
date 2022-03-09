@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { View, StyleSheet, Image, Pressable, Text } from 'react-native';
-import { TextInput, Button, Divider, HelperText } from 'react-native-paper';
+import { TextInput, Button, Divider, HelperText, useTheme } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import * as Google from 'expo-google-app-auth';
 import { useFocusEffect } from '@react-navigation/native';
@@ -12,7 +12,6 @@ import { unwrapResult } from '@reduxjs/toolkit';
 
 const styles = StyleSheet.create({
     input: {
-        width: '50%',
         color: 'black',
         backgroundColor: 'white',
         marginBottom: 5,
@@ -20,6 +19,8 @@ const styles = StyleSheet.create({
 });
 
 export default ({ navigation, setIsSignIn }) => {
+    const { colors } = useTheme();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -124,72 +125,71 @@ export default ({ navigation, setIsSignIn }) => {
                     marginBottom: 10,
                 }}
             />
-            <HelperText type='error'>
-                {errorMsg}
-            </HelperText>
-            <TextInput 
-                mode='outlined'
-                placeholder='Email'
-                placeholderTextColor='gray'
-                disabled={loginLoading || googleLoginLoading}
-                value={email}
-                style={styles.input}
-                selectionColor='#666'
-                onChangeText={(text) => setEmail(text)}
-            />
-            <TextInput 
-                mode='outlined'
-                placeholder='密碼'
-                placeholderTextColor='gray'
-                disabled={loginLoading || googleLoginLoading}
-                secureTextEntry
-                value={password}
-                style={styles.input}
-                selectionColor='#666'
-                onChangeText={(text) => setPassword(text)}
-            />
-            <Button 
-                mode='contained'
-                disabled={loginLoading || googleLoginLoading}
-                loading={loginLoading}
-                dark
-                style={{
-                    width: '50%',
-                    height: 50,
-                    marginVertical: 5,
-                    color: 'white',
-                    borderRadius: 10,
-                    elevation: 3,
-                }}
-                contentStyle={{ width: '100%', height: '100%', }}
-                onPress={handleLogin}
-            >
-                登入
-            </Button>
-            {/* <Button
-                mode='contained'
-                icon={require('../../../assets/GoogleIconG.png')}
-                disabled={loginLoading || googleLoginLoading}
-                loading={googleLoginLoading}
-                style={{
-                    width: '50%',
-                    height: 50,
-                    color: 'white',
-                    backgroundColor: 'green',
-                    borderRadius: 10,
-                    elevation: 5,
-                    marginTop: 10,
-                }}
-                contentStyle={{ width: '100%', height: '100%', }}
-                onPress={handleGoogleLogin}
-            >
-                Google Login
-            </Button> */}
+            <View style={{ width: '50%', justifyContent: 'center' }}>
+                <HelperText type='error'>
+                    {errorMsg}
+                </HelperText>
+                <TextInput 
+                    mode='outlined'
+                    placeholder='Email'
+                    placeholderTextColor='gray'
+                    disabled={loginLoading || googleLoginLoading}
+                    value={email}
+                    style={styles.input}
+                    selectionColor='#666'
+                    onChangeText={(text) => setEmail(text)}
+                />
+                <TextInput 
+                    mode='outlined'
+                    placeholder='密碼'
+                    placeholderTextColor='gray'
+                    disabled={loginLoading || googleLoginLoading}
+                    secureTextEntry
+                    value={password}
+                    style={styles.input}
+                    selectionColor='#666'
+                    onChangeText={(text) => setPassword(text)}
+                />
+                <Button 
+                    mode='contained'
+                    disabled={loginLoading || googleLoginLoading}
+                    loading={loginLoading}
+                    dark
+                    style={{
+                        height: 50,
+                        marginVertical: 5,
+                        color: 'white',
+                        elevation: 3,
+                    }}
+                    contentStyle={{ width: '100%', height: '100%', }}
+                    onPress={handleLogin}
+                >
+                    登入
+                </Button>
+                {/* <Button
+                    mode='contained'
+                    icon={require('../../../assets/GoogleIconG.png')}
+                    disabled={loginLoading || googleLoginLoading}
+                    loading={googleLoginLoading}
+                    style={{
+                        width: '50%',
+                        height: 50,
+                        color: 'white',
+                        backgroundColor: 'green',
+                        elevation: 5,
+                        marginTop: 10,
+                    }}
+                    contentStyle={{ width: '100%', height: '100%', }}
+                    onPress={handleGoogleLogin}
+                >
+                    Google Login
+                </Button> */}
+            </View>
             <Pressable 
                 style={{ marginTop: 5 }}
                 onPress={() => navigation.navigate('ForgetPassword')}
             >
-                <Text>
+                <Text style={{ color: colors.primary }}>
                     忘記密碼?
                 </Text>
             </Pressable>
@@ -209,7 +209,7 @@ export default ({ navigation, setIsSignIn }) => {
                     style={{ marginHorizontal: 3 }}
                     onPress={() => navigation.navigate('Register')}
                 >
-                    <Text>
+                    <Text style={{ color: colors.primary }}>
                         註冊
                     </Text>
                 </Pressable>

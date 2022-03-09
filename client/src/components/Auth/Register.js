@@ -58,11 +58,10 @@ export default ({ navigation }) => {
             style={{
                 flex: 1,
                 backgroundColor: 'white',
-                justifyContent: 'center',
+                justifyContent: 'flex-start',
                 alignItems: 'center',
             }}
         >
-            <Text style={{ fontSize: 50 }}>註冊</Text>
             <KeyboardAvoidingView 
                 // behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
                 behavior='padding'

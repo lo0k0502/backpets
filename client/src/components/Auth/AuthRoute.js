@@ -37,6 +37,7 @@ const DevOptions = ({ navigation }) => {
         mode='contained' 
         uppercase={false}
         onPress={() => navigation.goBack()}
+        dark
         style={{ margin: 10, }}
       >
         Go Back
