@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
         width: '60%',
         height: 50,
         marginTop: 50,
-        elevation: 5,
     },
 });
 

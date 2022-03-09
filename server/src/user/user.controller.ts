@@ -41,19 +41,20 @@ export class UserController {
     } 
 
     @Post('updateprofile')
-    async UpdateProfile(@Body() { userId, photoId, newUsername, email }, @Res() res: Response) {
+    async UpdateProfile(@Body() { userId, photoId, username, email }, @Res() res: Response) {
         try {
-            console.log('Updating: ', userId, photoId, newUsername, email);
+            console.log('Updating: ', userId, photoId, username, email);
             const existUser = await this.userService.findOne({ _id: userId });
             if (!existUser) return res.status(400).json({ message: '用戶不存在' });
     
-            if (existUser.username !== newUsername && await this.userService.findOne({ username: newUsername })) 
+            if (existUser.username !== username && await this.userService.findOne({ username })) 
                 return res.status(400).json({ message: '用戶名已被使用!' });
 
             const updatedOnceUser = await this.userService.updateOne({ _id: userId }, { 
-                username: newUsername, 
+                username, 
                 email,
                 photoId: new Types.ObjectId(photoId),
+                verified: email !== existUser.email,
             });
     
             const accessToken = await this.authService.signAccessTokenAsync(updatedOnceUser);

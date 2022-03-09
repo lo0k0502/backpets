@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
 });
 
 export default ({ route, navigation }) => {
-    const isMission = route.name === 'Mission';
+    const isMission = route.name === 'MissionTab';
     const isChangePassword = route.name === 'ChangePassword';
     const isEditProfile = route.name === 'EditProfile';
 

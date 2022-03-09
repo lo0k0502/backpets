@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Alert } from 'react-native';
-import { Avatar, Button, HelperText, TextInput } from 'react-native-paper';
+import { Avatar, Button, HelperText, Text, TextInput } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
     requestMediaLibraryPermissionsAsync, 
@@ -19,7 +19,6 @@ import { SERVERURL } from '../../../api/API';
 const styles = StyleSheet.create({
     root: {
         flex: 1,
-        justifyContent: 'flex-start',
         alignItems: 'center',
         backgroundColor: 'white',
     },
@@ -30,21 +29,14 @@ const styles = StyleSheet.create({
     imgchangebtn: {
         height: 40, 
         backgroundColor: '#be9a78',
-        margin: 10, 
+        margin: 10,
     },
     input: {
         width: '60%',
-        margin: 20,
+        marginRight: 20,
     },
     helpertext: { 
         marginTop: -20, 
-    },
-    submitbtn: {
-        width: '60%',
-        height: 50,
-        backgroundColor: '#be9a78',
-        marginTop: 20,
-        elevation: 5,
     },
 });
 
@@ -112,6 +104,36 @@ export default ({ navigation }) => {
         setEmailErrorMsg(validAddress.test(text) ? '' : '無效的電子郵件!');
     };
 
+    const updateUsername = async () => {
+        setIsLoading(true);
+
+        try {
+            unwrapResult(await dispatch(updateProfile({ username })));
+
+            setIsLoading(false);
+        } catch (error) {
+            setIsLoading(false);
+            console.log('Updating username:', error);
+            setErrorMsg(error.message);
+        }
+    };
+
+    const updateEmail = async () => {
+        setIsLoading(true);
+
+        try {
+            // unwrapResult(await dispatch(updateProfile({ email })));
+
+            setIsLoading(false);
+
+            Alert.alert('Email已修改!', '我們已寄一封驗證郵件至此信箱，請盡快進行驗證!', [{ text: 'OK' }])
+        } catch (error) {
+            setIsLoading(false);
+            console.log('Updating email:', error);
+            setErrorMsg(error.message);
+        }
+    };
+
     const handleSubmit = async () => {
         if (!username
             || !email
@@ -173,7 +195,7 @@ export default ({ navigation }) => {
             unwrapResult(await dispatch(updateProfile({
                 userId: previousProfile.info?._id,
                 photoId: sendPhotoId,
-                newUsername: username,
+                username,
                 email,
             })));
             setErrorMsg('');
@@ -228,51 +250,76 @@ export default ({ navigation }) => {
             >
                 更改大頭照
             </Button>
-            <TextInput
-                mode='outlined'
-                placeholder='Username'
-                placeholderTextColor='gray'
-                error={usernameErrorMsg}
-                disabled={isImgLoading || isLoading}
-                value={username}
-                style={styles.input}
-                selectionColor='#666'
-                onChangeText={checkUsername}
-            />
-            <HelperText 
-                type='error' 
-                style={styles.helpertext}
-            >
-                {usernameErrorMsg}
-            </HelperText>
-            <TextInput
-                mode='outlined'
-                placeholder='Email'
-                placeholderTextColor='gray'
-                error={emailErrorMsg}
-                disabled={isImgLoading || isLoading}
-                value={email}
-                style={styles.input}
-                selectionColor='#666'
-                onChangeText={checkEmail}
-            />
-            <HelperText
-                type='error' 
-                style={styles.helpertext}
-            >
-                {emailErrorMsg}
-            </HelperText>
-            <Button
-                mode='contained'
-                disabled={isImgLoading || isLoading}
-                loading={isLoading}
-                dark
-                style={styles.submitbtn}
-                contentStyle={{ width: '100%', height: '100%' }}
-                onPress={handleSubmit}
-            >
-                更改
-            </Button>
+            <View style={{ width: '90%', marginLeft: 50 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TextInput
+                        mode='outlined'
+                        placeholder='用戶名'
+                        placeholderTextColor='gray'
+                        error={usernameErrorMsg}
+                        disabled={isImgLoading || isLoading}
+                        style={styles.input}
+                        value={username}
+                        selectionColor='#666'
+                        onChangeText={checkUsername}
+                    />
+                    <Button
+                        mode='contained'
+                        disabled={
+                            isImgLoading
+                            || isLoading
+                            || usernameErrorMsg
+                            || username === user.info?.username
+                        }
+                        loading={isLoading}
+                        dark
+                        onPress={updateUsername}
+                    >
+                        更改
+                    </Button>
+                </View>
+                <HelperText
+                    type='error' 
+                    style={{ alignSelf: 'flex-start' }}
+                >
+                    {usernameErrorMsg}
+                </HelperText>
+            </View>
+            <View style={{ width: '90%', marginLeft: 50 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TextInput
+                        mode='outlined'
+                        placeholder='Email'
+                        placeholderTextColor='gray'
+                        error={emailErrorMsg}
+                        disabled={isImgLoading || isLoading}
+                        style={styles.input}
+                        value={email}
+                        selectionColor='#666'
+                        onChangeText={checkEmail}
+                    />
+                    <Button
+                        mode='contained'
+                        disabled={
+                            isImgLoading
+                            || isLoading
+                            || emailErrorMsg
+                            || email === user.info?.email
+                        }
+                        loading={isLoading}
+                        dark
+                        onPress={() => {}}
+                    >
+                        更改
+                    </Button>
+                </View>
+                <HelperText
+                    type='error' 
+                    style={{ alignSelf: 'flex-start' }}
+                >
+                    {emailErrorMsg}
+                </HelperText>
+            </View>
         </View>
     );
 };

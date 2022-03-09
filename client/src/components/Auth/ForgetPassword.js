@@ -68,7 +68,6 @@ export default ({ navigation }) => {
                     style={{
                         width: '60%',
                         height: 50,
-                        elevation: 3,
                     }}
                     contentStyle={{ width: '100%', height: '100%' }}
                     onPress={handleSubmit}

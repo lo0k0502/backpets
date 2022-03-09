@@ -50,9 +50,15 @@ export const tokenRefresh = createAsyncThunk(
 );
 export const updateProfile = createAsyncThunk(
     'user/updateprofile',
-    async ({ userId, photoId, newUsername, email }, {rejectWithValue}) => {
+    async ({ userId, photoId, username, email }, { rejectWithValue, getState }) => {
         try {
-            const response = await updateUserProfile({ userId, photoId, newUsername, email });
+            const { user: { info } } = getState();
+
+            if (!photoId) photoId = info.photoId;
+            if (!username) username = info.username;
+            if (!email) email = info.email;
+
+            const response = await updateUserProfile({ userId, photoId, username, email });
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);

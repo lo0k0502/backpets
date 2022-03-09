@@ -159,7 +159,6 @@ export default ({ navigation, setIsSignIn }) => {
                         height: 50,
                         marginVertical: 5,
                         color: 'white',
-                        elevation: 3,
                     }}
                     contentStyle={{ width: '100%', height: '100%', }}
                     onPress={handleLogin}
@@ -176,7 +175,6 @@ export default ({ navigation, setIsSignIn }) => {
                         height: 50,
                         color: 'white',
                         backgroundColor: 'green',
-                        elevation: 5,
                         marginTop: 10,
                     }}
                     contentStyle={{ width: '100%', height: '100%', }}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import MissionRoute from './Mission/MissionRoute';
+import MissionRoute from './Mission/Mission';
 import ReportRoute from './Report/ReportRoute';
 import PutUpForAdoptionRoute from './PutUpForAdoption/PutUpForAdoptionRoute';
 import { useTheme } from 'react-native-paper';

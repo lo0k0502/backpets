@@ -10,7 +10,6 @@ const styles = StyleSheet.create({
     card: {
         margin: 20,
         justifyContent: 'center',
-        elevation: 3,
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
         borderTopWidth: 5,
