@@ -80,8 +80,9 @@ export default ({ navigation }) => {
                     error={!isUsernameValid}
                     disabled={isLoading}
                     value={username}
-                    style={styles.input} 
-                    selectionColor='#666'
+                    style={styles.input}
+                    maxLength={20}
+                    right={<TextInput.Affix text={`${username.length}/20`} />}
                     onChangeText={text => setUsername(text)}
                 />
                 <HelperText type='error'>
@@ -95,7 +96,6 @@ export default ({ navigation }) => {
                     disabled={isLoading}
                     value={email}
                     style={{ width: '100%' }} 
-                    selectionColor='#666'
                     onChangeText={text => setEmail(text)}
                 />
                 <HelperText type='error'>
@@ -110,7 +110,6 @@ export default ({ navigation }) => {
                     secureTextEntry={passwordSecure}
                     value={password}
                     style={styles.input} 
-                    selectionColor='#666'
                     onChangeText={text => setPassword(text)}
                     right={
                         <TextInput.Icon 
@@ -130,8 +129,7 @@ export default ({ navigation }) => {
                     disabled={isLoading}
                     secureTextEntry={confirmPasswordSecure}
                     value={confirmPassword}
-                    style={styles.input} 
-                    selectionColor='#666'
+                    style={styles.input}
                     onChangeText={text => setConfirmPassword(text)}
                     right={
                         <TextInput.Icon 

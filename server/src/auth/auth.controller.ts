@@ -22,7 +22,7 @@ export class AuthController {
       try {
         const existUser = await this.userService.findOne({ username });
         if (existUser)
-          return res.status(400).json({ message: '用戶名已被使用!' });
+          return res.status(400).json({ message: '帳號名稱已被使用!' });
 
         const existEmail = await this.userService.findOne({ email });
         if (existEmail)

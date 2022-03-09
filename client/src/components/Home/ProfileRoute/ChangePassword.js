@@ -9,10 +9,8 @@ import { useStateWithValidation } from '../../../hooks';
 const styles = StyleSheet.create({
     root: {
         flex: 1,
-        justifyContent: 'flex-start',
         alignItems: 'center',
         backgroundColor: 'white',
-        paddingTop: 100,
     },
     input: {
         width: '60%',
@@ -44,18 +42,6 @@ export default ({  navigation }) => {
     const user = useSelector(selectUser);
     
     const handleSubmit = async () => {
-        if (!oldPassword
-            || !newPassword
-            || !confirmNewPassword
-            || !isOldPasswordValid
-            || !isNewPasswordValid
-            || !isConfirmNewPasswordValid) {
-            if (!oldPassword) setOldPassword('');
-            if (!newPassword) setNewPassword('');
-            if (!confirmNewPassword) setConfirmNewPassword('');
-            return
-        }
-
         setIsLoading(true);
         
         try {
@@ -85,13 +71,7 @@ export default ({  navigation }) => {
 
     return (
         <View style={styles.root}>
-            <HelperText
-                type='error'
-                style={{ 
-                    fontSize: 15, 
-                    marginBottom: -20,
-                }}
-            >
+            <HelperText type='error' style={{ fontSize: 15 }}>
                 {errorMsg}
             </HelperText>
             <TextInput
@@ -102,8 +82,6 @@ export default ({  navigation }) => {
                 disabled={isLoading}
                 secureTextEntry={oldPasswordSecure}
                 style={styles.input}
-                selectionColor='#666'
-                theme={{ colors: { primary: 'red' } }}
                 onChangeText={text => setOldPassword(text)}
                 right={
                     <TextInput.Icon 
@@ -126,8 +104,6 @@ export default ({  navigation }) => {
                 disabled={isLoading}
                 secureTextEntry={newPasswordSecure}
                 style={styles.input}
-                selectionColor='#666'
-                theme={{ colors: { primary: 'red' } }}
                 onChangeText={text => setNewPassword(text)}
                 right={
                     <TextInput.Icon 
@@ -150,8 +126,6 @@ export default ({  navigation }) => {
                 disabled={isLoading}
                 secureTextEntry={confirmNewPasswordSecure}
                 style={styles.input}
-                selectionColor='#666'
-                theme={{ colors: { primary: 'red' } }}
                 onChangeText={text => setConfirmNewPassword(text)}
                 right={
                     <TextInput.Icon 
@@ -168,7 +142,15 @@ export default ({  navigation }) => {
             </HelperText>
             <Button
                 mode='contained'
-                disabled={isLoading}
+                disabled={
+                    isLoading
+                    || !oldPassword
+                    || !newPassword
+                    || !confirmNewPassword
+                    || !isOldPasswordValid
+                    || !isNewPasswordValid
+                    || !isConfirmNewPasswordValid
+                }
                 loading={isLoading}
                 dark
                 style={styles.submitbtn}

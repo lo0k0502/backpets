@@ -178,7 +178,6 @@ export default ({ visible, close, refreshMissions }) => {
                         placeholderTextColor='gray'
                         error={titleErrorMsg}
                         value={title}
-                        selectionColor='#666'
                         onChangeText={checkTitle}
                     />
                     <HelperText
@@ -193,7 +192,6 @@ export default ({ visible, close, refreshMissions }) => {
                         error={contentErrorMsg}
                         value={content}
                         multiline
-                        selectionColor='#666'
                         render={(innerProps) => (
                             <NativeTextInput
                                 {...innerProps}

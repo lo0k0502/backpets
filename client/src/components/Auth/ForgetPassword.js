@@ -55,7 +55,6 @@ export default ({ navigation }) => {
                     disabled={isLoading}
                     value={email}
                     style={{ width: '100%' }} 
-                    selectionColor='#666'
                     onChangeText={text => setEmail(text)}
                 />
                 <HelperText type='error'>

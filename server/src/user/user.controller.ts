@@ -50,7 +50,7 @@ export class UserController {
             if (!existUser) return res.status(400).json({ message: '用戶不存在' });
     
             if (existUser.username !== username && await this.userService.findOne({ username })) 
-                return res.status(400).json({ message: '用戶名已被使用!' });
+                return res.status(400).json({ message: '帳號名稱已被使用!' });
 
             const emailIsChanged = email !== existUser.email;
 

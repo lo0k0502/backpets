@@ -32,7 +32,7 @@ export default ({ navigation }) => {
             </HelperText>
             <TextInput 
                 mode='outlined'
-                placeholder='Username'
+                placeholder='帳號名稱'
                 placeholderTextColor='gray'
                 disabled={isLoading}
                 style={{ margin: 10, }}

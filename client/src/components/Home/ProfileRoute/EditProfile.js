@@ -22,10 +22,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'white',
     },
-    title: {
-        fontSize: 40,
-        marginBottom: 50,
-    },
     imgchangebtn: {
         height: 40, 
         backgroundColor: '#be9a78',
@@ -110,16 +106,6 @@ export default ({ navigation }) => {
     };
 
     const handleSubmit = async () => {
-        if (!username
-            || !email
-            || usernameErrorMsg
-            || photoUrlErrorMsg
-            || emailErrorMsg) {
-            if (!username) setUsernameErrorMsg('不可為空!');
-            if (!email) setEmailErrorMsg('不可為空!');
-            return;
-        }
-
         // Start editing profile
         setIsLoading(true);
         
@@ -195,12 +181,7 @@ export default ({ navigation }) => {
     
     return (
         <View style={styles.root}>
-            <HelperText
-                type='error'
-                style={{ 
-                    fontSize: 20, 
-                }}
-            >
+            <HelperText type='error' style={{ fontSize: 20 }}>
                 {errorMsg}
             </HelperText>
             <Avatar.Image source={{ uri: photoUrl ? photoUrl : user.info?.photoId ? `${SERVERURL}/image/${user.info?.photoId}` : null }} size={100} style={{ backgroundColor: 'white' }} />
@@ -224,13 +205,14 @@ export default ({ navigation }) => {
             </Button>
             <TextInput
                 mode='outlined'
-                placeholder='Username'
+                placeholder='帳號名稱'
                 placeholderTextColor='gray'
                 error={usernameErrorMsg}
                 disabled={isImgLoading || isLoading}
                 value={username}
                 style={styles.input}
-                selectionColor='#666'
+                maxLength={20}
+                right={<TextInput.Affix text={`${username.length}/20`} />}
                 onChangeText={checkUsername}
             />
             <HelperText 
@@ -247,7 +229,6 @@ export default ({ navigation }) => {
                 disabled={isImgLoading || isLoading}
                 value={email}
                 style={styles.input}
-                selectionColor='#666'
                 onChangeText={checkEmail}
             />
             <HelperText

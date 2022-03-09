@@ -136,7 +136,6 @@ export default ({ navigation, setIsSignIn }) => {
                     disabled={loginLoading || googleLoginLoading}
                     value={email}
                     style={styles.input}
-                    selectionColor='#666'
                     onChangeText={(text) => setEmail(text)}
                 />
                 <TextInput 
@@ -147,7 +146,6 @@ export default ({ navigation, setIsSignIn }) => {
                     secureTextEntry
                     value={password}
                     style={styles.input}
-                    selectionColor='#666'
                     onChangeText={(text) => setPassword(text)}
                 />
                 <Button 
@@ -184,8 +182,12 @@ export default ({ navigation, setIsSignIn }) => {
                 </Button> */}
             </View>
             <Pressable 
+                disabled
                 style={{ marginTop: 5 }}
-                onPress={() => navigation.navigate('ForgetPassword')}
+                onPress={() => {
+                    if (loginLoading || googleLoginLoading) return;
+                    navigation.navigate('ForgetPassword');
+                }}
             >
                 <Text style={{ color: colors.primary }}>
                     忘記密碼?
@@ -205,7 +207,10 @@ export default ({ navigation, setIsSignIn }) => {
                 </Text>
                 <Pressable 
                     style={{ marginHorizontal: 3 }}
-                    onPress={() => navigation.navigate('Register')}
+                    onPress={() => {
+                        if (loginLoading || googleLoginLoading) return;
+                        navigation.navigate('Register');
+                    }}
                 >
                     <Text style={{ color: colors.primary }}>
                         註冊
@@ -215,6 +220,7 @@ export default ({ navigation, setIsSignIn }) => {
             <Button
                 mode='contained'
                 uppercase={false}
+                disabled={loginLoading || googleLoginLoading}
                 dark
                 style={{ marginTop: 10 }}
                 onPress={() => navigation.toggleDrawer()}
