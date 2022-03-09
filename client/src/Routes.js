@@ -32,7 +32,7 @@ const Drawer = createDrawerNavigator();
 const Stacks = createStackNavigator();
 
 export default () => {
-    const [isSignin, setIsSignIn] = useState(null);// Controls what page should be displayed. null is splash page, false is login page, true is home page.
+    const [signInState, setSignInState] = useState(null);// Controls what page should be displayed. null is splash page, false is login page, true is home page.
     const [errorMsg, setErrorMsg] = useState('');
   
     const dispatch = useDispatch();
@@ -46,7 +46,7 @@ export default () => {
                     try {
                         unwrapResult(await dispatch(logoutUser({})));
                         console.log('Not logged in, going back...');
-                        setIsSignIn(false);
+                        setSignInState(false);
                     } catch (error) {
                         console.log('While logging out:', error);
                     }
@@ -75,18 +75,18 @@ export default () => {
               refreshToken: tokens.refreshToken, 
             })));
 
-            setIsSignIn(true);
+            setSignInState(true);
           } catch (error) {
-            setIsSignIn(false);
+            setSignInState(false);
             console.log('While refreshing:', error.message);
           }
-        } else setIsSignIn(false);
+        } else setSignInState(false);
       })();
     }, []);
 
     return (
         <Stacks.Navigator screenOptions={{ headerShown: false }}>
-        {isSignin === null ? (
+        {signInState === null ? (
           <Stacks.Screen name='Splash'>
           {props => (
             <View {...props} style={ styles.view }>
@@ -104,7 +104,7 @@ export default () => {
             </View>
           )}
           </Stacks.Screen>
-        ) : isSignin ? (
+        ) : signInState ? (
           <Stacks.Screen name='Main'>
           {props => (
             <Drawer.Navigator
@@ -121,7 +121,7 @@ export default () => {
         ) : (
           <>
               <Stacks.Screen name='AuthRoute'>
-              {props => <AuthRoute {...props} setIsSignIn={setIsSignIn} />}
+              {props => <AuthRoute {...props} setSignInState={setSignInState} />}
               </Stacks.Screen>
               <Stacks.Screen name='DeleteUser' options={{ headerShown: true }}>
               {props => <DeleteUser {...props} />}

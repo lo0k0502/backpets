@@ -1,3 +1,5 @@
+import { MailModule } from './../mail/mail.module';
+import { MailService } from '../mail/mail.service';
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { MongooseModule } from "@nestjs/mongoose";
@@ -11,6 +13,7 @@ import { AuthService } from "src/auth/auth.service";
     imports: [
         MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
         JwtModule.register({}),
+        MailModule,
     ],
     controllers: [UserController],
     providers: [UserService, AuthService],

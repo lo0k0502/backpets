@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ({ navigation, setIsSignIn }) => {
+export default ({ navigation, setSignInState }) => {
     const { colors } = useTheme();
 
     const [email, setEmail] = useState('');
@@ -66,7 +66,7 @@ export default ({ navigation, setIsSignIn }) => {
             setErrorMsg('');
 
             console.log('Logged in, going to Home...');
-            setIsSignIn(true);
+            setSignInState(true);
         } catch (error) {
             console.log('While logging in:', error);
             setErrorMsg(error.message);
