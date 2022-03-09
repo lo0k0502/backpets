@@ -33,10 +33,15 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '60%',
-        marginRight: 20,
+        margin: 20,
     },
     helpertext: { 
         marginTop: -20, 
+    },
+    submitbtn: {
+        width: '60%',
+        height: 50,
+        marginTop: 20,
     },
 });
 
@@ -104,36 +109,6 @@ export default ({ navigation }) => {
         setEmailErrorMsg(validAddress.test(text) ? '' : '無效的電子郵件!');
     };
 
-    const updateUsername = async () => {
-        setIsLoading(true);
-
-        try {
-            unwrapResult(await dispatch(updateProfile({ username })));
-
-            setIsLoading(false);
-        } catch (error) {
-            setIsLoading(false);
-            console.log('Updating username:', error);
-            setErrorMsg(error.message);
-        }
-    };
-
-    const updateEmail = async () => {
-        setIsLoading(true);
-
-        try {
-            // unwrapResult(await dispatch(updateProfile({ email })));
-
-            setIsLoading(false);
-
-            Alert.alert('Email已修改!', '我們已寄一封驗證郵件至此信箱，請盡快進行驗證!', [{ text: 'OK' }])
-        } catch (error) {
-            setIsLoading(false);
-            console.log('Updating email:', error);
-            setErrorMsg(error.message);
-        }
-    };
-
     const handleSubmit = async () => {
         if (!username
             || !email
@@ -147,13 +122,12 @@ export default ({ navigation }) => {
 
         // Start editing profile
         setIsLoading(true);
-
-        const previousProfile = user;
+        
         try {
             let sendPhotoId;
 
             // Check if the photo is changed, if so, upload it to the database first.
-            if (photoUrl !== previousProfile.info?.photoUrl) {
+            if (photoUrl !== user.info?.photoUrl) {
                 let formData = new FormData();
                 const filename = photoUrl.split('/').pop();
                 let mediatype = filename.split('.').pop();
@@ -184,32 +158,30 @@ export default ({ navigation }) => {
                 sendPhotoId = data.photoId;
 
                 // If the previous avatar is in our database and it's not the default avatar, delete it.
-                if (previousProfile.info?.photoId !== '61a2dbeb3a662969fc731434') {
-                    await deleteImage(previousProfile.info?.photoId);
+                if (user.info?.photoId !== '61a2dbeb3a662969fc731434') {
+                    await deleteImage(user.info?.photoId);
                 }
             }
 
             if (!sendPhotoId) throw new Error('SendPhotoId is Null!!');
 
+            const emailIsChanged = email !== user.info?.email;
+
             // Update profile
             unwrapResult(await dispatch(updateProfile({
-                userId: previousProfile.info?._id,
+                userId: user.info?._id,
                 photoId: sendPhotoId,
                 username,
                 email,
             })));
+
             setErrorMsg('');
-            setphotoUrlErrorMsg('');
-            setUsernameErrorMsg('');
-            setEmailErrorMsg('');
             setIsLoading(false);
-            Alert.alert('修改成功!!', `回到上一頁...`, [
-                { text: 'OK', onPress: () => navigation.goBack() }
-            ]);
+            Alert.alert('成功!', `修改個人資料成功!${emailIsChanged ? '\nEmail已修改!\n我們已寄一封驗證郵件至此信箱，請盡快進行驗證!' : ''}`, [{ text: 'OK' }]);
         } catch (error) {
             setIsLoading(false);
             if (error.message) {
-                console.log('Updating:', error.message);
+                console.log('While updating profile:', error);
                 setErrorMsg(error.message);
             }
             if (error.response.data.message) {
@@ -248,78 +220,62 @@ export default ({ navigation }) => {
                 style={styles.imgchangebtn}
                 onPress={handleChangeImg}
             >
-                更改大頭照
+                選擇大頭照
             </Button>
-            <View style={{ width: '90%', marginLeft: 50 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <TextInput
-                        mode='outlined'
-                        placeholder='用戶名'
-                        placeholderTextColor='gray'
-                        error={usernameErrorMsg}
-                        disabled={isImgLoading || isLoading}
-                        style={styles.input}
-                        value={username}
-                        selectionColor='#666'
-                        onChangeText={checkUsername}
-                    />
-                    <Button
-                        mode='contained'
-                        disabled={
-                            isImgLoading
-                            || isLoading
-                            || usernameErrorMsg
-                            || username === user.info?.username
-                        }
-                        loading={isLoading}
-                        dark
-                        onPress={updateUsername}
-                    >
-                        更改
-                    </Button>
-                </View>
-                <HelperText
-                    type='error' 
-                    style={{ alignSelf: 'flex-start' }}
-                >
-                    {usernameErrorMsg}
-                </HelperText>
-            </View>
-            <View style={{ width: '90%', marginLeft: 50 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <TextInput
-                        mode='outlined'
-                        placeholder='Email'
-                        placeholderTextColor='gray'
-                        error={emailErrorMsg}
-                        disabled={isImgLoading || isLoading}
-                        style={styles.input}
-                        value={email}
-                        selectionColor='#666'
-                        onChangeText={checkEmail}
-                    />
-                    <Button
-                        mode='contained'
-                        disabled={
-                            isImgLoading
-                            || isLoading
-                            || emailErrorMsg
-                            || email === user.info?.email
-                        }
-                        loading={isLoading}
-                        dark
-                        onPress={() => {}}
-                    >
-                        更改
-                    </Button>
-                </View>
-                <HelperText
-                    type='error' 
-                    style={{ alignSelf: 'flex-start' }}
-                >
-                    {emailErrorMsg}
-                </HelperText>
-            </View>
+            <TextInput
+                mode='outlined'
+                placeholder='Username'
+                placeholderTextColor='gray'
+                error={usernameErrorMsg}
+                disabled={isImgLoading || isLoading}
+                value={username}
+                style={styles.input}
+                selectionColor='#666'
+                onChangeText={checkUsername}
+            />
+            <HelperText 
+                type='error' 
+                style={styles.helpertext}
+            >
+                {usernameErrorMsg}
+            </HelperText>
+            <TextInput
+                mode='outlined'
+                placeholder='Email'
+                placeholderTextColor='gray'
+                error={emailErrorMsg}
+                disabled={isImgLoading || isLoading}
+                value={email}
+                style={styles.input}
+                selectionColor='#666'
+                onChangeText={checkEmail}
+            />
+            <HelperText
+                type='error' 
+                style={styles.helpertext}
+            >
+                {emailErrorMsg}
+            </HelperText>
+            <Button
+                mode='contained'
+                disabled={
+                    isImgLoading
+                    || isLoading
+                    || (!photoUrl && username === user.info?.username && email === user.info?.email)
+                    || !username
+                    || !email
+                    || usernameErrorMsg
+                    || photoUrlErrorMsg
+                    || emailErrorMsg
+                }
+                loading={isLoading}
+                dark
+                style={styles.submitbtn}
+                contentStyle={{ width: '100%', height: '100%' }}
+                onPress={handleSubmit}
+            >
+                更改
+            </Button>
         </View>
     );
 };

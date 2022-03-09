@@ -1,3 +1,4 @@
+import { MailService } from '../mail/mail.service';
 import { Types } from 'mongoose';
 import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
@@ -11,6 +12,7 @@ export class UserController {
     constructor(
         private readonly userService: UserService,
         private readonly authService: AuthService,
+        private readonly mailService: MailService,
     ) {}
 
     @Get('fetchall')
@@ -50,12 +52,21 @@ export class UserController {
             if (existUser.username !== username && await this.userService.findOne({ username })) 
                 return res.status(400).json({ message: '用戶名已被使用!' });
 
+            const emailIsChanged = email !== existUser.email;
+
             const updatedOnceUser = await this.userService.updateOne({ _id: userId }, { 
                 username, 
                 email,
                 photoId: new Types.ObjectId(photoId),
-                verified: email !== existUser.email,
+                verified: !emailIsChanged,
             });
+
+            if (emailIsChanged) {
+                await this.mailService.sendEmailVerification({ 
+                    username: updatedOnceUser.username, 
+                    email: updatedOnceUser.email,
+                }, { id: updatedOnceUser['_id'] });
+            }
     
             const accessToken = await this.authService.signAccessTokenAsync(updatedOnceUser);
             const { refreshToken: newRefreshToken, refreshTokenSignature } = await this.authService.signRefreshTokenAsync(updatedOnceUser);
