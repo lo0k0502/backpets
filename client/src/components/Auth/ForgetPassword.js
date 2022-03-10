@@ -31,7 +31,7 @@ export default ({ navigation }) => {
         <View 
             style={{
                 flex: 1,
-                backgroundColor: 'white',
+                backgroundColor: '#f0e5da',
                 alignItems: 'center',
             }}
         >

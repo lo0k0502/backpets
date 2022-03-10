@@ -63,7 +63,7 @@ const LoginDrawer = ({ checkUnLogin, setSignInState }) => {
 // Contains authorization related routes.
 const AuthRoute = ({ setSignInState }) => {
   return (
-    <AuhtStacks.Navigator>
+    <AuhtStacks.Navigator screenOptions={{ headerStyle: { backgroundColor: '#f0e5da' } }}>
       <AuhtStacks.Screen name='LoginDrawer' options={{ headerShown: false }}>
       {props => <LoginDrawer {...props} setSignInState={setSignInState} />}
       </AuhtStacks.Screen>

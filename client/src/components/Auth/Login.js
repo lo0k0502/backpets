@@ -23,6 +23,7 @@ export default ({ navigation, setSignInState }) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [passwordSecure, setPasswordSecure] = useState(true);
 
     const [errorMsg, setErrorMsg] = useState('');
 
@@ -114,7 +115,7 @@ export default ({ navigation, setSignInState }) => {
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: 'white',
+                backgroundColor: '#f0e5da',
             }}
         >
             <Image 
@@ -143,10 +144,16 @@ export default ({ navigation, setSignInState }) => {
                     placeholder='密碼'
                     placeholderTextColor='gray'
                     disabled={loginLoading || googleLoginLoading}
-                    secureTextEntry
+                    secureTextEntry={passwordSecure}
                     value={password}
                     style={styles.input}
                     onChangeText={(text) => setPassword(text)}
+                    right={
+                        <TextInput.Icon 
+                            name={passwordSecure ? 'eye-off' : 'eye'} 
+                            onPress={() => setPasswordSecure(!passwordSecure)}
+                        />
+                    }
                 />
                 <Button 
                     mode='contained'
@@ -181,9 +188,8 @@ export default ({ navigation, setSignInState }) => {
                     Google Login
                 </Button> */}
             </View>
-            <Pressable 
-                disabled
-                style={{ marginTop: 5 }}
+            <Pressable
+                style={{ marginTop: 10 }}
                 onPress={() => {
                     if (loginLoading || googleLoginLoading) return;
                     navigation.navigate('ForgetPassword');
@@ -196,7 +202,7 @@ export default ({ navigation, setSignInState }) => {
             <Divider 
                 style={{
                     width: '90%',
-                    borderColor: 'lightgray',
+                    borderColor: colors.accent,
                     borderWidth: 1,
                     margin: 10,
                 }} 

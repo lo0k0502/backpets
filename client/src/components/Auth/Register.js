@@ -57,7 +57,7 @@ export default ({ navigation }) => {
         <View 
             style={{
                 flex: 1,
-                backgroundColor: 'white',
+                backgroundColor: '#f0e5da',
                 justifyContent: 'flex-start',
                 alignItems: 'center',
             }}

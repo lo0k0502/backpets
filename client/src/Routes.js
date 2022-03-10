@@ -31,8 +31,7 @@ const styles = StyleSheet.create({
 const Drawer = createDrawerNavigator();
 const Stacks = createStackNavigator();
 
-export default () => {
-    const [signInState, setSignInState] = useState(null);// Controls what page should be displayed. null is splash page, false is login page, true is home page.
+export default ({ signInStates: [signInState, setSignInState] }) => {
     const [errorMsg, setErrorMsg] = useState('');
   
     const dispatch = useDispatch();
