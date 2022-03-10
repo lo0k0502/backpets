@@ -110,10 +110,10 @@ export default ({ navigation }) => {
         setIsLoading(true);
         
         try {
-            let sendPhotoId;
+            let sendPhotoId = user.info?.photoId;
 
             // Check if the photo is changed, if so, upload it to the database first.
-            if (photoUrl !== user.info?.photoUrl) {
+            if (!!photoUrl) {
                 let formData = new FormData();
                 const filename = photoUrl.split('/').pop();
                 let mediatype = filename.split('.').pop();
@@ -148,8 +148,6 @@ export default ({ navigation }) => {
                     await deleteImage(user.info?.photoId);
                 }
             }
-
-            if (!sendPhotoId) throw new Error('SendPhotoId is Null!!');
 
             const emailIsChanged = email !== user.info?.email;
 
@@ -187,7 +185,7 @@ export default ({ navigation }) => {
             <Avatar.Image source={{ uri: photoUrl ? photoUrl : user.info?.photoId ? `${SERVERURL}/image/${user.info?.photoId}` : null }} size={100} style={{ backgroundColor: 'white' }} />
             <HelperText 
                 type='error' 
-                style={styles.helpertext}
+                // style={styles.helpertext}
             >
                 {photoUrlErrorMsg}
             </HelperText>

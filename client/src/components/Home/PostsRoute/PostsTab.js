@@ -1,47 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import MissionRoute from './Mission/Mission';
 import ReportRoute from './Report/ReportRoute';
 import PutUpForAdoptionRoute from './PutUpForAdoption/PutUpForAdoptionRoute';
-import { Appbar, TextInput, useTheme } from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
+import PostsAppbar from './PostsAppbar';
+import TagsView from './TagsView';
+import { tagsArray } from '../../../utils/constants';
 
 const PostsTab = createMaterialTopTabNavigator();
 
 export default ({ navigation }) => {
     const { colors } = useTheme();
 
+    const [searchText, setSearchText] = useState('');
+    const [tags, setTags] = useState(tagsArray.map(tagName => ({ name: tagName, selected: false })));
+
     return (
         <>
-            <Appbar style={{ backgroundColor: 'white' }}>
-                <TextInput
-                    mode='outlined'
-                    placeholder='搜尋'
-                    dense={true}
-                    style={{
-                        backgroundColor: colors.background2,
-                        flex: 1,
-                        paddingVertical: 0,
-                        justifyContent: 'center',
-                        marginHorizontal: '2%',
-                    }}
-                    outlineColor='transparent'
-                    activeOutlineColor={colors.background2}
-                    selectionColor={colors.primary}
-                    left={
-                        <TextInput.Icon
-                            name='menu'
-                            color='gray'
-                            onPress={navigation.toggleDrawer}
-                        />
-                    }
-                    right={
-                        <TextInput.Icon
-                            name='magnify'
-                            color='gray'
-                        />
-                    }
-                />
-            </Appbar>
+            <PostsAppbar
+                navigation={navigation}
+                searchTextState={[searchText, setSearchText]}
+                tagsState={[tags, setTags]}
+            />
+            <TagsView tagsState={[tags, setTags]} />
             <PostsTab.Navigator screenOptions={{ tabBarIndicatorStyle: { backgroundColor: colors.primary } }}>
                 <PostsTab.Screen name='Mission' options={{ title: '任務' }}>
                 {props => <MissionRoute {...props} />}

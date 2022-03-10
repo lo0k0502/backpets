@@ -114,9 +114,7 @@ export default ({ navigation, route: { params: { post } } }) => {
                     ) : null}
                 </Menu>
             </Appbar>
-            <ScrollView 
-                style={ styles.scrollView }
-            >
+            <ScrollView style={styles.scrollView}>
                 <View style={ styles.momentView }>
                     <Avatar.Image source={{ uri: poster.photoId ? `${SERVERURL}/image/${poster.photoId}` : null }} size={50} style={{ margin: 10, backgroundColor: 'white' }} />
                     <View>

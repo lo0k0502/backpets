@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { TextInput as NativeTextInput, StyleSheet } from 'react-native';
+import { TextInput as NativeTextInput, StyleSheet, ScrollView } from 'react-native';
 import { getMediaLibraryPermissionsAsync, requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaTypeOptions, getPendingResultAsync } from 'expo-image-picker';
 import { TextInput, Dialog, Button, Card, HelperText, useTheme } from 'react-native-paper';
 import { addMission, uploadImage } from '../../../../api';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
 import { useCurrentLocation } from '../../../../hooks';
-import { ScrollView } from 'react-native';
+import TagsView from '../TagsView';
+import { tagsArray } from '../../../../utils/constants';
 
 const styles = StyleSheet.create({
     innerPropNav: {
@@ -36,6 +37,7 @@ export default ({ visible, close, refreshMissions }) => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [photoUrl, setphotoUrl] = useState('');
+    const [tags, setTags] = useState(tagsArray.map(tagName => ({ name: tagName, selected: false })));
 
     const [titleErrorMsg, setTitleErrorMsg] = useState('');
     const [contentErrorMsg, setContentErrorMsg] = useState('');
@@ -99,13 +101,7 @@ export default ({ visible, close, refreshMissions }) => {
         setIsImgLoading(false);
     };
 
-    const handleSubmit = async () => {
-        if (!title || !content) {
-            if (!title) setTitleErrorMsg('不可為空!');
-            if (!content) setContentErrorMsg('不可為空!');
-            return;
-        }
-        
+    const handleSubmit = async () => {        
         // Start posting
         setIsLoading(true);
         
@@ -155,6 +151,8 @@ export default ({ visible, close, refreshMissions }) => {
                 },
             });
 
+            setIsLoading(false);
+
             handleClose();// Close the dialog
         } catch (error) {
             setIsLoading(false);
@@ -163,8 +161,6 @@ export default ({ visible, close, refreshMissions }) => {
                 setphotoUrlErrorMsg(error.response.data.message);
             }
         }
-
-        setIsLoading(false);
     };
 
     return (
@@ -184,6 +180,7 @@ export default ({ visible, close, refreshMissions }) => {
                     >
                         {titleErrorMsg}
                     </HelperText>
+                    <TagsView tagsState={[tags, setTags]} />
                     <TextInput
                         mode='outlined'
                         label='內文'
@@ -242,7 +239,11 @@ export default ({ visible, close, refreshMissions }) => {
                     mode='contained' 
                     color={colors.primary}
                     dark
-                    disabled={isLoading}
+                    disabled={
+                        isLoading
+                        || !title
+                        || !content
+                    }
                     loading={isLoading}
                     onPress={handleSubmit}
                     contentStyle={{ paddingHorizontal: 10 }}

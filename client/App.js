@@ -5,10 +5,10 @@ import { SafeAreaView, Platform, Appearance } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider } from 'react-redux';
 import { Provider as PaperProvider } from 'react-native-paper';
-import { theme } from './theme';
+import { theme } from './src/utils/theme';
 import store from './src/redux/store';
 import Routes from './src/Routes';
-import './src/moment';
+import './src/utils/moment';
 
 export default function App() {
   const [signInState, setSignInState] = useState(null);// Controls what page should be displayed. null is splash page, false is login page, true is home page.
