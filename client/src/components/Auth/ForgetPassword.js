@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Alert, KeyboardAvoidingView, Text, View } from 'react-native';
-import { Button, HelperText, TextInput } from 'react-native-paper';
+import { Button, HelperText, TextInput, useTheme } from 'react-native-paper';
 import { SendResetPasswordEmail } from '../../api';
 import { useStateWithValidation } from '../../hooks';
 
 export default ({ navigation }) => {
+    const { colors } = useTheme();
+
     const [email, setEmail, isEmailValid] = useStateWithValidation('', value => /^\w+((-\w+)|(\.\w+))*\@\w+((\.|-)\w+)*\.[A-z]+$/.test(value));
 
     const [errorMsg, setErrorMsg] = useState('');
@@ -31,7 +33,7 @@ export default ({ navigation }) => {
         <View 
             style={{
                 flex: 1,
-                backgroundColor: '#f0e5da',
+                backgroundColor: colors.background2,
                 alignItems: 'center',
             }}
         >
@@ -49,8 +51,7 @@ export default ({ navigation }) => {
                 </HelperText>
                 <TextInput 
                     mode='outlined'
-                    placeholder='E-mail'
-                    placeholderTextColor='gray'
+                    label='Email'
                     error={!isEmailValid}
                     disabled={isLoading}
                     value={email}

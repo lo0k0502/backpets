@@ -174,8 +174,7 @@ export default ({ visible, close, refreshMissions }) => {
                 <ScrollView style={{ height: '80%', paddingHorizontal: 20 }}>
                     <TextInput 
                         mode='outlined'
-                        placeholder='標題'
-                        placeholderTextColor='gray'
+                        label='標題'
                         error={titleErrorMsg}
                         value={title}
                         onChangeText={checkTitle}
@@ -187,8 +186,7 @@ export default ({ visible, close, refreshMissions }) => {
                     </HelperText>
                     <TextInput
                         mode='outlined'
-                        placeholder='內文'
-                        placeholderTextColor='gray'
+                        label='內文'
                         error={contentErrorMsg}
                         value={content}
                         multiline

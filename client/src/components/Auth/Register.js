@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, View, Platform } from 'react-native';
-import { Button, HelperText, TextInput } from 'react-native-paper';
+import { Button, HelperText, TextInput, useTheme } from 'react-native-paper';
 import { UserRegister } from '../../api';
 import { useStateWithValidation } from '../../hooks'
 
@@ -11,6 +11,8 @@ const styles = StyleSheet.create({
 });
 
 export default ({ navigation }) => {
+    const { colors } = useTheme();
+
     const [username, setUsername, isUsernameValid] = useStateWithValidation('');
     const [email, setEmail, isEmailValid] = useStateWithValidation('', value => /^\w+((-\w+)|(\.\w+))*\@\w+((\.|-)\w+)*\.[A-z]+$/.test(value));
     const [password, setPassword, isPasswordValid] = useStateWithValidation('', value => value.length >= 8);
@@ -57,7 +59,7 @@ export default ({ navigation }) => {
         <View 
             style={{
                 flex: 1,
-                backgroundColor: '#f0e5da',
+                backgroundColor: colors.background2,
                 justifyContent: 'flex-start',
                 alignItems: 'center',
             }}
@@ -75,8 +77,7 @@ export default ({ navigation }) => {
                 </HelperText>
                 <TextInput 
                     mode='outlined'
-                    placeholder='帳號名稱'
-                    placeholderTextColor='gray'
+                    label='帳號名稱'
                     error={!isUsernameValid}
                     disabled={isLoading}
                     value={username}
@@ -90,8 +91,7 @@ export default ({ navigation }) => {
                 </HelperText>
                 <TextInput 
                     mode='outlined'
-                    placeholder='E-mail'
-                    placeholderTextColor='gray'
+                    label='E-mail'
                     error={!isEmailValid}
                     disabled={isLoading}
                     value={email}
@@ -103,8 +103,7 @@ export default ({ navigation }) => {
                 </HelperText>
                 <TextInput 
                     mode='outlined'
-                    placeholder='密碼'
-                    placeholderTextColor='gray'
+                    label='密碼'
                     error={!isPasswordValid}
                     disabled={isLoading}
                     secureTextEntry={passwordSecure}
@@ -123,8 +122,7 @@ export default ({ navigation }) => {
                 </HelperText>
                 <TextInput 
                     mode='outlined'
-                    placeholder='確認密碼'
-                    placeholderTextColor='gray'
+                    label='確認密碼'
                     error={!isConfirmPasswordValid}
                     disabled={isLoading}
                     secureTextEntry={confirmPasswordSecure}

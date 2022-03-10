@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, useTheme } from 'react-native-paper';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
@@ -62,8 +62,10 @@ const LoginDrawer = ({ checkUnLogin, setSignInState }) => {
 
 // Contains authorization related routes.
 const AuthRoute = ({ setSignInState }) => {
+  const { colors } = useTheme();
+
   return (
-    <AuhtStacks.Navigator screenOptions={{ headerStyle: { backgroundColor: '#f0e5da' } }}>
+    <AuhtStacks.Navigator screenOptions={{ headerStyle: { backgroundColor: colors.background2 } }}>
       <AuhtStacks.Screen name='LoginDrawer' options={{ headerShown: false }}>
       {props => <LoginDrawer {...props} setSignInState={setSignInState} />}
       </AuhtStacks.Screen>

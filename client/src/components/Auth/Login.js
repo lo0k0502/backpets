@@ -41,11 +41,7 @@ export default ({ navigation, setSignInState }) => {
             return;
         }
 
-        setErrorMsg('1');
-
         setLoginLoading(true);
-
-        setErrorMsg('2');
 
         try {
             if ((await Location.getForegroundPermissionsAsync()).status !== 'granted') {
@@ -55,12 +51,8 @@ export default ({ navigation, setSignInState }) => {
                     return;
                 }
             }
-
-            setErrorMsg('3');
             
             unwrapResult(await dispatch(loginUser({ email, password })));
-
-            setErrorMsg('4');
 
             setEmail('');
             setPassword('');
@@ -115,7 +107,7 @@ export default ({ navigation, setSignInState }) => {
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: '#f0e5da',
+                backgroundColor: colors.background2,
             }}
         >
             <Image 
@@ -132,8 +124,7 @@ export default ({ navigation, setSignInState }) => {
                 </HelperText>
                 <TextInput 
                     mode='outlined'
-                    placeholder='Email'
-                    placeholderTextColor='gray'
+                    label='Email'
                     disabled={loginLoading || googleLoginLoading}
                     value={email}
                     style={styles.input}
@@ -141,8 +132,7 @@ export default ({ navigation, setSignInState }) => {
                 />
                 <TextInput 
                     mode='outlined'
-                    placeholder='密碼'
-                    placeholderTextColor='gray'
+                    label='密碼'
                     disabled={loginLoading || googleLoginLoading}
                     secureTextEntry={passwordSecure}
                     value={password}

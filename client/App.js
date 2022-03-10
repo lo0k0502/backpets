@@ -19,13 +19,13 @@ export default function App() {
         <SafeAreaView 
           style={{ 
             flex: 1,
-            backgroundColor: '#f0e5da',
+            backgroundColor: theme.colors.background2,
             paddingTop: Platform.OS === 'android' ? Constants.statusBarHeight : 0,
           }}
         >
           <StatusBar 
             style='auto'
-            backgroundColor={signInState === false ? '#f0e5da' : Appearance.getColorScheme() === 'dark' ? theme.colors.primary : 'white'}
+            backgroundColor={signInState === false ? theme.colors.background2 : Appearance.getColorScheme() === 'dark' ? theme.colors.primary : 'white'}
             animated
             networkActivityIndicatorVisible
             translucent

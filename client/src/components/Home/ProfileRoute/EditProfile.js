@@ -205,8 +205,7 @@ export default ({ navigation }) => {
             </Button>
             <TextInput
                 mode='outlined'
-                placeholder='帳號名稱'
-                placeholderTextColor='gray'
+                label='帳號名稱'
                 error={usernameErrorMsg}
                 disabled={isImgLoading || isLoading}
                 value={username}
@@ -223,8 +222,7 @@ export default ({ navigation }) => {
             </HelperText>
             <TextInput
                 mode='outlined'
-                placeholder='Email'
-                placeholderTextColor='gray'
+                label='Email'
                 error={emailErrorMsg}
                 disabled={isImgLoading || isLoading}
                 value={email}

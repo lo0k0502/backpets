@@ -76,8 +76,7 @@ export default ({  navigation }) => {
             </HelperText>
             <TextInput
                 mode='outlined'
-                placeholder='舊密碼'
-                placeholderTextColor='gray'
+                label='舊密碼'
                 error={!isOldPasswordValid}
                 disabled={isLoading}
                 secureTextEntry={oldPasswordSecure}
@@ -98,8 +97,7 @@ export default ({  navigation }) => {
             </HelperText>
             <TextInput
                 mode='outlined'
-                placeholder='新密碼'
-                placeholderTextColor='gray'
+                label='新密碼'
                 error={!isNewPasswordValid}
                 disabled={isLoading}
                 secureTextEntry={newPasswordSecure}
@@ -120,8 +118,7 @@ export default ({  navigation }) => {
             </HelperText>
             <TextInput
                 mode='outlined'
-                placeholder='確認新密碼'
-                placeholderTextColor='gray'
+                label='確認新密碼'
                 error={!isConfirmNewPasswordValid}
                 disabled={isLoading}
                 secureTextEntry={confirmNewPasswordSecure}

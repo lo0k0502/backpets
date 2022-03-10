@@ -4,7 +4,7 @@ import { useTheme } from 'react-native-paper';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import MissionRoute from './MissionRoute/MissionRoute';
+import PostsRoute from './PostsRoute/PostsRoute';
 import MapRoute from './MapRoute/MapRoute';
 import Store from './StoreRoute';
 import ProfileRoute from './ProfileRoute/ProfileRoute';
@@ -17,7 +17,7 @@ export default () => {
     return (
         <Tabs.Navigator 
             shifting
-            initialRouteName='MissionRoute'
+            initialRouteName='PostsRoute'
             barStyle={{
                 position: 'absolute',
                 right: 10,
@@ -47,13 +47,13 @@ export default () => {
             {props => <MapRoute {...props} />}
             </Tabs.Screen>
             <Tabs.Screen
-                name='MissionRoute' 
+                name='PostsRoute' 
                 options={{
                     title: '貼文',
                     tabBarIcon: ({ color }) => <Icons name='note-text-outline' color={color} size={20} />,
                 }}
             >
-            {props => <MissionRoute {...props} />}
+            {props => <PostsRoute {...props} />}
             </Tabs.Screen>
             <Tabs.Screen 
                 name='Store'
