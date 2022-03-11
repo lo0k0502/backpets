@@ -15,10 +15,10 @@ export class Mission {
   content: string;
 
   @Prop()
-  category: string;
+  tag: string;
 
   @Prop()
-  variety: string;
+  breed: string;
 
   @Prop()
   feature: string;

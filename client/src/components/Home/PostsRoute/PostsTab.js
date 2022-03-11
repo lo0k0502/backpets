@@ -3,7 +3,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import MissionRoute from './Mission/Mission';
 import ReportRoute from './Report/ReportRoute';
 import PutUpForAdoptionRoute from './PutUpForAdoption/PutUpForAdoptionRoute';
-import { useTheme } from 'react-native-paper';
+import { Divider, useTheme } from 'react-native-paper';
 import PostsAppbar from './PostsAppbar';
 import TagsView from './TagsView';
 import { tagsArray } from '../../../utils/constants';
@@ -24,6 +24,7 @@ export default ({ navigation }) => {
                 tagsState={[tags, setTags]}
             />
             <TagsView tagsState={[tags, setTags]} />
+            <Divider />
             <PostsTab.Navigator screenOptions={{ tabBarIndicatorStyle: { backgroundColor: colors.primary } }}>
                 <PostsTab.Screen name='Mission' options={{ title: '任務' }}>
                 {props => <MissionRoute {...props} />}

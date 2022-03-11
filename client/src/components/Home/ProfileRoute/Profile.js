@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Avatar, List, Divider, useTheme } from 'react-native-paper';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
 import { SERVERURL } from '../../../api/API';
@@ -44,12 +44,12 @@ export default ({ navigation }) => {
           </Text>
           <View style={{ flexDirection: 'row' }}>
             <View style={{ alignItems: 'center', marginRight: 5 }}>
-              <Icons name='currency-usd' color='white' size={25} />
+              <MaterialCommunityIcons name='currency-usd' color='white' size={25} />
               <Text style={styles.points}>點數</Text>
               <Text style={styles.points}>{user.info?.points}</Text>
             </View>
             <View style={{ alignItems: 'center' }}>
-              <Icons name='ticket-confirmation-outline' color='white' size={25} />
+              <MaterialCommunityIcons name='ticket-confirmation-outline' color='white' size={25} />
               <Text style={styles.points}>禮券</Text>
               <Text style={styles.points}>{user.info?.coupons.length}</Text>
             </View>

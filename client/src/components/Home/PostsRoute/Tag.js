@@ -1,7 +1,19 @@
-import React, { useState } from 'react';
-import { Chip } from 'react-native-paper';
+import React from 'react';
+import { Chip, useTheme } from 'react-native-paper';
 
-export default ({ tag: { name, selected }, setTags }) => {
+export default ({ tag: { name, selected }, tagsState: [tags, setTags], maxLimit, onExceedMaxLimit }) => {
+    const { colors } = useTheme();
+
+    const handleTagPress = () => {
+        if (
+            maxLimit !== null
+            && tags.filter(tag => tag.selected).length === maxLimit
+            && selected === false
+        ) {
+            if (onExceedMaxLimit() === false ? false : (onExceedMaxLimit() || true)) return;
+        }
+        setTags(tags => tags.map(tag => tag.name === name ? { name: tag.name, selected: !selected } : tag ));
+    };
 
     return (
         <Chip
@@ -25,10 +37,14 @@ export default ({ tag: { name, selected }, setTags }) => {
             }
             ellipsizeMode='tail'
             selected={selected}
-            onPress={() => setTags(tags => tags.map(tag => tag.name === name ? { name: tag.name, selected: !selected } : tag ))}
+            selectedColor={selected ? 'white' : colors.primary}
+            onPress={handleTagPress}
             style={{
                 maxWidth: 100,
                 margin: 3,
+                backgroundColor: selected ? colors.primary : 'white',
+                borderColor: colors.primary,
+                borderWidth: 1,
             }}
         >
             {name}

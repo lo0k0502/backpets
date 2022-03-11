@@ -84,7 +84,7 @@ export const useUser = (userId) => {
             } catch (error) {
                 console.log('While fetching user: ', error.response.data.message);
             }
-        })()
+        })();
     }, [userId]);
 
     return user;
