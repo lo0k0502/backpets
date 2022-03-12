@@ -51,7 +51,7 @@ export const useCurrentLocation = () => {
 };
 
 /**
- * @returns {{ mission: Object, refreshMissions: Function }}
+ * @returns {{ missions: Object[], refreshMissions: Function }}
  */
 export const useMissions = () => {
     const [missions, setMissions] = useState([]);
@@ -75,16 +75,11 @@ export const useMissions = () => {
 export const useUser = (userId) => {
     const [user, setUser] = useState({});
 
+    const fetchUser = async () => setUser((await fetchUserById(userId)).data.result);
+
     // Fetch the user of this user id
     useEffect(() => {
-        (async () => {
-            try {
-                const res = await fetchUserById(userId);
-                setUser(res.data.result);
-            } catch (error) {
-                console.log('While fetching user: ', error.response.data.message);
-            }
-        })();
+        fetchUser();
     }, [userId]);
 
     return user;

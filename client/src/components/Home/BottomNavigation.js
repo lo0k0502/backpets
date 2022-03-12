@@ -6,8 +6,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import PostsRoute from './PostsRoute/PostsRoute';
 import MapRoute from './MapRoute/MapRoute';
-import Store from './StoreRoute';
+import Store from './StoreRoute/StoreRoute';
 import ProfileRoute from './ProfileRoute/ProfileRoute';
+import AdoptionRoute from './AdoptionRoute/AdoptionRoute';
 
 const Tabs = createMaterialBottomTabNavigator();
 
@@ -71,7 +72,7 @@ export default () => {
                     tabBarIcon: ({ color }) => <MaterialCommunityIcons name='home-heart' color={color} size={20} />,
                 }}
             >
-            {props => <View><Text>Adoption</Text></View>}
+            {props => <AdoptionRoute {...props} />}
             </Tabs.Screen>
         </Tabs.Navigator>
     );

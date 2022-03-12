@@ -1,5 +1,6 @@
-import React from 'react';
-import { Dimensions, SafeAreaView, StyleSheet, View, VirtualizedList, Text, StatusBar } from 'react-native';
+import React, { useState } from 'react';
+import { Dimensions, StyleSheet, View, VirtualizedList, Text, StatusBar } from 'react-native';
+import AppSearchbar from '../AppSearchbar';
 
 const boxSize = Dimensions.get('window').width / 2 - 50;
 
@@ -8,7 +9,6 @@ const styles = StyleSheet.create({
         flex: 1,
         //flexWrap: 'wrap',
         backgroundColor: 'white',
-        marginTop: StatusBar.currentHeight,
         //alignContent: 'space-around',
     },
     item: {
@@ -43,10 +43,12 @@ const Item = ({ title }) => (
 );
 
 
-export default () => {
-    
+export default ({ navigation }) => {
+    const [searchText, setSearchText] = useState('');
+
     return (
-        <SafeAreaView style={styles.root}>
+        <View style={styles.root}>
+            <AppSearchbar navigation searchTextState={[searchText, setSearchText]} />
             <VirtualizedList 
                 data={DATA}
                 initialNumToRender={4}
@@ -57,6 +59,6 @@ export default () => {
             >
 
             </VirtualizedList>
-        </SafeAreaView>
+        </View>
     )
 };

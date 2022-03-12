@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import MissionRoute from './Mission/Mission';
+import Mission from './Mission/Mission';
 import ReportRoute from './Report/ReportRoute';
 import PutUpForAdoptionRoute from './PutUpForAdoption/PutUpForAdoptionRoute';
 import { Divider, useTheme } from 'react-native-paper';
-import PostsAppbar from './PostsAppbar';
+import AppSearchbar from '../AppSearchbar';
 import TagsView from './TagsView';
 import { tagsArray } from '../../../utils/constants';
 
@@ -18,7 +18,7 @@ export default ({ navigation }) => {
 
     return (
         <>
-            <PostsAppbar
+            <AppSearchbar
                 navigation={navigation}
                 searchTextState={[searchText, setSearchText]}
                 tagsState={[tags, setTags]}
@@ -27,7 +27,7 @@ export default ({ navigation }) => {
             <Divider />
             <PostsTab.Navigator screenOptions={{ tabBarIndicatorStyle: { backgroundColor: colors.primary } }}>
                 <PostsTab.Screen name='Mission' options={{ title: '任務' }}>
-                {props => <MissionRoute {...props} />}
+                {props => <Mission {...props} selectedTags={tagsArray.filter(tag => tags.find(_tag => _tag.name === tag && _tag.selected))} />}
                 </PostsTab.Screen>
                 <PostsTab.Screen name='Report' options={{ title: '通報' }}>
                 {props => <ReportRoute {...props} />}

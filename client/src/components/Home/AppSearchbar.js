@@ -13,7 +13,6 @@ export default ({ navigation, searchTextState: [searchText, setSearchText] }) =>
         onChangeText={text => setSearchText(text)}
         dense={true}
         style={{
-          backgroundColor: colors.background2,
           flex: 1,
           paddingVertical: 0,
           justifyContent: 'center',
@@ -26,6 +25,7 @@ export default ({ navigation, searchTextState: [searchText, setSearchText] }) =>
           <TextInput.Icon
             name='menu'
             color='gray'
+            forceTextInputFocus={false}
             onPress={navigation.toggleDrawer}
           />
         }

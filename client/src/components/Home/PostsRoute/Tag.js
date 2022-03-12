@@ -1,7 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Chip, useTheme } from 'react-native-paper';
 
-export default ({ tag: { name, selected }, tagsState: [tags, setTags], maxLimit, onExceedMaxLimit }) => {
+export default ({
+    tag,
+    tagsState,
+    maxLimit,
+    onExceedMaxLimit,
+    onPress,
+    disabled = false,
+}) => {
+    const { name, selected } = tag ? tag : { name: '未知', selected: false };
+    const [tags, setTags] = tagsState ? tagsState : useState([tag]);
     const { colors } = useTheme();
 
     const handleTagPress = () => {
@@ -17,8 +26,10 @@ export default ({ tag: { name, selected }, tagsState: [tags, setTags], maxLimit,
 
     return (
         <Chip
+            mode='outlined'
             icon={
-                name === '狗' ? 'dog'
+                name === '貓' ? 'cat'
+                : name === '狗' ? 'dog'
                 : name === '兔子' ? 'rabbit'
                 : name === '魚' ? 'fish'
                 : name === '牛' ? 'cow'
@@ -33,12 +44,13 @@ export default ({ tag: { name, selected }, tagsState: [tags, setTags], maxLimit,
                 : name === '熊貓' ? 'panda'
                 : name === '老鼠' ? 'rodent'
                 : name === '蜘蛛' ? 'spider'
-                : 'cat'
+                : null
             }
             ellipsizeMode='tail'
+            disabled={disabled}
             selected={selected}
             selectedColor={selected ? 'white' : colors.primary}
-            onPress={handleTagPress}
+            onPress={onPress === undefined ? handleTagPress : onPress}
             style={{
                 maxWidth: 100,
                 margin: 3,

@@ -298,6 +298,7 @@ export default ({ visible, close, refreshMissions }) => {
                                 value={lostTime}
                                 mode={dateTimePickerMode}
                                 is24Hour
+                                display='spinner'
                                 onChange={(e, dateTime) => {
                                     setShowDateTimePicker(false);
                                     if (dateTime) {

@@ -5,7 +5,9 @@ import { Headline, Text } from 'react-native-paper';
 import { useCurrentLocation, useMissions } from '../../../hooks';
 import PostCallout from './PostCallout';
 
-export default () => {
+export default ({ route }) => {
+  const { location } = route.params ? route.params : { location: { latitude: 120, longitude: 23 } }; // Location from post
+
   const { currentLatitude, currentLongitude } = useCurrentLocation();
   const { missions } = useMissions();
   

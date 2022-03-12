@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import Appbar from '../../Appbar';
+import Appbar from '../Appbar';
 import EditProfile from './EditProfile';
 import ChangePassword from './ChangePassword';
 import Profile from './Profile';

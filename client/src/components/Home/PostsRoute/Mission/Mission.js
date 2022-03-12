@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { StyleSheet, ScrollView, View, RefreshControl, Text } from 'react-native';
-import { Button, Portal } from 'react-native-paper';
+import { ActivityIndicator, Button, Portal, Title, useTheme } from 'react-native-paper';
 import MissionDialog from './MissionDialog';
 import MissionCard from './MissionCard';
 import { useSelector } from 'react-redux';
@@ -38,12 +38,13 @@ const styles = StyleSheet.create({
         },
     });
 
-export default ({ navigation }) => {
-    const [refreshing, setRefreshing] = useState(false);// State for RefreshControl component
-    const [missionDialog, setMissionDialog] = useState(false);// Whether mission dialog is open
-
+export default ({ navigation, selectedTags }) => {
     const user = useSelector(selectUser);
     const { missions, refreshMissions } = useMissions();
+    const { colors } = useTheme();
+
+    const [refreshing, setRefreshing] = useState(false);// State for RefreshControl component
+    const [missionDialog, setMissionDialog] = useState(false);// Whether mission dialog is open
 
     const handleRefresh = useCallback(() => {
         setRefreshing(true);
@@ -69,7 +70,18 @@ export default ({ navigation }) => {
             <Portal>
                 <MissionDialog visible={missionDialog} close={() => setMissionDialog(false)} refreshMissions={refreshMissions} />
             </Portal>
-            {missions.map(mission => <MissionCard mission={mission} key={mission._id} />)}
+            {missions.map(mission => selectedTags.includes(mission.tag) || !selectedTags.length ? true : false).find(e => e)
+                ? missions.map(mission => selectedTags.includes(mission.tag) || !selectedTags.length ? <MissionCard mission={mission} key={mission._id} /> : null)
+                : selectedTags.length
+                    ? <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
+                    : (
+                        <ActivityIndicator
+                            animating={true}
+                            color={colors.primary}
+                            size='large'
+                            style={{ marginTop: 50 }}
+                        />
+            )}
             <View style={{ height: 50 }} />
         </ScrollView>
     );
