@@ -32,10 +32,14 @@ export const useCurrentLocation = () => {
     let currentLongitude = 0;
   
     useEffect(() => {
+        let isMounted = true;
+
         (async () => {
             let locationResult = await Location.getCurrentPositionAsync({});
-            setLocation(locationResult);
+            if (isMounted) setLocation(locationResult);
         })();
+
+        return () => { isMounted = false };
     }, []);
     
     if (location) {
@@ -79,7 +83,14 @@ export const useUser = (userId) => {
 
     // Fetch the user of this user id
     useEffect(() => {
-        fetchUser();
+        let isMounted = true;
+
+        (async () => {
+            const result = await fetchUserById(userId)
+            if (isMounted) setUser(result.data.result);
+        })();
+
+        return () => { isMounted = false };
     }, [userId]);
 
     return user;

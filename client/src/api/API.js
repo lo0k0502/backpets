@@ -5,7 +5,7 @@ import { BASE_URL } from '@env';
 console.log('IP: ', BASE_URL)
 export const SERVERURL = `http://${BASE_URL}:8000`;
 console.log('Server URL: ', SERVERURL)
-const API = axios.create({ baseURL: SERVERURL });
+const API = axios.create({ baseURL: SERVERURL, timeout: 5000 , timeoutErrorMessage: 'Server timeout'});
 
 // Intercept all requests and put current access token in header for authorization.
 API.interceptors.request.use(async (req) => {

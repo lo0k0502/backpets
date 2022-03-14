@@ -6,14 +6,18 @@ export default ({ navigation }) => {
     const [allUsers, setAllUsers] = useState([]);
 
     useEffect(() => {
+        let isMounted = true;
+
         (async () => {
             const res = await fetchAllUsers();
-            setAllUsers(res.data.result);
+            if (isMounted) setAllUsers(res.data.result);
         })();
+
+        return () => { isMounted = false };
     }, []);
 
     return (
-        <View style={{ flex: 1, }}>
+        <View style={{ flex: 1 }}>
             {allUsers.map(user => (
                 <View 
                     key={user._id} 

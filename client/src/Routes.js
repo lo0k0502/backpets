@@ -59,13 +59,15 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
     // If failed or has no token, display login page;
     // If refreshed, display home page.
     useEffect(() => {
+      let isMounted = true;
+
       (async () => {
         const tokens = JSON.parse(await SecureStorage.getItemAsync('tokens'));
         if (tokens?.refreshToken) {
           try {
             if ((await Location.getForegroundPermissionsAsync()).status !== 'granted') {
               if ((await Location.requestForegroundPermissionsAsync()).status !== 'granted') {
-                setErrorMsg('權限不足!我們需要存取位置資訊來運行應用程式!');
+                if (isMounted) setErrorMsg('權限不足!我們需要存取位置資訊來運行應用程式!');
                 return;
               }
             }
@@ -74,13 +76,17 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
               refreshToken: tokens.refreshToken, 
             })));
 
-            setSignInState(true);
+            if (isMounted) setSignInState(true);
           } catch (error) {
-            setSignInState(false);
+            if (isMounted) setSignInState(false);
             console.log('While refreshing:', error.message);
           }
-        } else setSignInState(false);
+        } else {
+          if (isMounted) setSignInState(false);
+        }
       })();
+
+      return () => { isMounted = false };
     }, []);
 
     return (

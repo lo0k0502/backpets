@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { StyleSheet, ScrollView, View, RefreshControl, Text } from 'react-native';
 import { ActivityIndicator, Button, Portal, Title, useTheme } from 'react-native-paper';
 import MissionDialog from './MissionDialog';
