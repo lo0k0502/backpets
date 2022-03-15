@@ -24,6 +24,9 @@ export class User {
   coupons: Types.ObjectId[];
 
   @Prop()
+  searchHistory: string[];
+
+  @Prop()
   refreshToken: string;
 
   @Prop({ required: true })

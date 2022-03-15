@@ -91,51 +91,53 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
 
     return (
         <Stacks.Navigator screenOptions={{ headerShown: false }}>
-        {signInState === null ? (
-          <Stacks.Screen name='Splash'>
-          {props => (
-            <View {...props} style={ styles.view }>
-              {errorMsg ? (
-                <>
-                  <Text style={{ color: 'red', fontWeight: 'bold', margin: 10 }}>{errorMsg}</Text>
-                  <Text>請檢查您的權限設定並重新啟動應用程式</Text>
-                  <Button onPress={() => Restart()}>
-                    重新啟動
-                  </Button>
-                </>
-              ) : (
-                  <Image source={require('../assets/blackcat.png')} style={ styles.viewImage } />
-              )}
-            </View>
-          )}
-          </Stacks.Screen>
-        ) : signInState ? (
-          <Stacks.Screen name='Main'>
-          {props => (
-            <Drawer.Navigator
-              {...props}
-              drawerContent={props => <DrawerContent {...props} logoutback={logout} />} 
-              screenOptions={{ headerShown: false }}
-            >
-              <Drawer.Screen name='BottomNavigation'>
-              {props => <BottomNavigation {...props} />}
-              </Drawer.Screen>
-            </Drawer.Navigator>
-          )}
-          </Stacks.Screen>
-        ) : (
-          <>
-              <Stacks.Screen name='AuthRoute'>
-              {props => <AuthRoute {...props} setSignInState={setSignInState} />}
-              </Stacks.Screen>
-              <Stacks.Screen name='DeleteUser' options={{ headerShown: true }}>
-              {props => <DeleteUser {...props} />}
-              </Stacks.Screen>
-              <Stacks.Screen name='AllUsers' options={{ headerShown: true }}>
-              {props => <AllUsers {...props} />}
-              </Stacks.Screen>
-          </>
-        )}
+        {
+          signInState === null ? (
+            <Stacks.Screen name='Splash'>
+            {props => (
+              <View {...props} style={ styles.view }>
+                {errorMsg ? (
+                  <>
+                    <Text style={{ color: 'red', fontWeight: 'bold', margin: 10 }}>{errorMsg}</Text>
+                    <Text>請檢查您的權限設定並重新啟動應用程式</Text>
+                    <Button onPress={() => Restart()}>
+                      重新啟動
+                    </Button>
+                  </>
+                ) : (
+                    <Image source={require('../assets/blackcat.png')} style={ styles.viewImage } />
+                )}
+              </View>
+            )}
+            </Stacks.Screen>
+          ) : signInState ? (
+            <Stacks.Screen name='Main'>
+            {props => (
+              <Drawer.Navigator
+                {...props}
+                drawerContent={props => <DrawerContent {...props} logoutback={logout} />} 
+                screenOptions={{ headerShown: false }}
+              >
+                <Drawer.Screen name='BottomNavigation'>
+                {props => <BottomNavigation {...props} />}
+                </Drawer.Screen>
+              </Drawer.Navigator>
+            )}
+            </Stacks.Screen>
+          ) : (
+            <>
+                <Stacks.Screen name='AuthRoute'>
+                {props => <AuthRoute {...props} setSignInState={setSignInState} />}
+                </Stacks.Screen>
+                <Stacks.Screen name='DeleteUser' options={{ headerShown: true }}>
+                {props => <DeleteUser {...props} />}
+                </Stacks.Screen>
+                <Stacks.Screen name='AllUsers' options={{ headerShown: true }}>
+                {props => <AllUsers {...props} />}
+                </Stacks.Screen>
+            </>
+          )
+        }
         </Stacks.Navigator>
     );
 };

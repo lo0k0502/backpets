@@ -59,11 +59,20 @@ export const useCurrentLocation = () => {
  */
 export const useMissions = () => {
     const [missions, setMissions] = useState([]);
+    const [isMounted, setIsMounted] = useState(true);
 
-    const fetchMissions = async () => setMissions((await fetchAllMissions()).data.result);// Fetch all missions
+    // Fetch all missions
+    const fetchMissions = async () => {
+        const result = await fetchAllMissions()
+        if (isMounted) setMissions(result.data.result);
+    };
 
     useFocusEffect(useCallback(() => {
+        setIsMounted(true);
+
         fetchMissions();
+
+        return () => { setIsMounted(false) };
     }, []));
 
     return {
@@ -79,14 +88,12 @@ export const useMissions = () => {
 export const useUser = (userId) => {
     const [user, setUser] = useState({});
 
-    const fetchUser = async () => setUser((await fetchUserById(userId)).data.result);
-
     // Fetch the user of this user id
     useEffect(() => {
         let isMounted = true;
 
         (async () => {
-            const result = await fetchUserById(userId)
+            const result = await fetchUserById(userId);
             if (isMounted) setUser(result.data.result);
         })();
 

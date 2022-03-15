@@ -182,7 +182,15 @@ export default ({ navigation }) => {
             <HelperText type='error' style={{ fontSize: 20 }}>
                 {errorMsg}
             </HelperText>
-            <Avatar.Image source={{ uri: photoUrl ? photoUrl : user.info?.photoId ? `${SERVERURL}/image/${user.info?.photoId}` : null }} size={100} style={{ backgroundColor: 'white' }} />
+            <Avatar.Image
+                source={{
+                    uri: photoUrl ? photoUrl : (
+                        user.info?.photoId ? `${SERVERURL}/image/${user.info?.photoId}` : null
+                    )
+                }}
+                size={100}
+                style={{ backgroundColor: 'white' }}
+            />
             <HelperText 
                 type='error' 
                 // style={styles.helpertext}

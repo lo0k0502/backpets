@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Chip, useTheme } from 'react-native-paper';
+import { animalIconCHtoEN } from '../../../utils/constants';
 
 export default ({
     tag,
@@ -27,25 +28,7 @@ export default ({
     return (
         <Chip
             mode='outlined'
-            icon={
-                name === '貓' ? 'cat'
-                : name === '狗' ? 'dog'
-                : name === '兔子' ? 'rabbit'
-                : name === '魚' ? 'fish'
-                : name === '牛' ? 'cow'
-                : name === '豬' ? 'pig'
-                : name === '羊' ? 'sheep'
-                : name === '烏龜' ? 'tortoise'
-                : name === '驢' ? 'donkey'
-                : name === '鴨子' ? 'duck'
-                : name === '大象' ? 'elephant'
-                : name === '企鵝' ? 'penguin'
-                : name === '貓頭鷹' ? 'owl'
-                : name === '熊貓' ? 'panda'
-                : name === '老鼠' ? 'rodent'
-                : name === '蜘蛛' ? 'spider'
-                : null
-            }
+            icon={animalIconCHtoEN(name)}
             ellipsizeMode='tail'
             disabled={disabled}
             selected={selected}

@@ -17,6 +17,7 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
 import { useUser } from '../../../hooks';
 import { SERVERURL } from '../../../api/API';
+import { backIcon } from '../../../utils/constants';
 
 const styles = StyleSheet.create({
     appbar: {
@@ -91,7 +92,7 @@ export default ({ navigation, route: { params: { post } } }) => {
     return (
         <>
             <Appbar style={ styles.appbar }>
-                <Appbar.Action icon='arrow-left' onPress={navigation.goBack} />
+                <Appbar.Action icon={backIcon} onPress={navigation.goBack} />
                 <Appbar.Content />
                 <Menu
                     visible={menuOpen}
@@ -102,16 +103,16 @@ export default ({ navigation, route: { params: { post } } }) => {
                         title='分享' 
                         onPress={() => sharePost()} 
                     />
-                    {user.info?._id === poster._id ? (
-                        <>
+                    {
+                        user.info?._id === poster._id ? (
                             <Menu.Item 
                                 title='刪除任務'
                                 onPress={deletePost}
                                 style={{ backgroundColor: 'red' }}
                                 titleStyle={{ color: 'white' }}
                             />
-                        </>
-                    ) : null}
+                        ) : null
+                    }
                 </Menu>
             </Appbar>
             <ScrollView style={styles.scrollView}>

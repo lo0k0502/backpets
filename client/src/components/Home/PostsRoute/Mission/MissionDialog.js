@@ -292,23 +292,25 @@ export default ({ visible, close, refreshMissions }) => {
                                 {lostTime.getHours() + '時' + lostTime.getMinutes() + '分'}
                             </Button>
                         </View>
-                        {showDateTimePicker ? (
-                            <DateTimePicker
-                                testID="dateTimePicker"
-                                value={lostTime}
-                                mode={dateTimePickerMode}
-                                is24Hour
-                                display='spinner'
-                                onChange={(e, dateTime) => {
-                                    setShowDateTimePicker(false);
-                                    if (dateTime) {
-                                        if (dateTime > new Date()) return setLostTimeErrorMsg('不可選取未來的時間!');
-                                        setLostTimeErrorMsg('');
-                                        setLostTime(dateTime);
-                                    }
-                                }}
-                            />
-                        ) : null}
+                        {
+                            showDateTimePicker ? (
+                                <DateTimePicker
+                                    testID="dateTimePicker"
+                                    value={lostTime}
+                                    mode={dateTimePickerMode}
+                                    is24Hour
+                                    display='spinner'
+                                    onChange={(e, dateTime) => {
+                                        setShowDateTimePicker(false);
+                                        if (dateTime) {
+                                            if (dateTime > new Date()) return setLostTimeErrorMsg('不可選取未來的時間!');
+                                            setLostTimeErrorMsg('');
+                                            setLostTime(dateTime);
+                                        }
+                                    }}
+                                />
+                            ) : null
+                        }
                     </View>
                     <HelperText type='error'>
                         {lostTimeErrorMsg}
@@ -327,10 +329,8 @@ export default ({ visible, close, refreshMissions }) => {
                             <NativeTextInput
                                 {...innerProps}
                                 style={[
-                                innerProps.style,
-                                innerProps.multiline
-                                    ? styles.innerPropNav
-                                    : null,
+                                    innerProps.style,
+                                    innerProps.multiline ? styles.innerPropNav : null,
                                 ]}
                             />
                         )}

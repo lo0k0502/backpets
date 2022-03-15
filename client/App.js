@@ -25,7 +25,9 @@ export default function App() {
         >
           <StatusBar 
             style='auto'
-            backgroundColor={signInState === false ? theme.colors.background2 : Appearance.getColorScheme() === 'dark' ? theme.colors.primary : 'white'}
+            backgroundColor={signInState === false ? theme.colors.background2 : (
+              Appearance.getColorScheme() === 'dark' ? theme.colors.primary : 'white'
+            )}
             animated
             networkActivityIndicatorVisible
             translucent

@@ -75,17 +75,19 @@ export default ({ mission }) => {
                         <Tag tag={{ name: mission.tag, selected: true }} />
                     </View>
                     <Paragraph style={{ padding: 10 }}>{mission.content}</Paragraph>
-                    {mission.photoId ? (
-                        <Card.Cover
-                            source={{ uri: `${SERVERURL}/image/${mission.photoId}` }}
-                            style={{
-                                width: 300,
-                                height: 200,
-                                alignSelf: 'center',
-                                marginVertical: 5,
-                            }}
-                        />
-                    ) : null}
+                    {
+                        mission.photoId ? (
+                            <Card.Cover
+                                source={{ uri: `${SERVERURL}/image/${mission.photoId}` }}
+                                style={{
+                                    width: 300,
+                                    height: 200,
+                                    alignSelf: 'center',
+                                    marginVertical: 5,
+                                }}
+                            />
+                        ) : null
+                    }
                 </View>
             </TouchableRipple>
             <Card.Actions style={styles.cardAction}>

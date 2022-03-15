@@ -43,12 +43,16 @@ const Item = ({ title }) => (
 );
 
 
-export default ({ navigation }) => {
+export default ({ route, navigation }) => {
     const [searchText, setSearchText] = useState('');
 
     return (
         <View style={styles.root}>
-            <AppSearchbar navigation searchTextState={[searchText, setSearchText]} />
+            <AppSearchbar
+                route={route}
+                navigation={navigation}
+                searchTextState={[searchText, setSearchText]}
+            />
             <VirtualizedList 
                 data={DATA}
                 initialNumToRender={4}

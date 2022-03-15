@@ -38,7 +38,9 @@ const styles = StyleSheet.create({
         },
     });
 
-export default ({ navigation, selectedTags }) => {
+export default ({ route, navigation, selectedTags }) => {
+    const { searchText } = route.params ? route.params : { searchText: '' };
+
     const user = useSelector(selectUser);
     const { missions, refreshMissions } = useMissions();
     const { colors } = useTheme();
@@ -46,9 +48,29 @@ export default ({ navigation, selectedTags }) => {
     const [refreshing, setRefreshing] = useState(false);// State for RefreshControl component
     const [missionDialog, setMissionDialog] = useState(false);// Whether mission dialog is open
 
+    const checkMissionMatchTag = (mission) => (
+        selectedTags.includes(mission.tag)
+        || !selectedTags.length
+    );
+
+    const checkIfMissionsMatchTag = () => {
+        if (!selectedTags.length) return true;
+
+        for (let i = 0; i < missions.length; i++) {
+            if (selectedTags.includes(missions[i].tag)) return true
+        }
+        return false;
+    };
+
     const handleRefresh = useCallback(() => {
+        let isMounted = true;
+
         setRefreshing(true);
-        refreshMissions().then(() => setRefreshing(false));
+        refreshMissions().then(() => {
+            if (isMounted) setRefreshing(false);
+        });
+
+        return () => { isMounted = false };
     }, []);
     
     return (
@@ -70,18 +92,24 @@ export default ({ navigation, selectedTags }) => {
             <Portal>
                 <MissionDialog visible={missionDialog} close={() => setMissionDialog(false)} refreshMissions={refreshMissions} />
             </Portal>
-            {missions.map(mission => selectedTags.includes(mission.tag) || !selectedTags.length ? true : false).find(e => e)
-                ? missions.map(mission => selectedTags.includes(mission.tag) || !selectedTags.length ? <MissionCard mission={mission} key={mission._id} /> : null)
-                : selectedTags.length
-                    ? <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
-                    : (
-                        <ActivityIndicator
-                            animating={true}
-                            color={colors.primary}
-                            size='large'
-                            style={{ marginTop: 50 }}
-                        />
-            )}
+            {
+                missions.length ? (
+                    checkIfMissionsMatchTag() ? (
+                        missions.map(mission => checkMissionMatchTag(mission) ? <MissionCard key={mission._id} mission={mission} /> : null)
+                    ) : (
+                        selectedTags.length ? (
+                            <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
+                        ) : (
+                            <ActivityIndicator
+                                animating={true}
+                                color={colors.primary}
+                                size='large'
+                                style={{ marginTop: 50 }}
+                            />
+                        )
+                    )
+                ) : <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
+            }
             <View style={{ height: 50 }} />
         </ScrollView>
     );
