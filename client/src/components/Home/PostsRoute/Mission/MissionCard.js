@@ -78,8 +78,9 @@ export default ({ mission, setClueDialog }) => {
                 <Divider
                     style={{
                         backgroundColor: colors.primary,
-                        width: '100%',
+                        width: '95%',
                         height: 1,
+                        alignSelf: 'center',
                     }}
                 />
             </View>
@@ -87,7 +88,7 @@ export default ({ mission, setClueDialog }) => {
                 <Button
                     icon='white-balance-sunny'
                     dark
-                    style={{ flexGrow: 1 }}
+                    style={{ flexGrow: 1, borderRightWidth: 0.5, borderColor: colors.primary }}
                     theme={{ roundness: 0 }}
                     onPress={() => (
                         user.info?._id === poster._id ? null : setClueDialog(true)
@@ -98,7 +99,7 @@ export default ({ mission, setClueDialog }) => {
                 <Button
                     icon='map-marker-outline'
                     dark
-                    style={{ flexGrow: 1 }}
+                    style={{ flexGrow: 1, borderLeftWidth: 0.5, borderColor: colors.primary }}
                     theme={{ roundness: 0 }}
                     onPress={() => navigation.navigate('Map', { location: mission.location })}
                 >
