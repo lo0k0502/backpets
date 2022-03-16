@@ -6,6 +6,8 @@ import moment from 'moment';
 import { useUser } from '../../../../hooks';
 import { SERVERURL } from '../../../../api/API';
 import Tag from '../Tag';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../../../redux/userSlice';
 
 const styles = StyleSheet.create({
     card: {
@@ -29,75 +31,73 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ({ mission }) => {
+export default ({ mission, setClueDialog }) => {
     const navigation = useNavigation();
     const { colors } = useTheme();
+    const user = useSelector(selectUser);
     const poster = useUser(mission.userId);
 
     return (
         <Card style={ styles.card }>
-            <TouchableRipple 
-                style={{ width: '100%' }}
-                onPress={() => navigation.navigate('Post', { post: mission })}
-            >
-                <View>
-                    <Card.Title
-                        title={poster.username} 
-                        subtitle={moment(mission.post_time).fromNow()} 
-                        left={props => (
-                            <Avatar.Image
-                                {...props}
-                                source={{ uri: poster.photoId ? `${SERVERURL}/image/${poster.photoId}` : null }}
-                                style={{ backgroundColor: 'white' }}
-                            />
-                        )} 
-                    />
-                    <Subheading style={{ padding: 10 }}>品種: {mission.breed}</Subheading>
-                    <Subheading style={{ padding: 10 }}>特徵: {mission.feature}</Subheading>
-                    <Subheading style={{ padding: 10 }}>遺失時間: {(new Date(mission.lost_time)).toISOString().replace('T', ' ').slice(0, -8)}</Subheading>
-                    <Pressable
-                        style={{ margin: 10 }}
-                        onPress={() => navigation.navigate('Map', { location: mission.location })}
+            <View style={{ alignItems: 'flex-start' }}>
+                <Card.Title
+                    title={poster.username} 
+                    subtitle={moment(mission.post_time).fromNow()} 
+                    left={props => (
+                        <Avatar.Image
+                            {...props}
+                            source={{ uri: poster.photoId ? `${SERVERURL}/image/${poster.photoId}` : null }}
+                            style={{ backgroundColor: 'white' }}
+                        />
+                    )} 
+                />
+                <Subheading style={{ padding: 10 }}>品種: {mission.breed}</Subheading>
+                <Subheading style={{ padding: 10 }}>特徵: {mission.feature}</Subheading>
+                <Subheading style={{ padding: 10 }}>遺失時間: {(new Date(mission.lost_time)).toISOString().replace('T', ' ').slice(0, -8)}</Subheading>
+                <Pressable
+                    style={{ margin: 10 }}
+                    onPress={() => navigation.navigate('Map', { location: mission.location })}
+                >
+                    <Subheading
+                        style={{
+                            color: colors.primary,
+                            borderBottomWidth: 1,
+                            borderColor: colors.primary,
+                            alignSelf: 'flex-start',
+                        }}
                     >
-                        <Subheading
-                            style={{
-                                color: colors.primary,
-                                borderBottomWidth: 1,
-                                borderColor: colors.primary,
-                                alignSelf: 'flex-start',
-                            }}
-                        >
-                            前往地圖
-                        </Subheading>
-                    </Pressable>
-                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                        <Tag tag={{ name: mission.tag, selected: true }} />
-                    </View>
-                    <Paragraph style={{ padding: 10 }}>{mission.content}</Paragraph>
-                    {
-                        mission.photoId ? (
-                            <Card.Cover
-                                source={{ uri: `${SERVERURL}/image/${mission.photoId}` }}
-                                style={{
-                                    width: 300,
-                                    height: 200,
-                                    alignSelf: 'center',
-                                    marginVertical: 5,
-                                }}
-                            />
-                        ) : null
-                    }
+                        前往地圖
+                    </Subheading>
+                </Pressable>
+                <View style={{ flexDirection: 'row', paddingHorizontal: 10 }}>
+                    <Tag tag={{ name: mission.tag, selected: true }} />
                 </View>
-            </TouchableRipple>
+                <Paragraph style={{ padding: 10 }}>{mission.content}</Paragraph>
+                {
+                    mission.photoId ? (
+                        <Card.Cover
+                            source={{ uri: `${SERVERURL}/image/${mission.photoId}` }}
+                            style={{
+                                width: 300,
+                                height: 200,
+                                alignSelf: 'center',
+                                marginVertical: 5,
+                            }}
+                        />
+                    ) : null
+                }
+            </View>
             <Card.Actions style={styles.cardAction}>
                 <Button
                     mode='contained'
                     color={colors.primary}
                     dark
                     style={styles.acceptButton}
-                    onPress={() => {}}
+                    onPress={() => (
+                        user.info?._id === poster._id ? null : setClueDialog(true)
+                    )}
                 >
-                    執行
+                    {user.info?._id === poster._id ? '檢視線索' : '回報線索'}
                 </Button>
             </Card.Actions>
         </Card>

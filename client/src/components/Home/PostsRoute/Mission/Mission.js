@@ -6,6 +6,7 @@ import MissionCard from './MissionCard';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
 import { useMissions } from '../../../../hooks';
+import ClueDialog from './ClueDialog';
 
 const styles = StyleSheet.create({
     root: {
@@ -45,6 +46,7 @@ export default ({ route, navigation, selectedTags, searchTextState }) => {
     const { colors } = useTheme();
 
     const [missionDialog, setMissionDialog] = useState(false);// Whether mission dialog is open
+    const [clueDialog, setClueDialog] = useState(false);// Whether clue dialog is open
 
     const checkMissionMatchTagAndSearchText = (mission) => (
         (!selectedTags.length || selectedTags.includes(mission.tag))
@@ -90,7 +92,15 @@ export default ({ route, navigation, selectedTags, searchTextState }) => {
                 新增任務
             </Button>
             <Portal>
-                <MissionDialog visible={missionDialog} close={() => setMissionDialog(false)} refreshMissions={refreshMissions} />
+                <MissionDialog
+                    visible={missionDialog}
+                    close={() => setMissionDialog(false)}
+                    refreshMissions={refreshMissions}
+                />
+                <ClueDialog
+                    visible={clueDialog}
+                    close={() => setClueDialog(false)}
+                />
             </Portal>
             <View style={[styles.emailVerifySuggest, { display: user.info?.verified ? 'none' : 'flex' }]}>
                 <Text style={{ color: 'black' }}>你的信箱還未驗證喔!</Text>
@@ -108,12 +118,24 @@ export default ({ route, navigation, selectedTags, searchTextState }) => {
                     missions.length ? (
                         selectedTags.length || searchText ? (
                             checkMissionsMatchTagAndSearchText() ? (
-                                missions.map(mission => checkMissionMatchTagAndSearchText(mission) ? <MissionCard key={mission._id} mission={mission} /> : null)
+                                missions.map(mission => checkMissionMatchTagAndSearchText(mission) ? (
+                                    <MissionCard
+                                        key={mission._id}
+                                        mission={mission}
+                                        setClueDialog={setClueDialog}
+                                    />
+                                ) : null)
                             ) : (
                                 <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
                             )
                         ) : (
-                            missions.map(mission => <MissionCard key={mission._id} mission={mission} />)
+                            missions.map(mission => (
+                                <MissionCard
+                                    key={mission._id}
+                                    mission={mission}
+                                    setClueDialog={setClueDialog}
+                                />
+                            ))
                         )
                     ) : <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
                 )

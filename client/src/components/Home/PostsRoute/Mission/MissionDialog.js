@@ -54,7 +54,6 @@ export default ({ visible, close, refreshMissions }) => {
 
     // Close the dailog with configuration
     const handleClose = () => {
-        refreshMissions();
         close();
 
         setContent('');
@@ -178,6 +177,7 @@ export default ({ visible, close, refreshMissions }) => {
 
             setIsLoading(false);
 
+            refreshMissions();
             handleClose();// Close the dialog
         } catch (error) {
             setIsLoading(false);

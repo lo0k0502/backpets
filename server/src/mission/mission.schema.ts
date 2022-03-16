@@ -6,7 +6,7 @@ export type MissionDocument = Mission & Document;
 @Schema()
 export class Mission {
   @Prop({ required: true })
-  userId: string;
+  userId: Types.ObjectId;
 
   @Prop({ required: true })
   content: string;
@@ -34,6 +34,9 @@ export class Mission {
     latitude: number,
     longitude: number,
   };
+
+  @Prop()
+  clueIds: Types.ObjectId[];
 }
 
 export const MissionSchema = SchemaFactory.createForClass(Mission);

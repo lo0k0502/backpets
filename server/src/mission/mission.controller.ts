@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 import { Controller, Get, Res, Post, Body, Param, Delete } from '@nestjs/common';
 import { Response } from 'express';
-import { Mission as MissionModel } from 'src/mission/mission.schema';
+import { Mission } from 'src/mission/mission.schema';
 import { MissionService } from './mission.service';
 import * as moment from 'moment';
 
@@ -22,10 +22,10 @@ export class MissionController {
     }
 
     @Post('add')
-    async AddMission(@Body() { userId, content, tag, breed, feature, lost_time, photoId, location }: MissionModel, @Res() res: Response) {
+    async AddMission(@Body() { userId, content, tag, breed, feature, lost_time, photoId, location }, @Res() res: Response) {
         try {
             const result = await this.missionService.create({
-                userId,
+                userId: new Types.ObjectId(userId),
                 content,
                 tag,
                 breed,
@@ -34,6 +34,7 @@ export class MissionController {
                 post_time: moment().valueOf(),
                 photoId: photoId ? new Types.ObjectId(photoId) : null,
                 location,
+                clueIds: [],
             });
             return res.status(200).json({ result });
         } catch (error) {
