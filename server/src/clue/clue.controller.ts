@@ -3,6 +3,7 @@ import { Response } from 'express';
 import { Types } from 'mongoose';
 import { Clue } from './clue.schema';
 import { ClueService } from './clue.service';
+import * as moment from 'moment';
 
 @Controller('clue')
 export class ClueController {
@@ -27,6 +28,7 @@ export class ClueController {
                 userId: new Types.ObjectId(userId),
                 missionId: new Types.ObjectId(missionId),
                 content,
+                post_time: moment().valueOf(),
                 photoId: photoId ? new Types.ObjectId(photoId) : null,
                 location,
             });

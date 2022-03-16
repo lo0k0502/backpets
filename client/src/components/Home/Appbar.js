@@ -24,9 +24,13 @@ export default ({ route, navigation }) => {
             )
         }
             <Appbar.Content 
-                title={isChangePassword ? '更改密碼' : (
-                    isEditProfile ? '更改個人資料' : route.name
-                )}
+                title={
+                    isPostsTab ? 'BackPets' : (
+                        isChangePassword ? '更改密碼' : (
+                            isEditProfile ? '更改個人資料' : route.name
+                        )
+                    )
+                }
             />
         {
             isPostsTab ? (

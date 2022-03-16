@@ -15,6 +15,9 @@ export class Clue {
     content: string;
 
     @Prop()
+    post_time: number;
+
+    @Prop()
     photoId: Types.ObjectId;
 
     @Prop({ type: Object })

@@ -23,7 +23,7 @@ export class Mission {
   @Prop()
   lost_time: string;
 
-  @Prop({ required: true })
+  @Prop()
   post_time: number;
   
   @Prop()

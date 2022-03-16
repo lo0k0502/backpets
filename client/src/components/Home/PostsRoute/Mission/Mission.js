@@ -140,7 +140,7 @@ export default ({ route, navigation, selectedTags, searchTextState }) => {
                     ) : <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
                 )
             }
-            <View style={{ height: 50 }} />
+            <View style={{ height: 70 }} />
         </ScrollView>
     );
 };

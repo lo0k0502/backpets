@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { TextInput as NativeTextInput, StyleSheet, ScrollView, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { TextInput as NativeTextInput, StyleSheet, ScrollView, View, Image } from 'react-native';
 import { getMediaLibraryPermissionsAsync, requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaTypeOptions, getPendingResultAsync } from 'expo-image-picker';
 import { TextInput, Dialog, Button, Card, HelperText, useTheme, Divider, Text } from 'react-native-paper';
 import { addMission, uploadImage } from '../../../../api';
@@ -9,17 +9,13 @@ import { useCurrentLocation } from '../../../../hooks';
 import TagsView from '../TagsView';
 import { tagsArray } from '../../../../utils/constants';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import MapView from 'react-native-maps';
 
 const styles = StyleSheet.create({
     innerPropNav: {
         paddingTop: 8,
         paddingBottom: 8,
         height: 200,
-    },
-    imageButton: { 
-        height: 40, 
-        // alignSelf: 'center', 
-        marginVertical: 10, 
     },
     photoCard: { 
         width: 300, 
@@ -31,6 +27,7 @@ const styles = StyleSheet.create({
 export default ({ visible, close, refreshMissions }) => {
     const user = useSelector(selectUser);
     const { colors } = useTheme();
+    const { currentLatitude, currentLongitude } = useCurrentLocation();
 
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
     const [isImgLoading, setIsImgLoading] = useState(false);// Whether it is during image picking, if so, disable inputs and buttons. 
@@ -41,6 +38,13 @@ export default ({ visible, close, refreshMissions }) => {
     const [breed, setBreed] = useState('');
     const [feature, setFeature] = useState('');
     const [lostTime, setLostTime] = useState(new Date());
+    const [mapViewRegion, setMapViewRegion] = useState({
+        latitude: currentLatitude,
+        longitude: currentLongitude,
+        latitudeDelta: 0.0122,
+        longitudeDelta: 0.003,
+    });
+    const [changingLocation, setChangingLocation] = useState(false);
 
     const [showDateTimePicker, setShowDateTimePicker] = useState(false);
     const [dateTimePickerMode, setDateTimePickerMode] = useState('date');
@@ -50,7 +54,14 @@ export default ({ visible, close, refreshMissions }) => {
     const [featureErrorMsg, setFeatureErrorMsg] = useState('');
     const [lostTimeErrorMsg, setLostTimeErrorMsg] = useState('');
 
-    const { currentLatitude, currentLongitude } = useCurrentLocation();
+    useEffect(() => {
+        setMapViewRegion({
+            latitude: currentLatitude,
+            longitude: currentLongitude,
+            latitudeDelta: 0.0122,
+            longitudeDelta: 0.003,
+        });
+    }, [currentLatitude, currentLongitude]);
 
     // Close the dailog with configuration
     const handleClose = () => {
@@ -162,7 +173,7 @@ export default ({ visible, close, refreshMissions }) => {
 
             // Add the post
             await addMission({
-                userId: user.info?._id.toString(),
+                userId: user.info._id.toString(),
                 content,
                 tag: tags.find(tag => tag.selected).name,
                 breed,
@@ -170,8 +181,8 @@ export default ({ visible, close, refreshMissions }) => {
                 lost_time: lostTime.toISOString(),
                 photoId: sendPhotoId,
                 location: {
-                    latitude: currentLatitude, 
-                    longitude: currentLongitude, 
+                    latitude: mapViewRegion.latitude, 
+                    longitude: mapViewRegion.longitude, 
                 },
             });
 
@@ -195,7 +206,7 @@ export default ({ visible, close, refreshMissions }) => {
                 <ScrollView style={{ height: '80%', padding: 20 }}>
                     <TextInput 
                         mode='outlined'
-                        label='品種'
+                        label='品種(必要)'
                         disabled={isImgLoading || isLoading}
                         error={breedErrorMsg}
                         value={breed}
@@ -208,7 +219,7 @@ export default ({ visible, close, refreshMissions }) => {
                     </HelperText>
                     <TextInput 
                         mode='outlined'
-                        label='特徵'
+                        label='特徵(必要)'
                         disabled={isImgLoading || isLoading}
                         error={featureErrorMsg}
                         value={feature}
@@ -221,12 +232,12 @@ export default ({ visible, close, refreshMissions }) => {
                     </HelperText>
                     <Divider />
                     <HelperText type='info'>
-                        請選擇一個標籤
+                        請選擇一個標籤(必要)
                     </HelperText>
                     <TagsView maxLimit={1} onExceedMaxLimit={handleExceedMaxTagLimit} tagsState={[tags, setTags]} />
                     <Divider style={lostTimeErrorMsg && { backgroundColor: 'red' }} />
                     <HelperText type='info'>
-                        請選擇遺失日期與時間
+                        請選擇遺失日期與時間(必要)
                     </HelperText>
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ alignItems: 'center' }}>
@@ -243,6 +254,7 @@ export default ({ visible, close, refreshMissions }) => {
                                 style={{
                                     borderTopRightRadius: 0,
                                     borderBottomRightRadius: 0,
+                                    elevation: 0,
                                 }}
                             >
                                 {lostTime.getFullYear() + '/' + (lostTime.getMonth() + 1) + '/' + lostTime.getDate()}
@@ -262,6 +274,7 @@ export default ({ visible, close, refreshMissions }) => {
                                 style={{
                                     borderTopLeftRadius: 0,
                                     borderBottomLeftRadius: 0,
+                                    elevation: 0,
                                 }}
                             >
                                 {lostTime.getHours() + '時' + lostTime.getMinutes() + '分'}
@@ -291,10 +304,49 @@ export default ({ visible, close, refreshMissions }) => {
                         {lostTimeErrorMsg}
                     </HelperText>
                     <Divider style={lostTimeErrorMsg && { backgroundColor: 'red' }} />
-                    <HelperText type='info'></HelperText>
+                    <HelperText type='info'>
+                        位置(必要)
+                    </HelperText>
+                    <View style={[ { width: '100%', height: 200 }, !changingLocation && { opacity: 0.7 } ]}>
+                        <Image
+                            source={require('../../../../../assets/icons8-marker-48.png')}
+                            style={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                width: 36,
+                                height: 45,
+                                zIndex: 100,
+                                transform: [
+                                    { translateX: -18 },
+                                    { translateY: -45 },
+                                ],
+                            }}
+                            width={10}
+                            height={10}
+                        />
+                        <MapView
+                            style={{ flex: 1 }}
+                            showsUserLocation={!(isImgLoading || isLoading) && changingLocation}
+                            scrollEnabled={!(isImgLoading || isLoading) && changingLocation}
+                            region={mapViewRegion}
+                            onRegionChangeComplete={setMapViewRegion}
+                        />
+                    </View>
+                    <Button
+                        mode='contained'
+                        dark
+                        style={{ marginVertical: 10, elevation: 0 }}
+                        onPress={() => setChangingLocation(state => !state)}
+                    >
+                        {changingLocation ? '確定位置' : '更改位置'}
+                    </Button>
+                    <Text>{'緯度: ' + mapViewRegion.latitude.toString()}</Text>
+                    <Text>{'經度: ' + mapViewRegion.longitude.toString()}</Text>
+                    <Divider />
                     <TextInput
                         mode='outlined'
-                        label='補充'
+                        label='補充(非必要)'
                         disabled={isImgLoading || isLoading}
                         value={content}
                         multiline
@@ -315,34 +367,31 @@ export default ({ visible, close, refreshMissions }) => {
                     <Button 
                         mode='contained'
                         icon='plus'
-                        color={colors.primary}
                         dark
                         disabled={isImgLoading || isLoading}
                         loading={isImgLoading}
-                        contentStyle={{ width: '100%', height: '100%' }}
-                        style={ styles.imageButton }
+                        style={{ marginVertical: 10, elevation: 0 }}
                         onPress={handleChangeImg}
                     >
-                        {photoUrl ? '更改圖片' : '新增圖片'}
+                        {photoUrl ? '更改圖片' : '新增圖片(非必要)'}
                     </Button>
                     <HelperText type='error'>
                         {photoUrlErrorMsg}
                     </HelperText>
                     {photoUrl ? <Card.Cover source={{ uri: photoUrl }} style={ styles.photoCard } /> : null}
+                    <View style={{ height: 50 }} />
                 </ScrollView>
             </Dialog.ScrollArea>
             <Dialog.Actions>
-                <Button 
-                    color={colors.primary} 
+                <Button
                     disabled={isImgLoading || isLoading}
                     onPress={handleClose}
                     contentStyle={{ paddingHorizontal: 10 }}
                 >
                     取消
                 </Button>
-                <Button 
-                    mode='contained' 
-                    color={colors.primary}
+                <Button
+                    mode='contained'
                     dark
                     disabled={
                         isImgLoading
@@ -350,6 +399,7 @@ export default ({ visible, close, refreshMissions }) => {
                         || !tags.find(tag => tag.selected)
                         || !breed
                         || !feature
+                        || changingLocation
                     }
                     loading={isLoading}
                     onPress={handleSubmit}
