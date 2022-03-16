@@ -7,17 +7,18 @@ import { Divider, useTheme } from 'react-native-paper';
 import TagsView from './TagsView';
 import { tagsArray } from '../../../utils/constants';
 import Appbar from '../Appbar';
+import AppSearchbar from '../AppSearchbar';
 
 const PostsTab = createMaterialTopTabNavigator();
 
-export default ({ navigation, route, searchTextState }) => {
+export default ({ route, navigation, searchTextState }) => {
+
     const { colors } = useTheme();
 
     const [tags, setTags] = useState(tagsArray.map(tagName => ({ name: tagName, selected: false })));
 
     return (
         <>
-            <Appbar route={route} navigation={navigation} />
             <TagsView tagsState={[tags, setTags]} />
             <Divider />
             <PostsTab.Navigator screenOptions={{ tabBarIndicatorStyle: { backgroundColor: colors.primary } }}>

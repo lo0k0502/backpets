@@ -52,7 +52,6 @@ export default ({ mission }) => {
                             />
                         )} 
                     />
-                    <Title style={{ padding: 10 }}>{mission.title}</Title>
                     <Subheading style={{ padding: 10 }}>品種: {mission.breed}</Subheading>
                     <Subheading style={{ padding: 10 }}>特徵: {mission.feature}</Subheading>
                     <Subheading style={{ padding: 10 }}>遺失時間: {(new Date(mission.lost_time)).toISOString().replace('T', ' ').slice(0, -8)}</Subheading>

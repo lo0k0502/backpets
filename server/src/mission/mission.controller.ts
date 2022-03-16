@@ -22,11 +22,10 @@ export class MissionController {
     }
 
     @Post('add')
-    async AddMission(@Body() { userId, title, content, tag, breed, feature, lost_time, photoId, location }: MissionModel, @Res() res: Response) {
+    async AddMission(@Body() { userId, content, tag, breed, feature, lost_time, photoId, location }: MissionModel, @Res() res: Response) {
         try {
             const result = await this.missionService.create({
                 userId,
-                title,
                 content,
                 tag,
                 breed,

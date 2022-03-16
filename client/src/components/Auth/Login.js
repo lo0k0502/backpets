@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { View, StyleSheet, Image, Pressable, Text } from 'react-native';
+import { View, StyleSheet, Image, Pressable, Text, Dimensions } from 'react-native';
 import { TextInput, Button, Divider, HelperText, useTheme } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import * as Google from 'expo-google-app-auth';
@@ -20,6 +20,8 @@ const styles = StyleSheet.create({
 
 export default ({ navigation, setSignInState }) => {
     const { colors } = useTheme();
+    const imgWidth = Dimensions.get('window').width * 0.7;
+    const imgHeight = Dimensions.get('window').height
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -111,11 +113,13 @@ export default ({ navigation, setSignInState }) => {
             }}
         >
             <Image 
-                source={require('../../../assets/rsz_black-cat-icon-6.png')} 
+                source={require('../../../assets/BackPets.png')} 
                 style={{
-                    width: '30%',
-                    height: '28%',
-                    marginBottom: 10,
+                    flex: 1,
+                    width: '50%',
+                    maxHeight: '30%',
+                    resizeMode: 'center',
+                    // backgroundColor: 'white'
                 }}
             />
             <View style={{ width: '50%', justifyContent: 'center' }}>
@@ -125,6 +129,7 @@ export default ({ navigation, setSignInState }) => {
                 <TextInput 
                     mode='outlined'
                     label='Email'
+                    keyboardType='email-address'
                     disabled={loginLoading || googleLoginLoading}
                     value={email}
                     style={styles.input}

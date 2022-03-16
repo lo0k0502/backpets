@@ -52,6 +52,7 @@ export default ({ navigation }) => {
                 <TextInput 
                     mode='outlined'
                     label='Email'
+                    keyboardType='email-address'
                     error={!isEmailValid}
                     disabled={isLoading}
                     value={email}

@@ -105,7 +105,7 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
                     </Button>
                   </>
                 ) : (
-                    <Image source={require('../assets/blackcat.png')} style={ styles.viewImage } />
+                    <Image source={require('../assets/B.png')} style={ styles.viewImage } />
                 )}
               </View>
             )}

@@ -9,9 +9,6 @@ export class Mission {
   userId: string;
 
   @Prop({ required: true })
-  title: string;
-
-  @Prop({ required: true })
   content: string;
 
   @Prop()

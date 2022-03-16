@@ -55,16 +55,21 @@ export const useCurrentLocation = () => {
 };
 
 /**
- * @returns {{ missions: Object[], refreshMissions: Function }}
+ * @returns {{ missions: Object[], refreshMissions: Function, isFetching: boolean }}
  */
 export const useMissions = () => {
     const [missions, setMissions] = useState([]);
     const [isMounted, setIsMounted] = useState(true);
+    const [isFetching, setIsFetching] = useState(false);
 
     // Fetch all missions
     const fetchMissions = async () => {
+        setIsFetching(true);
         const result = await fetchAllMissions()
-        if (isMounted) setMissions(result.data.result);
+        if (isMounted) {
+            setMissions(result.data.result);
+            setIsFetching(false);
+        }
     };
 
     useFocusEffect(useCallback(() => {
@@ -78,6 +83,7 @@ export const useMissions = () => {
     return {
         missions,
         refreshMissions: fetchMissions,
+        isFetching,
     };
 };
 

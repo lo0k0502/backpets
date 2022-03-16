@@ -8,6 +8,7 @@ export default ({
   navigation,
   searchTextState: [searchText, setSearchText],
   autoFocus = false,
+  onFocus = () => {},
   searchFunction = () => {},
 }) => {
   const { colors } = useTheme();
@@ -32,6 +33,8 @@ export default ({
         selectTextOnFocus
         value={searchText}
         onChangeText={text => setSearchText(text)}
+        onFocus={onFocus}
+        onSubmitEditing={e => e.nativeEvent.text && searchFunction()}
         dense
         style={{
           flex: 1,
@@ -48,7 +51,10 @@ export default ({
               name={backIcon}
               color='gray'
               forceTextInputFocus={false}
-              onPress={() => navigation.pop(1)}
+              onPress={() => {
+                setSearchText('');
+                navigation.pop(1);
+              }}
             />
           ) : (
             <TextInput.Icon
@@ -61,9 +67,12 @@ export default ({
         }
         right={
           <TextInput.Icon
-            name='magnify'
+            name='close'
             color='gray'
-            onPress={searchFunction}
+            onPress={() => {
+              !isSearch && navigation.navigate('Search');
+              setSearchText('');
+            }}
           />
         }
       />

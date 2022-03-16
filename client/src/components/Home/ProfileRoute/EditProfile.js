@@ -229,6 +229,7 @@ export default ({ navigation }) => {
             <TextInput
                 mode='outlined'
                 label='Email'
+                keyboardType='email-address'
                 error={emailErrorMsg}
                 disabled={isImgLoading || isLoading}
                 value={email}

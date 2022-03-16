@@ -4,9 +4,9 @@
     "slug": "BackPets",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/blackcat.png",
+    "icon": "./assets/B.png",
     "splash": {
-      "image": "./assets/black-cat-icon-6.png",
+      "image": "./assets/BackPets.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

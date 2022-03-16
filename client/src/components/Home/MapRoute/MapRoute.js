@@ -32,7 +32,6 @@ export default ({ route }) => {
             latitude: mission.location.latitude,
             longitude: mission.location.longitude,
           }}
-          title={mission.title}
           description={mission.content}
         >
           <Callout 

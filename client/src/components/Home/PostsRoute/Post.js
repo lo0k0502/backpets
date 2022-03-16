@@ -123,8 +123,7 @@ export default ({ navigation, route: { params: { post } } }) => {
                         <Caption>{moment(post.post_time).fromNow()}</Caption>
                     </View>
                 </View>
-                <Divider style={ styles.imageDivider } />
-                <Headline>{post.title}</Headline>
+                <Divider style={styles.imageDivider} />
                 <Paragraph style={ styles.p }>{post.content}</Paragraph>
                 {post.photoId ? <Card.Cover source={{ uri: `${SERVERURL}/image/${post.photoId}` }}/> : null}
             </ScrollView>

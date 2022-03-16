@@ -35,7 +35,6 @@ export default ({ visible, close, refreshMissions }) => {
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
     const [isImgLoading, setIsImgLoading] = useState(false);// Whether it is during image picking, if so, disable inputs and buttons. 
 
-    const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [photoUrl, setPhotoUrl] = useState('');
     const [tags, setTags] = useState(tagsArray.map(tagName => ({ name: tagName, selected: false })));
@@ -45,8 +44,7 @@ export default ({ visible, close, refreshMissions }) => {
 
     const [showDateTimePicker, setShowDateTimePicker] = useState(false);
     const [dateTimePickerMode, setDateTimePickerMode] = useState('date');
-    
-    const [titleErrorMsg, setTitleErrorMsg] = useState('');
+
     const [photoUrlErrorMsg, setPhotoUrlErrorMsg] = useState('');
     const [breedErrorMsg, setBreedErrorMsg] = useState('');
     const [featureErrorMsg, setFeatureErrorMsg] = useState('');
@@ -59,7 +57,6 @@ export default ({ visible, close, refreshMissions }) => {
         refreshMissions();
         close();
 
-        setTitle('');
         setContent('');
         setPhotoUrl('');
         setTags(tagsArray.map(tagName => ({ name: tagName, selected: false })));
@@ -67,16 +64,10 @@ export default ({ visible, close, refreshMissions }) => {
         setFeature('');
         setLostTime(new Date());
 
-        setTitleErrorMsg('');
         setPhotoUrlErrorMsg('');
         setBreedErrorMsg('');
         setFeatureErrorMsg('');
         setLostTimeErrorMsg('');
-    };
-
-    const checkTitle = (text) => {
-        setTitle(text);
-        setTitleErrorMsg(text ? '' : '不可為空!!');
     };
 
     const checkBreed = (text) => {
@@ -173,7 +164,6 @@ export default ({ visible, close, refreshMissions }) => {
             // Add the post
             await addMission({
                 userId: user.info?._id.toString(),
-                title,
                 content,
                 tag: tags.find(tag => tag.selected).name,
                 breed,
@@ -205,26 +195,6 @@ export default ({ visible, close, refreshMissions }) => {
                 <ScrollView style={{ height: '80%', padding: 20 }}>
                     <TextInput 
                         mode='outlined'
-                        label='標題'
-                        disabled={isImgLoading || isLoading}
-                        error={titleErrorMsg}
-                        value={title}
-                        maxLength={20}
-                        right={<TextInput.Affix text={`${title.length}/20`} />}
-                        onChangeText={checkTitle}
-                    />
-                    <HelperText type='error'>
-                        {titleErrorMsg}
-                    </HelperText>
-                    <Divider />
-                    <HelperText type='info'>
-                        請選擇一個標籤
-                    </HelperText>
-                    <TagsView maxLimit={1} onExceedMaxLimit={handleExceedMaxTagLimit} tagsState={[tags, setTags]} />
-                    <Divider />
-                    <HelperText type='info'></HelperText>
-                    <TextInput 
-                        mode='outlined'
                         label='品種'
                         disabled={isImgLoading || isLoading}
                         error={breedErrorMsg}
@@ -249,6 +219,11 @@ export default ({ visible, close, refreshMissions }) => {
                     <HelperText type='error'>
                         {featureErrorMsg}
                     </HelperText>
+                    <Divider />
+                    <HelperText type='info'>
+                        請選擇一個標籤
+                    </HelperText>
+                    <TagsView maxLimit={1} onExceedMaxLimit={handleExceedMaxTagLimit} tagsState={[tags, setTags]} />
                     <Divider style={lostTimeErrorMsg && { backgroundColor: 'red' }} />
                     <HelperText type='info'>
                         請選擇遺失日期與時間
@@ -372,7 +347,6 @@ export default ({ visible, close, refreshMissions }) => {
                     disabled={
                         isImgLoading
                         || isLoading
-                        || !title
                         || !tags.find(tag => tag.selected)
                         || !breed
                         || !feature
