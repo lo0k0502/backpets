@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import * as Location from 'expo-location';
-import { fetchAllMissions, fetchUserById } from '../api';
+import { fetchAllMissions, fetchCluesByMission, fetchSelfMissions, fetchUserById } from '../api';
 import { useFocusEffect } from '@react-navigation/core';
 
 /**
@@ -55,34 +55,71 @@ export const useCurrentLocation = () => {
 };
 
 /**
+ * @param {any} userId If provided, it will fetch missions by this user ID, if not, all missions will be fetched.
  * @returns {{ missions: Object[], refreshMissions: Function, isFetching: boolean }}
  */
-export const useMissions = () => {
+export const useMissions = (userId) => {
     const [missions, setMissions] = useState([]);
-    const [isMounted, setIsMounted] = useState(true);
+    const isMounted = useRef(true);
     const [isFetching, setIsFetching] = useState(false);
 
     // Fetch all missions
     const fetchMissions = async () => {
         setIsFetching(true);
-        const result = await fetchAllMissions()
-        if (isMounted) {
+
+        const result = userId ? (await fetchSelfMissions(userId)) : (await fetchAllMissions());
+        if (isMounted.current) {
             setMissions(result.data.result);
             setIsFetching(false);
         }
     };
 
     useFocusEffect(useCallback(() => {
-        setIsMounted(true);
+        isMounted.current = true;
 
         fetchMissions();
 
-        return () => { setIsMounted(false) };
-    }, []));
+        return () => { isMounted.current = false };
+    }, [userId]));
 
     return {
         missions,
         refreshMissions: fetchMissions,
+        isFetching,
+    };
+};
+
+/**
+ * @param {any} missionId
+ * @returns {{ clues: Object[], refreshClues: Function, isFetching: boolean }}
+ */
+export const useClues = (missionId) => {
+    const [clues, setClues] = useState([]);
+    const isMounted = useRef(true);
+    const [isFetching, setIsFetching] = useState(false);
+
+    // Fetch all clues
+    const fetchClues = async () => {
+        setIsFetching(true);
+        
+        const result = await fetchCluesByMission(missionId);
+        if (isMounted.current) {
+            setClues(result.data.result);
+            setIsFetching(false);
+        }
+    };
+
+    useFocusEffect(useCallback(() => {
+        isMounted.current = true;
+
+        fetchClues();
+
+        return () => { isMounted.current = false };
+    }, [missionId]));
+
+    return {
+        clues,
+        refreshClues: fetchClues,
         isFetching,
     };
 };

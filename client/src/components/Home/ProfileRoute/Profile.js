@@ -81,9 +81,16 @@ const ListItem = ({ title, navigation }) => (
             navigation.navigate('EditProfile');
             break;
           }
+          case '發布過的任務': {
+            navigation.navigate('SelfMissions');
+            break;
+          }
           case '修改密碼': {
             navigation.navigate('ChangePassword');
             break;
+          }
+          default: {
+            return;
           }
         }
       }}

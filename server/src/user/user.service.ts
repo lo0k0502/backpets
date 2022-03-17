@@ -13,11 +13,11 @@ export class UserService {
   }
 
   async findOne(userFilterQuery: FilterQuery<UserDocument>): Promise<User> {
-    return this.userModel.findOne(userFilterQuery);
+    return this.userModel.findOne(userFilterQuery).exec();
   }
 
   async updateOne(userFilterQuery: FilterQuery<UserDocument>, user: Partial<User>): Promise<User> {
-    return this.userModel.findOneAndUpdate(userFilterQuery, user, { new: true });
+    return this.userModel.findOneAndUpdate(userFilterQuery, user, { new: true }).exec();
   }
 
   async findAll(): Promise<User[]> {

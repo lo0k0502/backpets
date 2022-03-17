@@ -13,6 +13,8 @@ export default ({ route, navigation }) => {
     const isPostsTab = route.name === 'PostsTab';
     const isChangePassword = route.name === 'ChangePassword';
     const isEditProfile = route.name === 'EditProfile';
+    const isSelfMissions = route.name === 'SelfMissions';
+    const isClue = route.name === 'Clue';
 
     return (
         <Appbar style={styles.appbar}>
@@ -27,7 +29,11 @@ export default ({ route, navigation }) => {
                 title={
                     isPostsTab ? 'BackPets' : (
                         isChangePassword ? '更改密碼' : (
-                            isEditProfile ? '更改個人資料' : route.name
+                            isEditProfile ? '更改個人資料' : (
+                                isSelfMissions ? '發布過的任務' : (
+                                    isClue ? '線索' : route.name
+                                )
+                            )
                         )
                     )
                 }

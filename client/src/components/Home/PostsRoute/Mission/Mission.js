@@ -110,7 +110,6 @@ export default ({ route, navigation, selectedTags, searchTextState }) => {
                 isFetching ? (
                     <ActivityIndicator
                         animating={true}
-                        color={colors.primary}
                         size='large'
                         style={{ marginTop: 50 }}
                     />

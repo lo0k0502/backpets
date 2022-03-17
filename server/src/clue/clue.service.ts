@@ -12,7 +12,7 @@ export class ClueService {
     }
     
     async findOne(userFilterQuery: FilterQuery<ClueDocument>): Promise<Clue> {
-        return this.clueModel.findOne(userFilterQuery);
+        return this.clueModel.findOne(userFilterQuery).exec();
     }
 
     async findSome(userFilterQuery: FilterQuery<ClueDocument>): Promise<Clue[]> {
@@ -24,7 +24,7 @@ export class ClueService {
     }
     
     async updateOne(userFilterQuery: FilterQuery<ClueDocument>, clue: Partial<Clue>): Promise<Clue> {
-        return this.clueModel.findOneAndUpdate(userFilterQuery, clue, { new: true });
+        return this.clueModel.findOneAndUpdate(userFilterQuery, clue, { new: true }).exec();
     }
     
     async deleteOne(userFilterQuery: FilterQuery<ClueDocument>): Promise<Clue> {

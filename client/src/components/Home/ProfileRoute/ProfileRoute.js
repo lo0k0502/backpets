@@ -4,6 +4,8 @@ import Appbar from '../Appbar';
 import EditProfile from './EditProfile';
 import ChangePassword from './ChangePassword';
 import Profile from './Profile';
+import SelfMissions from './SelfMissions';
+import Clue from './Clue';
 
 const ProfileStack = createStackNavigator();
 
@@ -23,6 +25,12 @@ export default () => {
             </ProfileStack.Screen>
             <ProfileStack.Screen name='ChangePassword'>
             {props => <ChangePassword {...props} />}
+            </ProfileStack.Screen>
+            <ProfileStack.Screen name='SelfMissions'>
+            {props => <SelfMissions {...props} />}
+            </ProfileStack.Screen>
+            <ProfileStack.Screen name='Clue'>
+            {props => <Clue {...props} />}
             </ProfileStack.Screen>
         </ProfileStack.Navigator>
     );
