@@ -17,7 +17,7 @@ export class MissionController {
 
     @Get('fetchbyuserid/:userid')
     async FetchByUserId(@Param() { userid }, @Res() res: Response) {
-        const result = await this.missionService.findOne({ userId: userid });
+        const result = await this.missionService.findSome({ userId: new Types.ObjectId(userid) });
         return res.status(200).json({ result });
     }
 

@@ -55,10 +55,9 @@ export const useCurrentLocation = () => {
 };
 
 /**
- * @param {any} userId If provided, it will fetch missions by this user ID, if not, all missions will be fetched.
  * @returns {{ missions: Object[], refreshMissions: Function, isFetching: boolean }}
  */
-export const useMissions = (userId) => {
+export const useMissions = () => {
     const [missions, setMissions] = useState([]);
     const isMounted = useRef(true);
     const [isFetching, setIsFetching] = useState(false);
@@ -67,7 +66,44 @@ export const useMissions = (userId) => {
     const fetchMissions = async () => {
         setIsFetching(true);
 
-        const result = userId ? (await fetchSelfMissions(userId)) : (await fetchAllMissions());
+        const result = await fetchAllMissions();
+        if (isMounted.current) {
+            setMissions(result.data.result);
+            setIsFetching(false);
+        }
+    };
+
+    useFocusEffect(useCallback(() => {
+        isMounted.current = true;
+
+        fetchMissions();
+
+        return () => { isMounted.current = false };
+    }, []));
+
+    return {
+        missions,
+        refreshMissions: fetchMissions,
+        isFetching,
+    };
+};
+
+/**
+ * @param {any} userId
+ * @returns {{ missions: Object[], refreshMissions: Function, isFetching: boolean }}
+ */
+export const useSelfMissions = (userId) => {
+    const [missions, setMissions] = useState([]);
+    const isMounted = useRef(true);
+    const [isFetching, setIsFetching] = useState(false);
+
+    // Fetch missions by user ID
+    const fetchMissions = async () => {
+        if (!userId) return;
+
+        setIsFetching(true);
+
+        const result = await fetchSelfMissions(userId);
         if (isMounted.current) {
             setMissions(result.data.result);
             setIsFetching(false);
@@ -98,11 +134,13 @@ export const useClues = (missionId) => {
     const isMounted = useRef(true);
     const [isFetching, setIsFetching] = useState(false);
 
-    // Fetch all clues
+    // Fetch clues by mission ID
     const fetchClues = async () => {
+        if (!missionId) return;
+
         setIsFetching(true);
         
-        const result = await fetchCluesByMission(missionId);
+        const result = await fetchCluesByMission(missionId.toString());
         if (isMounted.current) {
             setClues(result.data.result);
             setIsFetching(false);
@@ -150,5 +188,7 @@ export default {
     useStateWithValidation,
     useCurrentLocation,
     useMissions,
+    useSelfMissions,
+    useClues,
     useUser,
 };

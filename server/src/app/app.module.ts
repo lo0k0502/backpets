@@ -1,3 +1,4 @@
+import { ClueModule } from './../clue/clue.module';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from '../user/user.module';
@@ -17,6 +18,7 @@ import { AppController } from './app.controller';
     AuthModule,
     FileModule,
     MissionModule,
+    ClueModule,
   ],
   controllers: [AppController],
 })

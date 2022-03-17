@@ -3,7 +3,9 @@ import { RefreshControl, ScrollView, View } from 'react-native';
 import { ActivityIndicator, Text, Title, useTheme } from 'react-native-paper';
 import { useClues } from '../../../hooks';
 
-export default ({ route: { params: missionId } }) => {
+export default ({ route }) => {
+    const { missionId } = route.params;
+    console.log(missionId)
     const { colors } = useTheme();
     const { clues, refreshClues, isFetching } = useClues(missionId);
 

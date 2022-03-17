@@ -27,9 +27,9 @@ export const deleteImage = (photoId) => API.delete(`/image/${photoId}`);
 export const addMission = (payload) => API.post('/mission/add', payload);
 export const deleteMission = (missionId) => API.delete(`/mission/${missionId}`);
 export const fetchAllMissions = () => API.get('/mission/fetchall');
-export const fetchSelfMissions = (userId) => API.get(`/fetchbyuserid/${userId}`);
+export const fetchSelfMissions = (userId) => API.get(`/mission/fetchbyuserid/${userId}`);
 export const fetchMission = (missionid) => API.get(`/mission/${missionid}`);
 
 // clue
 export const addClue = (payload) => API.post('/clue/add', payload);
-export const fetchCluesByMission = (missionId) => API.get(`fetchbymission/${missionId}`);
+export const fetchCluesByMission = (missionId) => API.get(`/clue/fetchbymission/${missionId}`);

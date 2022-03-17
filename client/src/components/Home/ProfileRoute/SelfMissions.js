@@ -2,13 +2,13 @@ import React from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { ActivityIndicator, Title, useTheme } from 'react-native-paper';
 import { useSelector } from 'react-redux';
-import { useMissions } from '../../../hooks';
+import { useSelfMissions } from '../../../hooks';
 import { selectUser } from '../../../redux/userSlice';
 import MissionCard from '../PostsRoute/Mission/MissionCard';
 
 export default ({ navigation }) => {
     const user = useSelector(selectUser);
-    const { missions, refreshMissions, isFetching } = useMissions(user.info?._id);
+    const { missions, refreshMissions, isFetching } = useSelfMissions(user.info?._id);
     const { colors } = useTheme();
     
     return (
