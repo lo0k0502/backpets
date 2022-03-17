@@ -2,10 +2,10 @@ import React from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { ActivityIndicator, Text, Title, useTheme } from 'react-native-paper';
 import { useClues } from '../../../hooks';
+import ClueCard from './ClueCard';
 
 export default ({ route }) => {
     const { missionId } = route.params;
-    console.log(missionId)
     const { colors } = useTheme();
     const { clues, refreshClues, isFetching } = useClues(missionId);
 
@@ -33,7 +33,7 @@ export default ({ route }) => {
                 ) : (
                     clues.length ? (
                         clues.map(clue => (
-                            <Text>{clue._id}</Text>
+                            <ClueCard key={clue._id} clue={clue}  />
                         ))
                     ) : (
                         <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有線索QQ</Title>

@@ -66,10 +66,15 @@ export const useMissions = () => {
     const fetchMissions = async () => {
         setIsFetching(true);
 
-        const result = await fetchAllMissions();
-        if (isMounted.current) {
-            setMissions(result.data.result);
+        try {
+            const result = await fetchAllMissions();
+            if (isMounted.current) {
+                setMissions(result.data.result);
+                setIsFetching(false);
+            }
+        } catch (error) {
             setIsFetching(false);
+            console.log(error);
         }
     };
 
@@ -103,10 +108,15 @@ export const useSelfMissions = (userId) => {
 
         setIsFetching(true);
 
-        const result = await fetchSelfMissions(userId);
-        if (isMounted.current) {
-            setMissions(result.data.result);
+        try {
+            const result = await fetchSelfMissions(userId);
+            if (isMounted.current) {
+                setMissions(result.data.result);
+                setIsFetching(false);
+            }
+        } catch (error) {
             setIsFetching(false);
+            console.log(error);
         }
     };
 
