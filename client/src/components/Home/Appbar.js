@@ -16,16 +16,21 @@ export default ({ route, navigation }) => {
     const isSelfMissions = route.name === 'SelfMissions';
     const isClue = route.name === 'Clue';
 
+    const onBackIconPress = () => {
+        if (navigation.canGoBack()) return navigation.goBack();
+        if (isClue) return navigation.navigate('Profile');
+    };
+
     return (
         <Appbar style={styles.appbar}>
         {
             isPostsTab ? (
                 <Appbar.Action icon='menu' onPress={navigation.toggleDrawer} />
             ) : (
-                <Appbar.Action icon={backIcon} onPress={navigation.goBack} />
+                <Appbar.Action icon={backIcon} onPress={onBackIconPress} />
             )
         }
-            <Appbar.Content 
+            <Appbar.Content
                 title={
                     isPostsTab ? 'BackPets' : (
                         isChangePassword ? '更改密碼' : (

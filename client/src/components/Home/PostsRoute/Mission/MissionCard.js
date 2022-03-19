@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Card, Avatar, Paragraph, Button, useTheme, Text, Subheading, Divider } from 'react-native-paper';
+import { Card, Avatar, Paragraph, Button, useTheme, Text, Subheading, Divider, Caption } from 'react-native-paper';
 import moment from 'moment';
 import { useUser } from '../../../../hooks';
 import { SERVERURL } from '../../../../api/API';
@@ -40,7 +40,8 @@ export default ({
                             source={{ uri: poster.photoId ? `${SERVERURL}/image/${poster.photoId}` : null }}
                             style={{ backgroundColor: 'white' }}
                         />
-                    )} 
+                    )}
+                    right={props => <Caption {...props}>{mission.completed ? '已完成' : '未完成'}</Caption>}
                 />
                 <Subheading style={{ padding: 10 }}>
                     <Text style={{ color: colors.primary }}>品種: </Text>
@@ -49,6 +50,10 @@ export default ({
                 <Subheading style={{ padding: 10 }}>
                     <Text style={{ color: colors.primary }}>特徵: </Text>
                     {mission.feature}
+                </Subheading>
+                <Subheading style={{ padding: 10 }}>
+                    <Text style={{ color: colors.primary }}>性別: </Text>
+                    {mission.gender}
                 </Subheading>
                 <Subheading style={{ padding: 10 }}>
                     <Text style={{ color: colors.primary }}>遺失時間: </Text>
@@ -89,7 +94,7 @@ export default ({
             </View>
             <Card.Actions style={{ flexDirection: 'row', padding: 0 }}>
                 <Button
-                    icon='white-balance-sunny'
+                    icon='lightbulb-on-outline'
                     dark
                     style={{ flexGrow: 1, borderRightWidth: 0.5, borderColor: colors.primary }}
                     theme={{ roundness: 0 }}

@@ -28,7 +28,7 @@ export class MissionController {
     }
 
     @Post('add')
-    async AddMission(@Body() { userId, content, tag, breed, feature, lost_time, photoId, location }, @Res() res: Response) {
+    async AddMission(@Body() { userId, content, tag, breed, feature, gender, lost_time, photoId, location }, @Res() res: Response) {
         try {
             const result = await this.missionService.create({
                 userId: new Types.ObjectId(userId),
@@ -36,11 +36,13 @@ export class MissionController {
                 tag,
                 breed,
                 feature,
+                gender,
                 lost_time,
                 post_time: moment().valueOf(),
                 photoId: photoId ? new Types.ObjectId(photoId) : null,
                 location,
                 clueIds: [],
+                completed: false,
             });
             return res.status(200).json({ result });
         } catch (error) {

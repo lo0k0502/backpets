@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Appbar from '../Appbar';
 import EditProfile from './EditProfile';
@@ -6,10 +6,19 @@ import ChangePassword from './ChangePassword';
 import Profile from './Profile';
 import SelfMissions from './SelfMissions';
 import Clue from './Clue';
+import { useFocusEffect } from '@react-navigation/native';
 
 const ProfileStack = createStackNavigator();
 
-export default () => {
+export default ({ route, navigation }) => {
+
+    useFocusEffect(useCallback(() => {
+      if (route.params?.to) {
+        const { to, ...otherParams } = route.params;
+        navigation.navigate(route.params.to, { ...otherParams });
+      }
+    }, [route.params]));
+
     return (
         <ProfileStack.Navigator
             screenOptions={{

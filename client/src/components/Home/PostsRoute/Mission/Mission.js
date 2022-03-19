@@ -132,7 +132,9 @@ export default ({ route, navigation, selectedTags, searchTextState }) => {
                                 <MissionCard
                                     key={mission._id}
                                     mission={mission}
-                                    onViewCluePress={() => navigation.navigate('ProfileRoute', { screen: 'Clue', params: { missionId: mission._id } })}
+                                    onViewCluePress={() => {
+                                        navigation.navigate('ProfileRoute', { to: 'Clue', missionId: mission._id });
+                                    }}
                                     setClueDialog={setClueDialog}
                                 />
                             ))

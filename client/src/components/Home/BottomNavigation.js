@@ -1,5 +1,4 @@
 import React from 'react';
-import { View, Text } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -28,6 +27,7 @@ export default () => {
                 overflow: 'hidden',
             }}
             screenOptions={{ tabBarColor: colors.primary }}
+            backBehavior='initialRoute'
         >
             <Tabs.Screen
                 name='ProfileRoute'

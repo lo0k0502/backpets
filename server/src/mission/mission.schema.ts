@@ -21,6 +21,9 @@ export class Mission {
   feature: string;
 
   @Prop()
+  gender: string;
+
+  @Prop()
   lost_time: string;
 
   @Prop()
@@ -37,6 +40,9 @@ export class Mission {
 
   @Prop()
   clueIds: Types.ObjectId[];
+
+  @Prop()
+  completed: Boolean;
 }
 
 export const MissionSchema = SchemaFactory.createForClass(Mission);

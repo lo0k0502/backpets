@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { TextInput as NativeTextInput, StyleSheet, ScrollView, View, Image } from 'react-native';
 import { getMediaLibraryPermissionsAsync, requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaTypeOptions, getPendingResultAsync } from 'expo-image-picker';
-import { TextInput, Dialog, Button, Card, HelperText, useTheme, Divider, Text } from 'react-native-paper';
+import { TextInput, Dialog, Button, Card, HelperText, useTheme, Divider, Text, RadioButton } from 'react-native-paper';
 import { addMission, uploadImage } from '../../../../api';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
@@ -37,6 +37,7 @@ export default ({ visible, close, refreshMissions }) => {
     const [tags, setTags] = useState(tagsArray.map(tagName => ({ name: tagName, selected: false })));
     const [breed, setBreed] = useState('');
     const [feature, setFeature] = useState('');
+    const [gender, setGender] = useState('男');
     const [lostTime, setLostTime] = useState(new Date());
     const [mapViewRegion, setMapViewRegion] = useState({
         latitude: currentLatitude,
@@ -72,6 +73,7 @@ export default ({ visible, close, refreshMissions }) => {
         setTags(tagsArray.map(tagName => ({ name: tagName, selected: false })));
         setBreed('');
         setFeature('');
+        setGender('');
         setLostTime(new Date());
 
         setPhotoUrlErrorMsg('');
@@ -178,6 +180,7 @@ export default ({ visible, close, refreshMissions }) => {
                 tag: tags.find(tag => tag.selected).name,
                 breed,
                 feature,
+                gender,
                 lost_time: lostTime.toISOString(),
                 photoId: sendPhotoId,
                 location: {
@@ -230,6 +233,31 @@ export default ({ visible, close, refreshMissions }) => {
                     <HelperText type='error'>
                         {featureErrorMsg}
                     </HelperText>
+                    <HelperText type='info'>
+                        性別(必要)
+                    </HelperText>
+                    <View style={{ flexDirection: 'column' }}>
+                        <RadioButton.Group
+                            value={gender}
+                            onValueChange={setGender}
+                        >
+                            <RadioButton.Item
+                                label='男'
+                                value='男'
+                                position='leading'
+                                color={colors.primary}
+                                labelStyle={{ textAlign: 'left' }}
+                            />
+                            <RadioButton.Item
+                                label='女'
+                                value='女'
+                                position='leading'
+                                color={colors.primary}
+                                labelStyle={{ textAlign: 'left' }}
+                            />
+                        </RadioButton.Group>
+                    </View>
+                    <HelperText></HelperText>
                     <Divider />
                     <HelperText type='info'>
                         請選擇一個標籤(必要)

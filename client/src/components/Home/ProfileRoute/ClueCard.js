@@ -1,11 +1,16 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Card, Avatar, Paragraph, useTheme, Text } from 'react-native-paper';
+import { Card, Avatar, Paragraph, useTheme, Text, Checkbox } from 'react-native-paper';
 import moment from 'moment';
 import { useUser } from '../../../hooks';
 import { SERVERURL } from '../../../api/API';
 
-export default ({ clue }) => {
+export default ({
+    clue,
+    selecting,
+    clueCheckBoxesState: [clueCheckBoxes, setClueCheckboxses],
+    setSelectingErrorMsg,
+}) => {
     const { colors } = useTheme();
     const poster = useUser(clue.userId);
 
@@ -30,7 +35,33 @@ export default ({ clue }) => {
                             source={{ uri: poster.photoId ? `${SERVERURL}/image/${poster.photoId}` : null }}
                             style={{ backgroundColor: 'white' }}
                         />
-                    )} 
+                    )}
+                    right={props => (
+                        selecting ? (
+                            <Checkbox.Item
+                                {...props}
+                                label='選擇'
+                                status={clueCheckBoxes.find(clueCheckbox => clueCheckbox.id === clue._id).status}
+                                theme={{ colors: { accent: colors.primary } }}
+                                onPress={() => {
+                                    if (clueCheckBoxes.filter(clueCheckbox => clueCheckbox.status === 'checked').length >= 3) {
+                                        return setSelectingErrorMsg('最多只可選擇三個!');
+                                    }
+
+                                    setSelectingErrorMsg('');
+                                    
+                                    setClueCheckboxses(state => state.map(clueCheckbox => (
+                                        clueCheckbox.id === clue._id ? (
+                                            {
+                                                ...clueCheckbox,
+                                                status: clueCheckbox.status === 'checked' ? 'unchecked' : 'checked',
+                                            }
+                                        ) : clueCheckbox
+                                    )));
+                                }}
+                            />
+                        ) : null
+                    )}
                 />
                 <Card.Cover
                     source={{ uri: `${SERVERURL}/image/${clue.photoId}` }}
