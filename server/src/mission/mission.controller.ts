@@ -43,6 +43,7 @@ export class MissionController {
                 location,
                 clueIds: [],
                 completed: false,
+                chosen_clueIds: [],
             });
             return res.status(200).json({ result });
         } catch (error) {

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import * as Location from 'expo-location';
-import { fetchAllMissions, fetchCluesByMission, fetchSelfMissions, fetchUserById } from '../api';
+import { fetchAllMissions, fetchCluesByMission, fetchMission, fetchSelfMissions, fetchUserById } from '../api';
 import { useFocusEffect } from '@react-navigation/core';
 
 /**
@@ -133,6 +133,28 @@ export const useSelfMissions = (userId) => {
         refreshMissions: fetchMissions,
         isFetching,
     };
+};
+
+/**
+ * @param {*} missionId 
+ * @returns {Object}
+ */
+export const useMission = (missionId) => {
+    const [mission, setMission] = useState({});
+
+    // Fetch the mission of this mission id
+    useEffect(() => {
+        let isMounted = true;
+
+        (async () => {
+            const result = await fetchMission(missionId);
+            if (isMounted) setMission(result.data.result);
+        })();
+
+        return () => { isMounted = false };
+    }, [missionId]);
+
+    return mission;
 };
 
 /**

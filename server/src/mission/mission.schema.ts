@@ -43,6 +43,9 @@ export class Mission {
 
   @Prop()
   completed: Boolean;
+
+  @Prop()
+  chosen_clueIds: Types.ObjectId[];
 }
 
 export const MissionSchema = SchemaFactory.createForClass(Mission);

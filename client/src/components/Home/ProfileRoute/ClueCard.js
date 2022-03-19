@@ -8,6 +8,7 @@ import { SERVERURL } from '../../../api/API';
 export default ({
     clue,
     selecting,
+    disabled,
     clueCheckBoxesState: [clueCheckBoxes, setClueCheckboxses],
     setSelectingErrorMsg,
 }) => {
@@ -41,9 +42,11 @@ export default ({
                             <Checkbox.Item
                                 {...props}
                                 label='選擇'
+                                disabled={disabled}
                                 status={clueCheckBoxes.find(clueCheckbox => clueCheckbox.id === clue._id).status}
                                 theme={{ colors: { accent: colors.primary } }}
                                 onPress={() => {
+                                    if (disabled) return;
                                     if (clueCheckBoxes.filter(clueCheckbox => clueCheckbox.status === 'checked').length >= 3) {
                                         return setSelectingErrorMsg('最多只可選擇三個!');
                                     }
