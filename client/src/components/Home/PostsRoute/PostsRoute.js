@@ -11,16 +11,6 @@ const PostsStack = createStackNavigator();
 export default ({ route, navigation }) => {
     const [searchText, setSearchText] = useState('');
 
-    useEffect(() => {
-        navigation.reset({
-            ...navigation.getState(),
-            history: [
-                { key: route.key, type: 'route' }
-            ],
-        });
-        console.log(navigation.getState())
-    }, []);
-
     return (
         <>
             <PostsStack.Navigator
