@@ -14,7 +14,6 @@ import { MissionService } from './mission.service';
   ],
   controllers: [MissionController],
   providers: [MissionService, AuthService],
-  exports: [MissionService],
 })
 export class MissionModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

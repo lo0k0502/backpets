@@ -1,12 +1,14 @@
 import React, { useState, useCallback } from 'react';
 import { StyleSheet, ScrollView, View, RefreshControl, Text } from 'react-native';
-import { ActivityIndicator, Button, Portal, Title, useTheme } from 'react-native-paper';
+import { ActivityIndicator, Button, Divider, FAB, Portal, Title, useTheme } from 'react-native-paper';
 import MissionDialog from './MissionDialog';
 import MissionCard from './MissionCard';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
 import { useMissions } from '../../../../hooks';
 import ClueDialog from './ClueDialog';
+import { animalTagsArray } from '../../../../utils/constants';
+import TagsView from '../TagsView';
 
 const styles = StyleSheet.create({
     root: {
@@ -39,14 +41,18 @@ const styles = StyleSheet.create({
         },
     });
 
-export default ({ route, navigation, selectedTags, searchTextState }) => {
+export default ({ route, navigation, searchTextState }) => {
     const [searchText, setSearchText] = searchTextState;
     const user = useSelector(selectUser);
     const { missions, refreshMissions, isFetching } = useMissions();
     const { colors } = useTheme();
 
+    const [animalTags, setAnimalTags] = useState(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
+
     const [missionDialog, setMissionDialog] = useState(false);// Whether mission dialog is open
     const [clueDialog, setClueDialog] = useState(false);// Whether clue dialog is open
+
+    const selectedTags = animalTagsArray.filter(tag => animalTags.find(_tag => _tag.name === tag && _tag.selected));
 
     const checkMissionMatchTagAndSearchText = (mission) => (
         (!selectedTags.length || selectedTags.includes(mission.tag))
@@ -74,75 +80,92 @@ export default ({ route, navigation, selectedTags, searchTextState }) => {
 
         return missionsMatchTagAndSearchText.length ? true : false;
     };
-
-    const handleRefresh = useCallback(() => {
-        refreshMissions();
-    }, []);
     
     return (
-        <ScrollView style={styles.root} refreshControl={<RefreshControl refreshing={isFetching} onRefresh={handleRefresh} />}>
-            <Button
-                mode='contained'
-                icon='plus'
-                color='#be9a78'
-                dark
-                theme={{ roundness: 0 }}
-                onPress={() => setMissionDialog(true)}
-            >
-                新增任務
-            </Button>
-            <Portal>
-                <MissionDialog
-                    visible={missionDialog}
-                    close={() => setMissionDialog(false)}
-                    refreshMissions={refreshMissions}
-                />
-                <ClueDialog
-                    visible={clueDialog}
-                    close={() => setClueDialog(false)}
-                />
-            </Portal>
-            <View style={[styles.emailVerifySuggest, { display: user.info?.verified ? 'none' : 'flex' }]}>
-                <Text style={{ color: 'black' }}>你的信箱還未驗證喔!</Text>
-                <Text style={{ color: 'black' }}>我們強烈建議您先驗證您的信箱!</Text>
-            </View>
-            {
-                isFetching ? (
-                    <ActivityIndicator
-                        animating={true}
-                        size='large'
-                        style={{ marginTop: 50 }}
+        <>
+            <TagsView tagsState={[animalTags, setAnimalTags]} />
+            <Divider />
+            <ScrollView
+                style={styles.root}
+                refreshControl={(
+                    <RefreshControl
+                        refreshing={isFetching}
+                        onRefresh={refreshMissions}
                     />
-                ) : (
-                    missions.length ? (
-                        selectedTags.length || searchText ? (
-                            checkMissionsMatchTagAndSearchText() ? (
-                                missions.map(mission => checkMissionMatchTagAndSearchText(mission) ? (
+                )}
+            >
+                <Portal>
+                    <MissionDialog
+                        visible={missionDialog}
+                        close={() => setMissionDialog(false)}
+                        refreshMissions={refreshMissions}
+                    />
+                    <ClueDialog
+                        visible={clueDialog}
+                        close={() => setClueDialog(false)}
+                    />
+                </Portal>
+                {
+                    user.info?.verified ? null : (
+                        <View style={styles.emailVerifySuggest}>
+                            <Text style={{ color: 'black' }}>你的信箱還未驗證喔!</Text>
+                            <Text style={{ color: 'black' }}>我們強烈建議您先驗證您的信箱!</Text>
+                        </View>
+                    )
+                }
+                {
+                    isFetching ? (
+                        <ActivityIndicator
+                            animating={true}
+                            size='large'
+                            style={{ marginTop: 50 }}
+                        />
+                    ) : (
+                        missions.length ? (
+                            selectedTags.length || searchText ? (
+                                checkMissionsMatchTagAndSearchText() ? (
+                                    missions.map(mission => checkMissionMatchTagAndSearchText(mission) ? (
+                                        <MissionCard
+                                            key={mission._id}
+                                            mission={mission}
+                                            onViewCluePress={() => {
+                                                navigation.navigate('ProfileRoute', { to: 'Clue', missionId: mission._id });
+                                            }}
+                                            setClueDialog={setClueDialog}
+                                        />
+                                    ) : null)
+                                ) : (
+                                    <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
+                                )
+                            ) : (
+                                missions.map(mission => (
                                     <MissionCard
                                         key={mission._id}
                                         mission={mission}
+                                        onViewCluePress={() => {
+                                            navigation.navigate('ProfileRoute', { to: 'Clue', missionId: mission._id });
+                                        }}
                                         setClueDialog={setClueDialog}
                                     />
-                                ) : null)
-                            ) : (
-                                <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
+                                ))
                             )
-                        ) : (
-                            missions.map(mission => (
-                                <MissionCard
-                                    key={mission._id}
-                                    mission={mission}
-                                    onViewCluePress={() => {
-                                        navigation.navigate('ProfileRoute', { to: 'Clue', missionId: mission._id });
-                                    }}
-                                    setClueDialog={setClueDialog}
-                                />
-                            ))
-                        )
-                    ) : <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
-                )
-            }
-            <View style={{ height: 70 }} />
-        </ScrollView>
+                        ) : <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
+                    )
+                }
+                <View style={{ height: 70 }} />
+            </ScrollView>
+            <FAB
+                icon='plus'
+                color='white'
+                style={{
+                    position: 'absolute',
+                    right: 10,
+                    bottom: 70,
+                    elevation: 1,
+                }}
+                theme={{ colors: { accent: colors.primary } }}
+                onPress={() => setMissionDialog(true)}
+            />
+        </>
     );
 };

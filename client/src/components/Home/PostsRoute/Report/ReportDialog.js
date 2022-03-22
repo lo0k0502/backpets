@@ -2,21 +2,24 @@ import { getMediaLibraryPermissionsAsync, getPendingResultAsync, launchImageLibr
 import React, { useEffect, useState } from 'react';
 import { Alert, Image, ScrollView, TextInput as NativeTextInput, View } from 'react-native';
 import MapView from 'react-native-maps';
-import { Button, Card, Dialog, Divider, HelperText, Text, TextInput } from 'react-native-paper';
+import { Button, Dialog, HelperText, Text, TextInput, Divider, Card } from 'react-native-paper';
 import { useSelector } from 'react-redux';
-import { addClue, uploadImage } from '../../../../api';
+import { addReport, uploadImage } from '../../../../api';
 import { useCurrentLocation } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
+import { reportTagsArray } from '../../../../utils/constants';
+import TagsView from '../TagsView';
 
-export default ({ visible, close, missionId }) => {
+export default ({ visible, close, refreshReports }) => {
     const user = useSelector(selectUser);
     const { currentLatitude, currentLongitude } = useCurrentLocation();
-    
+
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
     const [isImgLoading, setIsImgLoading] = useState(false);// Whether it is during image picking, if so, disable inputs and buttons. 
     const [changingLocation, setChangingLocation] = useState(false);
 
     const [content, setContent] = useState('');
+    const [tags, setTags] = useState(reportTagsArray.map(tagName => ({ name: tagName, selected: false })));
     const [mapViewRegion, setMapViewRegion] = useState({
         latitude: currentLatitude,
         longitude: currentLongitude,
@@ -37,11 +40,11 @@ export default ({ visible, close, missionId }) => {
         });
     }, [currentLatitude, currentLongitude]);
 
-    // Close the dailog with configuration
     const handleClose = () => {
         close();
 
         setContent('');
+        setTags(reportTagsArray.map(tagName => ({ name: tagName, selected: false })));
         setMapViewRegion({
             latitude: currentLatitude,
             longitude: currentLongitude,
@@ -59,36 +62,15 @@ export default ({ visible, close, missionId }) => {
         setContentErrorMsg(text ? '' : '不可為空!!');
     };
 
-    // Change image
-    const handleChangeImg = async () => {
-        setIsImgLoading(true);
+    const handleExceedMaxTagLimit = () => {
+        const firstSelectedTagIndex = tags.findIndex(tag => tag.selected);
 
-        // Check if user has granted us to access their media library. If no, ask once.
-        if (!(await getMediaLibraryPermissionsAsync()).granted) {
-            if (!(await requestMediaLibraryPermissionsAsync()).granted) {
-                Alert.alert('權限不足!', '我們需要您的許可來存取您的媒體庫!', [{ text: '知道了' }]);
-                setIsImgLoading(false);
-                return;
-            }
-        }
+        setTags(tags => tags.map((tag, index) => {
+            if (index === firstSelectedTagIndex) return { ...tag, selected: false };
+            return tag;
+        }));
 
-        // Launch image picker
-        let result = await launchImageLibraryAsync({
-            mediaTypes: MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [3, 2],
-            quality: 1,
-        });
-
-        // Check if data gets lost, if so, use getPendingResultAsync function.
-        if (!result) result = await getPendingResultAsync();
-        if (!result) return setIsImgLoading(false);
-
-        // If the final result is not cancelled, change the current photo url to the result photo's local url.
-        if (!result.cancelled) setPhotoUrl(result.uri);
-
-
-        setIsImgLoading(false);
+        return false;
     };
 
     const handleSubmit = async () => {
@@ -123,11 +105,11 @@ export default ({ visible, close, missionId }) => {
             
             const { data } = await uploadImage(formData);
 
-            // Add the clue
-            await addClue({
+            // Add the report
+            await addReport({
                 userId: user.info._id.toString(),
-                missionId,
                 content,
+                tag: tags.find(tag => tag.selected).name,
                 photoId: data.photoId,
                 location: {
                     latitude: mapViewRegion.latitude, 
@@ -137,6 +119,7 @@ export default ({ visible, close, missionId }) => {
 
             setIsLoading(false);
 
+            refreshReports();
             handleClose();// Close the dialog
         } catch (error) {
             setIsLoading(false);
@@ -147,9 +130,41 @@ export default ({ visible, close, missionId }) => {
         }
     };
 
+    // Change image
+    const handleChangeImg = async () => {
+        setIsImgLoading(true);
+
+        // Check if user has granted us to access their media library. If no, ask once.
+        if (!(await getMediaLibraryPermissionsAsync()).granted) {
+            if (!(await requestMediaLibraryPermissionsAsync()).granted) {
+                Alert.alert('權限不足!', '我們需要您的許可來存取您的媒體庫!', [{ text: '知道了' }]);
+                setIsImgLoading(false);
+                return;
+            }
+        }
+
+        // Launch image picker
+        let result = await launchImageLibraryAsync({
+            mediaTypes: MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [3, 2],
+            quality: 1,
+        });
+
+        // Check if data gets lost, if so, use getPendingResultAsync function.
+        if (!result) result = await getPendingResultAsync();
+        if (!result) return setIsImgLoading(false);
+
+        // If the final result is not cancelled, change the current photo url to the result photo's local url.
+        if (!result.cancelled) setPhotoUrl(result.uri);
+
+
+        setIsImgLoading(false);
+    };
+
     return (
         <Dialog visible={visible} onDismiss={handleClose}>
-            <Dialog.Title>回報線索</Dialog.Title>
+            <Dialog.Title>發佈通報</Dialog.Title>
             <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
                 <ScrollView style={{ height: '80%', padding: 20 }}>
                     <TextInput
@@ -179,6 +194,11 @@ export default ({ visible, close, missionId }) => {
                     <HelperText type='error'>
                         {contentErrorMsg}
                     </HelperText>
+                    <Divider />
+                    <HelperText type='info'>
+                        請選擇一個標籤(必要)
+                    </HelperText>
+                    <TagsView maxLimit={1} onExceedMaxLimit={handleExceedMaxTagLimit} tagsState={[tags, setTags]} />
                     <Divider />
                     <HelperText type='info'>
                         位置(必要)
@@ -262,6 +282,7 @@ export default ({ visible, close, missionId }) => {
                         isImgLoading
                         || isLoading
                         || !content
+                        || !tags.find(tag => tag.selected)
                         || !photoUrl
                     }
                     loading={isLoading}

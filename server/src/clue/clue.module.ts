@@ -14,9 +14,8 @@ import { ClueService } from './clue.service';
     ],
     controllers: [ClueController],
     providers: [ClueService, AuthService],
-    exports: [ClueService],
 })
-export class ClueModule implements NestModule{
+export class ClueModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
       consumer
         .apply(AuthMiddleware)

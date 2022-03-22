@@ -7,6 +7,7 @@ import { AuthModule } from '../auth/auth.module';
 import { FileModule } from '../image/image.module';
 import { MissionModule } from '../mission/mission.module';
 import { AppController } from './app.controller';
+import { ReportModule } from '../report/report.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AppController } from './app.controller';
     FileModule,
     MissionModule,
     ClueModule,
+    ReportModule,
   ],
   controllers: [AppController],
 })

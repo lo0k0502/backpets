@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { Types } from 'mongoose';
-import { Clue } from './clue.schema';
 import { ClueService } from './clue.service';
 import * as moment from 'moment';
 
@@ -20,14 +19,15 @@ export class ClueController {
         const result = await this.clueService.findSome({ missionId: new Types.ObjectId(missionid) });
         return res.status(200).json({ result });
     }
-    
+
     @Post('add')
-    async AddClue(@Body() { userId, missionId, content, photoId, location }, @Res() res: Response) {
+    async AddClue(@Body() { userId, missionId, content, tag, photoId, location }, @Res() res: Response) {
         try {
             const result = await this.clueService.create({
                 userId: new Types.ObjectId(userId),
                 missionId: new Types.ObjectId(missionId),
                 content,
+                tag: tag,
                 post_time: moment().valueOf(),
                 photoId: photoId ? new Types.ObjectId(photoId) : null,
                 location,

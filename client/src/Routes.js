@@ -96,17 +96,19 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
             <Stacks.Screen name='Splash'>
             {props => (
               <View {...props} style={ styles.view }>
-                {errorMsg ? (
-                  <>
-                    <Text style={{ color: 'red', fontWeight: 'bold', margin: 10 }}>{errorMsg}</Text>
-                    <Text>請檢查您的權限設定並重新啟動應用程式</Text>
-                    <Button onPress={() => Restart()}>
-                      重新啟動
-                    </Button>
-                  </>
-                ) : (
-                    <Image source={require('../assets/1647874797282.gif')} style={ styles.viewImage } />
-                )}
+                {
+                  errorMsg ? (
+                    <>
+                      <Text style={{ color: 'red', fontWeight: 'bold', margin: 10 }}>{errorMsg}</Text>
+                      <Text>請檢查您的權限設定並重新啟動應用程式</Text>
+                      <Button onPress={() => Restart()}>
+                        重新啟動
+                      </Button>
+                    </>
+                  ) : (
+                      <Image source={require('../assets/1647874797282.gif')} style={ styles.viewImage } />
+                  )
+                }
               </View>
             )}
             </Stacks.Screen>

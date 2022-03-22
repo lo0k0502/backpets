@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 
-const tagsArray = [
+const animalTagsArray = [
     '貓',
     '狗',
     '兔子',
@@ -11,6 +11,14 @@ const tagsArray = [
     '熊貓',
     '鼠',
     '爬蟲類',
+    '其他',
+];
+
+const reportTagsArray = [
+    '流浪動物',
+    '具攻擊性',
+    '受傷動物',
+    '死亡動物',
     '其他',
 ];
 
@@ -39,7 +47,8 @@ const animalIconCHtoEN = (name) => {
 const backIcon = Platform.OS === 'ios' ? 'chevron-left' : 'arrow-left';
 
 export {
-    tagsArray,
+    animalTagsArray,
+    reportTagsArray,
     backIcon,
     animalIconCHtoEN,
 };

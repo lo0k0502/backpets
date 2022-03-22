@@ -11,23 +11,23 @@ export class MissionService {
     return (new this.missionModel(mission)).save();
   }
 
-  async findOne(userFilterQuery: FilterQuery<MissionDocument>): Promise<Mission> {
-    return this.missionModel.findOne(userFilterQuery).exec();
+  async findOne(missionFilterQuery: FilterQuery<MissionDocument>): Promise<Mission> {
+    return this.missionModel.findOne(missionFilterQuery).exec();
   }
 
-  async findSome(userFilterQuery: FilterQuery<MissionDocument>): Promise<Mission[]> {
-    return this.missionModel.find(userFilterQuery).exec();
+  async findSome(missionFilterQuery: FilterQuery<MissionDocument>): Promise<Mission[]> {
+    return this.missionModel.find(missionFilterQuery).exec();
   }
 
   async findAll(): Promise<Mission[]> {
     return this.missionModel.find().sort({ post_time: -1 }).exec();
   }
 
-  async updateOne(userFilterQuery: FilterQuery<MissionDocument>, mission: Partial<Mission>): Promise<Mission> {
-    return this.missionModel.findOneAndUpdate(userFilterQuery, mission, { new: true }).exec();
+  async updateOne(missionFilterQuery: FilterQuery<MissionDocument>, mission: Partial<Mission>): Promise<Mission> {
+    return this.missionModel.findOneAndUpdate(missionFilterQuery, mission, { new: true }).exec();
   }
 
-  async deleteOne(userFilterQuery: FilterQuery<MissionDocument>): Promise<Mission> {
-    return this.missionModel.findOneAndDelete(userFilterQuery).exec();
+  async deleteOne(missionFilterQuery: FilterQuery<MissionDocument>): Promise<Mission> {
+    return this.missionModel.findOneAndDelete(missionFilterQuery).exec();
   }
 }

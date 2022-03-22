@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import * as Location from 'expo-location';
-import { fetchAllMissions, fetchCluesByMission, fetchMission, fetchSelfMissions, fetchUserById } from '../api';
+import { fetchAllMissions, fetchAllReports, fetchCluesByMission, fetchMission, fetchSelfMissions, fetchUserById } from '../api';
 import { useFocusEffect } from '@react-navigation/core';
 
 /**
@@ -195,6 +195,45 @@ export const useClues = (missionId) => {
 };
 
 /**
+ * @returns {{ reports: Object[], refreshReports: Function, isFetching: boolean }}
+ */
+export const useReports = () => {
+    const [reports, setReports] = useState([]);
+    const isMounted = useRef(true);
+    const [isFetching, setIsFetching] = useState(false);
+
+    // Fetch all reports
+    const fetchReports = async () => {
+        setIsFetching(true);
+
+        try {
+            const result = await fetchAllReports();
+            if (isMounted.current) {
+                setReports(result.data.result);
+                setIsFetching(false);
+            }
+        } catch (error) {
+            setIsFetching(false);
+            console.log(error);
+        }
+    };
+
+    useFocusEffect(useCallback(() => {
+        isMounted.current = true;
+
+        fetchReports();
+
+        return () => { isMounted.current = false };
+    }, []));
+
+    return {
+        reports,
+        refreshReports: fetchReports,
+        isFetching,
+    };
+};
+
+/**
  * @param {String} userId
  * @returns {Object}
  */
@@ -222,5 +261,6 @@ export default {
     useMissions,
     useSelfMissions,
     useClues,
+    useReports,
     useUser,
 };

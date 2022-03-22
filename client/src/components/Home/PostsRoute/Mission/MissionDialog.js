@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
 import { useCurrentLocation } from '../../../../hooks';
 import TagsView from '../TagsView';
-import { tagsArray } from '../../../../utils/constants';
+import { animalTagsArray } from '../../../../utils/constants';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import MapView from 'react-native-maps';
 
@@ -34,7 +34,7 @@ export default ({ visible, close, refreshMissions }) => {
 
     const [content, setContent] = useState('');
     const [photoUrl, setPhotoUrl] = useState('');
-    const [tags, setTags] = useState(tagsArray.map(tagName => ({ name: tagName, selected: false })));
+    const [tags, setTags] = useState(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
     const [breed, setBreed] = useState('');
     const [feature, setFeature] = useState('');
     const [gender, setGender] = useState('男');
@@ -70,7 +70,7 @@ export default ({ visible, close, refreshMissions }) => {
 
         setContent('');
         setPhotoUrl('');
-        setTags(tagsArray.map(tagName => ({ name: tagName, selected: false })));
+        setTags(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
         setBreed('');
         setFeature('');
         setGender('');
@@ -120,7 +120,7 @@ export default ({ visible, close, refreshMissions }) => {
         let result = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [ 3, 2 ],
+            aspect: [3, 2],
             quality: 1,
         });
 

@@ -1,15 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
-export type ClueDocument = Clue & Document;
+export type ReportDocument = Report & Document;
 
 @Schema()
-export class Clue {
+export class Report {
     @Prop()
     userId: Types.ObjectId;
-
-    @Prop()
-    missionId: Types.ObjectId;
 
     @Prop()
     content: string;
@@ -30,4 +27,4 @@ export class Clue {
     };
 }
 
-export const ClueSchema = SchemaFactory.createForClass(Clue);
+export const ReportSchema = SchemaFactory.createForClass(Report);
