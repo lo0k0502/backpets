@@ -5,7 +5,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { useDispatch } from 'react-redux';
 import DrawerContent from './components/drawer';
 import BottomNavigation from './components/Home/BottomNavigation';
-import DeleteUser from './components/DevOptions/DeleteUser';
 import AllUsers from './components/DevOptions/AllUsers';
 import AuthRoute from './components/Auth/AuthRoute';
 import * as SecureStorage from 'expo-secure-store';
@@ -14,6 +13,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import * as Location from 'expo-location';
 import { Button, Text } from 'react-native-paper';
 import { Restart } from 'fiction-expo-restart';
+import AllImages from './components/DevOptions/AllImages';
 
 const styles = StyleSheet.create({
   view: { 
@@ -106,7 +106,7 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
                       </Button>
                     </>
                   ) : (
-                      <Image source={require('../assets/1647874797282.gif')} style={ styles.viewImage } />
+                      <Image source={require('../assets/1647972285878.gif')} style={ styles.viewImage } />
                   )
                 }
               </View>
@@ -131,11 +131,11 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
                 <Stacks.Screen name='AuthRoute'>
                 {props => <AuthRoute {...props} setSignInState={setSignInState} />}
                 </Stacks.Screen>
-                <Stacks.Screen name='DeleteUser' options={{ headerShown: true }}>
-                {props => <DeleteUser {...props} />}
-                </Stacks.Screen>
                 <Stacks.Screen name='AllUsers' options={{ headerShown: true }}>
                 {props => <AllUsers {...props} />}
+                </Stacks.Screen>
+                <Stacks.Screen name='AllImages' options={{ headerShown: true }}>
+                {props => <AllImages {...props} />}
                 </Stacks.Screen>
             </>
           )

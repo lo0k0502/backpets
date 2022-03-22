@@ -124,7 +124,7 @@ export default ({ visible, close, refreshReports }) => {
         } catch (error) {
             setIsLoading(false);
             if (error.response.data.message) {
-                console.log('while uploading photo:', error.response.data.message)
+                console.log('While adding:', error.response.data.message)
                 setPhotoUrlErrorMsg(error.response.data.message);
             }
         }
@@ -284,6 +284,7 @@ export default ({ visible, close, refreshReports }) => {
                         || !content
                         || !tags.find(tag => tag.selected)
                         || !photoUrl
+                        || changingLocation
                     }
                     loading={isLoading}
                     onPress={handleSubmit}

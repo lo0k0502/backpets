@@ -226,7 +226,7 @@ export default ({ navigation, setSignInState }) => {
                 style={{ marginTop: 10 }}
                 onPress={() => navigation.toggleDrawer()}
             >
-                選項
+                開發選項
             </Button>
         </View>
     );

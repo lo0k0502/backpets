@@ -141,7 +141,7 @@ export default ({ visible, close, missionId }) => {
         } catch (error) {
             setIsLoading(false);
             if (error.response.data.message) {
-                console.log('while uploading photo:', error.response.data.message)
+                console.log('While adding:', error.response.data.message)
                 setPhotoUrlErrorMsg(error.response.data.message);
             }
         }
@@ -263,6 +263,7 @@ export default ({ visible, close, missionId }) => {
                         || isLoading
                         || !content
                         || !photoUrl
+                        || changingLocation
                     }
                     loading={isLoading}
                     onPress={handleSubmit}

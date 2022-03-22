@@ -12,11 +12,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import MapView from 'react-native-maps';
 
 const styles = StyleSheet.create({
-    innerPropNav: {
-        paddingTop: 8,
-        paddingBottom: 8,
-        height: 200,
-    },
     photoCard: { 
         width: 300, 
         height: 200, 
@@ -31,6 +26,7 @@ export default ({ visible, close, refreshMissions }) => {
 
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
     const [isImgLoading, setIsImgLoading] = useState(false);// Whether it is during image picking, if so, disable inputs and buttons. 
+    const [changingLocation, setChangingLocation] = useState(false);
 
     const [content, setContent] = useState('');
     const [photoUrl, setPhotoUrl] = useState('');
@@ -45,7 +41,6 @@ export default ({ visible, close, refreshMissions }) => {
         latitudeDelta: 0.0122,
         longitudeDelta: 0.003,
     });
-    const [changingLocation, setChangingLocation] = useState(false);
 
     const [showDateTimePicker, setShowDateTimePicker] = useState(false);
     const [dateTimePickerMode, setDateTimePickerMode] = useState('date');
@@ -75,6 +70,12 @@ export default ({ visible, close, refreshMissions }) => {
         setFeature('');
         setGender('');
         setLostTime(new Date());
+        setMapViewRegion({
+            latitude: currentLatitude,
+            longitude: currentLongitude,
+            latitudeDelta: 0.0122,
+            longitudeDelta: 0.003,
+        });
 
         setPhotoUrlErrorMsg('');
         setBreedErrorMsg('');
@@ -196,7 +197,7 @@ export default ({ visible, close, refreshMissions }) => {
         } catch (error) {
             setIsLoading(false);
             if (error.response.data.message) {
-                console.log('while uploading photo:', error.response.data.message)
+                console.log('While adding:', error.response.data.message)
                 setPhotoUrlErrorMsg(error.response.data.message);
             }
         }
@@ -385,13 +386,17 @@ export default ({ visible, close, refreshMissions }) => {
                                 {...innerProps}
                                 style={[
                                     innerProps.style,
-                                    innerProps.multiline ? styles.innerPropNav : null,
+                                    innerProps.multiline ? {
+                                        paddingTop: 8,
+                                        paddingBottom: 8,
+                                        height: 200,
+                                    } : null,
                                 ]}
                             />
                         )}
                         onChangeText={setContent}
                     />
-                    <HelperText type='info'></HelperText>
+                    <HelperText></HelperText>
                     <Button 
                         mode='contained'
                         icon='plus'
@@ -406,7 +411,16 @@ export default ({ visible, close, refreshMissions }) => {
                     <HelperText type='error'>
                         {photoUrlErrorMsg}
                     </HelperText>
-                    {photoUrl ? <Card.Cover source={{ uri: photoUrl }} style={ styles.photoCard } /> : null}
+                    {photoUrl ? (
+                        <Card.Cover
+                            source={{ uri: photoUrl }}
+                            style={{ 
+                                width: 300, 
+                                height: 200, 
+                                alignSelf: 'center',
+                            }}
+                        />
+                    ) : null}
                     <View style={{ height: 50 }} />
                 </ScrollView>
             </Dialog.ScrollArea>

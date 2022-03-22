@@ -2,15 +2,15 @@ import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 import React from 'react';
 import { View } from 'react-native';
-import { Avatar, Button, Caption, Card, Divider, Paragraph, Subheading, Text, useTheme } from 'react-native-paper';
+import { Avatar, Button, Card, Divider, Paragraph, Subheading, Text, useTheme } from 'react-native-paper';
 import { SERVERURL } from '../../../../api/API';
 import { useUser } from '../../../../hooks';
 import Tag from '../Tag';
 
-export default ({ report }) => {
+export default ({ putUpForAdoption }) => {
     const navigation = useNavigation();
     const { colors } = useTheme();
-    const poster = useUser(report.userId);
+    const poster = useUser(putUpForAdoption.userId);
 
     return (
         <Card
@@ -26,7 +26,7 @@ export default ({ report }) => {
             <View style={{ alignItems: 'flex-start' }}>
                 <Card.Title
                     title={poster.username} 
-                    subtitle={moment(report.post_time).fromNow()} 
+                    subtitle={moment(putUpForAdoption.post_time).fromNow()} 
                     left={props => (
                         <Avatar.Image
                             {...props}
@@ -35,8 +35,16 @@ export default ({ report }) => {
                         />
                     )}
                 />
+                <Subheading style={{ padding: 10 }}>
+                    <Text style={{ color: colors.primary }}>品種: </Text>
+                    {putUpForAdoption.breed}
+                </Subheading>
+                <Subheading style={{ padding: 10 }}>
+                    <Text style={{ color: colors.primary }}>性別: </Text>
+                    {putUpForAdoption.gender}
+                </Subheading>
                 <Card.Cover
-                    source={{ uri: `${SERVERURL}/image/${report.photoId}` }}
+                    source={{ uri: `${SERVERURL}/image/${putUpForAdoption.photoId}` }}
                     style={{
                         width: 300,
                         height: 200,
@@ -44,12 +52,16 @@ export default ({ report }) => {
                         marginVertical: 5,
                     }}
                 />
-                <Paragraph style={{ padding: 10 }}>
-                    <Text style={{ color: colors.primary }}>{'補充:\n'}</Text>
-                    {report.content}
-                </Paragraph>
+                {
+                    putUpForAdoption.content ? (
+                        <Paragraph style={{ padding: 10 }}>
+                            <Text style={{ color: colors.primary }}>{'補充:\n'}</Text>
+                            {putUpForAdoption.content}
+                        </Paragraph>
+                    ) : null
+                }
                 <View style={{ flexDirection: 'row', paddingHorizontal: 10, paddingBottom: 10 }}>
-                    <Tag tag={{ name: report.tag, selected: true }} />
+                    <Tag tag={{ name: putUpForAdoption.tag, selected: true }} />
                 </View>
                 <Divider
                     style={{
@@ -66,7 +78,7 @@ export default ({ report }) => {
                     dark
                     style={{ flexGrow: 1 }}
                     theme={{ roundness: 0 }}
-                    onPress={() => navigation.navigate('Map', { location: report.location })}
+                    onPress={() => navigation.navigate('Map', { location: putUpForAdoption.location })}
                 >
                     前往地圖
                 </Button>

@@ -25,6 +25,17 @@ export class ImageController {
         return res.status(200).json({ photoId: file.id.toString() });
     }
 
+    @Get('fetchall')
+    async GetAllImage(@Res() res: Response) {
+        try {
+            const images = await this.gfs.find({});
+            return res.status(200).json({ result: images })
+        } catch (error) {
+            console.log(error);
+            return res.status(400).json({ message: 'Getting all error' });
+        }
+    }
+
     @Get(':id')
     async GetImage(@Param() { id }, @Res() res: Response) {
         try {
@@ -41,7 +52,6 @@ export class ImageController {
     @Delete(':id')
     async DeleteImage(@Param() { id }, @Res() res: Response) {
         try {
-            console.log('deleting')
             const image = await this.gfs.findById(id);
             if (!image) return res.status(400).json({ message: 'No such file' });
             await this.gfs.delete(image._id.toString());

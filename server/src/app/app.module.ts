@@ -8,6 +8,7 @@ import { FileModule } from '../image/image.module';
 import { MissionModule } from '../mission/mission.module';
 import { AppController } from './app.controller';
 import { ReportModule } from '../report/report.module';
+import { PutUpForAdoptionModule } from 'src/put-up-for-adoption/put-up-for-adoption.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ReportModule } from '../report/report.module';
     MissionModule,
     ClueModule,
     ReportModule,
+    PutUpForAdoptionModule,
   ],
   controllers: [AppController],
 })

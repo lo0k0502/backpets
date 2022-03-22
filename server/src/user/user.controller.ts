@@ -1,6 +1,6 @@
 import { MailService } from '../mail/mail.service';
 import { Types } from 'mongoose';
-import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { User } from './user.schema';
 import { UserService } from './user.service';
@@ -28,13 +28,13 @@ export class UserController {
         return res.status(200).json({ result: existUser });
     }
 
-    @Post('delete')
-    async DeleteUser(@Body() { username }: Partial<User>, @Res() res: Response) {
+    @Delete(':userid')
+    async DeleteUser(@Param() { userid }, @Res() res: Response) {
         try {
-            const existUser = await this.userService.findOne({ username });
+            const existUser = await this.userService.findOne({ _id: userid });
             if (!existUser) return res.status(400).json({ message: '用戶不存在' });
     
-            await this.userService.deleteOne({ username });
+            await this.userService.deleteOne({ _id: userid });
             return res.status(200).json({ success: true });
         } catch (error) {
             console.log(error);

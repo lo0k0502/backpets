@@ -12,8 +12,8 @@ import { MissionService } from './mission.service';
     MongooseModule.forFeature([{ name: Mission.name, schema: MissionSchema }]),
     JwtModule.register({}),
   ],
-  controllers: [MissionController],
   providers: [MissionService, AuthService],
+  controllers: [MissionController],
 })
 export class MissionModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

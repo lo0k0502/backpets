@@ -17,21 +17,21 @@ const DevOptions = ({ navigation }) => {
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Button 
         mode='outlined' 
-        icon='account-off'
-        uppercase={false}
-        onPress={() => navigation.navigate('DeleteUser')}
-        style={{ margin: 10, }}
-      >
-        Delete User
-      </Button>
-      <Button 
-        mode='outlined' 
         icon='account-multiple'
         uppercase={false}
         onPress={() => navigation.navigate('AllUsers')}
-        style={{ margin: 10, }}
+        style={{ margin: 10 }}
       >
         All Users
+      </Button>
+      <Button 
+        mode='outlined' 
+        icon='image-multiple'
+        uppercase={false}
+        onPress={() => navigation.navigate('AllImages')}
+        style={{ margin: 10 }}
+      >
+        All Images
       </Button>
       <Button 
         mode='contained' 

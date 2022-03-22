@@ -28,7 +28,7 @@ export default ({ searchTextState }) => {
                 />
             )}
             </PostsTab.Screen>
-            <PostsTab.Screen name='PutUpForAdoption' options={{ title: '認養' }}>
+            <PostsTab.Screen name='PutUpForAdoption' options={{ title: '送養' }}>
             {props => (
                 <PutUpForAdoptionRoute
                     {...props}

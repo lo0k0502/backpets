@@ -22,7 +22,7 @@ const reportTagsArray = [
     '其他',
 ];
 
-const animalIconCHtoEN = (name) => {
+const iconCHtoEN = (name) => {
     switch (name) {
         case '貓': return 'cat';
         case '狗': return 'dog';
@@ -40,6 +40,10 @@ const animalIconCHtoEN = (name) => {
         case '熊貓': return 'panda';
         case '老鼠': return 'rodent';
         case '蜘蛛': return 'spider';
+        case '流浪動物': return 'paw';
+        case '具攻擊性': return 'close-octagon';
+        case '受傷動物': return 'needle';
+        // case '死亡動物': return 'emoticon-dead ';
         default: return null;
     }
 };
@@ -50,5 +54,5 @@ export {
     animalTagsArray,
     reportTagsArray,
     backIcon,
-    animalIconCHtoEN,
+    iconCHtoEN,
 };

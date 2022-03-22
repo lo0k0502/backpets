@@ -21,6 +21,7 @@ export const uploadImage = (payload) => API.post('/image/upload', payload, {
         'Content-Type': 'multipart/form-data',
     },
 });
+export const fetchAllImages = () => API.get('/image/fetchall');
 export const deleteImage = (photoId) => API.delete(`/image/${photoId}`);
 
 // mission
@@ -37,3 +38,7 @@ export const fetchCluesByMission = (missionId) => API.get(`/clue/fetchbymission/
 // report
 export const addReport = (payload) => API.post('/report/add', payload);
 export const fetchAllReports = () => API.get('/report/fetchall');
+
+// put up for adoption
+export const addPutUpForAdoption = (payload) => API.post('/put-up-for-adoption/add', payload);
+export const fetchAllPutUpForAdoptions = () => API.get('/put-up-for-adoption/fetchall');

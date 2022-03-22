@@ -61,6 +61,7 @@ export default ({ route, navigation, searchTextState }) => {
             || mission.content.search(searchText) !== -1
             || mission.breed.search(searchText) !== -1
             || mission.feature.search(searchText) !== -1
+            || mission.gender.search(searchText) !== -1
         )
     );
 
@@ -75,6 +76,7 @@ export default ({ route, navigation, searchTextState }) => {
                 mission.content.search(searchText) !== -1
                 || mission.breed.search(searchText) !== -1
                 || mission.feature.search(searchText) !== -1
+                || mission.gender.search(searchText) !== -1
             ))
         ) : missionsMatchTag;
 

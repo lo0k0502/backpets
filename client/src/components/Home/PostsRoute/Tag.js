@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Chip, useTheme } from 'react-native-paper';
-import { animalIconCHtoEN } from '../../../utils/constants';
+import { iconCHtoEN } from '../../../utils/constants';
 
 export default ({
     tag,
@@ -28,7 +28,7 @@ export default ({
     return (
         <Chip
             mode='outlined'
-            icon={animalIconCHtoEN(name)}
+            icon={iconCHtoEN(name)}
             ellipsizeMode='tail'
             disabled={disabled}
             selected={selected}

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import * as Location from 'expo-location';
-import { fetchAllMissions, fetchAllReports, fetchCluesByMission, fetchMission, fetchSelfMissions, fetchUserById } from '../api';
+import { fetchAllMissions, fetchAllPutUpForAdoptions, fetchAllReports, fetchCluesByMission, fetchMission, fetchSelfMissions, fetchUserById } from '../api';
 import { useFocusEffect } from '@react-navigation/core';
 
 /**
@@ -70,12 +70,12 @@ export const useMissions = () => {
             const result = await fetchAllMissions();
             if (isMounted.current) {
                 setMissions(result.data.result);
-                setIsFetching(false);
             }
         } catch (error) {
-            setIsFetching(false);
             console.log(error);
         }
+
+        setIsFetching(false);
     };
 
     useFocusEffect(useCallback(() => {
@@ -112,12 +112,12 @@ export const useSelfMissions = (userId) => {
             const result = await fetchSelfMissions(userId);
             if (isMounted.current) {
                 setMissions(result.data.result);
-                setIsFetching(false);
             }
         } catch (error) {
-            setIsFetching(false);
             console.log(error);
         }
+
+        setIsFetching(false);
     };
 
     useFocusEffect(useCallback(() => {
@@ -171,12 +171,17 @@ export const useClues = (missionId) => {
         if (!missionId) return;
 
         setIsFetching(true);
-        
-        const result = await fetchCluesByMission(missionId.toString());
-        if (isMounted.current) {
-            setClues(result.data.result);
-            setIsFetching(false);
+
+        try {
+            const result = await fetchCluesByMission(missionId.toString());
+            if (isMounted.current) {
+                setClues(result.data.result);
+            }
+        } catch (error) {
+            console.log(error);
         }
+
+        setIsFetching(false);
     };
 
     useFocusEffect(useCallback(() => {
@@ -210,12 +215,12 @@ export const useReports = () => {
             const result = await fetchAllReports();
             if (isMounted.current) {
                 setReports(result.data.result);
-                setIsFetching(false);
             }
         } catch (error) {
-            setIsFetching(false);
             console.log(error);
         }
+
+        setIsFetching(false);
     };
 
     useFocusEffect(useCallback(() => {
@@ -229,6 +234,45 @@ export const useReports = () => {
     return {
         reports,
         refreshReports: fetchReports,
+        isFetching,
+    };
+};
+
+/**
+ * @returns {{ putUpForAdoptions: Object[], refreshPutUpForAdoptions: Function, isFetching: boolean }}
+ */
+export const usePutUpForAdoptions = () => {
+    const [putUpForAdoptions, setPutUpForAdoptions] = useState([]);
+    const isMounted = useRef(true);
+    const [isFetching, setIsFetching] = useState(false);
+
+    // Fetch all putUpForAdoptions
+    const fetchPutUpForAdoptions = async () => {
+        setIsFetching(true);
+
+        try {
+            const result = await fetchAllPutUpForAdoptions();
+            if (isMounted.current) {
+                setPutUpForAdoptions(result.data.result);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+        setIsFetching(false);
+    };
+
+    useFocusEffect(useCallback(() => {
+        isMounted.current = true;
+
+        fetchPutUpForAdoptions();
+
+        return () => { isMounted.current = false };
+    }, []));
+
+    return {
+        putUpForAdoptions,
+        refreshPutUpForAdoptions: fetchPutUpForAdoptions,
         isFetching,
     };
 };
@@ -262,5 +306,6 @@ export default {
     useSelfMissions,
     useClues,
     useReports,
+    usePutUpForAdoptions,
     useUser,
 };
