@@ -10,7 +10,7 @@ import { selectUser } from '../../../../redux/userSlice';
 
 export default ({ visible, close, refreshPutUpForAdoptions }) => {
     const user = useSelector(selectUser);
-    const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id);console.log('yes')
+    const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id);
     const { colors } = useTheme();
     const { currentLatitude, currentLongitude } = useCurrentLocation();
 
