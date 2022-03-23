@@ -7,7 +7,7 @@ import { SERVERURL } from '../../../../api/API';
 import { useUser } from '../../../../hooks';
 import Tag from '../Tag';
 
-export default ({ report }) => {
+export default ({ report, tagSelected = false }) => {
     const navigation = useNavigation();
     const { colors } = useTheme();
     const poster = useUser(report.userId);
@@ -49,7 +49,7 @@ export default ({ report }) => {
                     {report.content}
                 </Paragraph>
                 <View style={{ flexDirection: 'row', paddingHorizontal: 10, paddingBottom: 10 }}>
-                    <Tag tag={{ name: report.tag, selected: true }} />
+                    <Tag tag={{ name: report.tag, selected: tagSelected }} />
                 </View>
                 <Divider
                     style={{

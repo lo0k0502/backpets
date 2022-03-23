@@ -180,7 +180,7 @@ export default ({ visible, close, missionId }) => {
                         {contentErrorMsg}
                     </HelperText>
                     <Divider />
-                    <HelperText type='info'>
+                    <HelperText>
                         位置(必要)
                     </HelperText>
                     <View style={[ { width: '100%', height: 200 }, !changingLocation && { opacity: 0.7 } ]}>

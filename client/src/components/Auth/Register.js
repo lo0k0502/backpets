@@ -84,7 +84,7 @@ export default ({ navigation }) => {
                     style={styles.input}
                     maxLength={20}
                     right={<TextInput.Affix text={`${username.length}/20`} />}
-                    onChangeText={text => setUsername(text)}
+                    onChangeText={setUsername}
                 />
                 <HelperText type='error'>
                     {!isUsernameValid ? '不可為空!' : null}
@@ -97,7 +97,7 @@ export default ({ navigation }) => {
                     disabled={isLoading}
                     value={email}
                     style={{ width: '100%' }} 
-                    onChangeText={text => setEmail(text)}
+                    onChangeText={setEmail}
                 />
                 <HelperText type='error'>
                     {!isEmailValid ? '無效的電子郵件!' : null}
@@ -110,7 +110,7 @@ export default ({ navigation }) => {
                     secureTextEntry={passwordSecure}
                     value={password}
                     style={styles.input} 
-                    onChangeText={text => setPassword(text)}
+                    onChangeText={setPassword}
                     right={
                         <TextInput.Icon 
                             name={passwordSecure ? 'eye-off' : 'eye'} 
@@ -129,7 +129,7 @@ export default ({ navigation }) => {
                     secureTextEntry={confirmPasswordSecure}
                     value={confirmPassword}
                     style={styles.input}
-                    onChangeText={text => setConfirmPassword(text)}
+                    onChangeText={setConfirmPassword}
                     right={
                         <TextInput.Icon 
                             name={confirmPasswordSecure ? 'eye-off' : 'eye'} 

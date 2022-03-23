@@ -14,7 +14,7 @@ export default ({ logoutback }) => {
 
     return (
         <DrawerContentScrollView style={styles.root}>
-            <List.Section style={{ flex: 1, padding: 0 }}>
+            <List.Section style={{ flex: 1 }}>
                 {[ '意見回饋', '登出' ].map((title, index) => (
                     <ListItem 
                         key={index}

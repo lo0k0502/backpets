@@ -11,6 +11,7 @@ import { selectUser } from '../../../../redux/userSlice';
 
 export default ({
     mission,
+    tagSelected = false,
     setClueDialog = () => {},
     onViewCluePress = () => {},
 }) => {
@@ -43,6 +44,19 @@ export default ({
                     )}
                     right={props => <Caption {...props}>{mission.completed ? '已完成' : '未完成'}</Caption>}
                 />
+                {
+                    mission.photoId ? (
+                        <Card.Cover
+                            source={{ uri: `${SERVERURL}/image/${mission.photoId}` }}
+                            style={{
+                                width: 300,
+                                height: 200,
+                                alignSelf: 'center',
+                                marginVertical: 5,
+                            }}
+                        />
+                    ) : null
+                }
                 <Subheading style={{ padding: 10 }}>
                     <Text style={{ color: colors.primary }}>品種: </Text>
                     {mission.breed}
@@ -60,19 +74,6 @@ export default ({
                     {(new Date(mission.lost_time)).toISOString().replace('T', ' ').slice(0, -8)}
                 </Subheading>
                 {
-                    mission.photoId ? (
-                        <Card.Cover
-                            source={{ uri: `${SERVERURL}/image/${mission.photoId}` }}
-                            style={{
-                                width: 300,
-                                height: 200,
-                                alignSelf: 'center',
-                                marginVertical: 5,
-                            }}
-                        />
-                    ) : null
-                }
-                {
                     mission.content ? (
                         <Paragraph style={{ padding: 10 }}>
                             <Text style={{ color: colors.primary }}>{'補充:\n'}</Text>
@@ -81,7 +82,7 @@ export default ({
                     ) : null
                 }
                 <View style={{ flexDirection: 'row', paddingHorizontal: 10, paddingBottom: 10 }}>
-                    <Tag tag={{ name: mission.tag, selected: true }} />
+                    <Tag tag={{ name: mission.tag, selected: tagSelected }} />
                 </View>
                 <Divider
                     style={{

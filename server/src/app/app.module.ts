@@ -9,6 +9,7 @@ import { MissionModule } from '../mission/mission.module';
 import { AppController } from './app.controller';
 import { ReportModule } from '../report/report.module';
 import { PutUpForAdoptionModule } from 'src/put-up-for-adoption/put-up-for-adoption.module';
+import { PetModule } from 'src/pet/pet.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { PutUpForAdoptionModule } from 'src/put-up-for-adoption/put-up-for-adopt
     ClueModule,
     ReportModule,
     PutUpForAdoptionModule,
+    PetModule,
   ],
   controllers: [AppController],
 })

@@ -21,7 +21,7 @@ export class User {
   points: number;
 
   @Prop()
-  coupons: Types.ObjectId[];
+  couponIds: Types.ObjectId[];
 
   @Prop()
   searchHistory: string[];

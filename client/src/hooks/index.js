@@ -1,7 +1,19 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import * as Location from 'expo-location';
-import { fetchAllMissions, fetchAllPutUpForAdoptions, fetchAllReports, fetchCluesByMission, fetchMission, fetchSelfMissions, fetchUserById } from '../api';
+import { fetchAllMissions, fetchAllPutUpForAdoptions, fetchAllReports, fetchCluesByMission, fetchMission, fetchPetsByUserId, fetchSelfMissions, fetchUserById } from '../api';
 import { useFocusEffect } from '@react-navigation/core';
+
+export default {
+    useStateWithValidation,
+    useCurrentLocation,
+    useMissions,
+    useSelfMissions,
+    useClues,
+    useReports,
+    usePutUpForAdoptions,
+    useUser,
+    useSelfPets,
+};
 
 /**
  * @param {any} initialValue initial value
@@ -299,13 +311,41 @@ export const useUser = (userId) => {
     return user;
 };
 
-export default {
-    useStateWithValidation,
-    useCurrentLocation,
-    useMissions,
-    useSelfMissions,
-    useClues,
-    useReports,
-    usePutUpForAdoptions,
-    useUser,
+/**
+ * @returns {{ pets: Object[], refreshPets: Function, isFetching: boolean }}
+ */
+export const useSelfPets = (userId) => {
+    const [pets, setPets] = useState([]);
+    const isMounted = useRef(true);
+    const [isFetching, setIsFetching] = useState(false);
+
+    // Fetch all pets
+    const fetchSelfPets = async () => {
+        setIsFetching(true);
+
+        try {
+            const result = await fetchPetsByUserId(userId);
+            if (isMounted.current) {
+                setPets(result.data.result);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+        setIsFetching(false);
+    };
+
+    useFocusEffect(useCallback(() => {
+        isMounted.current = true;
+
+        fetchSelfPets();
+
+        return () => { isMounted.current = false };
+    }, [userId]));
+
+    return {
+        pets,
+        refreshPets: fetchSelfPets,
+        isFetching,
+    };
 };

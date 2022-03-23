@@ -195,12 +195,12 @@ export default ({ visible, close, refreshReports }) => {
                         {contentErrorMsg}
                     </HelperText>
                     <Divider />
-                    <HelperText type='info'>
+                    <HelperText>
                         請選擇一個標籤(必要)
                     </HelperText>
                     <TagsView maxLimit={1} onExceedMaxLimit={handleExceedMaxTagLimit} tagsState={[tags, setTags]} />
                     <Divider />
-                    <HelperText type='info'>
+                    <HelperText>
                         位置(必要)
                     </HelperText>
                     <View style={[ { width: '100%', height: 200 }, !changingLocation && { opacity: 0.7 } ]}>

@@ -15,6 +15,10 @@ export const updateUserPassword = (payload) => API.post('/user/updatepassword', 
 export const updateUserProfile = (payload) => API.post('/user/updateprofile', payload);
 export const deleteUser = (payload) => API.post('/user/delete', payload);
 
+// pet
+export const addPet = (payload) => API.post('/pet/add', payload);
+export const fetchPetsByUserId = (userId) => API.get(`/pet/fetchbyuserid/${userId}`);
+
 // image
 export const uploadImage = (payload) => API.post('/image/upload', payload, {
     headers: {

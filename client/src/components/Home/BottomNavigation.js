@@ -32,7 +32,7 @@ export default () => {
             <Tabs.Screen
                 name='ProfileRoute'
                 options={{
-                    title: '個人資料',
+                    title: '個人檔案',
                     tabBarIcon: ({ color }) => <MaterialCommunityIcons name='account-circle-outline' color={color} size={20} />,
                 }}
             >

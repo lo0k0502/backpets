@@ -28,7 +28,7 @@ export class Mission {
 
   @Prop()
   post_time: number;
-  
+
   @Prop()
   photoId: Types.ObjectId;
 

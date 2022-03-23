@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TextInput as NativeTextInput, StyleSheet, ScrollView, View, Image } from 'react-native';
+import { TextInput as NativeTextInput, StyleSheet, ScrollView, View, Image, Alert } from 'react-native';
 import { getMediaLibraryPermissionsAsync, requestMediaLibraryPermissionsAsync, launchImageLibraryAsync, MediaTypeOptions, getPendingResultAsync } from 'expo-image-picker';
 import { TextInput, Dialog, Button, Card, HelperText, useTheme, Divider, Text, RadioButton } from 'react-native-paper';
 import { addMission, uploadImage } from '../../../../api';
@@ -68,7 +68,7 @@ export default ({ visible, close, refreshMissions }) => {
         setTags(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
         setBreed('');
         setFeature('');
-        setGender('');
+        setGender('男');
         setLostTime(new Date());
         setMapViewRegion({
             latitude: currentLatitude,
@@ -234,7 +234,8 @@ export default ({ visible, close, refreshMissions }) => {
                     <HelperText type='error'>
                         {featureErrorMsg}
                     </HelperText>
-                    <HelperText type='info'>
+                    <Divider />
+                    <HelperText>
                         性別(必要)
                     </HelperText>
                     <View style={{ flexDirection: 'column' }}>
@@ -258,14 +259,13 @@ export default ({ visible, close, refreshMissions }) => {
                             />
                         </RadioButton.Group>
                     </View>
-                    <HelperText></HelperText>
                     <Divider />
-                    <HelperText type='info'>
+                    <HelperText>
                         請選擇一個標籤(必要)
                     </HelperText>
                     <TagsView maxLimit={1} onExceedMaxLimit={handleExceedMaxTagLimit} tagsState={[tags, setTags]} />
                     <Divider style={lostTimeErrorMsg && { backgroundColor: 'red' }} />
-                    <HelperText type='info'>
+                    <HelperText>
                         請選擇遺失日期與時間(必要)
                     </HelperText>
                     <View style={{ flexDirection: 'row' }}>
@@ -333,7 +333,7 @@ export default ({ visible, close, refreshMissions }) => {
                         {lostTimeErrorMsg}
                     </HelperText>
                     <Divider style={lostTimeErrorMsg && { backgroundColor: 'red' }} />
-                    <HelperText type='info'>
+                    <HelperText>
                         位置(必要)
                     </HelperText>
                     <View style={[ { width: '100%', height: 200 }, !changingLocation && { opacity: 0.7 } ]}>

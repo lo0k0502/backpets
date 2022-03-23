@@ -1,70 +1,77 @@
 import { getMediaLibraryPermissionsAsync, getPendingResultAsync, launchImageLibraryAsync, MediaTypeOptions, requestMediaLibraryPermissionsAsync } from 'expo-image-picker';
-import React, { useEffect, useState } from 'react';
-import { Image, ScrollView, View, TextInput as NativeTextInput, Alert } from 'react-native';
-import MapView from 'react-native-maps';
-import { Button, Card, Dialog, Divider, HelperText, RadioButton, Text, TextInput, useTheme } from 'react-native-paper';
+import React, { useState } from 'react';
+import { Alert, ScrollView, View } from 'react-native';
+import { Avatar, Button, Card, Dialog, Divider, HelperText, RadioButton, Subheading, Switch, Text, TextInput, useTheme } from 'react-native-paper';
 import { useSelector } from 'react-redux';
-import { addPutUpForAdoption, uploadImage } from '../../../../api';
-import { useCurrentLocation } from '../../../../hooks';
-import { selectUser } from '../../../../redux/userSlice';
-import { animalTagsArray } from '../../../../utils/constants';
-import TagsView from '../TagsView';
+import { addPet, uploadImage } from '../../../api';
+import { selectUser } from '../../../redux/userSlice';
+import { animalTagsArray } from '../../../utils/constants';
+import TagsView from '../PostsRoute/TagsView';
 
-export default ({ visible, close, refreshPutUpForAdoptions }) => {
+export default ({ visible, close, refreshPets }) => {
     const user = useSelector(selectUser);
     const { colors } = useTheme();
-    const { currentLatitude, currentLongitude } = useCurrentLocation();
 
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
-    const [isImgLoading, setIsImgLoading] = useState(false);// Whether it is during image picking, if so, disable inputs and buttons. 
-    const [changingLocation, setChangingLocation] = useState(false);
+    const [isImgLoading, setIsImgLoading] = useState(false);// Whether it is during image picking, if so, disable inputs and buttons.
 
-    const [content, setContent] = useState('');
-    const [photoUrl, setPhotoUrl] = useState('');
-    const [tags, setTags] = useState(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
+    const [name, setName] = useState('');
     const [breed, setBreed] = useState('');
+    const [feature, setFeature] = useState('');
     const [gender, setGender] = useState('男');
-    const [mapViewRegion, setMapViewRegion] = useState({
-        latitude: currentLatitude,
-        longitude: currentLongitude,
-        latitudeDelta: 0.0122,
-        longitudeDelta: 0.003,
-    });
+    const [tags, setTags] = useState(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
+    const [ligated, setLigated] = useState(false);
+    const [age, setAge] = useState('');
+    const [microchip, setMicrochip] = useState('');
+    const [photoUrl, setPhotoUrl] = useState('');
 
-    const [photoUrlErrorMsg, setPhotoUrlErrorMsg] = useState('');
+    const [nameErrorMsg, setNameErrorMsg] = useState('');
     const [breedErrorMsg, setBreedErrorMsg] = useState('');
-
-    useEffect(() => {
-        setMapViewRegion({
-            latitude: currentLatitude,
-            longitude: currentLongitude,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
-        });
-    }, [currentLatitude, currentLongitude]);
+    const [featureErrorMsg, setFeatureErrorMsg] = useState('');
+    const [ageErrorMsg, setAgeErrorMsg] = useState('');
+    const [photoUrlErrorMsg, setPhotoUrlErrorMsg] = useState('');
 
     const handleClose = () => {
         close();
 
-        setContent('');
-        setPhotoUrl('');
-        setTags(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
+        setName('');
         setBreed('');
+        setFeature('');
         setGender('男');
-        setMapViewRegion({
-            latitude: currentLatitude,
-            longitude: currentLongitude,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
-        });
+        setTags(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
+        setLigated(false);
+        setAge('');
+        setMicrochip('');
+        setPhotoUrl('');
 
-        setPhotoUrlErrorMsg('');
+        setNameErrorMsg('');
         setBreedErrorMsg('');
+        setFeatureErrorMsg('');
+        setAgeErrorMsg('');
+        setPhotoUrlErrorMsg('');
+    };
+
+    const checkName = (text) => {
+        setName(text);
+        setNameErrorMsg(text ? '' : '不可為空!!');
     };
 
     const checkBreed = (text) => {
         setBreed(text);
         setBreedErrorMsg(text ? '' : '不可為空!!');
+    };
+
+    const checkFeature = (text) => {
+        setFeature(text);
+        setFeatureErrorMsg(text ? '' : '不可為空!!');
+    };
+
+    const checkAge = (text) => {
+        const isDigits = /^\d*$/.test(text);
+        if (!isDigits) return setAgeErrorMsg('請輸入整數!');
+
+        setAge(text);
+        setAgeErrorMsg(text ? '' : '不可為空!!');
     };
 
     const handleExceedMaxTagLimit = () => {
@@ -95,7 +102,7 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
         let result = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [3, 2],
+            aspect: [1, 1],
             quality: 1,
         });
 
@@ -142,23 +149,23 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
             
             const { data } = await uploadImage(formData);
 
-            // Add the put up for adoption
-            await addPutUpForAdoption({
+            // Add the pet
+            await addPet({
+                name,
                 userId: user.info._id.toString(),
-                content,
                 tag: tags.find(tag => tag.selected).name,
                 breed,
+                feature,
                 gender,
                 photoId: data.photoId,
-                location: {
-                    latitude: mapViewRegion.latitude, 
-                    longitude: mapViewRegion.longitude, 
-                },
+                ligated,
+                age: parseInt(age, 10),
+                microchip,
             });
 
             setIsLoading(false);
 
-            refreshPutUpForAdoptions();
+            refreshPets();
             handleClose();// Close the dialog
         } catch (error) {
             setIsLoading(false);
@@ -171,9 +178,22 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
 
     return (
         <Dialog visible={visible} onDismiss={handleClose}>
-            <Dialog.Title>發佈送養貼文</Dialog.Title>
+            <Dialog.Title>新增寵物護照</Dialog.Title>
             <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
                 <ScrollView style={{ height: '80%', padding: 20 }}>
+                    <TextInput 
+                        mode='outlined'
+                        label='寵物名稱(必要)'
+                        disabled={isImgLoading || isLoading}
+                        error={nameErrorMsg}
+                        value={name}
+                        maxLength={10}
+                        right={<TextInput.Affix text={`${name.length}/10`} />}
+                        onChangeText={checkName}
+                    />
+                    <HelperText type='error'>
+                        {nameErrorMsg}
+                    </HelperText>
                     <TextInput
                         mode='outlined'
                         label='品種(必要)'
@@ -186,6 +206,19 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
                     />
                     <HelperText type='error'>
                         {breedErrorMsg}
+                    </HelperText>
+                    <TextInput 
+                        mode='outlined'
+                        label='特徵(必要)'
+                        disabled={isImgLoading || isLoading}
+                        error={featureErrorMsg}
+                        value={feature}
+                        maxLength={20}
+                        right={<TextInput.Affix text={`${feature.length}/20`} />}
+                        onChangeText={checkFeature}
+                    />
+                    <HelperText type='error'>
+                        {featureErrorMsg}
                     </HelperText>
                     <Divider />
                     <HelperText>
@@ -219,70 +252,43 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
                     <TagsView maxLimit={1} onExceedMaxLimit={handleExceedMaxTagLimit} tagsState={[tags, setTags]} />
                     <Divider />
                     <HelperText>
-                        位置(必要)
+                        是否結紮(必要)
                     </HelperText>
-                    <View style={[ { width: '100%', height: 200 }, !changingLocation && { opacity: 0.7 } ]}>
-                        <Image
-                            source={require('../../../../../assets/icons8-marker-48.png')}
-                            style={{
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                width: 36,
-                                height: 45,
-                                zIndex: 100,
-                                transform: [
-                                    { translateX: -18 },
-                                    { translateY: -45 },
-                                ],
-                            }}
-                            width={10}
-                            height={10}
-                        />
-                        <MapView
-                            style={{ flex: 1 }}
-                            showsUserLocation={!(isImgLoading || isLoading) && changingLocation}
-                            scrollEnabled={!(isImgLoading || isLoading) && changingLocation}
-                            region={mapViewRegion}
-                            onRegionChangeComplete={setMapViewRegion}
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Subheading style={{ marginLeft: 10 }}>{ligated ? '是' : '否'}</Subheading>
+                        <Switch
+                            value={ligated}
+                            onValueChange={setLigated}
+                            color={colors.primary}
                         />
                     </View>
-                    <Button
-                        mode='contained'
-                        dark
-                        style={{ marginVertical: 10, elevation: 0 }}
-                        onPress={() => setChangingLocation(state => !state)}
-                    >
-                        {changingLocation ? '確定位置' : '更改位置'}
-                    </Button>
-                    <Text>{'緯度: ' + mapViewRegion.latitude.toString()}</Text>
-                    <Text>{'經度: ' + mapViewRegion.longitude.toString()}</Text>
                     <Divider />
-                    <TextInput
+                    <HelperText></HelperText>
+                    <TextInput 
                         mode='outlined'
-                        label='補充(非必要)'
+                        label='寵物年齡(必要)'
+                        keyboardType='decimal-pad'
                         disabled={isImgLoading || isLoading}
-                        value={content}
-                        multiline
-                        maxLength={50}
-                        right={<TextInput.Affix text={`${content.length}/50`} />}
-                        render={(innerProps) => (
-                            <NativeTextInput
-                                {...innerProps}
-                                style={[
-                                    innerProps.style,
-                                    innerProps.multiline ? {
-                                        paddingTop: 8,
-                                        paddingBottom: 8,
-                                        height: 200,
-                                    } : null,
-                                ]}
-                            />
-                        )}
-                        onChangeText={setContent}
+                        error={ageErrorMsg}
+                        value={age}
+                        maxLength={3}
+                        right={<TextInput.Affix text={`${age.length}/3`} />}
+                        onChangeText={checkAge}
+                    />
+                    <HelperText type='error'>
+                        {ageErrorMsg}
+                    </HelperText>
+                    <TextInput 
+                        mode='outlined'
+                        label='寵物晶片號碼(非必要)'
+                        disabled={isImgLoading || isLoading}
+                        value={microchip}
+                        maxLength={20}
+                        right={<TextInput.Affix text={`${microchip.length}/20`} />}
+                        onChangeText={setMicrochip}
                     />
                     <HelperText></HelperText>
-                    <Button 
+                    <Button
                         mode='contained'
                         icon='plus'
                         dark
@@ -291,17 +297,17 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
                         style={{ marginVertical: 10, elevation: 0 }}
                         onPress={handleChangeImg}
                     >
-                        {photoUrl ? '更改圖片' : '新增圖片(必要)'}
+                        {photoUrl ? '更改大頭照' : '新增大頭照(必要)'}
                     </Button>
                     <HelperText type='error'>
                         {photoUrlErrorMsg}
                     </HelperText>
                     {photoUrl ? (
-                        <Card.Cover
+                        <Avatar.Image
                             source={{ uri: photoUrl }}
-                            style={{ 
-                                width: 300, 
-                                height: 200, 
+                            size={100}
+                            style={{
+                                backgroundColor: 'white',
                                 alignSelf: 'center',
                             }}
                         />
@@ -323,16 +329,18 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
                     disabled={
                         isImgLoading
                         || isLoading
+                        || !name
                         || !breed
+                        || !feature
                         || !tags.find(tag => tag.selected)
+                        || !age
                         || !photoUrl
-                        || changingLocation
                     }
                     loading={isLoading}
                     onPress={handleSubmit}
                     contentStyle={{ paddingHorizontal: 10 }}
                 >
-                    發佈
+                    新增
                 </Button>
             </Dialog.Actions>
         </Dialog>

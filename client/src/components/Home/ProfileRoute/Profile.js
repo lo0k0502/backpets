@@ -51,14 +51,14 @@ export default ({ navigation }) => {
             <View style={{ alignItems: 'center' }}>
               <MaterialCommunityIcons name='ticket-confirmation-outline' color='white' size={25} />
               <Text style={styles.points}>禮券</Text>
-              <Text style={styles.points}>{user.info?.coupons.length}</Text>
+              <Text style={styles.points}>{user.info?.couponIds.length}</Text>
             </View>
           </View>
         </View>
       </View>
 
       <List.Section>
-        {[ '修改個人資料', '編輯寵物護照', '發布過的任務', '兌換紀錄', '點數紀錄', '修改密碼' ].map((title, index) => (
+        {[ '修改個人資料', '編輯寵物護照', '發布過的貼文', '兌換紀錄', '點數紀錄', '修改密碼' ].map((title, index) => (
           <ListItem
             key={index}
             title={title}
@@ -81,7 +81,11 @@ const ListItem = ({ title, navigation }) => (
             navigation.navigate('EditProfile');
             break;
           }
-          case '發布過的任務': {
+          case '編輯寵物護照': {
+            navigation.navigate('PetPassports');
+            break;
+          }
+          case '發布過的貼文': {
             navigation.navigate('SelfMissions');
             break;
           }

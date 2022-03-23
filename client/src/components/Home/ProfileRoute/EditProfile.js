@@ -77,7 +77,7 @@ export default ({ navigation }) => {
         let result = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [ 1, 1 ],
+            aspect: [1, 1],
             quality: 1,
         });
 

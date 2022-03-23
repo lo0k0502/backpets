@@ -7,7 +7,7 @@ import { SERVERURL } from '../../../../api/API';
 import { useUser } from '../../../../hooks';
 import Tag from '../Tag';
 
-export default ({ putUpForAdoption }) => {
+export default ({ putUpForAdoption, tagSelected = false }) => {
     const navigation = useNavigation();
     const { colors } = useTheme();
     const poster = useUser(putUpForAdoption.userId);
@@ -61,7 +61,7 @@ export default ({ putUpForAdoption }) => {
                     ) : null
                 }
                 <View style={{ flexDirection: 'row', paddingHorizontal: 10, paddingBottom: 10 }}>
-                    <Tag tag={{ name: putUpForAdoption.tag, selected: true }} />
+                    <Tag tag={{ name: putUpForAdoption.tag, selected: tagSelected }} />
                 </View>
                 <Divider
                     style={{

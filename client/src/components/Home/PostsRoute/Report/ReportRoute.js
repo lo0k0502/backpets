@@ -74,6 +74,7 @@ export default ({ searchTextState }) => {
                       <ReportCard
                         key={report._id}
                         report={report}
+                        tagSelected={selectedTags.length}
                       />
                     ) : null)
                   ) : (

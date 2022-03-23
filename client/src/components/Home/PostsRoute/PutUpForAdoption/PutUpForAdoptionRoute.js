@@ -72,6 +72,7 @@ export default ({ searchTextState }) => {
                     <PutUpForAdoptionCard
                       key={putUpForAdoption._id}
                       putUpForAdoption={putUpForAdoption}
+                      tagSelected={selectedTags.length}
                     />
                   ) : null)
                 ) : (

@@ -9,8 +9,7 @@ export default ({ route, navigation, searchTextState }) => {
   const user = useSelector(selectUser);
 
   return (
-    <>
-      <List.Section style={{ flex: 1 }}>
+    <List.Section style={{ flex: 1, backgroundColor: 'white', marginTop: 0 }}>
       {user.info?.searchHistory.map((history, index) => (
         <List.Item
           key={index}
@@ -23,7 +22,6 @@ export default ({ route, navigation, searchTextState }) => {
           right={() => <List.Icon icon='arrow-top-left' color='gray' />}
         />
       ))}
-      </List.Section>
-    </>
+    </List.Section>
   );
 };

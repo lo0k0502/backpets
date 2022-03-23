@@ -13,6 +13,7 @@ export default ({ route, navigation }) => {
     const isPostsTab = route.name === 'PostsTab';
     const isChangePassword = route.name === 'ChangePassword';
     const isEditProfile = route.name === 'EditProfile';
+    const isPetPassports = route.name === 'PetPassports';
     const isSelfMissions = route.name === 'SelfMissions';
     const isClue = route.name === 'Clue';
 
@@ -35,8 +36,10 @@ export default ({ route, navigation }) => {
                     isPostsTab ? 'BackPets' : (
                         isChangePassword ? '更改密碼' : (
                             isEditProfile ? '更改個人資料' : (
-                                isSelfMissions ? '發布過的任務' : (
-                                    isClue ? '線索' : route.name
+                                isPetPassports ? '編輯寵物護照' : (
+                                    isSelfMissions ? '發布過的貼文' : (
+                                        isClue ? '線索' : route.name
+                                    )
                                 )
                             )
                         )

@@ -1,11 +1,11 @@
 import React, { useState, useCallback } from 'react';
-import { StyleSheet, ScrollView, View, RefreshControl, Text } from 'react-native';
+import { StyleSheet, ScrollView, View, RefreshControl, Text, Alert } from 'react-native';
 import { ActivityIndicator, Button, Divider, FAB, Portal, Title, useTheme } from 'react-native-paper';
 import MissionDialog from './MissionDialog';
 import MissionCard from './MissionCard';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
-import { useMissions } from '../../../../hooks';
+import { useMissions, useSelfPets } from '../../../../hooks';
 import ClueDialog from './ClueDialog';
 import { animalTagsArray } from '../../../../utils/constants';
 import TagsView from '../TagsView';
@@ -45,6 +45,7 @@ export default ({ route, navigation, searchTextState }) => {
     const [searchText, setSearchText] = searchTextState;
     const user = useSelector(selectUser);
     const { missions, refreshMissions, isFetching } = useMissions();
+    const { pets } = useSelfPets(user.info?._id);
     const { colors } = useTheme();
 
     const [animalTags, setAnimalTags] = useState(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
@@ -130,6 +131,7 @@ export default ({ route, navigation, searchTextState }) => {
                                         <MissionCard
                                             key={mission._id}
                                             mission={mission}
+                                            tagSelected={selectedTags.length}
                                             onViewCluePress={() => {
                                                 navigation.navigate('ProfileRoute', { to: 'Clue', missionId: mission._id });
                                             }}
@@ -166,7 +168,12 @@ export default ({ route, navigation, searchTextState }) => {
                     elevation: 1,
                 }}
                 theme={{ colors: { accent: colors.primary } }}
-                onPress={() => setMissionDialog(true)}
+                onPress={() => {
+                    if (!pets.length) {
+                        return Alert.alert('沒有寵物!', '您的寵物護照目前沒有寵物喔!', [{ text: '知道了' }]);
+                    }
+                    setMissionDialog(true);
+                }}
             />
         </>
     );
