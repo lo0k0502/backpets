@@ -19,6 +19,6 @@ export class ReportModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .forRoutes('clue');
+      .forRoutes('report');
   };
 }
