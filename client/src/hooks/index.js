@@ -172,7 +172,23 @@ export const useMission = (missionId) => {
 
 /**
  * @param {any} missionId
- * @returns {{ clues: Object[], refreshClues: Function, isFetching: boolean }}
+ * @returns {{
+ *  clues: {
+ *      _id: String,
+ *      userId: String,
+ *      missionId: String,
+ *      content: String,
+ *      tag: String,
+ *      post_time: Number,
+ *      photoId: String,
+ *      location: {
+ *          latitude: Number,
+ *          longitude: Number,
+ *      },
+ *  }[],
+ *  refreshClues: Function,
+ *  isFetching: boolean,
+ * }}
  */
 export const useClues = (missionId) => {
     const [clues, setClues] = useState([]);
@@ -213,7 +229,22 @@ export const useClues = (missionId) => {
 };
 
 /**
- * @returns {{ reports: Object[], refreshReports: Function, isFetching: boolean }}
+ * @returns {{
+ *  reports: {
+ *      _id: String,
+ *      userId: String,
+ *      content: String,
+ *      tag: String,
+ *      post_time: Number,
+ *      photoId: String,
+ *      location: {
+ *          latitude: Number,
+ *          longitude: Number,
+ *      },
+ *  }[],
+ *  refreshReports: Function,
+ *  isFetching: boolean,
+ * }}
  */
 export const useReports = () => {
     const [reports, setReports] = useState([]);
@@ -252,7 +283,20 @@ export const useReports = () => {
 };
 
 /**
- * @returns {{ putUpForAdoptions: Object[], refreshPutUpForAdoptions: Function, isFetching: boolean }}
+ * @returns {{
+ *  putUpForAdoptions: {
+ *      _id: String,
+ *      petId: String,
+ *      content: String,
+ *      post_time: Number,
+ *      location: {
+ *          latitude: Number,
+ *          longitude: Number,
+ *      },
+ *  }[],
+ *  refreshPutUpForAdoptions: Function,
+ *  isFetching: boolean,
+ * }}
  */
 export const usePutUpForAdoptions = () => {
     const [putUpForAdoptions, setPutUpForAdoptions] = useState([]);
@@ -292,7 +336,21 @@ export const usePutUpForAdoptions = () => {
 
 /**
  * @param {String} userId
- * @returns {{ user: Object, isFetching: boolean }}
+ * @returns {{
+ *  user: {
+ *      _id: String,
+ *      username: String,
+ *      password: String,
+ *      email: String,
+ *      photoId: String,
+ *      points: Number,
+ *      couponIds: String[],
+ *      searchHistory: String[],
+ *      refreshToken: String,
+ *      verified: boolean,
+ *  },
+ *  isFetching: boolean,
+ * }}
  */
 export const useUser = (userId) => {
     const [user, setUser] = useState({});
@@ -325,7 +383,23 @@ export const useUser = (userId) => {
 };
 
 /**
- * @returns {{ pets: Object[], refreshPets: Function, isFetching: boolean }}
+ * @returns {{
+ *  pets: {
+ *      _id: String,
+ *      name: String,
+ *      userId: String,
+ *      tag: String,
+ *      breed: String,
+ *      feature: String,
+ *      gender: String,
+ *      photoId: String,
+ *      ligated: boolean,
+ *      age: Number,
+ *      microchip: String,
+ *  }[],
+ *  refreshPets: Function,
+ *  isFetching: boolean,
+ * }}
  */
 export const useSelfPets = (userId) => {
     const [pets, setPets] = useState([]);
@@ -365,7 +439,22 @@ export const useSelfPets = (userId) => {
 
 /**
  * @param {String} petId
- * @returns {{ pet: Object, isFetching: boolean }}
+ * @returns {{
+ *  pet: {
+ *      _id: String,
+ *      name: String,
+ *      userId: String,
+ *      tag: String,
+ *      breed: String,
+ *      feature: String,
+ *      gender: String,
+ *      photoId: String,
+ *      ligated: boolean,
+ *      age: Number,
+ *      microchip: String,
+ *  },
+ *  isFetching: boolean,
+ * }}
  */
 export const usePet = (petId) => {
     const [pet, setPet] = useState({});

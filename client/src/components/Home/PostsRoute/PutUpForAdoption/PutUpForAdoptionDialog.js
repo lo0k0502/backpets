@@ -10,7 +10,7 @@ import { selectUser } from '../../../../redux/userSlice';
 
 export default ({ visible, close, refreshPutUpForAdoptions }) => {
     const user = useSelector(selectUser);
-    const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id);
+    const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id);console.log('yes')
     const { colors } = useTheme();
     const { currentLatitude, currentLongitude } = useCurrentLocation();
 
@@ -98,7 +98,7 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
                                         />
                                     )}
                                 >
-                                    <List.Section>
+                                    <List.Section style={{ marginTop: 0 }}>
                                         {pets.map(pet => (
                                             <ListItem
                                                 key={pet._id}
@@ -112,6 +112,15 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
                                     </List.Section>
                                 </ScrollView>
                             </Dialog.ScrollArea>
+                            <Dialog.Actions>
+                                <Button
+                                    disabled={isLoading}
+                                    onPress={() => setPetsDialog(false)}
+                                    contentStyle={{ paddingHorizontal: 10 }}
+                                >
+                                    取消
+                                </Button>
+                            </Dialog.Actions>
                         </Dialog>
                     </Portal>
                     <Button 
