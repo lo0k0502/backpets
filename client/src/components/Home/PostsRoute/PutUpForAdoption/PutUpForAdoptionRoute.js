@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { RefreshControl, ScrollView, View } from 'react-native';
 import { ActivityIndicator, Divider, FAB, Portal, Text, Title, useTheme } from 'react-native-paper';
 import { usePutUpForAdoptions } from '../../../../hooks';
 import { animalTagsArray } from '../../../../utils/constants';
@@ -49,7 +49,18 @@ export default ({ searchTextState }) => {
     <>
       <TagsView tagsState={[animalTags, setAnimalTags]} />
       <Divider />
-      <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
+      <ScrollView
+        style={{
+          flex: 1,
+          backgroundColor: 'white',
+        }}
+        refreshControl={(
+          <RefreshControl
+            refreshing={isFetching}
+            onRefresh={refreshPutUpForAdoptions}
+          />
+        )}
+      >
         <Portal>
           <PutUpForAdoptionDialog
             visible={putUpForAdoptionDialog}
@@ -89,6 +100,7 @@ export default ({ searchTextState }) => {
             ) : <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
           )
         }
+        <View style={{ marginBottom: 70 }} />
       </ScrollView>
       <FAB
         icon='plus'

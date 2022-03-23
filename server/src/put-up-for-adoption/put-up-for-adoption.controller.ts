@@ -27,16 +27,12 @@ export class PutUpForAdoptionController {
     }
 
     @Post('add')
-    async AddPutUpForAdoption(@Body() { userId, content, tag, breed, gender, photoId, location }, @Res() res: Response) {
+    async AddPutUpForAdoption(@Body() { petId, content, location }, @Res() res: Response) {
         try {
             const result = await this.putUpForAdoptionService.create({
-                userId: new Types.ObjectId(userId),
+                petId: new Types.ObjectId(petId),
                 content,
-                tag,
-                breed,
-                gender,
                 post_time: moment().valueOf(),
-                photoId: new Types.ObjectId(photoId),
                 location,
             });
             return res.status(200).json({ result });

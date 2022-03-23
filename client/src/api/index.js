@@ -17,6 +17,7 @@ export const deleteUser = (payload) => API.post('/user/delete', payload);
 
 // pet
 export const addPet = (payload) => API.post('/pet/add', payload);
+export const fetchPet = (petId) => API.get(`/pet/${petId}`);
 export const fetchPetsByUserId = (userId) => API.get(`/pet/fetchbyuserid/${userId}`);
 
 // image

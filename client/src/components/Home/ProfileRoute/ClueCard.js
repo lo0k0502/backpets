@@ -13,7 +13,7 @@ export default ({
     setSelectingErrorMsg,
 }) => {
     const { colors } = useTheme();
-    const poster = useUser(clue.userId);
+    const { user: poster } = useUser(clue.userId);
 
     return (
         <Card

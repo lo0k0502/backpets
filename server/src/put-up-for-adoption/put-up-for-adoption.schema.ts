@@ -6,25 +6,13 @@ export type PutUpForAdoptionDocument = PutUpForAdoption & Document;
 @Schema()
 export class PutUpForAdoption {
   @Prop({ required: true })
-  userId: Types.ObjectId;
+  petId: Types.ObjectId;
 
   @Prop()
   content: string;
 
   @Prop()
-  tag: string;
-
-  @Prop()
-  breed: string;
-
-  @Prop()
-  gender: string;
-
-  @Prop()
   post_time: number;
-  
-  @Prop()
-  photoId: Types.ObjectId;
 
   @Prop({ type: Object, required: true })
   location: {

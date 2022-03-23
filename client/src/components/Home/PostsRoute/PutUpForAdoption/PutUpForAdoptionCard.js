@@ -4,13 +4,14 @@ import React from 'react';
 import { View } from 'react-native';
 import { Avatar, Button, Card, Divider, Paragraph, Subheading, Text, useTheme } from 'react-native-paper';
 import { SERVERURL } from '../../../../api/API';
-import { useUser } from '../../../../hooks';
+import { usePet, useUser } from '../../../../hooks';
 import Tag from '../Tag';
 
 export default ({ putUpForAdoption, tagSelected = false }) => {
     const navigation = useNavigation();
     const { colors } = useTheme();
-    const poster = useUser(putUpForAdoption.userId);
+    const { pet } = usePet(putUpForAdoption.petId);
+    const { user: poster } = useUser(pet?.userId);
 
     return (
         <Card
@@ -35,23 +36,46 @@ export default ({ putUpForAdoption, tagSelected = false }) => {
                         />
                     )}
                 />
+                {
+                    pet?.photoId ? (
+                        <Avatar.Image
+                            source={{ uri: `${SERVERURL}/image/${pet.photoId}` }}
+                            size={200}
+                            style={{
+                                alignSelf: 'center',
+                                marginVertical: 5,
+                            }}
+                        />
+                    ) : null
+                }
                 <Subheading style={{ padding: 10 }}>
                     <Text style={{ color: colors.primary }}>品種: </Text>
-                    {putUpForAdoption.breed}
+                    {pet?.breed}
                 </Subheading>
                 <Subheading style={{ padding: 10 }}>
                     <Text style={{ color: colors.primary }}>性別: </Text>
-                    {putUpForAdoption.gender}
+                    {pet?.gender}
                 </Subheading>
-                <Card.Cover
-                    source={{ uri: `${SERVERURL}/image/${putUpForAdoption.photoId}` }}
-                    style={{
-                        width: 300,
-                        height: 200,
-                        alignSelf: 'center',
-                        marginVertical: 5,
-                    }}
-                />
+                <Subheading style={{ padding: 10 }}>
+                    <Text style={{ color: colors.primary }}>特徵: </Text>
+                    {pet?.feature}
+                </Subheading>
+                <Subheading style={{ padding: 10 }}>
+                    <Text style={{ color: colors.primary }}>是否結紮: </Text>
+                    {pet?.ligated ? '是' : '否'}
+                </Subheading>
+                <Subheading style={{ padding: 10 }}>
+                    <Text style={{ color: colors.primary }}>年齡: </Text>
+                    {pet?.age?.toString()}
+                </Subheading>
+                {
+                    pet?.microchip ? (
+                        <Subheading style={{ padding: 10 }}>
+                            <Text style={{ color: colors.primary }}>寵物晶片號碼: </Text>
+                            {pet?.microchip}
+                        </Subheading>
+                    ) : null
+                }
                 {
                     putUpForAdoption.content ? (
                         <Paragraph style={{ padding: 10 }}>
@@ -61,7 +85,7 @@ export default ({ putUpForAdoption, tagSelected = false }) => {
                     ) : null
                 }
                 <View style={{ flexDirection: 'row', paddingHorizontal: 10, paddingBottom: 10 }}>
-                    <Tag tag={{ name: putUpForAdoption.tag, selected: tagSelected }} />
+                    <Tag tag={{ name: pet?.tag, selected: tagSelected }} />
                 </View>
                 <Divider
                     style={{

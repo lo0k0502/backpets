@@ -18,7 +18,7 @@ export default ({
     const navigation = useNavigation();
     const { colors } = useTheme();
     const user = useSelector(selectUser);
-    const poster = useUser(mission.userId);
+    const { user: poster } = useUser(mission.userId);
 
     return (
         <Card

@@ -10,7 +10,7 @@ import Tag from '../Tag';
 export default ({ report, tagSelected = false }) => {
     const navigation = useNavigation();
     const { colors } = useTheme();
-    const poster = useUser(report.userId);
+    const { user: poster } = useUser(report.userId);
 
     return (
         <Card
