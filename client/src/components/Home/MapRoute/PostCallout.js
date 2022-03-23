@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { Headline, Text } from 'react-native-paper';
 
 const styles = StyleSheet.create({
@@ -14,7 +15,7 @@ const styles = StyleSheet.create({
       width: 140,
       flexDirection: 'row',
       alignSelf: 'flex-start',
-      backgroundColor: '#4da2ab',
+      backgroundColor: '#be9a78',
       paddingHorizontal: 10,
       paddingVertical: 6,
       borderRadius: 10,
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
       backgroundColor: 'transparent',
       borderWidth: 16,
       borderColor: 'transparent',
-      borderTopColor: '#4da2ab',
+      borderTopColor: '#be9a78',
       alignSelf: 'center',
       marginTop: -1,
     },
@@ -40,11 +41,15 @@ const styles = StyleSheet.create({
 });
 
 export default ({ mission }) => {
+    const navigation = useNavigation();
+
     return (
         <View style={styles.container}>
             <View style={styles.bubble}>
                 <View style={styles.root}>
-                    <Text style={{ fontWeight: '900' }}>我家狗不見了</Text>
+                    <Text style={{ fontWeight: '900' }}>
+                        我家的{mission.breed}不見了
+                    </Text>
                     <Text>{mission.content}</Text>
                 </View>
             </View>
