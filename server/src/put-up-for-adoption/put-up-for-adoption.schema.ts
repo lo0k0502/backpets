@@ -12,12 +12,12 @@ export class PutUpForAdoption {
   content: string;
 
   @Prop()
-  post_time: number;
+  post_time: Number;
 
   @Prop({ type: Object, required: true })
   location: {
-    latitude: number,
-    longitude: number,
+    latitude: Number,
+    longitude: Number,
   };
 }
 

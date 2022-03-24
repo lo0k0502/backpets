@@ -15,15 +15,15 @@ export class Clue {
     content: string;
 
     @Prop()
-    post_time: number;
+    post_time: Number;
 
     @Prop()
     photoId: Types.ObjectId;
 
     @Prop({ type: Object })
     location: {
-        latitude: number,
-        longitude: number,
+        latitude: Number,
+        longitude: Number,
     };
 }
 

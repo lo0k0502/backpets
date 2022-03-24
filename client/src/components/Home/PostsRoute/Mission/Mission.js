@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, ScrollView, View, RefreshControl, Text, Alert } from 'react-native';
-import { ActivityIndicator, Button, Divider, FAB, Portal, Title, useTheme } from 'react-native-paper';
+import { ActivityIndicator, Divider, FAB, Portal, Title, useTheme } from 'react-native-paper';
 import MissionDialog from './MissionDialog';
 import MissionCard from './MissionCard';
 import { useSelector } from 'react-redux';
@@ -9,6 +9,7 @@ import { useMissions, useSelfPets } from '../../../../hooks';
 import ClueDialog from './ClueDialog';
 import { animalTagsArray } from '../../../../utils/constants';
 import TagsView from '../TagsView';
+import EditMissionDialog from './EditMissionDialog';
 
 const styles = StyleSheet.create({
     root: {
@@ -51,6 +52,8 @@ export default ({ route, navigation, searchTextState }) => {
     const [animalTags, setAnimalTags] = useState(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
 
     const [missionDialog, setMissionDialog] = useState(false);// Whether mission dialog is open
+    const [editMissionDialog, setEditMissionDialog] = useState(false);// Whether edit mission dialog is open
+    const [editMission, setEditMission] = useState({});
     const [clueDialog, setClueDialog] = useState(false);// Whether clue dialog is open
 
     const selectedTags = animalTagsArray.filter(tag => animalTags.find(_tag => _tag.name === tag && _tag.selected));
@@ -103,6 +106,12 @@ export default ({ route, navigation, searchTextState }) => {
                         close={() => setMissionDialog(false)}
                         refreshMissions={refreshMissions}
                     />
+                    <EditMissionDialog
+                        mission={editMission}
+                        visible={editMissionDialog}
+                        close={() => setEditMissionDialog(false)}
+                        refreshMissions={refreshMissions}
+                    />
                     <ClueDialog
                         visible={clueDialog}
                         close={() => setClueDialog(false)}
@@ -136,6 +145,8 @@ export default ({ route, navigation, searchTextState }) => {
                                                 navigation.navigate('ProfileRoute', { to: 'Clue', missionId: mission._id });
                                             }}
                                             setClueDialog={setClueDialog}
+                                            setEditMission={setEditMission}
+                                            setEditMissionDialog={setEditMissionDialog}
                                         />
                                     ) : null)
                                 ) : (
@@ -150,6 +161,8 @@ export default ({ route, navigation, searchTextState }) => {
                                             navigation.navigate('ProfileRoute', { to: 'Clue', missionId: mission._id });
                                         }}
                                         setClueDialog={setClueDialog}
+                                        setEditMission={setEditMission}
+                                        setEditMissionDialog={setEditMissionDialog}
                                     />
                                 ))
                             )

@@ -46,6 +46,20 @@ export class MissionController {
         }
     }
 
+    @Post(':missionid')
+    async EditMission(@Param() { missionid }, @Body() { content, lost_time, location }, @Res() res: Response) {
+        try {
+            const result = await this.missionService.findOne({ _id: missionid });
+            if (!result) return res.status(400).json({ message: '任務不存在' });
+
+            await this.missionService.updateOne({ _id: missionid }, { content, lost_time, location });
+            return res.status(200).json({ success: true });
+        } catch (error) {
+            console.log(error);
+            return res.status(400).json({ message: '錯誤' });
+        }
+    }
+
     @Delete(':missionid')
     async DeleteMission(@Param() { missionid }, @Res() res: Response) {
         try {

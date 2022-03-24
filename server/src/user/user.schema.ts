@@ -18,7 +18,7 @@ export class User {
   photoId: Types.ObjectId;
 
   @Prop()
-  points: number;
+  points: Number;
 
   @Prop()
   couponIds: Types.ObjectId[];

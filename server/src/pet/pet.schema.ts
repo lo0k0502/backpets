@@ -30,7 +30,7 @@ export class Pet {
   ligated: Boolean;
 
   @Prop({ required: true })
-  age: number;
+  age: Number;
 
   @Prop()
   microchip: string;

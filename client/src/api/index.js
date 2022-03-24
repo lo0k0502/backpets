@@ -31,6 +31,7 @@ export const deleteImage = (photoId) => API.delete(`/image/${photoId}`);
 
 // mission
 export const addMission = (payload) => API.post('/mission/add', payload);
+export const editMission = (missionId, payload) => API.post(`/mission/${missionId}`, payload);
 export const deleteMission = (missionId) => API.delete(`/mission/${missionId}`);
 export const fetchAllMissions = () => API.get('/mission/fetchall');
 export const fetchSelfMissions = (userId) => API.get(`/mission/fetchbyuserid/${userId}`);

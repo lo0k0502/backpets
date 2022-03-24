@@ -14,6 +14,8 @@ export default ({
     tagSelected = false,
     setClueDialog = () => {},
     onViewCluePress = () => {},
+    setEditMissionDialog = () => {},
+    setEditMission = () => {},
 }) => {
     const navigation = useNavigation();
     const { colors } = useTheme();
@@ -62,7 +64,14 @@ export default ({
                                         )}
                                         theme={{ roundness: 0 }}
                                     >
-                                        <Menu.Item title='編輯任務' onPress={() => {}} />
+                                        <Menu.Item
+                                            title='編輯任務'
+                                            onPress={() => {
+                                                setMenu(false);
+                                                setEditMission(mission);
+                                                setEditMissionDialog(true);
+                                            }}
+                                        />
                                         <Menu.Item title='刪除任務' titleStyle={{ color: 'red' }} onPress={() => {}} />
                                     </Menu>
                                 ) : null
