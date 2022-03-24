@@ -3,23 +3,19 @@ import { Image, ScrollView, View, TextInput as NativeTextInput, Alert, RefreshCo
 import MapView from 'react-native-maps';
 import { Avatar, Button, Card, Dialog, Divider, HelperText, List, Portal, RadioButton, Text, TextInput, useTheme } from 'react-native-paper';
 import { useSelector } from 'react-redux';
-import { addPutUpForAdoption, uploadImage } from '../../../../api';
+import { addPutUpForAdoption, editPutUpForAdoption, uploadImage } from '../../../../api';
 import { SERVERURL } from '../../../../api/API';
-import { useCurrentLocation, useSelfPets } from '../../../../hooks';
+import { useCurrentLocation, usePet, useSelfPets } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
 
-export default ({ visible, close, refreshPutUpForAdoptions }) => {
-    const user = useSelector(selectUser);
-    const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id);
+export default ({ putUpForAdoption, visible, close, refreshPutUpForAdoptions }) => {
+    const { pet, isFetching: isFetchingPet } = usePet(putUpForAdoption.petId);
     const { colors } = useTheme();
     const { currentLatitude, currentLongitude } = useCurrentLocation();
 
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
     const [changingLocation, setChangingLocation] = useState(false);
 
-    const [petsDialog, setPetsDialog] = useState(false);
-
-    const [petId, setPetId] = useState('');
     const [content, setContent] = useState('');
     const [mapViewRegion, setMapViewRegion] = useState({
         latitude: currentLatitude,
@@ -27,8 +23,6 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
         latitudeDelta: 0.0122,
         longitudeDelta: 0.003,
     });
-
-    const chosenPet = pets.find(pet => pet._id === petId);
 
     useEffect(() => {
         setMapViewRegion({
@@ -39,12 +33,29 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
         });
     }, [currentLatitude, currentLongitude]);
 
+    useEffect(() => {
+        setContent(putUpForAdoption.content || '');
+        setMapViewRegion(putUpForAdoption.location ? {
+            ...putUpForAdoption.location,
+            latitudeDelta: 0.0122,
+            longitudeDelta: 0.003,
+        } : {
+            latitude: currentLatitude,
+            longitude: currentLongitude,
+            latitudeDelta: 0.0122,
+            longitudeDelta: 0.003,
+        });
+    }, [putUpForAdoption]);
+
     const handleClose = () => {
         close();
 
-        setPetId('');
-        setContent('');
-        setMapViewRegion({
+        setContent(putUpForAdoption.content || '');
+        setMapViewRegion(putUpForAdoption.location ? {
+            ...putUpForAdoption.location,
+            latitudeDelta: 0.0122,
+            longitudeDelta: 0.003,
+        } : {
             latitude: currentLatitude,
             longitude: currentLongitude,
             latitudeDelta: 0.0122,
@@ -57,15 +68,17 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
         setIsLoading(true);
         
         try {
-            // Add the put up for adoption
-            await addPutUpForAdoption({
-                petId,
-                content,
-                location: {
-                    latitude: mapViewRegion.latitude, 
-                    longitude: mapViewRegion.longitude, 
-                },
-            });
+            // Edit the put up for adoption
+            await editPutUpForAdoption(
+                putUpForAdoption._id,
+                {
+                    content,
+                    location: {
+                        latitude: mapViewRegion.latitude, 
+                        longitude: mapViewRegion.longitude, 
+                    },
+                }
+            );
 
             setIsLoading(false);
 
@@ -82,67 +95,18 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
             <Dialog.Title>發佈送養貼文</Dialog.Title>
             <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
                 <ScrollView style={{ height: '80%', paddingHorizontal: 20 }}>
-                    <Portal>
-                        <Dialog visible={petsDialog} onDismiss={() => setPetsDialog(false)}>
-                            <Dialog.Title>請選擇一個寵物</Dialog.Title>
-                            <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
-                                <ScrollView
-                                    style={{
-                                        height: '80%',
-                                        padding: 20,
-                                    }}
-                                    refreshControl={(
-                                        <RefreshControl
-                                            refreshing={isFetching}
-                                            onRefresh={refreshPets}
-                                        />
-                                    )}
-                                >
-                                    <List.Section style={{ marginTop: 0 }}>
-                                        {pets.map(pet => (
-                                            <ListItem
-                                                key={pet._id}
-                                                pet={pet}
-                                                onPress={() => {
-                                                    setPetId(pet._id);
-                                                    setPetsDialog(false);
-                                                }}
-                                            />
-                                        ))}
-                                    </List.Section>
-                                </ScrollView>
-                            </Dialog.ScrollArea>
-                            <Dialog.Actions>
-                                <Button
-                                    disabled={isLoading}
-                                    onPress={() => setPetsDialog(false)}
-                                    contentStyle={{ paddingHorizontal: 10 }}
-                                >
-                                    取消
-                                </Button>
-                            </Dialog.Actions>
-                        </Dialog>
-                    </Portal>
-                    <Button 
-                        mode='contained'
-                        dark
-                        disabled={isLoading}
-                        style={{ marginVertical: 10, elevation: 0 }}
-                        onPress={() => setPetsDialog(true)}
-                    >
-                        {petId ? '更改寵物' : '選擇寵物(必要)'}
-                    </Button>
-                    {
-                        petId ? (
-                            <>
-                                <HelperText>送養寵物:</HelperText>
-                                <List.Item
-                                    title={chosenPet.name}
-                                    left={() => <Avatar.Image source={{ uri: `${SERVERURL}/image/${chosenPet.photoId}` }} style={{ backgroundColor: 'white' }} />}
-                                />
-                            </>
-                        ) : null
-                    }
+                    <HelperText>送養寵物:</HelperText>
+                    <List.Item
+                        title={isFetchingPet ? '' : pet.name}
+                        titleStyle={isFetchingPet && { backgroundColor: '#ddd', borderRadius: 20, width: 50, height: 10 }}
+                        description={isFetchingPet ? '' : pet.breed}
+                        left={() => (
+                            <Avatar.Image
+                                source={isFetchingPet ? null : { uri: `${SERVERURL}/image/${pet.photoId}` }}
+                                style={{ backgroundColor: isFetchingPet ? '#ddd' : 'white' }}
+                            />
+                        )}
+                    />
                     <Divider />
                     <HelperText>
                         位置(必要)
@@ -223,7 +187,6 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
                     dark
                     disabled={
                         isLoading
-                        || !petId
                         || changingLocation
                     }
                     loading={isLoading}

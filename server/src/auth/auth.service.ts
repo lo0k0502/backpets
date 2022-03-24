@@ -6,7 +6,7 @@ import { User } from '../user/user.schema';
 export class AuthService {
     constructor(private jwtService: JwtService) {}
 
-    async signAccessTokenAsync(user: User, expiresIn: string | number = '30m') {
+    async signAccessTokenAsync(user: User, expiresIn: string | number = '1h') {
         const accessToken = await this.jwtService.signAsync(
         { 
           username: user.username,

@@ -166,7 +166,7 @@ export default ({ visible, close, refreshReports }) => {
         <Dialog visible={visible} onDismiss={handleClose}>
             <Dialog.Title>發佈通報</Dialog.Title>
             <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
-                <ScrollView style={{ height: '80%', padding: 20 }}>
+                <ScrollView style={{ height: '80%', paddingHorizontal: 20 }}>
                     <TextInput
                         mode='outlined'
                         label='說明(必要)'

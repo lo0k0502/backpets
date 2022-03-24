@@ -42,8 +42,22 @@ export class PutUpForAdoptionController {
         }
     }
 
+    @Post(':putupforadoptionid')
+    async EditPutUpForAdoption(@Param() { putupforadoptionid }, @Body() { content, location }, @Res() res: Response) {
+        try {
+            const result = await this.putUpForAdoptionService.findOne({ _id: putupforadoptionid });
+            if (!result) return res.status(400).json({ message: '送養貼文不存在' });
+    
+            await this.putUpForAdoptionService.updateOne({ _id: putupforadoptionid }, { content, location });
+            return res.status(200).json({ success: true });
+        } catch (error) {
+            console.log(error);
+            return res.status(400).json({ message: '錯誤' });
+        }
+    }
+
     @Delete(':putupforadoptionid')
-    async DeleteMission(@Param() { putupforadoptionid }, @Res() res: Response) {
+    async DeletePutUpForAdoption(@Param() { putupforadoptionid }, @Res() res: Response) {
         try {
             const result = await this.putUpForAdoptionService.findOne({ _id: putupforadoptionid });
             if (!result) return res.status(400).json({ message: '送養貼文不存在' });

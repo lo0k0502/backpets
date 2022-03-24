@@ -6,6 +6,7 @@ import { usePutUpForAdoptions, useSelfPets } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
 import { animalTagsArray } from '../../../../utils/constants';
 import TagsView from '../TagsView';
+import EditPutUpForAdoptionDialog from './EditPutUpForAdoptionDialog';
 import PutUpForAdoptionCard from './PutUpForAdoptionCard';
 import PutUpForAdoptionDialog from './PutUpForAdoptionDialog';
 
@@ -17,6 +18,8 @@ export default ({ searchTextState }) => {
   const { colors } = useTheme();
 
   const [putUpForAdoptionDialog, setPutUpForAdoptionDialog] = useState(false);// Whether putUpForAdoption dialog is open
+  const [editPutUpForAdoptionDialog, setEditPutUpForAdoptionDialog] = useState(false);// Whether edit putUpForAdoption dialog is open
+  const [editPutUpForAdoption, setEditPutUpForAdoption] = useState({});
 
   const [animalTags, setAnimalTags] = useState(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
 
@@ -71,6 +74,12 @@ export default ({ searchTextState }) => {
             close={() => setPutUpForAdoptionDialog(false)}
             refreshPutUpForAdoptions={refreshPutUpForAdoptions}
           />
+          <EditPutUpForAdoptionDialog
+            putUpForAdoption={editPutUpForAdoption}
+            visible={editPutUpForAdoptionDialog}
+            close={() => setEditPutUpForAdoptionDialog(false)}
+            refreshPutUpForAdoptions={refreshPutUpForAdoptions}
+          />
         </Portal>
         {
           isFetching ? (
@@ -88,6 +97,8 @@ export default ({ searchTextState }) => {
                       key={putUpForAdoption._id}
                       putUpForAdoption={putUpForAdoption}
                       tagSelected={selectedTags.length}
+                      setEditPutUpForAdoption={setEditPutUpForAdoption}
+                      setEditPutUpForAdoptionDialog={setEditPutUpForAdoptionDialog}
                     />
                   ) : null)
                 ) : (
@@ -98,6 +109,8 @@ export default ({ searchTextState }) => {
                   <PutUpForAdoptionCard
                     key={putUpForAdoption._id}
                     putUpForAdoption={putUpForAdoption}
+                    setEditPutUpForAdoption={setEditPutUpForAdoption}
+                    setEditPutUpForAdoptionDialog={setEditPutUpForAdoptionDialog}
                   />
                 ))
               )

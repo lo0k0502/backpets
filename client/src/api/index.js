@@ -47,4 +47,5 @@ export const fetchAllReports = () => API.get('/report/fetchall');
 
 // put up for adoption
 export const addPutUpForAdoption = (payload) => API.post('/put-up-for-adoption/add', payload);
+export const editPutUpForAdoption = (putUpForAdoptionId, payload) => API.post(`/put-up-for-adoption/${putUpForAdoptionId}`, payload);
 export const fetchAllPutUpForAdoptions = () => API.get('/put-up-for-adoption/fetchall');

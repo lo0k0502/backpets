@@ -401,7 +401,7 @@ export const useUser = (userId) => {
  *  isFetching: boolean,
  * }}
  */
-export const useSelfPets = (userId) => {
+export const useSelfPets = (userId, dependencies = []) => {
     const [pets, setPets] = useState([]);
     const isMounted = useRef(true);
     const [isFetching, setIsFetching] = useState(false);
@@ -428,7 +428,7 @@ export const useSelfPets = (userId) => {
         if (userId) fetchSelfPets();
 
         return () => { isMounted.current = false };
-    }, [userId]);
+    }, [userId, ...dependencies]);
 
     return {
         pets,

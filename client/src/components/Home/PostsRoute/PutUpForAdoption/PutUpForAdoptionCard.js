@@ -9,7 +9,12 @@ import { usePet, useUser } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
 import Tag from '../Tag';
 
-export default ({ putUpForAdoption, tagSelected = false }) => {
+export default ({
+    putUpForAdoption,
+    tagSelected = false,
+    setEditPutUpForAdoption = () => {},
+    setEditPutUpForAdoptionDialog = () => {},
+}) => {
     const navigation = useNavigation();
     const { colors } = useTheme();
     const user = useSelector(selectUser);
@@ -55,7 +60,14 @@ export default ({ putUpForAdoption, tagSelected = false }) => {
                                 )}
                                 theme={{ roundness: 0 }}
                             >
-                                <Menu.Item title='編輯貼文' onPress={() => {}} />
+                                <Menu.Item
+                                    title='編輯貼文'
+                                    onPress={() => {
+                                        setMenu(false);
+                                        setEditPutUpForAdoption(putUpForAdoption);
+                                        setEditPutUpForAdoptionDialog(true);
+                                    }}
+                                />
                                 <Menu.Item title='刪除貼文' titleStyle={{ color: 'red' }} onPress={() => {}} />
                             </Menu>
                         ) : null

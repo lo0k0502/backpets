@@ -11,13 +11,11 @@ import { SERVERURL } from '../../../../api/API';
 
 export default ({ mission, visible, close, refreshMissions }) => {
     const { colors } = useTheme();
+    const { pet, isFetching: isFetchingPet } = usePet(mission.petId);
     const { currentLatitude, currentLongitude } = useCurrentLocation();
     
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
     const [changingLocation, setChangingLocation] = useState(false);
-    
-    const [petId, setPetId] = useState('');
-    const { pet } = usePet(petId);
 
     const [content, setContent] = useState('');
     const [lostTime, setLostTime] = useState(new Date());
@@ -43,7 +41,6 @@ export default ({ mission, visible, close, refreshMissions }) => {
     }, [currentLatitude, currentLongitude]);
 
     useEffect(() => {
-        setPetId(mission.petId || '');
         setContent(mission.content || '');
         setLostTime(mission.lost_time ? new Date(mission.lost_time) : new Date());
         setMapViewRegion(mission.location ? {
@@ -62,10 +59,13 @@ export default ({ mission, visible, close, refreshMissions }) => {
     const handleClose = () => {
         close();
 
-        setPetId('');
-        setContent('');
-        setLostTime(new Date());
-        setMapViewRegion({
+        setContent(mission.content || '');
+        setLostTime(mission.lost_time ? new Date(mission.lost_time) : new Date());
+        setMapViewRegion(mission.location ? {
+            ...mission.location,
+            latitudeDelta: 0.0122,
+            longitudeDelta: 0.003,
+        } : {
             latitude: currentLatitude,
             longitude: currentLongitude,
             latitudeDelta: 0.0122,
@@ -107,18 +107,19 @@ export default ({ mission, visible, close, refreshMissions }) => {
         <Dialog visible={visible} onDismiss={handleClose}>
             <Dialog.Title>發佈任務</Dialog.Title>
             <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
-                <ScrollView style={{ height: '80%', padding: 20 }}>
-                    {
-                        pet?.photoId ? (
-                            <>
-                                <HelperText>遺失寵物:</HelperText>
-                                <List.Item
-                                    title={pet.name}
-                                    left={() => <Avatar.Image source={{ uri: `${SERVERURL}/image/${pet.photoId}` }} style={{ backgroundColor: 'white' }} />}
-                                />
-                            </>
-                        ) : null
-                    }
+                <ScrollView style={{ height: '80%', paddingHorizontal: 20 }}>
+                    <HelperText>遺失寵物:</HelperText>
+                    <List.Item
+                        title={isFetchingPet ? '' : pet.name}
+                        titleStyle={isFetchingPet && { backgroundColor: '#ddd', borderRadius: 20, width: 50, height: 10 }}
+                        description={isFetchingPet ? '' : pet.breed}
+                        left={() => (
+                            <Avatar.Image
+                                source={isFetchingPet ? null : { uri: `${SERVERURL}/image/${pet.photoId}` }}
+                                style={{ backgroundColor: isFetchingPet ? '#ddd' : 'white' }}
+                            />
+                        )}
+                    />
                     <Divider style={lostTimeErrorMsg && { backgroundColor: 'red' }} />
                     <HelperText>
                         請選擇遺失日期與時間(必要)
@@ -267,7 +268,6 @@ export default ({ mission, visible, close, refreshMissions }) => {
                     dark
                     disabled={
                         isLoading
-                        || !petId
                         || changingLocation
                     }
                     loading={isLoading}

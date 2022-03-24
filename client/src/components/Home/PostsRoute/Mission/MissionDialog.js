@@ -10,16 +10,16 @@ import MapView from 'react-native-maps';
 import { SERVERURL } from '../../../../api/API';
 
 export default ({ visible, close, refreshMissions }) => {
+    const [petsDialog, setPetsDialog] = useState(false);
+
     const user = useSelector(selectUser);
-    const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id);
+    const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id, [petsDialog]);
     const { missions } = useMissions();
     const { colors } = useTheme();
     const { currentLatitude, currentLongitude } = useCurrentLocation();
 
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
     const [changingLocation, setChangingLocation] = useState(false);
-
-    const [petsDialog, setPetsDialog] = useState(false);
 
     const [petId, setPetId] = useState('');
     const [content, setContent] = useState('');
@@ -94,7 +94,7 @@ export default ({ visible, close, refreshMissions }) => {
         <Dialog visible={visible} onDismiss={handleClose}>
             <Dialog.Title>發佈任務</Dialog.Title>
             <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
-                <ScrollView style={{ height: '80%', padding: 20 }}>
+                <ScrollView style={{ height: '80%', paddingHorizontal: 20 }}>
                     <Portal>
                         <Dialog visible={petsDialog} onDismiss={() => setPetsDialog(false)}>
                             <Dialog.Title>請選擇一個寵物</Dialog.Title>

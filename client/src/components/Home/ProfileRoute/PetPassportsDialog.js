@@ -180,7 +180,7 @@ export default ({ visible, close, refreshPets }) => {
         <Dialog visible={visible} onDismiss={handleClose}>
             <Dialog.Title>新增寵物護照</Dialog.Title>
             <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
-                <ScrollView style={{ height: '80%', padding: 20 }}>
+                <ScrollView style={{ height: '80%', paddingHorizontal: 20 }}>
                     <TextInput 
                         mode='outlined'
                         label='寵物名稱(必要)'
