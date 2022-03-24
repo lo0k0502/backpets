@@ -1,16 +1,21 @@
 import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
-import React from 'react';
+import React, { useState } from 'react';
 import { View } from 'react-native';
-import { Avatar, Button, Caption, Card, Divider, Paragraph, Subheading, Text, useTheme } from 'react-native-paper';
+import { Avatar, Button, Caption, Card, Divider, IconButton, Menu, Paragraph, Subheading, Text, useTheme } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 import { SERVERURL } from '../../../../api/API';
 import { useUser } from '../../../../hooks';
+import { selectUser } from '../../../../redux/userSlice';
 import Tag from '../Tag';
 
 export default ({ report, tagSelected = false }) => {
     const navigation = useNavigation();
     const { colors } = useTheme();
+    const user = useSelector(selectUser);
     const { user: poster } = useUser(report.userId);
+
+    const [menu, setMenu] = useState(false);
 
     return (
         <Card
@@ -33,6 +38,26 @@ export default ({ report, tagSelected = false }) => {
                             source={{ uri: poster.photoId ? `${SERVERURL}/image/${poster.photoId}` : null }}
                             style={{ backgroundColor: 'white' }}
                         />
+                    )}
+                    right={props => (
+                        user.info?._id === poster._id ? (
+                            <Menu
+                                {...props}
+                                visible={menu}
+                                onDismiss={() => setMenu(false)}
+                                anchor={(
+                                    <IconButton
+                                        icon='dots-vertical'
+                                        size={30}
+                                        onPress={() => setMenu(true)}
+                                    />
+                                )}
+                                theme={{ roundness: 0 }}
+                            >
+                                <Menu.Item title='編輯通報' onPress={() => {}} />
+                                <Menu.Item title='刪除通報' titleStyle={{ color: 'red' }} onPress={() => {}} />
+                            </Menu>
+                        ) : null
                     )}
                 />
                 <Card.Cover

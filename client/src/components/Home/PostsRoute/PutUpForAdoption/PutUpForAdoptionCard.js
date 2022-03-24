@@ -1,17 +1,22 @@
 import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
-import React from 'react';
+import React, { useState } from 'react';
 import { View } from 'react-native';
-import { Avatar, Button, Card, Divider, Paragraph, Subheading, Text, useTheme } from 'react-native-paper';
+import { Avatar, Button, Card, Divider, IconButton, Menu, Paragraph, Subheading, Text, useTheme } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 import { SERVERURL } from '../../../../api/API';
 import { usePet, useUser } from '../../../../hooks';
+import { selectUser } from '../../../../redux/userSlice';
 import Tag from '../Tag';
 
 export default ({ putUpForAdoption, tagSelected = false }) => {
     const navigation = useNavigation();
     const { colors } = useTheme();
+    const user = useSelector(selectUser);
     const { pet } = usePet(putUpForAdoption.petId);
     const { user: poster } = useUser(pet?.userId);
+
+    const [menu, setMenu] = useState(false);
 
     return (
         <Card
@@ -34,6 +39,26 @@ export default ({ putUpForAdoption, tagSelected = false }) => {
                             source={{ uri: poster.photoId ? `${SERVERURL}/image/${poster.photoId}` : null }}
                             style={{ backgroundColor: 'white' }}
                         />
+                    )}
+                    right={props => (
+                        user.info?._id === poster._id ? (
+                            <Menu
+                                {...props}
+                                visible={menu}
+                                onDismiss={() => setMenu(false)}
+                                anchor={(
+                                    <IconButton
+                                        icon='dots-vertical'
+                                        size={30}
+                                        onPress={() => setMenu(true)}
+                                    />
+                                )}
+                                theme={{ roundness: 0 }}
+                            >
+                                <Menu.Item title='編輯貼文' onPress={() => {}} />
+                                <Menu.Item title='刪除貼文' titleStyle={{ color: 'red' }} onPress={() => {}} />
+                            </Menu>
+                        ) : null
                     )}
                 />
                 {
@@ -84,9 +109,13 @@ export default ({ putUpForAdoption, tagSelected = false }) => {
                         </Paragraph>
                     ) : null
                 }
-                <View style={{ flexDirection: 'row', paddingHorizontal: 10, paddingBottom: 10 }}>
-                    <Tag tag={{ name: pet?.tag, selected: tagSelected }} />
-                </View>
+                {
+                    pet?.tag ? (
+                        <View style={{ flexDirection: 'row', paddingHorizontal: 10, paddingBottom: 10 }}>
+                            <Tag tag={{ name: pet.tag, selected: tagSelected }} />
+                        </View>
+                    ) : null
+                }
                 <Divider
                     style={{
                         backgroundColor: colors.primary,

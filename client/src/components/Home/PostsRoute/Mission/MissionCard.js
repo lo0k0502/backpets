@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Card, Avatar, Paragraph, Button, useTheme, Text, Subheading, Divider, Caption } from 'react-native-paper';
+import { Card, Avatar, Paragraph, Button, useTheme, Text, Subheading, Divider, Caption, IconButton, Menu } from 'react-native-paper';
 import moment from 'moment';
 import { usePet, useUser } from '../../../../hooks';
 import { SERVERURL } from '../../../../api/API';
@@ -20,6 +20,8 @@ export default ({
     const user = useSelector(selectUser);
     const { pet } = usePet(mission.petId);
     const { user: poster } = useUser(pet?.userId);
+
+    const [menu, setMenu] = useState(false);
 
     return (
         <Card
@@ -43,7 +45,30 @@ export default ({
                             style={{ backgroundColor: 'white' }}
                         />
                     )}
-                    right={props => <Caption {...props}>{mission.completed ? '已完成' : '未完成'}</Caption>}
+                    right={props => (
+                        <View {...props} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Caption>{mission.completed ? '已完成' : '未完成'}</Caption>
+                            {
+                                user.info?._id === poster._id ? (
+                                    <Menu
+                                        visible={menu}
+                                        onDismiss={() => setMenu(false)}
+                                        anchor={(
+                                            <IconButton
+                                                icon='dots-vertical'
+                                                size={30}
+                                                onPress={() => setMenu(true)}
+                                            />
+                                        )}
+                                        theme={{ roundness: 0 }}
+                                    >
+                                        <Menu.Item title='編輯任務' onPress={() => {}} />
+                                        <Menu.Item title='刪除任務' titleStyle={{ color: 'red' }} onPress={() => {}} />
+                                    </Menu>
+                                ) : null
+                            }
+                        </View>
+                    )}
                 />
                 {
                     pet?.photoId ? (
@@ -81,9 +106,13 @@ export default ({
                         </Paragraph>
                     ) : null
                 }
-                <View style={{ flexDirection: 'row', paddingHorizontal: 10, paddingBottom: 10 }}>
-                    <Tag tag={{ name: pet?.tag, selected: tagSelected }} />
-                </View>
+                {
+                    pet?.tag ? (
+                        <View style={{ flexDirection: 'row', paddingHorizontal: 10, paddingBottom: 10 }}>
+                            <Tag tag={{ name: pet.tag, selected: tagSelected }} />
+                        </View>
+                    ) : null
+                }
                 <Divider
                     style={{
                         backgroundColor: colors.primary,
