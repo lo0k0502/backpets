@@ -92,7 +92,7 @@ export default ({ putUpForAdoption, visible, close, refreshPutUpForAdoptions }) 
 
     return (
         <Dialog visible={visible} onDismiss={handleClose}>
-            <Dialog.Title>發佈送養貼文</Dialog.Title>
+            <Dialog.Title>編輯送養貼文</Dialog.Title>
             <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
                 <ScrollView style={{ height: '80%', paddingHorizontal: 20 }}>
                     <HelperText>送養寵物:</HelperText>
@@ -193,7 +193,7 @@ export default ({ putUpForAdoption, visible, close, refreshPutUpForAdoptions }) 
                     onPress={handleSubmit}
                     contentStyle={{ paddingHorizontal: 10 }}
                 >
-                    發佈
+                    編輯
                 </Button>
             </Dialog.Actions>
         </Dialog>

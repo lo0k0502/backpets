@@ -54,6 +54,7 @@ export class ImageController {
         try {
             const image = await this.gfs.findById(id);
             if (!image) return res.status(400).json({ message: 'No such file' });
+            
             await this.gfs.delete(image._id.toString());
             return res.status(200).json({ message: 'Successfully deleted' });
         } catch (error) {

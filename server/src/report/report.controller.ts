@@ -38,6 +38,20 @@ export class ReportController {
         }
     }
 
+    @Post(':reportid')
+    async EditReport(@Param() { reportid }, @Body() { content, tag, photoId, location }, @Res() res: Response) {
+        try {
+            const result = await this.reportService.findOne({ _id: reportid });
+            if (!result) return res.status(400).json({ message: '通報不存在' });
+    
+            await this.reportService.updateOne({ _id: reportid }, { content, tag, photoId, location });
+            return res.status(200).json({ success: true });
+        } catch (error) {
+            console.log(error);
+            return res.status(400).json({ message: '錯誤' });
+        }
+    }
+
     @Delete(':reportid')
     async DeleteReport(@Param() { reportid }, @Res() res: Response) {
         try {

@@ -9,7 +9,12 @@ import { useUser } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
 import Tag from '../Tag';
 
-export default ({ report, tagSelected = false }) => {
+export default ({
+    report,
+    tagSelected = false,
+    setEditReport = () => {},
+    setEditReportDialog = () => {},
+}) => {
     const navigation = useNavigation();
     const { colors } = useTheme();
     const user = useSelector(selectUser);
@@ -54,7 +59,14 @@ export default ({ report, tagSelected = false }) => {
                                 )}
                                 theme={{ roundness: 0 }}
                             >
-                                <Menu.Item title='編輯通報' onPress={() => {}} />
+                                <Menu.Item
+                                    title='編輯通報'
+                                    onPress={() => {
+                                        setMenu(false);
+                                        setEditReport(report);
+                                        setEditReportDialog(true);
+                                    }}
+                                />
                                 <Menu.Item title='刪除通報' titleStyle={{ color: 'red' }} onPress={() => {}} />
                             </Menu>
                         ) : null

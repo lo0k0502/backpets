@@ -4,6 +4,7 @@ import { ActivityIndicator, Divider, FAB, Portal, Text, Title, useTheme } from '
 import { useReports } from '../../../../hooks';
 import { reportTagsArray } from '../../../../utils/constants';
 import TagsView from '../TagsView';
+import EditReportDialog from './EditReportDialog';
 import ReportCard from './ReportCard';
 import ReportDialog from './ReportDialog';
 
@@ -15,6 +16,8 @@ export default ({ searchTextState }) => {
   const [reportTags, setReportTags] = useState(reportTagsArray.map(tagName => ({ name: tagName, selected: false })));
 
   const [reportDialog, setReportDialog] = useState(false);// Whether report dialog is open
+  const [editReportDialog, setEditReportDialog] = useState(false);// Whether edit report dialog is open
+  const [editReport, setEditReport] = useState({});
 
   const selectedTags = reportTagsArray.filter(tag => reportTags.find(_tag => _tag.name === tag && _tag.selected));
 
@@ -58,6 +61,12 @@ export default ({ searchTextState }) => {
             close={() => setReportDialog(false)}
             refreshReports={refreshReports}
           />
+          <EditReportDialog
+            report={editReport}
+            visible={editReportDialog}
+            close={() => setEditReportDialog(false)}
+            refreshReports={refreshReports}
+          />
         </Portal>
           {
             isFetching ? (
@@ -75,6 +84,8 @@ export default ({ searchTextState }) => {
                         key={report._id}
                         report={report}
                         tagSelected={selectedTags.length}
+                        setEditReport={setEditReport}
+                        setEditReportDialog={setEditReportDialog}
                       />
                     ) : null)
                   ) : (
@@ -85,6 +96,8 @@ export default ({ searchTextState }) => {
                     <ReportCard
                       key={report._id}
                       report={report}
+                      setEditReport={setEditReport}
+                      setEditReportDialog={setEditReportDialog}
                     />
                   ))
                 )

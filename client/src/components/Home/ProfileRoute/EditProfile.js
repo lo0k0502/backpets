@@ -140,7 +140,6 @@ export default ({ navigation }) => {
                 });
     
                 const { data } = await uploadImage(formData);
-                
                 sendPhotoId = data.photoId;
 
                 // If the previous avatar is in our database and it's not the default avatar, delete it.

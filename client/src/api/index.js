@@ -43,6 +43,7 @@ export const fetchCluesByMission = (missionId) => API.get(`/clue/fetchbymission/
 
 // report
 export const addReport = (payload) => API.post('/report/add', payload);
+export const editReport = (reportId, payload) => API.post(`/report/${reportId}`, payload);
 export const fetchAllReports = () => API.get('/report/fetchall');
 
 // put up for adoption
