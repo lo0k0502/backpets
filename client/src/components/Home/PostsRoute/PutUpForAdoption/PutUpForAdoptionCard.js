@@ -86,6 +86,10 @@ export default ({
                     ) : null
                 }
                 <Subheading style={{ padding: 10 }}>
+                    <Text style={{ color: colors.primary }}>寵物名稱: </Text>
+                    {pet?.name}
+                </Subheading>
+                <Subheading style={{ padding: 10 }}>
                     <Text style={{ color: colors.primary }}>品種: </Text>
                     {pet?.breed}
                 </Subheading>

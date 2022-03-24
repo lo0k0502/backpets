@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Headline, Text } from 'react-native-paper';
+import { usePet } from '../../../hooks';
 
 const styles = StyleSheet.create({
     root: {
@@ -42,13 +43,14 @@ const styles = StyleSheet.create({
 
 export default ({ mission }) => {
     const navigation = useNavigation();
+    const { pet } = usePet(mission.petId);
 
     return (
         <View style={styles.container}>
             <View style={styles.bubble}>
                 <View style={styles.root}>
                     <Text style={{ fontWeight: '900' }}>
-                        我家的{mission.breed}不見了
+                        我家的{pet.breed}不見了
                     </Text>
                     <Text>{mission.content}</Text>
                 </View>

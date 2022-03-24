@@ -58,30 +58,42 @@ export default ({ route, navigation, searchTextState }) => {
 
     const selectedTags = animalTagsArray.filter(tag => animalTags.find(_tag => _tag.name === tag && _tag.selected));
 
-    const checkMissionMatchTagAndSearchText = (mission) => (
-        (!selectedTags.length || selectedTags.includes(mission.tag))
-        && (
-            !searchText
-            || mission.content.search(searchText) !== -1
-            || mission.breed.search(searchText) !== -1
-            || mission.feature.search(searchText) !== -1
-            || mission.gender.search(searchText) !== -1
-        )
-    );
+    const checkMissionMatchTagAndSearchText = (mission) => {
+        const pet = pets.find(_pet => _pet._id === mission.petId);
+
+        return (
+            (!selectedTags.length || selectedTags.includes(pet.tag))
+            && (
+                !searchText
+                || mission.content.search(searchText) !== -1
+                || pet.name.search(searchText) !== -1
+                || pet.breed.search(searchText) !== -1
+                || pet.feature.search(searchText) !== -1
+                || pet.gender.search(searchText) !== -1
+            )
+        );
+    };
 
     const checkMissionsMatchTagAndSearchText = () => {
         const missionsMatchTag = selectedTags.length ? (
-            missions.filter(mission => selectedTags.includes(mission.tag))
+            missions.filter(mission => {
+                return selectedTags.includes(pets.find(_pet => _pet._id === mission.petId).tag);
+            })
         ) : missions;
         if (!missionsMatchTag.length) return false;
         
         const missionsMatchTagAndSearchText = searchText ? (
-            missionsMatchTag.filter(mission => (
-                mission.content.search(searchText) !== -1
-                || mission.breed.search(searchText) !== -1
-                || mission.feature.search(searchText) !== -1
-                || mission.gender.search(searchText) !== -1
-            ))
+            missionsMatchTag.filter(mission => {
+                const pet = pets.find(_pet => _pet._id === mission.petId);
+        
+                return (
+                    mission.content.search(searchText) !== -1
+                    || pet.name.search(searchText) !== -1
+                    || pet.breed.search(searchText) !== -1
+                    || pet.feature.search(searchText) !== -1
+                    || pet.gender.search(searchText) !== -1
+                );
+            })
         ) : missionsMatchTag;
 
         return missionsMatchTagAndSearchText.length ? true : false;

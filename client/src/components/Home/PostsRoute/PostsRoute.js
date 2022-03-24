@@ -18,15 +18,14 @@ export default ({ route, navigation }) => {
                     header: props => (
                         searchText || props.route.name === 'Search' ? (
                             <AppSearchbar
-                              route={props.route}
-                              navigation={props.navigation}
+                              {...props}
                               searchTextState={[searchText, setSearchText]}
                               autoFocus={props.route.name === 'Search'}
-                              searchFunction={props.route.name === 'Search' && (() => props.navigation.navigate('PostsTab'))}
+                              searchFunction={props.route.name === 'Search' ? (() => props.navigation.navigate('PostsTab')) : () => {}}
                             />
                         ) : (
                             props.route.name === 'PostsTab' ? (
-                                <Appbar route={props.route} navigation={props.navigation} />
+                                <Appbar {...props} />
                             ) : null
                         )
                     )

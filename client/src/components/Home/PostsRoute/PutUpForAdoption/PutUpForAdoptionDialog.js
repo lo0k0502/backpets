@@ -5,12 +5,13 @@ import { Avatar, Button, Card, Dialog, Divider, HelperText, List, Portal, RadioB
 import { useSelector } from 'react-redux';
 import { addPutUpForAdoption, uploadImage } from '../../../../api';
 import { SERVERURL } from '../../../../api/API';
-import { useCurrentLocation, useSelfPets } from '../../../../hooks';
+import { useCurrentLocation, usePutUpForAdoptions, useSelfPets } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
 
 export default ({ visible, close, refreshPutUpForAdoptions }) => {
     const user = useSelector(selectUser);
     const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id);
+    const { putUpForAdoptions } = usePutUpForAdoptions()
     const { colors } = useTheme();
     const { currentLatitude, currentLongitude } = useCurrentLocation();
 
@@ -103,6 +104,7 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
                                             <ListItem
                                                 key={pet._id}
                                                 pet={pet}
+                                                disabled={putUpForAdoptions.find(putUpForAdoption => putUpForAdoption.petId === pet._id)}
                                                 onPress={() => {
                                                     setPetId(pet._id);
                                                     setPetsDialog(false);
@@ -237,11 +239,15 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
     );
 };
 
-const ListItem = ({ pet, onPress }) => {
+const ListItem = ({ pet, disabled = false, onPress }) => {
     return (
         <>
             <List.Item
                 title={pet.name}
+                description={disabled ? '無法選擇: 已存在此寵物的送養貼文' : null}
+                descriptionStyle={{ color: 'red' }}
+                style={disabled && { backgroundColor: '#eee', opacity: 0.7 }}
+                disabled={disabled}
                 left={() => <Avatar.Image source={{ uri: `${SERVERURL}/image/${pet.photoId}` }} style={{ backgroundColor: 'white' }} />}
                 onPress={onPress}
             />

@@ -319,13 +319,13 @@ export const usePutUpForAdoptions = () => {
         setIsFetching(false);
     };
 
-    useFocusEffect(useCallback(() => {
+    useEffect(() => {
         isMounted.current = true;
 
         fetchPutUpForAdoptions();
 
         return () => { isMounted.current = false };
-    }, []));
+    }, []);
 
     return {
         putUpForAdoptions,

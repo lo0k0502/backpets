@@ -25,28 +25,40 @@ export default ({ searchTextState }) => {
 
   const selectedTags = animalTagsArray.filter(tag => animalTags.find(_tag => _tag.name === tag && _tag.selected));
 
-  const checkPutUpForAdoptionMatchTagAndSearchText = (putUpForAdoption) => (
-      (!selectedTags.length || selectedTags.includes(putUpForAdoption.tag))
+  const checkPutUpForAdoptionMatchTagAndSearchText = (putUpForAdoption) => {
+    const pet = pets.find(_pet => _pet._id === putUpForAdoption.petId);
+
+    return (
+      (!selectedTags.length || selectedTags.includes(pet.tag))
       && (
-          !searchText
-          || putUpForAdoption.content.search(searchText) !== -1
-          || putUpForAdoption.breed.search(searchText) !== -1
-          || putUpForAdoption.gender.search(searchText) !== -1
+        !searchText
+        || putUpForAdoption.content.search(searchText) !== -1
+        || pet.name.search(searchText) !== -1
+        || pet.breed.search(searchText) !== -1
+        || pet.gender.search(searchText) !== -1
       )
-  );
+    );
+  };
 
   const checkPutUpForAdoptionsMatchTagAndSearchText = () => {
       const putUpForAdoptionsMatchTag = selectedTags.length ? (
-          putUpForAdoptions.filter(putUpForAdoption => selectedTags.includes(putUpForAdoption.tag))
+          putUpForAdoptions.filter(putUpForAdoption => {
+            return selectedTags.includes(pets.find(_pet => _pet._id === putUpForAdoption.petId).tag);
+          })
       ) : putUpForAdoptions;
       if (!putUpForAdoptionsMatchTag.length) return false;
       
       const putUpForAdoptionsMatchTagAndSearchText = searchText ? (
-          putUpForAdoptionsMatchTag.filter(putUpForAdoption => (
+          putUpForAdoptionsMatchTag.filter(putUpForAdoption => {
+            const pet = pets.find(_pet => _pet._id === putUpForAdoption.petId);
+
+            return (
               putUpForAdoption.content.search(searchText) !== -1
-              || putUpForAdoption.breed.search(searchText) !== -1
-              || putUpForAdoption.gender.search(searchText) !== -1
-          ))
+              || pet.name.search(searchText) !== -1
+              || pet.breed.search(searchText) !== -1
+              || pet.gender.search(searchText) !== -1
+            );
+          })
       ) : putUpForAdoptionsMatchTag;
 
       return putUpForAdoptionsMatchTagAndSearchText.length ? true : false;

@@ -319,7 +319,7 @@ export default ({ visible, close, refreshMissions }) => {
     );
 };
 
-const ListItem = ({ pet, disabled, onPress }) => {
+const ListItem = ({ pet, disabled = false, onPress }) => {
     return (
         <>
             <List.Item
