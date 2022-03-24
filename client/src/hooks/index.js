@@ -91,13 +91,13 @@ export const useMissions = () => {
         setIsFetching(false);
     };
 
-    useFocusEffect(useCallback(() => {
+    useEffect(() => {
         isMounted.current = true;
 
         fetchMissions();
 
         return () => { isMounted.current = false };
-    }, []));
+    }, []);
 
     return {
         missions,

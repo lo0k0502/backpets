@@ -130,8 +130,8 @@ export default ({ visible, close, missionId }) => {
                 content,
                 photoId: data.photoId,
                 location: {
-                    latitude: mapViewRegion.latitude, 
-                    longitude: mapViewRegion.longitude, 
+                    latitude: mapViewRegion.latitude,
+                    longitude: mapViewRegion.longitude,
                 },
             });
 

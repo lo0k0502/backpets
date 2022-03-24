@@ -6,22 +6,10 @@ export type MissionDocument = Mission & Document;
 @Schema()
 export class Mission {
   @Prop({ required: true })
-  userId: Types.ObjectId;
+  petId: Types.ObjectId;
 
   @Prop({ required: true })
   content: string;
-
-  @Prop()
-  tag: string;
-
-  @Prop()
-  breed: string;
-
-  @Prop()
-  feature: string;
-
-  @Prop()
-  gender: string;
 
   @Prop()
   lost_time: string;
@@ -29,17 +17,11 @@ export class Mission {
   @Prop()
   post_time: number;
 
-  @Prop()
-  photoId: Types.ObjectId;
-
   @Prop({ type: Object, required: true })
   location: {
     latitude: number,
     longitude: number,
   };
-
-  @Prop()
-  clueIds: Types.ObjectId[];
 
   @Prop()
   completed: Boolean;

@@ -16,7 +16,7 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
 
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
     const [changingLocation, setChangingLocation] = useState(false);
-    
+
     const [petsDialog, setPetsDialog] = useState(false);
 
     const [petId, setPetId] = useState('');

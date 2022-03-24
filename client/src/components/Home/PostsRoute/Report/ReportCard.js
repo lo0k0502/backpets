@@ -45,7 +45,7 @@ export default ({ report, tagSelected = false }) => {
                     }}
                 />
                 <Paragraph style={{ padding: 10 }}>
-                    <Text style={{ color: colors.primary }}>{'補充:\n'}</Text>
+                    <Subheading style={{ color: colors.primary }}>{'說明:\n'}</Subheading>
                     {report.content}
                 </Paragraph>
                 <View style={{ flexDirection: 'row', paddingHorizontal: 10, paddingBottom: 10 }}>

@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Card, Avatar, Paragraph, Button, useTheme, Text, Subheading, Divider, Caption } from 'react-native-paper';
 import moment from 'moment';
-import { useUser } from '../../../../hooks';
+import { usePet, useUser } from '../../../../hooks';
 import { SERVERURL } from '../../../../api/API';
 import Tag from '../Tag';
 import { useSelector } from 'react-redux';
@@ -18,7 +18,8 @@ export default ({
     const navigation = useNavigation();
     const { colors } = useTheme();
     const user = useSelector(selectUser);
-    const { user: poster } = useUser(mission.userId);
+    const { pet } = usePet(mission.petId);
+    const { user: poster } = useUser(pet?.userId);
 
     return (
         <Card
@@ -45,12 +46,11 @@ export default ({
                     right={props => <Caption {...props}>{mission.completed ? '已完成' : '未完成'}</Caption>}
                 />
                 {
-                    mission.photoId ? (
-                        <Card.Cover
-                            source={{ uri: `${SERVERURL}/image/${mission.photoId}` }}
+                    pet?.photoId ? (
+                        <Avatar.Image
+                            source={{ uri: `${SERVERURL}/image/${pet.photoId}` }}
+                            size={200}
                             style={{
-                                width: 300,
-                                height: 200,
                                 alignSelf: 'center',
                                 marginVertical: 5,
                             }}
@@ -59,15 +59,15 @@ export default ({
                 }
                 <Subheading style={{ padding: 10 }}>
                     <Text style={{ color: colors.primary }}>品種: </Text>
-                    {mission.breed}
+                    {pet?.breed}
                 </Subheading>
                 <Subheading style={{ padding: 10 }}>
                     <Text style={{ color: colors.primary }}>特徵: </Text>
-                    {mission.feature}
+                    {pet?.feature}
                 </Subheading>
                 <Subheading style={{ padding: 10 }}>
                     <Text style={{ color: colors.primary }}>性別: </Text>
-                    {mission.gender}
+                    {pet?.gender}
                 </Subheading>
                 <Subheading style={{ padding: 10 }}>
                     <Text style={{ color: colors.primary }}>遺失時間: </Text>
@@ -76,13 +76,13 @@ export default ({
                 {
                     mission.content ? (
                         <Paragraph style={{ padding: 10 }}>
-                            <Text style={{ color: colors.primary }}>{'補充:\n'}</Text>
+                            <Subheading style={{ color: colors.primary }}>{'補充:\n'}</Subheading>
                             {mission.content}
                         </Paragraph>
                     ) : null
                 }
                 <View style={{ flexDirection: 'row', paddingHorizontal: 10, paddingBottom: 10 }}>
-                    <Tag tag={{ name: mission.tag, selected: tagSelected }} />
+                    <Tag tag={{ name: pet?.tag, selected: tagSelected }} />
                 </View>
                 <Divider
                     style={{

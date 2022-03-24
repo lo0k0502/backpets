@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Card, Avatar, Paragraph, useTheme, Text, Checkbox } from 'react-native-paper';
+import { Card, Avatar, Paragraph, useTheme, Text, Checkbox, Subheading } from 'react-native-paper';
 import moment from 'moment';
 import { useUser } from '../../../hooks';
 import { SERVERURL } from '../../../api/API';
@@ -76,7 +76,7 @@ export default ({
                     }}
                 />
                 <Paragraph style={{ padding: 10 }}>
-                    <Text style={{ color: colors.primary }}>{'說明:\n'}</Text>
+                    <Subheading style={{ color: colors.primary }}>{'說明:\n'}</Subheading>
                     {clue.content}
                 </Paragraph>
             </View>

@@ -15,9 +15,6 @@ export class Clue {
     content: string;
 
     @Prop()
-    tag: string;
-
-    @Prop()
     post_time: number;
 
     @Prop()

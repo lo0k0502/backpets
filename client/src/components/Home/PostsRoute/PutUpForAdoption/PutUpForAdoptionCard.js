@@ -79,7 +79,7 @@ export default ({ putUpForAdoption, tagSelected = false }) => {
                 {
                     putUpForAdoption.content ? (
                         <Paragraph style={{ padding: 10 }}>
-                            <Text style={{ color: colors.primary }}>{'補充:\n'}</Text>
+                            <Subheading style={{ color: colors.primary }}>{'補充:\n'}</Subheading>
                             {putUpForAdoption.content}
                         </Paragraph>
                     ) : null

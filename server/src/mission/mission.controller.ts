@@ -28,20 +28,14 @@ export class MissionController {
     }
 
     @Post('add')
-    async AddMission(@Body() { userId, content, tag, breed, feature, gender, lost_time, photoId, location }, @Res() res: Response) {
+    async AddMission(@Body() { petId, content, lost_time, location }, @Res() res: Response) {
         try {
             const result = await this.missionService.create({
-                userId: new Types.ObjectId(userId),
+                petId: new Types.ObjectId(petId),
                 content,
-                tag,
-                breed,
-                feature,
-                gender,
                 lost_time,
                 post_time: moment().valueOf(),
-                photoId: photoId ? new Types.ObjectId(photoId) : null,
                 location,
-                clueIds: [],
                 completed: false,
                 chosen_clueIds: [],
             });
