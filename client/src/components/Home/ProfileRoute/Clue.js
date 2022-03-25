@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { RefreshControl, ScrollView, View } from 'react-native';
-import { ActivityIndicator, AnimatedFAB, FAB, HelperText, Subheading, Text, Title, useTheme } from 'react-native-paper';
+import {
+    RefreshControl,
+    ScrollView,
+    View,
+} from 'react-native';
+import {
+    ActivityIndicator,
+    FAB,
+    HelperText,
+    Title,
+    useTheme,
+} from 'react-native-paper';
 import { useClues, useMission } from '../../../hooks';
 import ClueCard from './ClueCard';
 
-export default ({ route, navigation }) => {
+export default ({ route }) => {
     const { missionId } = route.params;
     const { colors } = useTheme();
     const mission = useMission(missionId);

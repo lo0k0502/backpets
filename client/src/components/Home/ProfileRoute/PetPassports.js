@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { RefreshControl, ScrollView } from 'react-native';
-import { ActivityIndicator, Avatar, Divider, List, Portal, Text } from 'react-native-paper';
+import { Avatar, Divider, List, Portal } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { SERVERURL } from '../../../api/API';
 import { useSelfPets } from '../../../hooks';

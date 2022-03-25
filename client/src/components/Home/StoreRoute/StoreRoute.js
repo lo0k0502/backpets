@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { Dimensions, StyleSheet, View, VirtualizedList, Text, StatusBar } from 'react-native';
+import {
+    Dimensions,
+    StyleSheet,
+    View,
+    VirtualizedList,
+    Text,
+} from 'react-native';
 import AppSearchbar from '../AppSearchbar';
 
 const boxSize = Dimensions.get('window').width / 2 - 50;

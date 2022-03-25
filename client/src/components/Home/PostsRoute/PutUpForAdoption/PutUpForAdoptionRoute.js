@@ -1,6 +1,18 @@
 import React, { useState } from 'react';
-import { Alert, RefreshControl, ScrollView, View } from 'react-native';
-import { ActivityIndicator, Divider, FAB, Portal, Text, Title, useTheme } from 'react-native-paper';
+import {
+  Alert,
+  RefreshControl,
+  ScrollView,
+  View,
+} from 'react-native';
+import {
+  ActivityIndicator,
+  Divider,
+  FAB,
+  Portal,
+  Title,
+  useTheme,
+} from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { usePutUpForAdoptions, useSelfPets } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';

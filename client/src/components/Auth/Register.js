@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, Platform } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { Button, HelperText, TextInput, useTheme } from 'react-native-paper';
 import { UserRegister } from '../../api';
 import { useStateWithValidation } from '../../hooks'

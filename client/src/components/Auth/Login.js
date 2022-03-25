@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { View, StyleSheet, Image, Pressable, Text, Dimensions } from 'react-native';
+import { View, StyleSheet, Image, Pressable, Text } from 'react-native';
 import { TextInput, Button, Divider, HelperText, useTheme } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import * as Google from 'expo-google-app-auth';
@@ -20,8 +20,6 @@ const styles = StyleSheet.create({
 
 export default ({ navigation, setSignInState }) => {
     const { colors } = useTheme();
-    const imgWidth = Dimensions.get('window').width * 0.7;
-    const imgHeight = Dimensions.get('window').height
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

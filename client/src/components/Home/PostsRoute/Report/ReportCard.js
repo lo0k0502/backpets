@@ -2,7 +2,17 @@ import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import { Avatar, Button, Caption, Card, Divider, IconButton, Menu, Paragraph, Subheading, Text, useTheme } from 'react-native-paper';
+import {
+    Avatar,
+    Button,
+    Card,
+    Divider,
+    IconButton,
+    Menu,
+    Paragraph,
+    Subheading,
+    useTheme,
+} from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { SERVERURL } from '../../../../api/API';
 import { useUser } from '../../../../hooks';

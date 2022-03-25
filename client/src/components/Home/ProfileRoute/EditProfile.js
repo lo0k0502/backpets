@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Alert } from 'react-native';
-import { Avatar, Button, HelperText, Text, TextInput } from 'react-native-paper';
+import { Avatar, Button, HelperText, TextInput } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
     requestMediaLibraryPermissionsAsync, 
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ({ navigation }) => {
+export default () => {
     const user = useSelector(selectUser);
 
     const [isLoading, setIsLoading] = useState(false);// Whether it is during editing profile, if so, disable inputs and buttons.

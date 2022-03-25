@@ -1,6 +1,17 @@
-import React, { useCallback, useState } from 'react'
-import { RefreshControl, ScrollView, View } from 'react-native';
-import { ActivityIndicator, Divider, FAB, Portal, Text, Title, useTheme } from 'react-native-paper';
+import React, { useState } from 'react'
+import {
+  RefreshControl,
+  ScrollView,
+  View,
+} from 'react-native';
+import {
+  ActivityIndicator,
+  Divider,
+  FAB,
+  Portal,
+  Title,
+  useTheme,
+} from 'react-native-paper';
 import { useReports } from '../../../../hooks';
 import { reportTagsArray } from '../../../../utils/constants';
 import TagsView from '../TagsView';

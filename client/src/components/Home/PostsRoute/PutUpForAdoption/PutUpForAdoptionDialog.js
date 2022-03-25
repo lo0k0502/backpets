@@ -1,9 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Image, ScrollView, View, TextInput as NativeTextInput, Alert, RefreshControl } from 'react-native';
+import {
+    Image,
+    ScrollView,
+    View,
+    TextInput as NativeTextInput,
+    RefreshControl,
+} from 'react-native';
 import MapView from 'react-native-maps';
-import { Avatar, Button, Card, Dialog, Divider, HelperText, List, Portal, RadioButton, Text, TextInput, useTheme } from 'react-native-paper';
+import {
+    Avatar,
+    Button,
+    Dialog,
+    Divider,
+    HelperText,
+    List,
+    Portal,
+    Text,
+    TextInput,
+} from 'react-native-paper';
 import { useSelector } from 'react-redux';
-import { addPutUpForAdoption, uploadImage } from '../../../../api';
+import { addPutUpForAdoption } from '../../../../api';
 import { SERVERURL } from '../../../../api/API';
 import { useCurrentLocation, usePutUpForAdoptions, useSelfPets } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
@@ -12,7 +28,6 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
     const user = useSelector(selectUser);
     const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id);
     const { putUpForAdoptions } = usePutUpForAdoptions()
-    const { colors } = useTheme();
     const { currentLatitude, currentLongitude } = useCurrentLocation();
 
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.

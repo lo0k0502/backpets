@@ -1,6 +1,16 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import * as Location from 'expo-location';
-import { fetchAllMissions, fetchAllPutUpForAdoptions, fetchAllReports, fetchCluesByMission, fetchMission, fetchPet, fetchPetsByUserId, fetchSelfMissions, fetchUserById } from '../api';
+import {
+    fetchAllMissions,
+    fetchAllPutUpForAdoptions,
+    fetchAllReports,
+    fetchCluesByMission,
+    fetchMission,
+    fetchPet,
+    fetchPetsByUserId,
+    fetchSelfMissions,
+    fetchUserById,
+} from '../api';
 import { useFocusEffect } from '@react-navigation/core';
 
 export default {

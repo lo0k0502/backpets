@@ -1,6 +1,13 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Card, Avatar, Paragraph, useTheme, Text, Checkbox, Subheading } from 'react-native-paper';
+import {
+    Card,
+    Avatar,
+    Paragraph,
+    useTheme,
+    Checkbox,
+    Subheading,
+} from 'react-native-paper';
 import moment from 'moment';
 import { useUser } from '../../../hooks';
 import { SERVERURL } from '../../../api/API';

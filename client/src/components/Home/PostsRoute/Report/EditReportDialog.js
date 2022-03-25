@@ -1,18 +1,35 @@
-import { getMediaLibraryPermissionsAsync, getPendingResultAsync, launchImageLibraryAsync, MediaTypeOptions, requestMediaLibraryPermissionsAsync } from 'expo-image-picker';
 import React, { useEffect, useState } from 'react';
-import { Alert, Image, ScrollView, TextInput as NativeTextInput, View } from 'react-native';
+import {
+    Alert,
+    Image,
+    ScrollView,
+    TextInput as NativeTextInput,
+    View,
+} from 'react-native';
+import {
+    getMediaLibraryPermissionsAsync,
+    getPendingResultAsync,
+    launchImageLibraryAsync,
+    MediaTypeOptions,
+    requestMediaLibraryPermissionsAsync,
+} from 'expo-image-picker';
+import {
+    Button,
+    Dialog,
+    HelperText,
+    Text,
+    TextInput,
+    Divider,
+    Card,
+} from 'react-native-paper';
 import MapView from 'react-native-maps';
-import { Button, Dialog, HelperText, Text, TextInput, Divider, Card } from 'react-native-paper';
-import { useSelector } from 'react-redux';
-import { addReport, deleteImage, editReport, uploadImage } from '../../../../api';
+import { deleteImage, editReport, uploadImage } from '../../../../api';
 import { SERVERURL } from '../../../../api/API';
 import { useCurrentLocation } from '../../../../hooks';
-import { selectUser } from '../../../../redux/userSlice';
 import { reportTagsArray } from '../../../../utils/constants';
 import TagsView from '../TagsView';
 
 export default ({ report, visible, close, refreshReports }) => {
-    const user = useSelector(selectUser);
     const { currentLatitude, currentLongitude } = useCurrentLocation();
 
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.

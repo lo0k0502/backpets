@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Appbar, TextInput, useTheme } from 'react-native-paper';
+import { Appbar } from 'react-native-paper';
 import { backIcon } from '../../utils/constants';
 
 const styles = StyleSheet.create({

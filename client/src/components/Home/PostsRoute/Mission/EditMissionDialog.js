@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { TextInput as NativeTextInput, StyleSheet, ScrollView, View, Image, RefreshControl } from 'react-native';
-import { TextInput, Dialog, Button, HelperText, useTheme, Divider, Text, Portal, List, Avatar } from 'react-native-paper';
-import { addMission, editMission } from '../../../../api';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../../../../redux/userSlice';
-import { useCurrentLocation, useMissions, usePet, useSelfPets } from '../../../../hooks';
+import {
+    TextInput as NativeTextInput,
+    ScrollView,
+    View,
+    Image,
+} from 'react-native';
+import {
+    TextInput,
+    Dialog,
+    Button,
+    HelperText,
+    useTheme,
+    Divider,
+    Text,
+    List,
+    Avatar,
+} from 'react-native-paper';
+import { editMission } from '../../../../api';
+import { useCurrentLocation, usePet } from '../../../../hooks';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import MapView from 'react-native-maps';
 import { SERVERURL } from '../../../../api/API';

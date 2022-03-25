@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, ScrollView, RefreshControl } from 'react-native';
+import { Text, ScrollView, RefreshControl } from 'react-native';
 import { Avatar, Button, Card, Subheading, useTheme } from 'react-native-paper';
 import { deleteUser, fetchAllUsers } from '../../api';
 import { SERVERURL } from '../../api/API';
 
-export default ({ navigation }) => {
+export default () => {
     const [allUsers, setAllUsers] = useState([]);
     const [isFetching, setIsFetching] = useState(false);
     const isMounted = useRef(true);

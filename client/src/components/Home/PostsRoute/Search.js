@@ -1,10 +1,9 @@
 import React from 'react';
-import AppSearchbar from '../AppSearchbar';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
-import { List, Text } from 'react-native-paper';
+import { List } from 'react-native-paper';
 
-export default ({ route, navigation, searchTextState }) => {
+export default ({ navigation, searchTextState }) => {
   const [searchText, setSearchText] = searchTextState;
   const user = useSelector(selectUser);
 

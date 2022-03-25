@@ -1,7 +1,28 @@
-import { getMediaLibraryPermissionsAsync, getPendingResultAsync, launchImageLibraryAsync, MediaTypeOptions, requestMediaLibraryPermissionsAsync } from 'expo-image-picker';
 import React, { useState } from 'react';
-import { Alert, ScrollView, View } from 'react-native';
-import { Avatar, Button, Card, Dialog, Divider, HelperText, RadioButton, Subheading, Switch, Text, TextInput, useTheme } from 'react-native-paper';
+import {
+    Alert,
+    ScrollView,
+    View,
+} from 'react-native';
+import {
+    Avatar,
+    Button,
+    Dialog,
+    Divider,
+    HelperText,
+    RadioButton,
+    Subheading,
+    Switch,
+    TextInput,
+    useTheme,
+} from 'react-native-paper';
+import {
+    getMediaLibraryPermissionsAsync,
+    getPendingResultAsync,
+    launchImageLibraryAsync,
+    MediaTypeOptions,
+    requestMediaLibraryPermissionsAsync,
+} from 'expo-image-picker';
 import { useSelector } from 'react-redux';
 import { addPet, uploadImage } from '../../../api';
 import { selectUser } from '../../../redux/userSlice';

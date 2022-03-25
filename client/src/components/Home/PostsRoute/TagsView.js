@@ -14,7 +14,15 @@ export default ({ maxLimit = null, onExceedMaxLimit = () => true, tagsState: [ta
           backgroundColor: 'white',
         }}
       >
-        {tags.map((tag, index) => <Tag key={index} tag={tag} tagsState={[tags, setTags]} maxLimit={maxLimit} onExceedMaxLimit={onExceedMaxLimit} />)}
+        {tags.map((tag, index) => (
+          <Tag
+            key={index}
+            tag={tag}
+            tagsState={[tags, setTags]}
+            maxLimit={maxLimit}
+            onExceedMaxLimit={onExceedMaxLimit}
+          />
+        ))}
         <View style={{ width: 15 }} />
       </ScrollView>
     </View>

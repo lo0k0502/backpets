@@ -1,6 +1,20 @@
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView, View, RefreshControl, Text, Alert } from 'react-native';
-import { ActivityIndicator, Divider, FAB, Portal, Title, useTheme } from 'react-native-paper';
+import {
+    StyleSheet,
+    ScrollView,
+    View,
+    RefreshControl,
+    Text,
+    Alert,
+} from 'react-native';
+import {
+    ActivityIndicator,
+    Divider,
+    FAB,
+    Portal,
+    Title,
+    useTheme,
+} from 'react-native-paper';
 import MissionDialog from './MissionDialog';
 import MissionCard from './MissionCard';
 import { useSelector } from 'react-redux';
@@ -42,7 +56,7 @@ const styles = StyleSheet.create({
         },
     });
 
-export default ({ route, navigation, searchTextState }) => {
+export default ({ navigation, searchTextState }) => {
     const [searchText, setSearchText] = searchTextState;
     const user = useSelector(selectUser);
     const { missions, refreshMissions, isFetching } = useMissions();

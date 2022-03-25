@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import PostsTab from './PostsTab';
@@ -8,7 +8,7 @@ import Appbar from '../Appbar';
 
 const PostsStack = createStackNavigator();
 
-export default ({ route, navigation }) => {
+export default () => {
     const [searchText, setSearchText] = useState('');
 
     return (

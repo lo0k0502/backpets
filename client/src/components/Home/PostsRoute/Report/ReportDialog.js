@@ -1,8 +1,28 @@
-import { getMediaLibraryPermissionsAsync, getPendingResultAsync, launchImageLibraryAsync, MediaTypeOptions, requestMediaLibraryPermissionsAsync } from 'expo-image-picker';
 import React, { useEffect, useState } from 'react';
-import { Alert, Image, ScrollView, TextInput as NativeTextInput, View } from 'react-native';
+import {
+    Alert,
+    Image,
+    ScrollView,
+    TextInput as NativeTextInput,
+    View,
+} from 'react-native';
+import {
+    getMediaLibraryPermissionsAsync,
+    getPendingResultAsync,
+    launchImageLibraryAsync,
+    MediaTypeOptions,
+    requestMediaLibraryPermissionsAsync,
+} from 'expo-image-picker';
+import {
+    Button,
+    Dialog,
+    HelperText,
+    Text,
+    TextInput,
+    Divider,
+    Card,
+} from 'react-native-paper';
 import MapView from 'react-native-maps';
-import { Button, Dialog, HelperText, Text, TextInput, Divider, Card } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { addReport, uploadImage } from '../../../../api';
 import { useCurrentLocation } from '../../../../hooks';
