@@ -7,7 +7,7 @@ import { useSelfPets } from '../../../hooks';
 import { selectUser } from '../../../redux/userSlice';
 import PetPassportsDialog from './PetPassportsDialog';
 
-export default () =>  {
+export default ({ navigation }) =>  {
     const user = useSelector(selectUser);
     const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id);
 
@@ -35,7 +35,13 @@ export default () =>  {
                     />
                 </Portal>
                 <List.Section style={{ flex: 1, marginTop: 0 }}>
-                    {pets.map(pet => <ListItem key={pet._id} pet={pet} />)}
+                    {pets.map(pet => (
+                        <ListItem
+                            key={pet._id}
+                            pet={pet}
+                            onPress={() => navigation.navigate('EditPetPassport', { petId: pet._id })}
+                        />
+                    ))}
                     <List.Item
                         left={props => <List.Icon {...props} icon='plus' />}
                         title='新增寵物護照'
@@ -48,14 +54,14 @@ export default () =>  {
     );
 };
 
-const ListItem = ({ pet }) => {
+const ListItem = ({ pet, onPress }) => {
     return (
         <>
             <List.Item
                 title={pet.name}
                 left={() => <Avatar.Image source={{ uri: `${SERVERURL}/image/${pet.photoId}` }} style={{ backgroundColor: 'white' }} />}
                 right={() => <List.Icon icon='chevron-right' style={{ alignSelf: 'center' }} />}
-                onPress={() => {}}
+                onPress={onPress}
             />
             <Divider />
         </>

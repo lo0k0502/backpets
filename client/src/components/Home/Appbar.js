@@ -1,13 +1,6 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { backIcon } from '../../utils/constants';
-
-const styles = StyleSheet.create({
-    appbar: {
-        backgroundColor: 'white',
-    },
-});
 
 export default ({ route, navigation }) => {
     const isPostsTab = route.name === 'PostsTab';
@@ -23,7 +16,7 @@ export default ({ route, navigation }) => {
     };
 
     return (
-        <Appbar style={styles.appbar}>
+        <Appbar style={{ backgroundColor: 'white' }}>
         {
             isPostsTab ? (
                 <Appbar.Action icon='menu' onPress={navigation.toggleDrawer} />

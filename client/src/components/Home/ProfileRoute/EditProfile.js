@@ -23,8 +23,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     imgchangebtn: {
-        height: 40, 
-        backgroundColor: '#be9a78',
+        height: 40,
         margin: 10,
     },
     input: {
@@ -47,10 +46,10 @@ export default () => {
     const [isLoading, setIsLoading] = useState(false);// Whether it is during editing profile, if so, disable inputs and buttons.
     const [isImgLoading, setIsImgLoading] = useState(false);// Whether it is during image picking, if so, disable inputs and buttons.
 
-    const [photoUrl, setphotoUrl] = useState('');
+    const [photoUrl, setPhotoUrl] = useState('');
     const [username, setUsername] = useState(user.info?.username);
     const [email, setEmail] = useState(user.info?.email);
-    
+
     const [errorMsg, setErrorMsg] = useState('');
     const [photoUrlErrorMsg, setphotoUrlErrorMsg] = useState('');
     const [usernameErrorMsg, setUsernameErrorMsg] = useState('');
@@ -63,10 +62,8 @@ export default () => {
         setIsImgLoading(true);
 
         // Check if user has granted us to access their media library. If no, ask once.
-        const currentPermission = await getMediaLibraryPermissionsAsync();
-        if (!currentPermission.granted) {
-            let permissionResult = await requestMediaLibraryPermissionsAsync();
-            if (!permissionResult.granted) {
+        if (!(await getMediaLibraryPermissionsAsync()).granted) {
+            if (!(await requestMediaLibraryPermissionsAsync()).granted) {
                 Alert.alert('權限不足!', '我們需要您的許可來存取您的媒體庫!', [{ text: '知道了!' }]);
                 setIsImgLoading(false);
                 return;
@@ -86,7 +83,7 @@ export default () => {
         if (!result) return setIsImgLoading(false);
 
         // If the final result is not cancelled, change the current photo url to the result photo's local url.
-        if (!result.cancelled) setphotoUrl(result.uri);
+        if (!result.cancelled) setPhotoUrl(result.uri);
 
         setIsImgLoading(false);
     };
@@ -190,10 +187,7 @@ export default () => {
                 size={100}
                 style={{ backgroundColor: 'white' }}
             />
-            <HelperText 
-                type='error' 
-                // style={styles.helpertext}
-            >
+            <HelperText type='error'>
                 {photoUrlErrorMsg}
             </HelperText>
             <Button 
@@ -201,12 +195,11 @@ export default () => {
                 disabled={isImgLoading || isLoading}
                 loading={isImgLoading}
                 uppercase={false}
-                color='#be9a78'
                 dark
                 style={styles.imgchangebtn}
                 onPress={handleChangeImg}
             >
-                選擇大頭照
+                更改大頭照
             </Button>
             <TextInput
                 mode='outlined'

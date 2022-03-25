@@ -8,6 +8,7 @@ import SelfMissions from './SelfMissions';
 import Clue from './Clue';
 import { useFocusEffect } from '@react-navigation/native';
 import PetPassports from './PetPassports';
+import EditPetPassport from './EditPetPassport';
 
 const ProfileStack = createStackNavigator();
 
@@ -35,6 +36,9 @@ export default ({ route, navigation }) => {
             </ProfileStack.Screen>
             <ProfileStack.Screen name='PetPassports'>
             {props => <PetPassports {...props} />}
+            </ProfileStack.Screen>
+            <ProfileStack.Screen name='EditPetPassport' options={{ headerShown: false }}>
+            {props => <EditPetPassport {...props} />}
             </ProfileStack.Screen>
             <ProfileStack.Screen name='ChangePassword'>
             {props => <ChangePassword {...props} />}

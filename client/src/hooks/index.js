@@ -122,7 +122,7 @@ export const useMissions = () => {
  * @param {any} userId
  * @returns {{ missions: Object[], refreshMissions: Function, isFetching: boolean }}
  */
-export const useSelfMissions = (userId) => {
+export const useSelfMissions = (userId, dependencies = []) => {
     const { pets } = useSelfPets(userId);
     const [missions, setMissions] = useState([]);
     const isMounted = useRef(true);
@@ -152,10 +152,10 @@ export const useSelfMissions = (userId) => {
     useFocusEffect(useCallback(() => {
         isMounted.current = true;
 
-        if (userId) fetchMissions();
+        if (userId && pets.length) fetchMissions();
 
         return () => { isMounted.current = false };
-    }, [userId]));
+    }, [userId, pets, ...dependencies]));
 
     return {
         missions,
