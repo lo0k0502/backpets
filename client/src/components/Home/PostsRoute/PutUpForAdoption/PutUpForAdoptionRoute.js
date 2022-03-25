@@ -14,7 +14,7 @@ import {
   useTheme,
 } from 'react-native-paper';
 import { useSelector } from 'react-redux';
-import { usePutUpForAdoptions, useSelfPets } from '../../../../hooks';
+import { usePets, usePutUpForAdoptions, useSelfPets } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
 import { animalTagsArray } from '../../../../utils/constants';
 import TagsView from '../TagsView';
@@ -24,9 +24,10 @@ import PutUpForAdoptionDialog from './PutUpForAdoptionDialog';
 
 export default ({ searchTextState }) => {
   const [searchText, setSearchText] = searchTextState;
-  const { putUpForAdoptions, refreshPutUpForAdoptions, isFetching } = usePutUpForAdoptions();
   const user = useSelector(selectUser);
-  const { pets } = useSelfPets(user.info?._id);
+  const { putUpForAdoptions, refreshPutUpForAdoptions, isFetching } = usePutUpForAdoptions();
+  const { pets, isFetching: isFetchingPets } = usePets();
+  const { pets: selfPets, isFetching: isFetchingSelfPets } = useSelfPets(user.info?._id);
   const { colors } = useTheme();
 
   const [putUpForAdoptionDialog, setPutUpForAdoptionDialog] = useState(false);// Whether putUpForAdoption dialog is open
@@ -106,7 +107,7 @@ export default ({ searchTextState }) => {
           />
         </Portal>
         {
-          isFetching ? (
+          isFetching || isFetchingPets ? (
             <ActivityIndicator
               animating={true}
               size='large'
@@ -154,7 +155,8 @@ export default ({ searchTextState }) => {
         }}
         theme={{ colors: { accent: colors.primary } }}
         onPress={() => {
-          if (!pets.length) {
+          if (isFetchingSelfPets) return;
+          if (!selfPets.length) {
               return Alert.alert('沒有寵物!', '您的寵物護照目前沒有寵物喔!', [{ text: '知道了' }]);
           }
           setPutUpForAdoptionDialog(true);

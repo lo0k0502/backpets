@@ -25,15 +25,15 @@ import { useCurrentLocation, usePutUpForAdoptions, useSelfPets } from '../../../
 import { selectUser } from '../../../../redux/userSlice';
 
 export default ({ visible, close, refreshPutUpForAdoptions }) => {
+    const [petsDialog, setPetsDialog] = useState(false);
+
     const user = useSelector(selectUser);
-    const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id);
+    const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id, [petsDialog]);
     const { putUpForAdoptions } = usePutUpForAdoptions()
     const { currentLatitude, currentLongitude } = useCurrentLocation();
 
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
     const [changingLocation, setChangingLocation] = useState(false);
-
-    const [petsDialog, setPetsDialog] = useState(false);
 
     const [petId, setPetId] = useState('');
     const [content, setContent] = useState('');

@@ -50,8 +50,8 @@ export default ({
         >
             <View style={{ alignItems: 'flex-start' }}>
                 <Card.Title
-                    title={poster.username} 
-                    subtitle={moment(mission.post_time).fromNow()} 
+                    title={poster.username}
+                    subtitle={moment(mission.post_time).fromNow()}
                     left={props => (
                         <Avatar.Image
                             {...props}

@@ -8,8 +8,9 @@ import {
     fetchMission,
     fetchPet,
     fetchPetsByUserId,
-    fetchSelfMissions,
+    fetchMissionsByPetId,
     fetchUserById,
+    fetchAllPets,
 } from '../api';
 import { useFocusEffect } from '@react-navigation/core';
 
@@ -22,6 +23,7 @@ export default {
     useReports,
     usePutUpForAdoptions,
     useUser,
+    usePets,
     useSelfPets,
     usePet,
 };
@@ -121,21 +123,25 @@ export const useMissions = () => {
  * @returns {{ missions: Object[], refreshMissions: Function, isFetching: boolean }}
  */
 export const useSelfMissions = (userId) => {
+    const { pets } = useSelfPets(userId);
     const [missions, setMissions] = useState([]);
     const isMounted = useRef(true);
     const [isFetching, setIsFetching] = useState(false);
 
     // Fetch missions by user ID
     const fetchMissions = async () => {
-        if (!userId) return;
-
         setIsFetching(true);
 
         try {
-            const result = await fetchSelfMissions(userId);
-            if (isMounted.current) {
-                setMissions(result.data.result);
-            }
+            const result = await pets.reduce(async (previousPromise, pet) => {
+                let previous = await previousPromise;
+
+                const fetchedMissions = await fetchMissionsByPetId(pet._id);
+
+                return previous.concat(fetchedMissions.data.result);
+            }, Promise.resolve([]));
+
+            if (isMounted.current) setMissions(result);
         } catch (error) {
             console.log(error);
         }
@@ -411,12 +417,65 @@ export const useUser = (userId) => {
  *  isFetching: boolean,
  * }}
  */
-export const useSelfPets = (userId, dependencies = []) => {
+export const usePets = (dependencies = []) => {
     const [pets, setPets] = useState([]);
     const isMounted = useRef(true);
     const [isFetching, setIsFetching] = useState(false);
 
     // Fetch all pets
+    const fetchPets = async () => {
+        setIsFetching(true);
+
+        try {
+            const result = await fetchAllPets();
+            if (isMounted.current) setPets(result.data.result);
+        } catch (error) {
+            console.log(error);
+        }
+
+        setIsFetching(false);
+    };
+
+    useEffect(() => {
+        isMounted.current = true;
+
+        fetchPets();
+
+        return () => { isMounted.current = false };
+    }, [...dependencies]);
+
+    return {
+        pets,
+        refreshPets: fetchPets,
+        isFetching,
+    };
+};
+
+/**
+ * @returns {{
+ *  pets: {
+ *      _id: String,
+ *      name: String,
+ *      userId: String,
+ *      tag: String,
+ *      breed: String,
+ *      feature: String,
+ *      gender: String,
+ *      photoId: String,
+ *      ligated: boolean,
+ *      age: Number,
+ *      microchip: String,
+ *  }[],
+ *  refreshPets: Function,
+ *  isFetching: boolean,
+ * }}
+ */
+export const useSelfPets = (userId, dependencies = []) => {
+    const [pets, setPets] = useState([]);
+    const isMounted = useRef(true);
+    const [isFetching, setIsFetching] = useState(false);
+
+    // Fetch pets by userId
     const fetchSelfPets = async () => {
         setIsFetching(true);
 

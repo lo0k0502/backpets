@@ -17,8 +17,9 @@ export const deleteUser = (payload) => API.post('/user/delete', payload);
 
 // pet
 export const addPet = (payload) => API.post('/pet/add', payload);
-export const fetchPet = (petId) => API.get(`/pet/${petId}`);
+export const fetchAllPets = () => API.get('/pet/fetchall');
 export const fetchPetsByUserId = (userId) => API.get(`/pet/fetchbyuserid/${userId}`);
+export const fetchPet = (petId) => API.get(`/pet/${petId}`);
 
 // image
 export const uploadImage = (payload) => API.post('/image/upload', payload, {
@@ -34,7 +35,7 @@ export const addMission = (payload) => API.post('/mission/add', payload);
 export const editMission = (missionId, payload) => API.post(`/mission/${missionId}`, payload);
 export const deleteMission = (missionId) => API.delete(`/mission/${missionId}`);
 export const fetchAllMissions = () => API.get('/mission/fetchall');
-export const fetchSelfMissions = (userId) => API.get(`/mission/fetchbyuserid/${userId}`);
+export const fetchMissionsByPetId = (petId) => API.get(`/mission/fetchbypetid/${petId}`);
 export const fetchMission = (missionid) => API.get(`/mission/${missionid}`);
 
 // clue

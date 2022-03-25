@@ -16,7 +16,7 @@ export class PetService {
     }
   
     async findSome(petFilterQuery: FilterQuery<PetDocument>): Promise<Pet[]> {
-      return this.petModel.find(petFilterQuery).exec();
+      return this.petModel.find(petFilterQuery).lean().exec();
     }
   
     async findAll(): Promise<Pet[]> {

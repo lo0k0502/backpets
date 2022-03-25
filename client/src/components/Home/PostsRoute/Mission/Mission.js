@@ -19,7 +19,7 @@ import MissionDialog from './MissionDialog';
 import MissionCard from './MissionCard';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
-import { useMissions, useSelfPets } from '../../../../hooks';
+import { useMissions, usePets, useSelfPets } from '../../../../hooks';
 import ClueDialog from './ClueDialog';
 import { animalTagsArray } from '../../../../utils/constants';
 import TagsView from '../TagsView';
@@ -60,7 +60,8 @@ export default ({ navigation, searchTextState }) => {
     const [searchText, setSearchText] = searchTextState;
     const user = useSelector(selectUser);
     const { missions, refreshMissions, isFetching } = useMissions();
-    const { pets } = useSelfPets(user.info?._id);
+    const { pets, isFetching: isFetchingPets } = usePets();
+    const { pets: selfPets, isFetching: isFetchingSelfPets } = useSelfPets(user.info?._id);
     const { colors } = useTheme();
 
     const [animalTags, setAnimalTags] = useState(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
@@ -95,7 +96,7 @@ export default ({ navigation, searchTextState }) => {
             })
         ) : missions;
         if (!missionsMatchTag.length) return false;
-        
+
         const missionsMatchTagAndSearchText = searchText ? (
             missionsMatchTag.filter(mission => {
                 const pet = pets.find(_pet => _pet._id === mission.petId);
@@ -152,7 +153,7 @@ export default ({ navigation, searchTextState }) => {
                     )
                 }
                 {
-                    isFetching ? (
+                    isFetching || isFetchingPets ? (
                         <ActivityIndicator
                             animating={true}
                             size='large'
@@ -208,7 +209,8 @@ export default ({ navigation, searchTextState }) => {
                 }}
                 theme={{ colors: { accent: colors.primary } }}
                 onPress={() => {
-                    if (!pets.length) {
+                    if (isFetchingSelfPets) return;
+                    if (!selfPets.length) {
                         return Alert.alert('沒有寵物!', '您的寵物護照目前沒有寵物喔!', [{ text: '知道了' }]);
                     }
                     setMissionDialog(true);

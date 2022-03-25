@@ -7,6 +7,12 @@ import { PetService } from './pet.service';
 export class PetController {
     constructor(private readonly petService: PetService) {}
 
+    @Get('fetchall')
+    async FetchAllPets(@Res() res: Response) {
+        const result = await this.petService.findAll();
+        return res.status(200).json({ result });
+    }
+
     @Get('fetchbyuserid/:userid')
     async FetchByUserId(@Param() { userid }, @Res() res: Response) {
         const result = await this.petService.findSome({ userId: new Types.ObjectId(userid) });
