@@ -82,7 +82,7 @@ export const useCurrentLocation = () => {
 /**
  * @returns {{ missions: Object[], refreshMissions: Function, isFetching: boolean }}
  */
-export const useMissions = () => {
+export const useMissions = (dependencies = []) => {
     const [missions, setMissions] = useState([]);
     const isMounted = useRef(true);
     const [isFetching, setIsFetching] = useState(false);
@@ -109,7 +109,7 @@ export const useMissions = () => {
         fetchMissions();
 
         return () => { isMounted.current = false };
-    }, []);
+    }, [...dependencies]);
 
     return {
         missions,
@@ -149,13 +149,13 @@ export const useSelfMissions = (userId, dependencies = []) => {
         setIsFetching(false);
     };
 
-    useFocusEffect(useCallback(() => {
+    useEffect(() => {
         isMounted.current = true;
 
         if (userId && pets.length) fetchMissions();
 
         return () => { isMounted.current = false };
-    }, [userId, pets, ...dependencies]));
+    }, [userId, pets, ...dependencies]);
 
     return {
         missions,
@@ -262,7 +262,7 @@ export const useClues = (missionId) => {
  *  isFetching: boolean,
  * }}
  */
-export const useReports = () => {
+export const useReports = (dependencies = []) => {
     const [reports, setReports] = useState([]);
     const isMounted = useRef(true);
     const [isFetching, setIsFetching] = useState(false);
@@ -283,13 +283,13 @@ export const useReports = () => {
         setIsFetching(false);
     };
 
-    useFocusEffect(useCallback(() => {
+    useEffect(() => {
         isMounted.current = true;
 
         fetchReports();
 
         return () => { isMounted.current = false };
-    }, []));
+    }, [...dependencies]);
 
     return {
         reports,
@@ -314,7 +314,7 @@ export const useReports = () => {
  *  isFetching: boolean,
  * }}
  */
-export const usePutUpForAdoptions = () => {
+export const usePutUpForAdoptions = (dependencies = []) => {
     const [putUpForAdoptions, setPutUpForAdoptions] = useState([]);
     const isMounted = useRef(true);
     const [isFetching, setIsFetching] = useState(false);
@@ -341,7 +341,7 @@ export const usePutUpForAdoptions = () => {
         fetchPutUpForAdoptions();
 
         return () => { isMounted.current = false };
-    }, []);
+    }, [...dependencies]);
 
     return {
         putUpForAdoptions,

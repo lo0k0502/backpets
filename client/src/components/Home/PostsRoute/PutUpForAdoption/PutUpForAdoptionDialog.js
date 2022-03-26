@@ -29,7 +29,7 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
 
     const user = useSelector(selectUser);
     const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id, [petsDialog]);
-    const { putUpForAdoptions } = usePutUpForAdoptions()
+    const { putUpForAdoptions } = usePutUpForAdoptions([petsDialog])
     const { currentLatitude, currentLongitude } = useCurrentLocation();
 
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.

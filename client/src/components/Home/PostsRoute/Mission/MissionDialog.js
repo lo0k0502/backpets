@@ -31,7 +31,7 @@ export default ({ visible, close, refreshMissions }) => {
 
     const user = useSelector(selectUser);
     const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id, [petsDialog]);
-    const { missions } = useMissions();
+    const { missions } = useMissions([petsDialog]);
     const { colors } = useTheme();
     const { currentLatitude, currentLongitude } = useCurrentLocation();
 
