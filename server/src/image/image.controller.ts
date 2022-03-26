@@ -13,20 +13,8 @@ export class ImageController {
         this.gfs = new MongoGridFS(this.connection.db, 'image');
     }
 
-    @Post('upload')
-    @ApiConsumes('multipart/form-data')
-    @UseInterceptors(FileInterceptor('image'))
-    Upload(@UploadedFile() file, @Res() res: Response) {
-        if (!file) return res.status(400).json({ message: 'No file selected' });
-        if (file.mimetype !== 'image/jpeg'
-            && file.mimetype !== 'image/png')
-            return res.status(400).json({ message: 'Not an image!!' });
-    
-        return res.status(200).json({ photoId: file.id.toString() });
-    }
-
     @Get('fetchall')
-    async GetAllImage(@Res() res: Response) {
+    async GetAllImages(@Res() res: Response) {
         try {
             const images = await this.gfs.find({});
             return res.status(200).json({ result: images })
@@ -49,6 +37,18 @@ export class ImageController {
         }
     }
 
+    @Post('upload')
+    @ApiConsumes('multipart/form-data')
+    @UseInterceptors(FileInterceptor('image'))
+    Upload(@UploadedFile() file, @Res() res: Response) {
+        if (!file) return res.status(400).json({ message: 'No file selected' });
+        if (file.mimetype !== 'image/jpeg'
+            && file.mimetype !== 'image/png')
+            return res.status(400).json({ message: 'Not an image!!' });
+    
+        return res.status(200).json({ photoId: file.id.toString() });
+    }
+    
     @Delete(':id')
     async DeleteImage(@Param() { id }, @Res() res: Response) {
         try {

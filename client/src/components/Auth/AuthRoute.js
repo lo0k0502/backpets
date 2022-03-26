@@ -33,15 +33,6 @@ const DevOptions = ({ navigation }) => {
       >
         All Images
       </Button>
-      <Button 
-        mode='contained' 
-        uppercase={false}
-        onPress={() => navigation.goBack()}
-        dark
-        style={{ margin: 10, }}
-      >
-        Go Back
-      </Button>
     </View>
   );
 };

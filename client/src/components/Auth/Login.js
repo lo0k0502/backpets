@@ -216,16 +216,6 @@ export default ({ navigation, setSignInState }) => {
                     </Text>
                 </Pressable>
             </View>
-            <Button
-                mode='contained'
-                uppercase={false}
-                disabled={loginLoading || googleLoginLoading}
-                dark
-                style={{ marginTop: 10 }}
-                onPress={() => navigation.toggleDrawer()}
-            >
-                開發選項
-            </Button>
         </View>
     );
 };
