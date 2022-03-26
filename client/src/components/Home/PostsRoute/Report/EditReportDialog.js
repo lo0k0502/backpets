@@ -153,26 +153,16 @@ export default ({ report, visible, close, refreshReports }) => {
                 let formData = new FormData();
                 const filename = photoUrl.split('/').pop();
                 const mediatype = filename.split('.').pop();
-                let type = null;
-                switch (mediatype) {
-                    case 'jpg': 
-                        type = 'image/jpeg';
-                        break;
-                    case 'jpeg': 
-                        type = 'image/jpeg';
-                        break;
-                    case 'png': 
-                        type = 'image/jpeg';
-                        break;
-                    default: {
-                        setIsLoading(false);
-                        return;
-                    }
+
+                if (!(mediatype === 'jpg' || mediatype === 'jpeg' || mediatype === 'png')) {
+                    setIsLoading(false);
+                    return;
                 }
+
                 formData.append('image', {
                     uri: photoUrl,
                     name: filename,
-                    type,
+                    type: 'image/jpeg',
                 });
                 
                 const { data } = await uploadImage(formData);

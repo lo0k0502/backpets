@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Alert,
     ScrollView,
@@ -24,12 +24,13 @@ import {
     requestMediaLibraryPermissionsAsync,
 } from 'expo-image-picker';
 import { useSelector } from 'react-redux';
-import { addPet, uploadImage } from '../../../api';
+import { addPet, deleteImage, editPet, uploadImage } from '../../../api';
 import { selectUser } from '../../../redux/userSlice';
 import { animalTagsArray } from '../../../utils/constants';
 import TagsView from '../PostsRoute/TagsView';
+import { SERVERURL } from '../../../api/API';
 
-export default ({ visible, close, refreshPets }) => {
+export default ({ pet, visible, close, refreshPets }) => {
     const user = useSelector(selectUser);
     const { colors } = useTheme();
 
@@ -52,18 +53,26 @@ export default ({ visible, close, refreshPets }) => {
     const [ageErrorMsg, setAgeErrorMsg] = useState('');
     const [photoUrlErrorMsg, setPhotoUrlErrorMsg] = useState('');
 
+    const setInitialValues = () => {
+        setName(pet.name || '');
+        setBreed(pet.breed || '');
+        setFeature(pet.feature || '');
+        setGender(pet.gender || '男');
+        setTags(animalTagsArray.map(tagName => ({ name: tagName, selected: tagName === pet.tag })));
+        setLigated(pet.ligated || false);
+        setAge(pet.age?.toString() || '');
+        setMicrochip(pet.microchip || '');
+        setPhotoUrl(pet.photoId ? `${SERVERURL}/image/${pet.photoId}` : '');
+    };
+
+    useEffect(() => {
+        setInitialValues();
+    }, [pet]);
+
     const handleClose = () => {
         close();
 
-        setName('');
-        setBreed('');
-        setFeature('');
-        setGender('男');
-        setTags(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
-        setLigated(false);
-        setAge('');
-        setMicrochip('');
-        setPhotoUrl('');
+        setInitialValues();
 
         setNameErrorMsg('');
         setBreedErrorMsg('');
@@ -143,42 +152,39 @@ export default ({ visible, close, refreshPets }) => {
         setIsLoading(true);
         
         try {
-            let formData = new FormData();
-            const filename = photoUrl.split('/').pop();
-            const mediatype = filename.split('.').pop();
-            let type = null;
-            switch (mediatype) {
-                case 'jpg': 
-                    type = 'image/jpeg';
-                    break;
-                case 'jpeg': 
-                    type = 'image/jpeg';
-                    break;
-                case 'png': 
-                    type = 'image/jpeg';
-                    break;
-                default: {
+            let sendPhotoId = pet.photoId;
+            if (photoUrl !== `${SERVERURL}/image/${pet.photoId}`) {
+                let formData = new FormData();
+                const filename = photoUrl.split('/').pop();
+                const mediatype = filename.split('.').pop();
+
+                if (!(mediatype === 'jpg' || mediatype === 'jpeg' || mediatype === 'png')) {
                     setIsLoading(false);
                     return;
                 }
-            }
-            formData.append('image', {
-                uri: photoUrl,
-                name: filename,
-                type,
-            });
-            
-            const { data } = await uploadImage(formData);
 
-            // Add the pet
-            await addPet({
+                formData.append('image', {
+                    uri: photoUrl,
+                    name: filename,
+                    type: 'image/jpeg',
+                });
+                
+                const { data } = await uploadImage(formData);
+                sendPhotoId = data.photoId;
+
+                // If the previous image is in our database, delete it.
+                await deleteImage(pet.photoId);
+            }
+
+            // Edit the pet
+            await editPet(pet._id, {
                 name,
-                userId: user.info._id.toString(),
+                userId: user.info._id,
                 tag: tags.find(tag => tag.selected).name,
                 breed,
                 feature,
                 gender,
-                photoId: data.photoId,
+                photoId: sendPhotoId,
                 ligated,
                 age: parseInt(age, 10),
                 microchip,
@@ -199,7 +205,7 @@ export default ({ visible, close, refreshPets }) => {
 
     return (
         <Dialog visible={visible} onDismiss={handleClose}>
-            <Dialog.Title>新增寵物護照</Dialog.Title>
+            <Dialog.Title>編輯寵物護照</Dialog.Title>
             <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
                 <ScrollView style={{ height: '80%', paddingHorizontal: 20 }}>
                     <TextInput 
@@ -218,6 +224,7 @@ export default ({ visible, close, refreshPets }) => {
                     <TextInput
                         mode='outlined'
                         label='品種(必要)'
+                        selectionColor={colors.primary}
                         disabled={isImgLoading || isLoading}
                         error={breedErrorMsg}
                         value={breed}
@@ -361,7 +368,7 @@ export default ({ visible, close, refreshPets }) => {
                     onPress={handleSubmit}
                     contentStyle={{ paddingHorizontal: 10 }}
                 >
-                    新增
+                    編輯
                 </Button>
             </Dialog.Actions>
         </Dialog>

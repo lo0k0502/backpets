@@ -47,6 +47,31 @@ export class PetController {
         }
     }
 
+    @Post(':petid')
+    async EditPet(@Param() { petid }, @Body() { name, userId, tag, breed, feature, gender, photoId, ligated, age, microchip }, @Res() res: Response) {
+        try {
+            const result = await this.petService.findOne({ _id: petid });
+            if (!result) return res.status(400).json({ message: '寵物不存在' });
+    
+            await this.petService.updateOne({ _id: petid }, {
+                name,
+                userId: new Types.ObjectId(userId),
+                tag,
+                breed,
+                feature,
+                gender,
+                photoId: new Types.ObjectId(photoId),
+                ligated,
+                age,
+                microchip,
+            });
+            return res.status(200).json({ success: true });
+        } catch (error) {
+            console.log(error);
+            return res.status(400).json({ message: '錯誤' });
+        }
+    }
+
     @Delete(':petid')
     async DeletePet(@Param() { petid }, @Res() res: Response) {
         try {

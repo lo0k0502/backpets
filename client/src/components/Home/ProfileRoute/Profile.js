@@ -58,7 +58,7 @@ export default ({ navigation }) => {
       </View>
 
       <List.Section>
-        {[ '修改個人資料', '編輯寵物護照', '發布過的貼文', '兌換紀錄', '點數紀錄', '修改密碼' ].map((title, index) => (
+        {[ '修改個人資料', '寵物護照列表', '發布過的貼文', '兌換紀錄', '點數紀錄', '修改密碼' ].map((title, index) => (
           <ListItem
             key={index}
             title={title}
@@ -81,7 +81,7 @@ const ListItem = ({ title, navigation }) => (
             navigation.navigate('EditProfile');
             break;
           }
-          case '編輯寵物護照': {
+          case '寵物護照列表': {
             navigation.navigate('PetPassports');
             break;
           }

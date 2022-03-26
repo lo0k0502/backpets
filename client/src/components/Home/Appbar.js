@@ -29,7 +29,7 @@ export default ({ route, navigation }) => {
                     isPostsTab ? 'BackPets' : (
                         isChangePassword ? '更改密碼' : (
                             isEditProfile ? '更改個人資料' : (
-                                isPetPassports ? '編輯寵物護照' : (
+                                isPetPassports ? '寵物護照列表' : (
                                     isSelfMissions ? '發布過的貼文' : (
                                         isClue ? '線索' : route.name
                                     )

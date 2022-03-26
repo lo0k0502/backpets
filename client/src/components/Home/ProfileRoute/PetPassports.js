@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { RefreshControl, ScrollView } from 'react-native';
-import { Avatar, Divider, List, Portal } from 'react-native-paper';
+import { Alert, RefreshControl, ScrollView } from 'react-native';
+import { Avatar, Divider, IconButton, List, Portal } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { SERVERURL } from '../../../api/API';
 import { useSelfPets } from '../../../hooks';
 import { selectUser } from '../../../redux/userSlice';
-import PetPassportsDialog from './PetPassportsDialog';
+import EditPetPassportDialog from './EditPetPassportDialog';
+import PetPassportDialog from './PetPassportDialog';
 
 export default ({ navigation }) =>  {
     const user = useSelector(selectUser);
     const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id);
 
-    const [petPassportsDialog, setPetPassportsDialog] = useState(false);// Whether petPassports dialog is open
+    const [petPassportsDialog, setPetPassportDialog] = useState(false);// Whether petPassports dialog is open
+    const [editPetPassportDialog, setEditPetPassportDialog] = useState(false);// Whether editPetPassports dialog is open
+    const [editPetPassport, setEditPetPassport] = useState({});
 
     return (
         <>
@@ -28,9 +31,15 @@ export default ({ navigation }) =>  {
                 )}
             >
                 <Portal>
-                    <PetPassportsDialog
+                    <PetPassportDialog
                         visible={petPassportsDialog}
-                        close={() => setPetPassportsDialog(false)}
+                        close={() => setPetPassportDialog(false)}
+                        refreshPets={refreshPets}
+                    />
+                    <EditPetPassportDialog
+                        pet={editPetPassport}
+                        visible={editPetPassportDialog}
+                        close={() => setEditPetPassportDialog(false)}
                         refreshPets={refreshPets}
                     />
                 </Portal>
@@ -39,13 +48,22 @@ export default ({ navigation }) =>  {
                         <ListItem
                             key={pet._id}
                             pet={pet}
-                            onPress={() => navigation.navigate('EditPetPassport', { petId: pet._id })}
+                            onEditPress={() => {
+                                setEditPetPassport(pet);
+                                setEditPetPassportDialog(true);
+                            }}
+                            onDeletePress={() => {
+                                Alert.alert('正在刪除寵物!', '這個動作將會刪除所有與此寵物有關的貼文!\n請問確定要刪除嗎?', [
+                                    { text: '取消' },
+                                    { text: '確定刪除', onPress: () => {} }
+                                ])
+                            }}
                         />
                     ))}
                     <List.Item
                         left={props => <List.Icon {...props} icon='plus' />}
                         title='新增寵物護照'
-                        onPress={() => setPetPassportsDialog(true)}
+                        onPress={() => setPetPassportDialog(true)}
                     />
                     <Divider />
                 </List.Section>
@@ -54,14 +72,29 @@ export default ({ navigation }) =>  {
     );
 };
 
-const ListItem = ({ pet, onPress }) => {
+const ListItem = ({ pet, onEditPress, onDeletePress }) => {
     return (
         <>
             <List.Item
                 title={pet.name}
                 left={() => <Avatar.Image source={{ uri: `${SERVERURL}/image/${pet.photoId}` }} style={{ backgroundColor: 'white' }} />}
-                right={() => <List.Icon icon='chevron-right' style={{ alignSelf: 'center' }} />}
-                onPress={onPress}
+                right={props => (
+                    <>
+                        <IconButton
+                            {...props}
+                            icon='pencil-outline'
+                            style={{ alignSelf: 'center' }}
+                            onPress={onEditPress}
+                        />
+                        <IconButton
+                            {...props}
+                            icon='trash-can-outline'
+                            style={{ alignSelf: 'center' }}
+                            onPress={onDeletePress}
+                        />
+                    </>
+                )}
+                // onPress={onPress}
             />
             <Divider />
         </>

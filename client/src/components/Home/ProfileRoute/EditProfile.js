@@ -114,26 +114,16 @@ export default () => {
                 let formData = new FormData();
                 const filename = photoUrl.split('/').pop();
                 let mediatype = filename.split('.').pop();
-                switch (mediatype) {
-                    case 'jpg': 
-                        mediatype = 'image/jpeg';
-                        break;
-                    case 'jpeg': 
-                        mediatype = 'image/jpeg';
-                        break;
-                    case 'png': 
-                        mediatype = 'image/png';
-                        break;
-                    default: {
-                        setIsLoading(false);
-                        setphotoUrlErrorMsg('選取的檔案並非圖檔!');
-                        return;
-                    }
+
+                if (!(mediatype === 'jpg' || mediatype === 'jpeg' || mediatype === 'png')) {
+                    setIsLoading(false);
+                    return;
                 }
+
                 formData.append('image', {
                     uri: photoUrl,
                     name: filename,
-                    type: mediatype,
+                    type: 'image/jpeg',
                 });
     
                 const { data } = await uploadImage(formData);
