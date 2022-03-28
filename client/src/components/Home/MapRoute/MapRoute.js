@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import MapView, { Callout, Marker } from 'react-native-maps';
+import MapView, { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Headline, Text } from 'react-native-paper';
 import { useCurrentLocation, useMissions } from '../../../hooks';
 import PostCallout from './PostCallout';
@@ -13,6 +13,7 @@ export default ({ route }) => {
   
   return (
     <MapView 
+      provider='PROVIDER_GOOGLE'
       style={{
         ...StyleSheet.absoluteFillObject,
       }}

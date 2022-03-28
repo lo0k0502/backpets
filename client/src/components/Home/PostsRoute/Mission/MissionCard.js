@@ -24,7 +24,7 @@ import { selectUser } from '../../../../redux/userSlice';
 export default ({
     mission,
     tagSelected = false,
-    setClueDialog = () => {},
+    onReportCluePress = () => {},
     onViewCluePress = () => {},
     setEditMissionDialog = () => {},
     setEditMission = () => {},
@@ -154,7 +154,7 @@ export default ({
                     style={{ flexGrow: 1, borderRightWidth: 0.5, borderColor: colors.primary }}
                     theme={{ roundness: 0 }}
                     onPress={() => (
-                        user.info?._id === poster._id ? onViewCluePress() : setClueDialog(true)
+                        user.info?._id === poster._id ? onViewCluePress() : onReportCluePress()
                     )}
                 >
                     {user.info?._id === poster._id ? '檢視線索' : '回報線索'}

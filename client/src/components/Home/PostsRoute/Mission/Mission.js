@@ -70,6 +70,7 @@ export default ({ navigation, searchTextState }) => {
     const [editMissionDialog, setEditMissionDialog] = useState(false);// Whether edit mission dialog is open
     const [editMission, setEditMission] = useState({});
     const [clueDialog, setClueDialog] = useState(false);// Whether clue dialog is open
+    const [addClueMissionId, setAddClueMissionId] = useState('');
 
     const selectedTags = animalTagsArray.filter(tag => animalTags.find(_tag => _tag.name === tag && _tag.selected));
 
@@ -140,6 +141,7 @@ export default ({ navigation, searchTextState }) => {
                         refreshMissions={refreshMissions}
                     />
                     <ClueDialog
+                        missionId={addClueMissionId}
                         visible={clueDialog}
                         close={() => setClueDialog(false)}
                     />
@@ -171,7 +173,10 @@ export default ({ navigation, searchTextState }) => {
                                             onViewCluePress={() => {
                                                 navigation.navigate('ProfileRoute', { to: 'Clue', missionId: mission._id });
                                             }}
-                                            setClueDialog={setClueDialog}
+                                            onReportCluePress={() => {
+                                                setAddClueMissionId(mission._id);
+                                                setClueDialog(true);
+                                            }}
                                             setEditMission={setEditMission}
                                             setEditMissionDialog={setEditMissionDialog}
                                         />
@@ -187,7 +192,10 @@ export default ({ navigation, searchTextState }) => {
                                         onViewCluePress={() => {
                                             navigation.navigate('ProfileRoute', { to: 'Clue', missionId: mission._id });
                                         }}
-                                        setClueDialog={setClueDialog}
+                                        onReportCluePress={() => {
+                                            setAddClueMissionId(mission._id);
+                                            setClueDialog(true);
+                                        }}
                                         setEditMission={setEditMission}
                                         setEditMissionDialog={setEditMissionDialog}
                                     />

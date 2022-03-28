@@ -279,7 +279,7 @@ export default ({ visible, close, missionId }) => {
                     onPress={handleSubmit}
                     contentStyle={{ paddingHorizontal: 10 }}
                 >
-                    發佈
+                    回報
                 </Button>
             </Dialog.Actions>
         </Dialog>

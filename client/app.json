@@ -19,7 +19,12 @@
     "ios": {
       "bundleIdentifier": "com.lo0k.backpets",
       "buildNumber": "1.0.0",
-      "supportsTablet": true
+      "supportsTablet": true, 
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAvszEp6weLtrEElAqE060wv31hdWfOIRU"
+        }
+      }
     },
     "android": {
       "package": "com.lo0k.backpets",
