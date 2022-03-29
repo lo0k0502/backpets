@@ -14,7 +14,7 @@ import {
   useTheme,
 } from 'react-native-paper';
 import { useSelector } from 'react-redux';
-import { usePets, usePutUpForAdoptions, useSelfPets } from '../../../../hooks';
+import { usePets, usePutUpForAdoptions, useFocusSelfPets } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
 import { animalTagsArray } from '../../../../utils/constants';
 import TagsView from '../TagsView';
@@ -27,7 +27,7 @@ export default ({ searchTextState }) => {
   const user = useSelector(selectUser);
   const { putUpForAdoptions, refreshPutUpForAdoptions, isFetching } = usePutUpForAdoptions();
   const { pets, isFetching: isFetchingPets } = usePets();
-  const { pets: selfPets, isFetching: isFetchingSelfPets } = useSelfPets(user.info?._id);
+  const { pets: selfPets, isFetching: isFetchingSelfPets } = useFocusSelfPets(user.info?._id);
   const { colors } = useTheme();
 
   const [putUpForAdoptionDialog, setPutUpForAdoptionDialog] = useState(false);// Whether putUpForAdoption dialog is open

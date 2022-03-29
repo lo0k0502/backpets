@@ -3,14 +3,14 @@ import { Alert, RefreshControl, ScrollView } from 'react-native';
 import { Avatar, Divider, IconButton, List, Portal } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { SERVERURL } from '../../../api/API';
-import { useSelfPets } from '../../../hooks';
+import { useFocusSelfPets } from '../../../hooks';
 import { selectUser } from '../../../redux/userSlice';
 import EditPetPassportDialog from './EditPetPassportDialog';
 import PetPassportDialog from './PetPassportDialog';
 
 export default ({ navigation }) =>  {
     const user = useSelector(selectUser);
-    const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id);
+    const { pets, refreshPets, isFetching } = useFocusSelfPets(user.info?._id);
 
     const [petPassportsDialog, setPetPassportDialog] = useState(false);// Whether petPassports dialog is open
     const [editPetPassportDialog, setEditPetPassportDialog] = useState(false);// Whether editPetPassports dialog is open
