@@ -52,7 +52,7 @@ export const useStateWithValidation = (initialValue, validationFunction = state 
 /**
  * @returns {{ location: Location.LocationObject, currentLatitude: Number, currentLongitude: Number }}
  */
-export const useCurrentLocation = () => {
+export const useCurrentLocation = (dependencies = []) => {
     const [location, setLocation] = useState(null);
     let currentLatitude = 0;
     let currentLongitude = 0;
@@ -66,7 +66,7 @@ export const useCurrentLocation = () => {
         })();
 
         return () => { isMounted = false };
-    }, []);
+    }, [...dependencies]);
     
     if (location) {
         currentLatitude = location.coords.latitude;

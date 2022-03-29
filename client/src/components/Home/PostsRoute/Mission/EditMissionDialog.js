@@ -118,7 +118,7 @@ export default ({ mission, visible, close, refreshMissions }) => {
 
     return (
         <Dialog visible={visible} onDismiss={handleClose}>
-            <Dialog.Title>發佈任務</Dialog.Title>
+            <Dialog.Title>編輯任務</Dialog.Title>
             <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
                 <ScrollView style={{ height: '80%', paddingHorizontal: 20 }}>
                     <HelperText>遺失寵物:</HelperText>
@@ -287,7 +287,7 @@ export default ({ mission, visible, close, refreshMissions }) => {
                     onPress={handleSubmit}
                     contentStyle={{ paddingHorizontal: 10 }}
                 >
-                    編輯
+                    完成
                 </Button>
             </Dialog.Actions>
         </Dialog>

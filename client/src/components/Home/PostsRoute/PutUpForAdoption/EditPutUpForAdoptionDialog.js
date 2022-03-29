@@ -204,7 +204,7 @@ export default ({ putUpForAdoption, visible, close, refreshPutUpForAdoptions }) 
                     onPress={handleSubmit}
                     contentStyle={{ paddingHorizontal: 10 }}
                 >
-                    編輯
+                    完成
                 </Button>
             </Dialog.Actions>
         </Dialog>

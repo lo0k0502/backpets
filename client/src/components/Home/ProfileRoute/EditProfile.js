@@ -242,7 +242,7 @@ export default () => {
                 contentStyle={{ width: '100%', height: '100%' }}
                 onPress={handleSubmit}
             >
-                更改
+                完成
             </Button>
         </View>
     );

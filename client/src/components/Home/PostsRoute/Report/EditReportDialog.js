@@ -326,7 +326,7 @@ export default ({ report, visible, close, refreshReports }) => {
                     onPress={handleSubmit}
                     contentStyle={{ paddingHorizontal: 10 }}
                 >
-                    編輯
+                    完成
                 </Button>
             </Dialog.Actions>
         </Dialog>

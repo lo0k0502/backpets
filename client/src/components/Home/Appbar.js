@@ -28,7 +28,7 @@ export default ({ route, navigation }) => {
                 title={
                     isPostsTab ? 'BackPets' : (
                         isChangePassword ? '更改密碼' : (
-                            isEditProfile ? '更改個人資料' : (
+                            isEditProfile ? '編輯個人資料' : (
                                 isPetPassports ? '寵物護照列表' : (
                                     isSelfMissions ? '發布過的貼文' : (
                                         isClue ? '線索' : route.name
