@@ -11,14 +11,18 @@ import {
     Title,
     useTheme,
 } from 'react-native-paper';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../../redux/userSlice';
+import { completeMission } from '../../../api';
 import { useClues, useMission } from '../../../hooks';
 import ClueCard from './ClueCard';
 
 export default ({ route }) => {
+    const user = useSelector(selectUser);
     const { missionId } = route.params;
     const { colors } = useTheme();
-    const mission = useMission(missionId);
-    const { clues, refreshClues, isFetching } = useClues(missionId);
+    const { mission, refreshMission, isFetching: isFetchingMission } = useMission(missionId);
+    const { clues, refreshClues, isFetching: isFetchingClues } = useClues(missionId);
 
     const [selecting, setSelecting] = useState(false);
     const [clueCheckBoxes, setClueCheckboxses] = useState([]);
@@ -26,12 +30,24 @@ export default ({ route }) => {
 
     const [isLoading, setIsLoading] = useState(false);
 
+    const refreshPage = async () => {
+        await refreshMission();
+        await refreshClues();
+    };
+
     const handleSubmit = async () => {
         setSelectingErrorMsg('');
         setIsLoading(true);
 
         try {
-            
+            await completeMission({
+                missionId,
+                userId: user.info._id,
+                chosen_clueIds: clueCheckBoxes.filter(clueCheckBox => clueCheckBox.status === 'check'),
+            });
+
+            refreshPage();
+            setSelecting(false);
         } catch (error) {
             console.log('While completing mission: ', error);
         }
@@ -40,7 +56,7 @@ export default ({ route }) => {
     };
 
     useEffect(() => {
-        setClueCheckboxses(clues.map(clue => ({ id: clue._id, status: 'unchecked' })));
+        setClueCheckboxses(clues.map(clue => ({ id: clue._id, userId: clue.userId, status: 'unchecked' })));
     }, [clues]);
 
     return (
@@ -52,8 +68,8 @@ export default ({ route }) => {
                 }}
                 refreshControl={
                     <RefreshControl
-                        refreshing={isFetching}
-                        onRefresh={refreshClues}
+                        refreshing={isFetchingMission || isFetchingClues}
+                        onRefresh={refreshPage}
                     />
                 }
             >
@@ -70,7 +86,7 @@ export default ({ route }) => {
                     ) : null
                 }
                 {
-                    isFetching ? (
+                    isFetchingMission || isFetchingClues ? (
                         <ActivityIndicator
                             animating={true}
                             color={colors.primary}
@@ -98,7 +114,7 @@ export default ({ route }) => {
             </ScrollView>
             {
                 mission.completed ? null : (
-                    !isFetching && clues.length ? (
+                    !(isFetchingMission || isFetchingClues) && clues.length ? (
                         selecting ? (
                             <>
                                 <FAB
@@ -124,7 +140,7 @@ export default ({ route }) => {
                                     label='確定選擇'
                                     color='white'
                                     extended
-                                    disabled={isLoading}
+                                    disabled={isLoading || !clueCheckBoxes.filter(clueCheckBox => clueCheckBox.status === 'checked').length}
                                     style={{
                                         position: 'absolute',
                                         right: 10,

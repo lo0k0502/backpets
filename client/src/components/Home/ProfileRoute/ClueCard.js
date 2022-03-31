@@ -30,7 +30,7 @@ export default ({
     const [clueCheckBoxes, setClueCheckboxses] = clueCheckBoxesState || [[], () => {}];
     const { colors } = useTheme();
     const { user: poster } = useUser(clue.userId);
-    const mission = useMission(clue.missionId);
+    const { mission } = useMission(clue.missionId);
     const { pet } = usePet(mission.petId);
     const { user: missionPoster } = useUser(pet.userId);
 
@@ -84,6 +84,9 @@ export default ({
                                 theme={{ colors: { accent: colors.primary } }}
                                 onPress={() => {
                                     if (disabled) return;
+                                    if (clueCheckBoxes.find(clueCheckbox => clueCheckbox.userId === clue.userId)) {
+                                        return setSelectingErrorMsg('不可選擇同一個人!');
+                                    }
                                     if (clueCheckBoxes.filter(clueCheckbox => clueCheckbox.status === 'checked').length >= 3) {
                                         return setSelectingErrorMsg('最多只可選擇三個!');
                                     }

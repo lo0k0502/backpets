@@ -169,24 +169,44 @@ export const useSelfMissions = (userId, dependencies = []) => {
 
 /**
  * @param {*} missionId 
- * @returns {Object}
+ * @returns {{
+ *  mission: {},
+ *  refreshMission: Function,
+ *  isFetching: boolean,
+ * }}
  */
 export const useMission = (missionId) => {
     const [mission, setMission] = useState({});
+    const isMounted = useRef(true);
+    const [isFetching, setIsFetching] = useState(false);
 
     // Fetch the mission of this mission id
-    useEffect(() => {
-        let isMounted = true;
+    const fetchMissionByMissionId = async () => {
+        setIsFetching(true);
 
-        if (missionId) (async () => {
+        try {
             const result = await fetchMission(missionId);
-            if (isMounted) setMission(result.data.result);
-        })();
+            if (isMounted.current) setMission(result.data.result);
+        } catch (error) {
+            console.log(error);
+        }
 
-        return () => { isMounted = false };
+        setIsFetching(false);
+    };
+
+    useEffect(() => {
+        isMounted.current = true;
+
+        if (missionId) fetchMissionByMissionId();
+
+        return () => { isMounted.current = false };
     }, [missionId]);
 
-    return mission;
+    return {
+        mission,
+        refreshMission: fetchMissionByMissionId,
+        isFetching,
+    };
 };
 
 /**

@@ -1,3 +1,5 @@
+import { ClueService } from './../clue/clue.service';
+import { PointRecordService } from './../point-record/point-record.service';
 import { Types } from 'mongoose';
 import { Controller, Get, Res, Post, Body, Param, Delete } from '@nestjs/common';
 import { Response } from 'express';
@@ -7,7 +9,11 @@ import * as moment from 'moment';
 
 @Controller('mission')
 export class MissionController {
-    constructor(private readonly missionService: MissionService) {}
+    constructor(
+        private readonly missionService: MissionService,
+        private readonly pointRecordService: PointRecordService,
+        private readonly clueService: ClueService,
+    ) {}
 
     @Get('fetchall')
     async FetchAllMissions(@Res() res: Response) {
@@ -42,6 +48,34 @@ export class MissionController {
             return res.status(200).json({ result });
         } catch (error) {
             console.error(error);
+            return res.status(400).json({ message: '錯誤' });
+        }
+    }
+
+    @Post('completemission')
+    async CompleteMission(@Body() { missionId, userId, chosen_clueIds }, @Res() res: Response) {
+        try {
+            const result = await this.missionService.findOne({ _id: missionId });
+            if (!result) return res.status(400).json({ message: '任務不存在' });
+
+            await this.missionService.updateOne({ _id: missionId }, { completed: true, chosen_clueIds });
+
+            const createPointRecord = async (clueId) => {
+                await this.pointRecordService.create({
+                    missionId: new Types.ObjectId(missionId),
+                    userId: new Types.ObjectId(userId),
+                    clueId: new Types.ObjectId(clueId),
+                    time: moment().valueOf(),
+                });
+
+                await this.clueService.updateOne({ _id: clueId }, { awarded: true });
+            };
+
+            await Promise.all(chosen_clueIds.map(clueId => createPointRecord(clueId)));
+
+            return res.status(200).json({ success: true });
+        } catch (error) {
+            console.log(error);
             return res.status(400).json({ message: '錯誤' });
         }
     }

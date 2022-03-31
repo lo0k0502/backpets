@@ -14,11 +14,11 @@ export class AuthMiddleware implements NestMiddleware {
         
         try {
             await this.authService.verifyAccessTokenAsync(accessToken);
-            console.log('AccessToken verified!');
+            console.log('AccessToken verified!\n');
             next();
 
         } catch (error) {
-            console.log('AccessToken forbidden!');
+            console.log('AccessToken forbidden!\n');
             return res.status(400).json({ message: 'AccessToken forbidden!' });
         }
     }

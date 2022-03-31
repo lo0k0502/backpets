@@ -14,8 +14,10 @@ import { AuthService } from "src/auth/auth.service";
 
 @Module({
     imports: [
-        MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-        MongooseModule.forFeature([{ name: Clue.name, schema: ClueSchema }]),
+        MongooseModule.forFeature([
+            { name: User.name, schema: UserSchema },
+            { name: Clue.name, schema: ClueSchema },
+        ]),
         JwtModule.register({}),
         MailModule,
     ],
