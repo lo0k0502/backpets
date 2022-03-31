@@ -4,13 +4,14 @@ import {
     fetchAllMissions,
     fetchAllPutUpForAdoptions,
     fetchAllReports,
-    fetchCluesByMission,
+    fetchCluesByMissionId,
     fetchMission,
     fetchPet,
     fetchPetsByUserId,
     fetchMissionsByPetId,
     fetchUserById,
     fetchAllPets,
+    fetchCluesByUserId,
 } from '../api';
 import { useFocusEffect } from '@react-navigation/core';
 
@@ -20,6 +21,7 @@ export default {
     useMissions,
     useSelfMissions,
     useClues,
+    useSelfClues,
     useReports,
     usePutUpForAdoptions,
     useUser,
@@ -202,27 +204,25 @@ export const useMission = (missionId) => {
  *          latitude: Number,
  *          longitude: Number,
  *      },
+ *      awarded: Boolean,
+ *      pointsReceived: Boolean,
  *  }[],
  *  refreshClues: Function,
  *  isFetching: boolean,
  * }}
  */
-export const useClues = (missionId) => {
+export const useClues = (missionId, dependencies = []) => {
     const [clues, setClues] = useState([]);
     const isMounted = useRef(true);
     const [isFetching, setIsFetching] = useState(false);
 
     // Fetch clues by mission ID
     const fetchClues = async () => {
-        if (!missionId) return;
-
         setIsFetching(true);
 
         try {
-            const result = await fetchCluesByMission(missionId.toString());
-            if (isMounted.current) {
-                setClues(result.data.result);
-            }
+            const result = await fetchCluesByMissionId(missionId.toString());
+            if (isMounted.current) setClues(result.data.result);
         } catch (error) {
             console.log(error);
         }
@@ -236,7 +236,63 @@ export const useClues = (missionId) => {
         if (missionId) fetchClues();
 
         return () => { isMounted.current = false };
-    }, [missionId]));
+    }, [missionId, ...dependencies]));
+
+    return {
+        clues,
+        refreshClues: fetchClues,
+        isFetching,
+    };
+};
+
+/**
+ * @param {any} userId
+ * @returns {{
+ *  clues: {
+ *      _id: String,
+ *      userId: String,
+ *      missionId: String,
+ *      content: String,
+ *      tag: String,
+ *      post_time: Number,
+ *      photoId: String,
+ *      location: {
+ *          latitude: Number,
+ *          longitude: Number,
+ *      },
+ *      awarded: Boolean,
+ *      pointsReceived: Boolean,
+ *  }[],
+ *  refreshClues: Function,
+ *  isFetching: boolean,
+ * }}
+ */
+export const useSelfClues = (userId, dependencies = []) => {
+    const [clues, setClues] = useState([]);
+    const isMounted = useRef(true);
+    const [isFetching, setIsFetching] = useState(false);
+
+    // Fetch clues by user ID
+    const fetchClues = async () => {
+        setIsFetching(true);
+
+        try {
+            const result = await fetchCluesByUserId(userId.toString());
+            if (isMounted.current) setClues(result.data.result);
+        } catch (error) {
+            console.log(error);
+        }
+
+        setIsFetching(false);
+    };
+
+    useFocusEffect(useCallback(() => {
+        isMounted.current = true;
+
+        if (userId) fetchClues();
+
+        return () => { isMounted.current = false };
+    }, [userId, ...dependencies]));
 
     return {
         clues,

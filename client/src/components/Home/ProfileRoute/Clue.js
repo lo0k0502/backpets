@@ -26,6 +26,19 @@ export default ({ route }) => {
 
     const [isLoading, setIsLoading] = useState(false);
 
+    const handleSubmit = async () => {
+        setSelectingErrorMsg('');
+        setIsLoading(true);
+
+        try {
+            
+        } catch (error) {
+            console.log('While completing mission: ', error);
+        }
+
+        setIsLoading(false);
+    };
+
     useEffect(() => {
         setClueCheckboxses(clues.map(clue => ({ id: clue._id, status: 'unchecked' })));
     }, [clues]);
@@ -119,11 +132,7 @@ export default ({ route }) => {
                                         elevation: 1,
                                     }}
                                     theme={{ colors: { accent: colors.primary } }}
-                                    onPress={() => {
-                                        setSelectingErrorMsg('');
-                                        setIsLoading(true);
-                                        setTimeout(() => setIsLoading(false), 1000);
-                                    }}
+                                    onPress={handleSubmit}
                                 />
                             </>
                         ) : (

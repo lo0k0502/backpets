@@ -9,6 +9,7 @@ export default ({ route, navigation }) => {
     const isPetPassports = route.name === 'PetPassports';
     const isSelfMissions = route.name === 'SelfMissions';
     const isClue = route.name === 'Clue';
+    const isSelfClues = route.name === 'SelfClues';
 
     const onBackIconPress = () => {
         if (navigation.canGoBack()) return navigation.goBack();
@@ -31,7 +32,9 @@ export default ({ route, navigation }) => {
                             isEditProfile ? '編輯個人資料' : (
                                 isPetPassports ? '寵物護照列表' : (
                                     isSelfMissions ? '發布過的貼文' : (
-                                        isClue ? '線索' : route.name
+                                        isClue ? '線索' : (
+                                            isSelfClues ? '回報過的線索' : route.name
+                                        )
                                     )
                                 )
                             )

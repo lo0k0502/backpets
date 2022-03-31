@@ -1,3 +1,4 @@
+import { ClueService } from './../clue/clue.service';
 import { MailService } from '../mail/mail.service';
 import { Types } from 'mongoose';
 import { Body, Controller, Delete, Get, Param, Post, Res } from '@nestjs/common';
@@ -13,6 +14,7 @@ export class UserController {
         private readonly userService: UserService,
         private readonly authService: AuthService,
         private readonly mailService: MailService,
+        private readonly clueService: ClueService,
     ) {}
 
     @Get('fetchall')
@@ -27,20 +29,6 @@ export class UserController {
         if (!existUser) return res.status(400).json({ message: '用戶不存在' });
         return res.status(200).json({ result: existUser });
     }
-
-    @Delete(':userid')
-    async DeleteUser(@Param() { userid }, @Res() res: Response) {
-        try {
-            const existUser = await this.userService.findOne({ _id: userid });
-            if (!existUser) return res.status(400).json({ message: '用戶不存在' });
-    
-            await this.userService.deleteOne({ _id: userid });
-            return res.status(200).json({ success: true });
-        } catch (error) {
-            console.log(error);
-            return res.status(400).json({ message: '錯誤' });
-        }
-    } 
 
     @Post('updateprofile')
     async UpdateProfile(@Body() { userId, photoId, username, email }, @Res() res: Response) {
@@ -98,4 +86,34 @@ export class UserController {
             return res.status(400).json({ message: '錯誤' });
         }
     }
+
+    @Post('updatepoints')
+    async UpdatePoints(@Body() { userId, clueId, points }, @Res() res: Response) {
+        try {
+            const existUser = await this.userService.findOne({ _id: userId });
+            if (!existUser) return res.status(400).json({ message: '用戶不存在' });
+
+            const result = await this.userService.updateOne({ _id: userId }, { points: existUser.points + points });
+            await this.clueService.updateOne({ _id: clueId }, { pointsReceived: true });
+            
+            return res.status(200).json({ result });
+        } catch (error) {
+            console.log(error);
+            return res.status(400).json({ message: '錯誤' });
+        }
+    }
+
+    @Delete(':userid')
+    async DeleteUser(@Param() { userid }, @Res() res: Response) {
+        try {
+            const existUser = await this.userService.findOne({ _id: userid });
+            if (!existUser) return res.status(400).json({ message: '用戶不存在' });
+    
+            await this.userService.deleteOne({ _id: userid });
+            return res.status(200).json({ success: true });
+        } catch (error) {
+            console.log(error);
+            return res.status(400).json({ message: '錯誤' });
+        }
+    } 
 }

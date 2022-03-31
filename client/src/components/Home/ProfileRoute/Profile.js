@@ -58,7 +58,7 @@ export default ({ navigation }) => {
       </View>
 
       <List.Section>
-        {[ '修改個人資料', '寵物護照列表', '發布過的貼文', '兌換紀錄', '點數紀錄', '修改密碼' ].map((title, index) => (
+        {[ '修改個人資料', '寵物護照列表', '發布過的貼文', '回報過的線索', '兌換紀錄', '點數紀錄', '修改密碼' ].map((title, index) => (
           <ListItem
             key={index}
             title={title}
@@ -87,6 +87,10 @@ const ListItem = ({ title, navigation }) => (
           }
           case '發布過的貼文': {
             navigation.navigate('SelfMissions');
+            break;
+          }
+          case '回報過的線索': {
+            navigation.navigate('SelfClues');
             break;
           }
           case '修改密碼': {

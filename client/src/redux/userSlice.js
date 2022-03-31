@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Alert, Clipboard } from 'react-native';
 import * as SecureStorage from 'expo-secure-store';
-import { loginUser, googleLogin, logoutUser, tokenRefresh, updateProfile } from './userReducer';
+import { loginUser, googleLogin, logoutUser, tokenRefresh, updateProfile, updatePoints } from './userReducer';
 
 // The redux state instance, contains state control and the configuration when the dispatched function finish its work.
 export const userSlice = createSlice({
@@ -61,6 +61,9 @@ export const userSlice = createSlice({
       if (action.payload.message) {
         console.log('While updating:', action.payload.message);
       }
+    },
+    [updatePoints.fulfilled]: (state, action) => {
+      state.info = action.payload.result;
     },
   },
 });

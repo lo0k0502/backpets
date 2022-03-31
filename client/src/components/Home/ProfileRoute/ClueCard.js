@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View } from 'react-native';
 import {
     Card,
@@ -7,20 +7,50 @@ import {
     useTheme,
     Checkbox,
     Subheading,
+    Button,
+    Caption,
+    Divider,
 } from 'react-native-paper';
 import moment from 'moment';
-import { useUser } from '../../../hooks';
+import { useMission, usePet, useUser } from '../../../hooks';
 import { SERVERURL } from '../../../api/API';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { useDispatch } from 'react-redux';
+import { updatePoints } from '../../../redux/userReducer';
 
 export default ({
     clue,
-    selecting,
-    disabled,
-    clueCheckBoxesState: [clueCheckBoxes, setClueCheckboxses],
-    setSelectingErrorMsg,
+    self = false,
+    refreshClues = () => {},
+    selecting = false,
+    disabled = false,
+    clueCheckBoxesState,
+    setSelectingErrorMsg = () => {},
 }) => {
+    const [clueCheckBoxes, setClueCheckboxses] = clueCheckBoxesState || [[], () => {}];
     const { colors } = useTheme();
     const { user: poster } = useUser(clue.userId);
+    const mission = useMission(clue.missionId);
+    const { pet } = usePet(mission.petId);
+    const { user: missionPoster } = useUser(pet.userId);
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    const dispatch = useDispatch();
+
+    const receivePoints = async () => {
+        setIsLoading(true);
+
+        try {
+            unwrapResult(await dispatch(updatePoints({ clueId: clue._id, points: 10 })));
+
+            refreshClues();
+        } catch (error) {
+            console.log('While receiving points: ', error);
+        }
+
+        setIsLoading(false);
+    };
 
     return (
         <Card
@@ -45,7 +75,7 @@ export default ({
                         />
                     )}
                     right={props => (
-                        selecting ? (
+                        !self && selecting ? (
                             <Checkbox.Item
                                 {...props}
                                 label='選擇'
@@ -70,7 +100,11 @@ export default ({
                                     )));
                                 }}
                             />
-                        ) : null
+                        ) : (
+                            self && clue.awarded ? (
+                                <Caption {...props}>獲獎</Caption>
+                            ) : null
+                        )
                     )}
                 />
                 <Card.Cover
@@ -86,7 +120,62 @@ export default ({
                     <Subheading style={{ color: colors.primary }}>{'說明:\n'}</Subheading>
                     {clue.content}
                 </Paragraph>
+                {
+                    self ? (
+                        <>
+                            <View
+                                style={{
+                                    width: '100%',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Subheading style={{ padding: 10, color: colors.primary }}>
+                                    回報給: 
+                                </Subheading>
+                                <Card.Title
+                                    title={missionPoster.username}
+                                    subtitle={moment(mission.post_time).fromNow() + '的任務'}
+                                    left={props => (
+                                        <Avatar.Image
+                                            {...props}
+                                            source={{ uri: missionPoster.photoId ? `${SERVERURL}/image/${missionPoster.photoId}` : null }}
+                                            style={{ backgroundColor: 'white' }}
+                                        />
+                                    )}
+                                />
+                            </View>
+                        </>
+                    ) : null
+                }
+                {
+                    clue.awarded ? (
+                        <Divider
+                            style={{
+                                backgroundColor: colors.primary,
+                                width: '95%',
+                                height: 1,
+                                alignSelf: 'center',
+                            }}
+                        />
+                    ) : null
+                }
             </View>
+            {
+                clue.awarded ? (
+                    <Card.Actions style={{ flexDirection: 'row', padding: 0 }}>
+                        <Button
+                            dark
+                            disabled={clue.pointsReceived || isLoading}
+                            style={{ flexGrow: 1 }}
+                            theme={{ roundness: 0 }}
+                            onPress={receivePoints}
+                        >
+                            {clue.pointsReceived ? '點數已領取' : '領取點數'}
+                        </Button>
+                    </Card.Actions>
+                ) : null
+            }
         </Card>
     );
 };

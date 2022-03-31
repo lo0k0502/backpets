@@ -8,15 +8,21 @@ import * as moment from 'moment';
 export class ClueController {
     constructor(private readonly clueService: ClueService) {}
 
-    @Get(':clueid')
-    async FetchClue(@Param() { clueid }, @Res() res: Response) {
-        const result = await this.clueService.findOne({ _id: clueid });
+    @Get('fetchbymissionid/:missionid')
+    async FetchCluesByMissionId(@Param() { missionid }, @Res() res: Response) {
+        const result = await this.clueService.findSome({ missionId: new Types.ObjectId(missionid) });
         return res.status(200).json({ result });
     }
 
-    @Get('fetchbymission/:missionid')
-    async FetchCluesByMission(@Param() { missionid }, @Res() res: Response) {
-        const result = await this.clueService.findSome({ missionId: new Types.ObjectId(missionid) });
+    @Get('fetchbyuserid/:userid')
+    async FetchCluesByUserId(@Param() { userid }, @Res() res: Response) {
+        const result = await this.clueService.findSome({ userId: new Types.ObjectId(userid) });
+        return res.status(200).json({ result });
+    }
+
+    @Get(':clueid')
+    async FetchClue(@Param() { clueid }, @Res() res: Response) {
+        const result = await this.clueService.findOne({ _id: clueid });
         return res.status(200).json({ result });
     }
 
@@ -30,6 +36,8 @@ export class ClueController {
                 post_time: moment().valueOf(),
                 photoId: photoId ? new Types.ObjectId(photoId) : null,
                 location,
+                awarded: false,
+                pointsReceived: false,
             });
             return res.status(200).json({ result });
         } catch (error) {

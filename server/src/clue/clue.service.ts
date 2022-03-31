@@ -16,7 +16,7 @@ export class ClueService {
     }
 
     async findSome(clueFilterQuery: FilterQuery<ClueDocument>): Promise<Clue[]> {
-        return this.clueModel.find(clueFilterQuery).exec();
+        return this.clueModel.find(clueFilterQuery).sort({ post_time: -1, awarded: -1 }).exec();
     }
 
     async findAll(): Promise<Clue[]> {

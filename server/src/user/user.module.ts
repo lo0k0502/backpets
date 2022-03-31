@@ -1,3 +1,6 @@
+import { Clue, ClueSchema } from './../clue/clue.schema';
+import { ClueModule } from './../clue/clue.module';
+import { ClueService } from './../clue/clue.service';
 import { MailModule } from './../mail/mail.module';
 import { MailService } from '../mail/mail.service';
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from "@nestjs/common";
@@ -12,11 +15,12 @@ import { AuthService } from "src/auth/auth.service";
 @Module({
     imports: [
         MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+        MongooseModule.forFeature([{ name: Clue.name, schema: ClueSchema }]),
         JwtModule.register({}),
         MailModule,
     ],
     controllers: [UserController],
-    providers: [UserService, AuthService],
+    providers: [UserService, AuthService, ClueService],
     exports: [UserService],
 })
 export class UserModule implements NestModule {

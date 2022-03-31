@@ -151,6 +151,7 @@ export default ({
                 <Button
                     icon='lightbulb-on-outline'
                     dark
+                    disabled={user.info?._id !== poster._id && mission.completed}
                     style={{ flexGrow: 1, borderRightWidth: 0.5, borderColor: colors.primary }}
                     theme={{ roundness: 0 }}
                     onPress={() => (

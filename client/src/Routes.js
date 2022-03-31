@@ -33,9 +33,9 @@ const Stacks = createStackNavigator();
 
 export default ({ signInStates: [signInState, setSignInState] }) => {
     const [errorMsg, setErrorMsg] = useState('');
-  
+
     const dispatch = useDispatch();
-    
+
     // Logout with alert
     const logout = () => {
         Alert.alert('正在登出', '確定要登出嗎?', [

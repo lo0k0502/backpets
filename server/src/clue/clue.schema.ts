@@ -25,6 +25,12 @@ export class Clue {
         latitude: Number,
         longitude: Number,
     };
+
+    @Prop()
+    awarded: Boolean;
+
+    @Prop()
+    pointsReceived: Boolean;
 }
 
 export const ClueSchema = SchemaFactory.createForClass(Clue);
