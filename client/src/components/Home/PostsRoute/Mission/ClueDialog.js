@@ -195,7 +195,7 @@ export default ({ visible, close, missionId }) => {
                     </HelperText>
                     <View style={[ { width: '100%', height: 200 }, !changingLocation && { opacity: 0.7 } ]}>
                         <Image
-                            source={require('../../../../../assets/icons8-marker-48.png')}
+                            source={require('../../../../../assets/map_marker.png')}
                             style={{
                                 position: 'absolute',
                                 top: '50%',
