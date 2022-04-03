@@ -171,7 +171,7 @@ export default ({ navigation, searchTextState }) => {
                                             mission={mission}
                                             tagSelected={selectedTags.length}
                                             onViewCluePress={() => {
-                                                navigation.navigate('ProfileRoute', { to: 'Clue', missionId: mission._id });
+                                                navigation.navigate('Clue', { missionId: mission._id });
                                             }}
                                             onReportCluePress={() => {
                                                 setAddClueMissionId(mission._id);
@@ -190,7 +190,7 @@ export default ({ navigation, searchTextState }) => {
                                         key={mission._id}
                                         mission={mission}
                                         onViewCluePress={() => {
-                                            navigation.navigate('ProfileRoute', { to: 'Clue', missionId: mission._id });
+                                            navigation.navigate('Clue', { missionId: mission._id });
                                         }}
                                         onReportCluePress={() => {
                                             setAddClueMissionId(mission._id);

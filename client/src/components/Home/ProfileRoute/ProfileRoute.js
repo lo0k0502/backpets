@@ -5,7 +5,7 @@ import EditProfile from './EditProfile';
 import ChangePassword from './ChangePassword';
 import Profile from './Profile';
 import SelfMissions from './SelfMissions';
-import Clue from './Clue';
+import Clue from '../Clue';
 import { useFocusEffect } from '@react-navigation/native';
 import PetPassports from './PetPassports';
 import SelfClues from './SelfClues';

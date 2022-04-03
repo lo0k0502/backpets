@@ -12,9 +12,9 @@ import {
     useTheme,
 } from 'react-native-paper';
 import { useSelector } from 'react-redux';
-import { selectUser } from '../../../redux/userSlice';
-import { completeMission } from '../../../api';
-import { useClues, useMission } from '../../../hooks';
+import { selectUser } from '../../redux/userSlice';
+import { completeMission } from '../../api';
+import { useClues, useMission } from '../../hooks';
 import ClueCard from './ClueCard';
 
 export default ({ route }) => {

@@ -12,11 +12,11 @@ import {
     Divider,
 } from 'react-native-paper';
 import moment from 'moment';
-import { useMission, usePet, useUser } from '../../../hooks';
-import { SERVERURL } from '../../../api/API';
+import { useMission, usePet, useUser } from '../../hooks';
+import { SERVERURL } from '../../api/API';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
-import { updatePoints } from '../../../redux/userReducer';
+import { updatePoints } from '../../redux/userReducer';
 
 export default ({
     clue,

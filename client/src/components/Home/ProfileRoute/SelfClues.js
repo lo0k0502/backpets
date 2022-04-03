@@ -4,7 +4,7 @@ import { ActivityIndicator, Text, Title, useTheme } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { useSelfClues } from '../../../hooks';
 import { selectUser } from '../../../redux/userSlice';
-import ClueCard from './ClueCard';
+import ClueCard from '../ClueCard';
 
 export default () => {
     const user = useSelector(selectUser);
