@@ -84,7 +84,7 @@ export default ({
                                 theme={{ colors: { accent: colors.primary } }}
                                 onPress={() => {
                                     if (disabled) return;
-                                    if (clueCheckBoxes.find(clueCheckbox => clueCheckbox.userId === clue.userId)) {
+                                    if (clueCheckBoxes.find(clueCheckbox => clueCheckbox.userId === clue.userId && clueCheckbox.status === 'checked')) {
                                         return setSelectingErrorMsg('不可選擇同一個人!');
                                     }
                                     if (clueCheckBoxes.filter(clueCheckbox => clueCheckbox.status === 'checked').length >= 3) {

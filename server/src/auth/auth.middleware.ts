@@ -7,7 +7,7 @@ export class AuthMiddleware implements NestMiddleware {
     constructor(private readonly authService: AuthService) {}
 
     async use(req: Request, res: Response, next: NextFunction) {
-        console.log(req.originalUrl, 'AccessToken verifying...');
+        console.log(req.method, req.originalUrl, 'AccessToken verifying...');
         
         const accessToken = req.headers.authorization?.split(' ')[1];
         if (!accessToken) return res.status(400).json({ message: 'No access token!' });

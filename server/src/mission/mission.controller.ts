@@ -60,12 +60,14 @@ export class MissionController {
 
             await this.missionService.updateOne({ _id: missionId }, { completed: true, chosen_clueIds });
 
+            const now = moment().valueOf();
+
             const createPointRecord = async (clueId) => {
                 await this.pointRecordService.create({
                     missionId: new Types.ObjectId(missionId),
                     userId: new Types.ObjectId(userId),
                     clueId: new Types.ObjectId(clueId),
-                    time: moment().valueOf(),
+                    time: now,
                 });
 
                 await this.clueService.updateOne({ _id: clueId }, { awarded: true });

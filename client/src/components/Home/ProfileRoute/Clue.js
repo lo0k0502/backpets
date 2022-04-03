@@ -43,7 +43,7 @@ export default ({ route }) => {
             await completeMission({
                 missionId,
                 userId: user.info._id,
-                chosen_clueIds: clueCheckBoxes.filter(clueCheckBox => clueCheckBox.status === 'check'),
+                chosen_clueIds: clueCheckBoxes.filter(clueCheckBox => clueCheckBox.status === 'checked').map(clueCheckBox => clueCheckBox.id),
             });
 
             refreshPage();
