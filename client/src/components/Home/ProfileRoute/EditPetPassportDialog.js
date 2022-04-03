@@ -26,9 +26,9 @@ import {
 import { useSelector } from 'react-redux';
 import { addPet, deleteImage, editPet, uploadImage } from '../../../api';
 import { selectUser } from '../../../redux/userSlice';
-import { animalTagsArray } from '../../../utils/constants';
 import TagsView from '../PostsRoute/TagsView';
 import { SERVERURL } from '../../../api/API';
+import { constants } from '../../../utils';
 
 export default ({ pet, visible, close, refreshPets }) => {
     const user = useSelector(selectUser);
@@ -41,7 +41,7 @@ export default ({ pet, visible, close, refreshPets }) => {
     const [breed, setBreed] = useState('');
     const [feature, setFeature] = useState('');
     const [gender, setGender] = useState('男');
-    const [tags, setTags] = useState(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
+    const [tags, setTags] = useState(constants.animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
     const [ligated, setLigated] = useState(false);
     const [age, setAge] = useState('');
     const [microchip, setMicrochip] = useState('');
@@ -58,7 +58,7 @@ export default ({ pet, visible, close, refreshPets }) => {
         setBreed(pet.breed || '');
         setFeature(pet.feature || '');
         setGender(pet.gender || '男');
-        setTags(animalTagsArray.map(tagName => ({ name: tagName, selected: tagName === pet.tag })));
+        setTags(constants.animalTagsArray.map(tagName => ({ name: tagName, selected: tagName === pet.tag })));
         setLigated(pet.ligated || false);
         setAge(pet.age?.toString() || '');
         setMicrochip(pet.microchip || '');

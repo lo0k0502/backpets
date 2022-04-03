@@ -90,7 +90,7 @@ export default ({ searchTextState }) => {
               reports.length ? (
                 selectedTags.length || searchText ? (
                   checkReportsMatchTagAndSearchText() ? (
-                    reports.map(report => checkReportMatchTagAndSearchText(report) ? (
+                    reports.filter(checkReportMatchTagAndSearchText).map(report => (
                       <ReportCard
                         key={report._id}
                         report={report}
@@ -98,7 +98,7 @@ export default ({ searchTextState }) => {
                         setEditReport={setEditReport}
                         setEditReportDialog={setEditReportDialog}
                       />
-                    ) : null)
+                    ))
                   ) : (
                     <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有通報QQ</Title>
                   )

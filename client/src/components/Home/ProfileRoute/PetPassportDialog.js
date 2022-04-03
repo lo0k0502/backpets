@@ -26,8 +26,8 @@ import {
 import { useSelector } from 'react-redux';
 import { addPet, uploadImage } from '../../../api';
 import { selectUser } from '../../../redux/userSlice';
-import { animalTagsArray } from '../../../utils/constants';
 import TagsView from '../PostsRoute/TagsView';
+import { constants } from '../../../utils';
 
 export default ({ visible, close, refreshPets }) => {
     const user = useSelector(selectUser);
@@ -40,7 +40,7 @@ export default ({ visible, close, refreshPets }) => {
     const [breed, setBreed] = useState('');
     const [feature, setFeature] = useState('');
     const [gender, setGender] = useState('男');
-    const [tags, setTags] = useState(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
+    const [tags, setTags] = useState(constants.animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
     const [ligated, setLigated] = useState(false);
     const [age, setAge] = useState('');
     const [microchip, setMicrochip] = useState('');
@@ -59,7 +59,7 @@ export default ({ visible, close, refreshPets }) => {
         setBreed('');
         setFeature('');
         setGender('男');
-        setTags(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
+        setTags(constants.animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
         setLigated(false);
         setAge('');
         setMicrochip('');

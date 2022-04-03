@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Image,
     ScrollView,
     View,
     TextInput as NativeTextInput,
 } from 'react-native';
-import MapView from 'react-native-maps';
 import {
     Avatar,
     Button,
@@ -13,65 +11,42 @@ import {
     Divider,
     HelperText,
     List,
-    Text,
+    Menu,
+    Subheading,
     TextInput,
 } from 'react-native-paper';
 import { editPutUpForAdoption } from '../../../../api';
 import { SERVERURL } from '../../../../api/API';
-import { useCurrentLocation, usePet } from '../../../../hooks';
+import { usePet } from '../../../../hooks';
+import { constants } from '../../../../utils';
 
 export default ({ putUpForAdoption, visible, close, refreshPutUpForAdoptions }) => {
     const { pet, isFetching: isFetchingPet } = usePet(putUpForAdoption.petId);
-    const { currentLatitude, currentLongitude } = useCurrentLocation();
 
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
-    const [changingLocation, setChangingLocation] = useState(false);
 
     const [content, setContent] = useState('');
-    const [mapViewRegion, setMapViewRegion] = useState({
-        latitude: currentLatitude,
-        longitude: currentLongitude,
-        latitudeDelta: 0.0122,
-        longitudeDelta: 0.003,
-    });
+    const [county, setCounty] = useState(constants.countys[0]);
+    const [district, setDistrict] = useState(constants.area_data[county][0]);
+    const [phone, setPhone] = useState('');
 
-    useEffect(() => {
-        setMapViewRegion({
-            latitude: currentLatitude,
-            longitude: currentLongitude,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
-        });
-    }, [currentLatitude, currentLongitude]);
+    const [countyMenu, setCountyMenu] = useState(false);
+    const [districtMenu, setDistrictMenu] = useState(false);
 
-    useEffect(() => {
-        setContent(putUpForAdoption.content || '');
-        setMapViewRegion(putUpForAdoption.location ? {
-            ...putUpForAdoption.location,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
-        } : {
-            latitude: currentLatitude,
-            longitude: currentLongitude,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
-        });
-    }, [putUpForAdoption]);
+    const [phoneErrorMsg, setPhoneErrorMsg] = useState('');
 
     const handleClose = () => {
         close();
 
         setContent(putUpForAdoption.content || '');
-        setMapViewRegion(putUpForAdoption.location ? {
-            ...putUpForAdoption.location,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
-        } : {
-            latitude: currentLatitude,
-            longitude: currentLongitude,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
-        });
+        setCounty(putUpForAdoption.county || constants.countys[0]);
+        setDistrict(putUpForAdoption.district || constants.area_data[county][0]);
+        setPhone(putUpForAdoption.phone || '');
+    };
+
+    const checkPhone = (text) => {
+        setPhone(text);
+        setPhoneErrorMsg(text ? '' : '不可為空!!');
     };
 
     const handleSubmit = async () => {
@@ -84,10 +59,9 @@ export default ({ putUpForAdoption, visible, close, refreshPutUpForAdoptions }) 
                 putUpForAdoption._id,
                 {
                     content,
-                    location: {
-                        latitude: mapViewRegion.latitude, 
-                        longitude: mapViewRegion.longitude, 
-                    },
+                    county,
+                    district,
+                    phone,
                 }
             );
 
@@ -97,9 +71,16 @@ export default ({ putUpForAdoption, visible, close, refreshPutUpForAdoptions }) 
             handleClose();// Close the dialog
         } catch (error) {
             setIsLoading(false);
-            console.log('While adding:', error);
+            console.log('While editing putUpForAdoption:', error);
         }
     };
+
+    useEffect(() => {
+        setContent(putUpForAdoption.content || '');
+        setCounty(putUpForAdoption.county || constants.countys[0]);
+        setDistrict(putUpForAdoption.district || constants.area_data[county][0]);
+        setPhone(putUpForAdoption.phone || '');
+    }, [putUpForAdoption]);
 
     return (
         <Dialog visible={visible} onDismiss={handleClose}>
@@ -113,7 +94,7 @@ export default ({ putUpForAdoption, visible, close, refreshPutUpForAdoptions }) 
                         description={isFetchingPet ? '' : pet.breed}
                         left={() => (
                             <Avatar.Image
-                                source={isFetchingPet ? null : { uri: `${SERVERURL}/image/${pet.photoId}` }}
+                                source={{ uri: pet.photoId ? `${SERVERURL}/image/${pet.photoId}` : null }}
                                 style={{ backgroundColor: isFetchingPet ? '#ddd' : 'white' }}
                             />
                         )}
@@ -122,43 +103,81 @@ export default ({ putUpForAdoption, visible, close, refreshPutUpForAdoptions }) 
                     <HelperText>
                         位置(必要)
                     </HelperText>
-                    <View style={[ { width: '100%', height: 200 }, !changingLocation && { opacity: 0.7 } ]}>
-                        <Image
-                            source={require('../../../../../assets/map_marker.png')}
-                            style={{
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                width: 36,
-                                height: 45,
-                                zIndex: 100,
-                                transform: [
-                                    { translateX: -18 },
-                                    { translateY: -45 },
-                                ],
-                            }}
-                            width={10}
-                            height={10}
-                        />
-                        <MapView
-                            style={{ flex: 1 }}
-                            showsUserLocation={!isLoading && changingLocation}
-                            scrollEnabled={!isLoading && changingLocation}
-                            region={mapViewRegion}
-                            onRegionChangeComplete={setMapViewRegion}
-                        />
+                    <View style={{ flexDirection: 'row', marginBottom: 5, alignItems: 'center' }}>
+                        <Subheading>縣市: </Subheading>
+                        <Menu
+                            visible={countyMenu}
+                            onDismiss={() => setCountyMenu(false)}
+                            anchor={(
+                                <Button
+                                    mode='contained'
+                                    dark
+                                    disabled={isLoading}
+                                    onPress={() => setCountyMenu(true)}
+                                    style={{ elevation: 0 }}
+                                >
+                                    {county}
+                                </Button>
+                            )}
+                            theme={{ roundness: 0 }}
+                        >
+                            {constants.countys.map((_county, index) => (
+                                <Menu.Item
+                                    key={index}
+                                    title={_county}
+                                    onPress={() => {
+                                        setCounty(_county);
+                                        setDistrict(constants.area_data[_county][0]);
+                                        setCountyMenu(false);
+                                    }}
+                                />
+                            ))}
+                        </Menu>
+                        <Subheading> 地區: </Subheading>
+                        <Menu
+                            visible={districtMenu}
+                            onDismiss={() => setDistrictMenu(false)}
+                            anchor={(
+                                <Button
+                                    mode='contained'
+                                    dark
+                                    disabled={isLoading}
+                                    onPress={() => setDistrictMenu(true)}
+                                    style={{ elevation: 0 }}
+                                >
+                                    {district}
+                                </Button>
+                            )}
+                            theme={{ roundness: 0 }}
+                        >
+                            {constants.area_data[county].map((_district, index) => (
+                                <Menu.Item
+                                    key={index}
+                                    title={_district}
+                                    onPress={() => {
+                                        setDistrict(_district);
+                                        setDistrictMenu(false);
+                                    }}
+                                />
+                            ))}
+                        </Menu>
                     </View>
-                    <Button
-                        mode='contained'
-                        dark
-                        style={{ marginVertical: 10, elevation: 0 }}
-                        onPress={() => setChangingLocation(state => !state)}
-                    >
-                        {changingLocation ? '確定位置' : '更改位置'}
-                    </Button>
-                    <Text>{'緯度: ' + mapViewRegion.latitude.toString()}</Text>
-                    <Text>{'經度: ' + mapViewRegion.longitude.toString()}</Text>
                     <Divider />
+                    <HelperText></HelperText>
+                    <TextInput 
+                        mode='outlined'
+                        label='電話(必要)'
+                        keyboardType='phone-pad'
+                        disabled={isLoading}
+                        error={phoneErrorMsg}
+                        value={phone}
+                        maxLength={20}
+                        right={<TextInput.Affix text={`${phone.length}/20`} />}
+                        onChangeText={checkPhone}
+                    />
+                    <HelperText type='error'>
+                        {phoneErrorMsg}
+                    </HelperText>
                     <TextInput
                         mode='outlined'
                         label='補充(非必要)'
@@ -198,7 +217,7 @@ export default ({ putUpForAdoption, visible, close, refreshPutUpForAdoptions }) 
                     dark
                     disabled={
                         isLoading
-                        || changingLocation
+                        || !phone
                     }
                     loading={isLoading}
                     onPress={handleSubmit}
@@ -208,18 +227,5 @@ export default ({ putUpForAdoption, visible, close, refreshPutUpForAdoptions }) 
                 </Button>
             </Dialog.Actions>
         </Dialog>
-    );
-};
-
-const ListItem = ({ pet, onPress }) => {
-    return (
-        <>
-            <List.Item
-                title={pet.name}
-                left={() => <Avatar.Image source={{ uri: `${SERVERURL}/image/${pet.photoId}` }} style={{ backgroundColor: 'white' }} />}
-                onPress={onPress}
-            />
-            <Divider />
-        </>
     );
 };

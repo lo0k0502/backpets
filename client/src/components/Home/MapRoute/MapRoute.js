@@ -6,8 +6,8 @@ import { Headline, Text } from 'react-native-paper';
 import { useCurrentLocation, useMissions } from '../../../hooks';
 import PostCallout from './PostCallout';
 import AppSearchbar from '../AppSearchbar';
-import { animalTagsArray } from '../../../utils/constants';
 import TagsView from '../PostsRoute/TagsView';
+import { constants } from '../../../utils';
 
 export default ({ route }) => {
   
@@ -22,11 +22,10 @@ export default ({ route }) => {
   useFocusEffect(useCallback(() => {
     setRegion(location === null ? { latitude: currentLatitude, longitude: currentLongitude } : location);
   }, [location, currentLatitude, currentLongitude]));
-
   // Tag
-  const [animalTags, setAnimalTags] = useState(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
+  const [animalTags, setAnimalTags] = useState(constants.animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
 
-  const selectedTags = animalTagsArray.filter(tag => animalTags.find(_tag => _tag.name === tag && _tag.selected));
+  const selectedTags = constants.animalTagsArray.filter(tag => animalTags.find(_tag => _tag.name === tag && _tag.selected));
 
   const checkMissionMatchTagAndSearchText = (mission) => {
       const pet = pets.find(_pet => _pet._id === mission.petId);

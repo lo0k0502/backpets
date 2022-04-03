@@ -21,9 +21,9 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
 import { useFocusSelfPets, useMissions, usePets } from '../../../../hooks';
 import ClueDialog from './ClueDialog';
-import { animalTagsArray } from '../../../../utils/constants';
 import TagsView from '../TagsView';
 import EditMissionDialog from './EditMissionDialog';
+import { constants } from '../../../../utils';
 
 const styles = StyleSheet.create({
     root: {
@@ -64,7 +64,7 @@ export default ({ navigation, searchTextState }) => {
     const { pets: selfPets, isFetching: isFetchingSelfPets } = useFocusSelfPets(user.info?._id);
     const { colors } = useTheme();
 
-    const [animalTags, setAnimalTags] = useState(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
+    const [animalTags, setAnimalTags] = useState(constants.animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
 
     const [missionDialog, setMissionDialog] = useState(false);// Whether mission dialog is open
     const [editMissionDialog, setEditMissionDialog] = useState(false);// Whether edit mission dialog is open
@@ -72,7 +72,7 @@ export default ({ navigation, searchTextState }) => {
     const [clueDialog, setClueDialog] = useState(false);// Whether clue dialog is open
     const [addClueMissionId, setAddClueMissionId] = useState('');
 
-    const selectedTags = animalTagsArray.filter(tag => animalTags.find(_tag => _tag.name === tag && _tag.selected));
+    const selectedTags = constants.animalTagsArray.filter(tag => animalTags.find(_tag => _tag.name === tag && _tag.selected));
 
     const checkMissionMatchTagAndSearchText = (mission) => {
         const pet = pets.find(_pet => _pet._id === mission.petId);
@@ -165,7 +165,7 @@ export default ({ navigation, searchTextState }) => {
                         missions.length ? (
                             selectedTags.length || searchText ? (
                                 checkMissionsMatchTagAndSearchText() ? (
-                                    missions.map(mission => checkMissionMatchTagAndSearchText(mission) ? (
+                                    missions.filter(checkMissionMatchTagAndSearchText).map(mission => (
                                         <MissionCard
                                             key={mission._id}
                                             mission={mission}
@@ -180,7 +180,7 @@ export default ({ navigation, searchTextState }) => {
                                             setEditMission={setEditMission}
                                             setEditMissionDialog={setEditMissionDialog}
                                         />
-                                    ) : null)
+                                    ))
                                 ) : (
                                     <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
                                 )

@@ -30,7 +30,7 @@ export default ({
     const { colors } = useTheme();
     const user = useSelector(selectUser);
     const { pet } = usePet(putUpForAdoption.petId);
-    const { user: poster } = useUser(pet?.userId);
+    const { user: poster } = useUser(putUpForAdoption.userId);
 
     const [menu, setMenu] = useState(false);
 
@@ -143,26 +143,15 @@ export default ({
                         </View>
                     ) : null
                 }
-                <Divider
-                    style={{
-                        backgroundColor: colors.primary,
-                        width: '95%',
-                        height: 1,
-                        alignSelf: 'center',
-                    }}
-                />
+                <Subheading style={{ padding: 10 }}>
+                    <Text style={{ color: colors.primary }}>地區: </Text>
+                    {putUpForAdoption.county}{putUpForAdoption.district}
+                </Subheading>
+                <Subheading style={{ padding: 10 }}>
+                    <Text style={{ color: colors.primary }}>電話: </Text>
+                    {putUpForAdoption.phone}
+                </Subheading>
             </View>
-            <Card.Actions style={{ flexDirection: 'row', padding: 0 }}>
-                <Button
-                    icon='map-marker-outline'
-                    dark
-                    style={{ flexGrow: 1 }}
-                    theme={{ roundness: 0 }}
-                    onPress={() => navigation.navigate('Map', { location: putUpForAdoption.location })}
-                >
-                    前往地圖
-                </Button>
-            </Card.Actions>
         </Card>
     );
 };

@@ -7,16 +7,19 @@ import {
 } from 'react-native';
 import {
   ActivityIndicator,
+  Button,
   Divider,
   FAB,
+  Menu,
   Portal,
+  Subheading,
   Title,
   useTheme,
 } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { usePets, usePutUpForAdoptions, useFocusSelfPets } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
-import { animalTagsArray } from '../../../../utils/constants';
+import { constants } from '../../../../utils';
 import TagsView from '../TagsView';
 import EditPutUpForAdoptionDialog from './EditPutUpForAdoptionDialog';
 import PutUpForAdoptionCard from './PutUpForAdoptionCard';
@@ -34,11 +37,16 @@ export default ({ searchTextState }) => {
   const [editPutUpForAdoptionDialog, setEditPutUpForAdoptionDialog] = useState(false);// Whether edit putUpForAdoption dialog is open
   const [editPutUpForAdoption, setEditPutUpForAdoption] = useState({});
 
-  const [animalTags, setAnimalTags] = useState(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
+  const [animalTags, setAnimalTags] = useState(constants.animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
+  const [county, setCounty] = useState(constants.all_countys[0]);
+  const [district, setDistrict] = useState(constants.all_area_data[county][0]);
 
-  const selectedTags = animalTagsArray.filter(tag => animalTags.find(_tag => _tag.name === tag && _tag.selected));
+  const [countyMenu, setCountyMenu] = useState(false);
+  const [districtMenu, setDistrictMenu] = useState(false);
 
-  const checkPutUpForAdoptionMatchTagAndSearchText = (putUpForAdoption) => {
+  const selectedTags = constants.animalTagsArray.filter(tag => animalTags.find(_tag => _tag.name === tag && _tag.selected));
+
+  const checkPutUpForAdoptionMatchTagAndSearchTextAndArea = (putUpForAdoption) => {
     const pet = pets.find(_pet => _pet._id === putUpForAdoption.petId);
 
     return (
@@ -49,11 +57,17 @@ export default ({ searchTextState }) => {
         || pet.name.search(searchText) !== -1
         || pet.breed.search(searchText) !== -1
         || pet.gender.search(searchText) !== -1
+      ) && (
+        county !== '全部'
+        && (
+          putUpForAdoption.county === county
+          && putUpForAdoption.district === district
+        )
       )
     );
   };
 
-  const checkPutUpForAdoptionsMatchTagAndSearchText = () => {
+  const checkPutUpForAdoptionsMatchTagAndSearchTextAndArea = () => {
       const putUpForAdoptionsMatchTag = selectedTags.length ? (
           putUpForAdoptions.filter(putUpForAdoption => {
             return selectedTags.includes(pets.find(_pet => _pet._id === putUpForAdoption.petId).tag);
@@ -73,13 +87,85 @@ export default ({ searchTextState }) => {
             );
           })
       ) : putUpForAdoptionsMatchTag;
+      if (!putUpForAdoptionsMatchTagAndSearchText.length) return false
 
-      return putUpForAdoptionsMatchTagAndSearchText.length ? true : false;
+      const putUpForAdoptionsMatchTagAndSearchTextAndArea = county !== '全部' ? (
+        putUpForAdoptionsMatchTagAndSearchText.filter(putUpForAdoption => {
+          return putUpForAdoption.county === county && putUpForAdoption.district === district;
+        })
+      ) : putUpForAdoptionsMatchTagAndSearchText;
+
+      return putUpForAdoptionsMatchTagAndSearchTextAndArea.length ? true : false;
   };
 
   return (
     <>
       <TagsView tagsState={[animalTags, setAnimalTags]} />
+      <Divider />
+      <View
+        style={{
+          flexDirection: 'row',
+          padding: '2%',
+          alignItems: 'center',
+          backgroundColor: 'white',
+        }}
+      >
+          <Subheading>縣市: </Subheading>
+          <Menu
+              visible={countyMenu}
+              onDismiss={() => setCountyMenu(false)}
+              anchor={(
+                  <Button
+                      mode='contained'
+                      dark
+                      onPress={() => setCountyMenu(true)}
+                      style={{ elevation: 0 }}
+                  >
+                      {county}
+                  </Button>
+              )}
+              theme={{ roundness: 0 }}
+          >
+              {constants.all_countys.map((_county, index) => (
+                  <Menu.Item
+                      key={index}
+                      title={_county}
+                      onPress={() => {
+                          setCounty(_county);
+                          setDistrict(constants.all_area_data[_county][0]);
+                          setCountyMenu(false);
+                      }}
+                  />
+              ))}
+          </Menu>
+          <Subheading> 地區: </Subheading>
+          <Menu
+              visible={districtMenu}
+              onDismiss={() => setDistrictMenu(false)}
+              anchor={(
+                  <Button
+                      mode='contained'
+                      dark
+                      onPress={() => setDistrictMenu(true)}
+                      style={{ elevation: 0 }}
+                  >
+                      {district}
+                  </Button>
+              )}
+              theme={{ roundness: 0 }}
+          >
+              {constants.all_area_data[county].map((_district, index) => (
+                  <Menu.Item
+                      key={index}
+                      title={_district}
+                      onPress={() => {
+                          setDistrict(_district);
+                          setDistrictMenu(false);
+                      }}
+                  />
+              ))}
+          </Menu>
+      </View>
       <Divider />
       <ScrollView
         style={{
@@ -115,9 +201,9 @@ export default ({ searchTextState }) => {
             />
           ) : (
             putUpForAdoptions.length ? (
-              selectedTags.length || searchText ? (
-                checkPutUpForAdoptionsMatchTagAndSearchText() ? (
-                  putUpForAdoptions.map(putUpForAdoption => checkPutUpForAdoptionMatchTagAndSearchText(putUpForAdoption) ? (
+              selectedTags.length || searchText || county !== '全部' ? (
+                checkPutUpForAdoptionsMatchTagAndSearchTextAndArea() ? (
+                  putUpForAdoptions.filter(checkPutUpForAdoptionMatchTagAndSearchTextAndArea).map(putUpForAdoption => (
                     <PutUpForAdoptionCard
                       key={putUpForAdoption._id}
                       putUpForAdoption={putUpForAdoption}
@@ -125,7 +211,7 @@ export default ({ searchTextState }) => {
                       setEditPutUpForAdoption={setEditPutUpForAdoption}
                       setEditPutUpForAdoptionDialog={setEditPutUpForAdoptionDialog}
                     />
-                  ) : null)
+                  ))
                 ) : (
                   <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
                 )
