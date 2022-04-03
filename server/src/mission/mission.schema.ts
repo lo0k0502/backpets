@@ -8,6 +8,9 @@ export class Mission {
   @Prop({ required: true })
   petId: Types.ObjectId;
 
+  @Prop({ required: true })
+  userId: Types.ObjectId;
+
   @Prop()
   content: string;
 

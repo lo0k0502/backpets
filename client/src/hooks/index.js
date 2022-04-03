@@ -12,6 +12,7 @@ import {
     fetchUserById,
     fetchAllPets,
     fetchCluesByUserId,
+    fetchPointRecordsByUserId,
 } from '../api';
 import { useFocusEffect } from '@react-navigation/core';
 
@@ -92,7 +93,7 @@ export const useMissions = (dependencies = []) => {
 
     // Fetch all missions
     const fetchMissions = async () => {
-        setIsFetching(true);
+        if (isMounted.current) setIsFetching(true);
 
         try {
             const result = await fetchAllMissions();
@@ -103,7 +104,7 @@ export const useMissions = (dependencies = []) => {
             console.log(error);
         }
 
-        setIsFetching(false);
+        if (isMounted.current) setIsFetching(false);
     };
 
     useEffect(() => {
@@ -133,7 +134,7 @@ export const useSelfMissions = (userId, dependencies = []) => {
 
     // Fetch missions by user ID
     const fetchMissions = async () => {
-        setIsFetching(true);
+        if (isMounted.current) setIsFetching(true);
 
         try {
             const result = await pets.reduce(async (previousPromise, pet) => {
@@ -149,7 +150,7 @@ export const useSelfMissions = (userId, dependencies = []) => {
             console.log(error);
         }
 
-        setIsFetching(false);
+        if (isMounted.current) setIsFetching(false);
     };
 
     useFocusEffect(useCallback(() => {
@@ -182,7 +183,7 @@ export const useMission = (missionId) => {
 
     // Fetch the mission of this mission id
     const fetchMissionByMissionId = async () => {
-        setIsFetching(true);
+        if (isMounted.current) setIsFetching(true);
 
         try {
             const result = await fetchMission(missionId);
@@ -191,7 +192,7 @@ export const useMission = (missionId) => {
             console.log(error);
         }
 
-        setIsFetching(false);
+        if (isMounted.current) setIsFetching(false);
     };
 
     useEffect(() => {
@@ -238,7 +239,7 @@ export const useClues = (missionId, dependencies = []) => {
 
     // Fetch clues by mission ID
     const fetchClues = async () => {
-        setIsFetching(true);
+        if (isMounted.current) setIsFetching(true);
 
         try {
             const result = await fetchCluesByMissionId(missionId.toString());
@@ -247,7 +248,7 @@ export const useClues = (missionId, dependencies = []) => {
             console.log(error);
         }
 
-        setIsFetching(false);
+        if (isMounted.current) setIsFetching(false);
     };
 
     useFocusEffect(useCallback(() => {
@@ -294,7 +295,7 @@ export const useSelfClues = (userId, dependencies = []) => {
 
     // Fetch clues by user ID
     const fetchClues = async () => {
-        setIsFetching(true);
+        if (isMounted.current) setIsFetching(true);
 
         try {
             const result = await fetchCluesByUserId(userId.toString());
@@ -303,7 +304,7 @@ export const useSelfClues = (userId, dependencies = []) => {
             console.log(error);
         }
 
-        setIsFetching(false);
+        if (isMounted.current) setIsFetching(false);
     };
 
     useFocusEffect(useCallback(() => {
@@ -346,7 +347,7 @@ export const useReports = (dependencies = []) => {
 
     // Fetch all reports
     const fetchReports = async () => {
-        setIsFetching(true);
+        if (isMounted.current) setIsFetching(true);
 
         try {
             const result = await fetchAllReports();
@@ -357,7 +358,7 @@ export const useReports = (dependencies = []) => {
             console.log(error);
         }
 
-        setIsFetching(false);
+        if (isMounted.current) setIsFetching(false);
     };
 
     useEffect(() => {
@@ -398,7 +399,7 @@ export const usePutUpForAdoptions = (dependencies = []) => {
 
     // Fetch all putUpForAdoptions
     const fetchPutUpForAdoptions = async () => {
-        setIsFetching(true);
+        if (isMounted.current) setIsFetching(true);
 
         try {
             const result = await fetchAllPutUpForAdoptions();
@@ -409,7 +410,7 @@ export const usePutUpForAdoptions = (dependencies = []) => {
             console.log(error);
         }
 
-        setIsFetching(false);
+        if (isMounted.current) setIsFetching(false);
     };
 
     useEffect(() => {
@@ -452,7 +453,7 @@ export const useUser = (userId) => {
 
     // Fetch the user of this user id
     const fetchTheUser = async () => {
-        setIsFetching(true);
+        if (isMounted.current) setIsFetching(true);
 
         try {
             const result = await fetchUserById(userId);
@@ -461,7 +462,7 @@ export const useUser = (userId) => {
             console.log(error);
         }
 
-        setIsFetching(false);
+        if (isMounted.current) setIsFetching(false);
     };
 
     useEffect(() => {
@@ -501,7 +502,7 @@ export const usePets = (dependencies = []) => {
 
     // Fetch all pets
     const fetchPets = async () => {
-        setIsFetching(true);
+        if (isMounted.current) setIsFetching(true);
 
         try {
             const result = await fetchAllPets();
@@ -510,7 +511,7 @@ export const usePets = (dependencies = []) => {
             console.log(error);
         }
 
-        setIsFetching(false);
+        if (isMounted.current) setIsFetching(false);
     };
 
     useEffect(() => {
@@ -554,7 +555,7 @@ export const useSelfPets = (userId, dependencies = []) => {
 
     // Fetch pets by userId
     const fetchSelfPets = async () => {
-        setIsFetching(true);
+        if (isMounted.current) setIsFetching(true);
 
         try {
             const result = await fetchPetsByUserId(userId);
@@ -565,7 +566,7 @@ export const useSelfPets = (userId, dependencies = []) => {
             console.log(error);
         }
 
-        setIsFetching(false);
+        if (isMounted.current) setIsFetching(false);
     };
 
     useEffect(() => {
@@ -609,7 +610,7 @@ export const useFocusSelfPets = (userId, dependencies = []) => {
 
     // Fetch pets by userId
     const fetchSelfPets = async () => {
-        setIsFetching(true);
+        if (isMounted.current) setIsFetching(true);
 
         try {
             const result = await fetchPetsByUserId(userId);
@@ -620,7 +621,7 @@ export const useFocusSelfPets = (userId, dependencies = []) => {
             console.log(error);
         }
 
-        setIsFetching(false);
+        if (isMounted.current) setIsFetching(false);
     };
 
     useFocusEffect(useCallback(() => {
@@ -657,14 +658,14 @@ export const useFocusSelfPets = (userId, dependencies = []) => {
  *  isFetching: boolean,
  * }}
  */
-export const usePet = (petId) => {
+export const usePet = (petId, dependencies = []) => {
     const [pet, setPet] = useState({});
     const isMounted = useRef(true);
     const [isFetching, setIsFetching] = useState(false);
 
     // Fetch the pet of this pet id
     const fetchThePet = async () => {
-        setIsFetching(true);
+        if (isMounted.current) setIsFetching(true);
 
         try {
             const result = await fetchPet(petId);
@@ -673,7 +674,7 @@ export const usePet = (petId) => {
             console.log(error);
         }
 
-        setIsFetching(false);
+        if (isMounted.current) setIsFetching(false);
     };
 
     useEffect(() => {
@@ -682,7 +683,57 @@ export const usePet = (petId) => {
         if (petId) fetchThePet();
 
         return () => { isMounted.current = false };
-    }, [petId]);
+    }, [petId, ...dependencies]);
 
     return { pet, isFetching };
+};
+
+/**
+ * @param {String} userId 
+ * @param {any[]} dependencies 
+ * @returns {{
+ *  pointRecords: {
+ *      _id: String,
+ *      points: Number,
+ *      userId: String?,
+ *      missionId: String?,
+ *      clueId: String?,
+ *      product: String?,
+ *      time: Number,
+ *  }[],
+ *  refreshPointRecords: Function,
+ *  isFetching: boolean,
+ * }}
+ */
+export const useSelfPointRecords = (userId, dependencies = []) => {
+    const [pointRecords, setPointRecords] = useState([]);
+    const isMounted = useRef(true);
+    const [isFetching, setIsFetching] = useState(false);
+
+    const fetchPointRecords = async () => {
+        if (isMounted.current) setIsFetching(true);
+
+        try {
+            const result = await fetchPointRecordsByUserId(userId);
+            if (isMounted.current) setPointRecords(result.data.result);
+        } catch (error) {
+            console.log(error);
+        }
+
+        if (isMounted.current) setIsFetching(false);
+    };
+
+    useEffect(() => {
+        isMounted.current = true;
+
+        if (userId) fetchPointRecords();
+
+        return () => { isMounted.current = false };
+    }, [userId, ...dependencies]);
+    
+    return {
+        pointRecords,
+        refreshPointRecords: fetchPointRecords,
+        isFetching,
+    }
 };

@@ -1,3 +1,4 @@
+import { PetService } from './../pet/pet.service';
 import { ClueService } from './../clue/clue.service';
 import { PointRecordService } from './../point-record/point-record.service';
 import { Types } from 'mongoose';
@@ -13,6 +14,7 @@ export class MissionController {
         private readonly missionService: MissionService,
         private readonly pointRecordService: PointRecordService,
         private readonly clueService: ClueService,
+        private readonly petService: PetService,
     ) {}
 
     @Get('fetchall')
@@ -36,8 +38,12 @@ export class MissionController {
     @Post('add')
     async AddMission(@Body() { petId, content, lost_time, location }, @Res() res: Response) {
         try {
+            const existPet = await this.petService.findOne({ _id: petId });
+            if (!existPet) return res.status(400).json({ message: '寵物不存在' });
+
             const result = await this.missionService.create({
                 petId: new Types.ObjectId(petId),
+                userId: existPet.userId,
                 content,
                 lost_time,
                 post_time: moment().valueOf(),
@@ -65,10 +71,14 @@ export class MissionController {
             const now = moment().valueOf();
 
             const createPointRecord = async (clueId) => {
+                const existCluePoster = await this.clueService.findOne({ _id: clueId });
+
                 await this.pointRecordService.create({
+                    points: 10,
                     missionId: new Types.ObjectId(missionId),
-                    userId: new Types.ObjectId(userId),
+                    userId: existCluePoster.userId,
                     clueId: new Types.ObjectId(clueId),
+                    productId: null,
                     time: now,
                 });
 

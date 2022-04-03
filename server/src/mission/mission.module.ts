@@ -1,3 +1,4 @@
+import { Pet, PetSchema } from './../pet/pet.schema';
 import { Clue, ClueSchema } from './../clue/clue.schema';
 import { ClueService } from './../clue/clue.service';
 import { PointRecord, PointRecordSchema } from './../point-record/point-record.schema';
@@ -10,6 +11,7 @@ import { MissionController } from './mission.controller';
 import { Mission, MissionSchema } from './mission.schema';
 import { MissionService } from './mission.service';
 import { PointRecordService } from 'src/point-record/point-record.service';
+import { PetService } from 'src/pet/pet.service';
 
 @Module({
   imports: [
@@ -17,6 +19,7 @@ import { PointRecordService } from 'src/point-record/point-record.service';
       { name: Mission.name, schema: MissionSchema },
       { name: PointRecord.name, schema: PointRecordSchema },
       { name: Clue.name, schema: ClueSchema },
+      { name: Pet.name, schema: PetSchema },
     ]),
     JwtModule.register({}),
   ],
@@ -25,6 +28,7 @@ import { PointRecordService } from 'src/point-record/point-record.service';
     AuthService,
     PointRecordService,
     ClueService,
+    PetService,
   ],
   controllers: [MissionController],
 })

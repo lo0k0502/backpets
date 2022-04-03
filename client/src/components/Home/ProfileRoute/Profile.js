@@ -93,6 +93,10 @@ const ListItem = ({ title, navigation }) => (
             navigation.navigate('SelfClues');
             break;
           }
+          case '點數紀錄': {
+            navigation.navigate('PointRecord');
+            break;
+          }
           case '修改密碼': {
             navigation.navigate('ChangePassword');
             break;

@@ -1,3 +1,4 @@
+import { PointRecordModule } from './../point-record/point-record.module';
 import { ClueModule } from './../clue/clue.module';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -25,6 +26,7 @@ import { PetModule } from 'src/pet/pet.module';
     ReportModule,
     PutUpForAdoptionModule,
     PetModule,
+    PointRecordModule,
   ],
   controllers: [AppController],
 })
