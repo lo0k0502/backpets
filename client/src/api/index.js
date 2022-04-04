@@ -58,3 +58,6 @@ export const fetchAllPutUpForAdoptions = () => API.get('/put-up-for-adoption/fet
 
 // point record
 export const fetchPointRecordsByUserId = (userId) => API.get(`/point-record/fetchbyuserid/${userId}`);
+
+// feedback
+export const addFeedback = (payload) => API.post('/feedback/add', payload);

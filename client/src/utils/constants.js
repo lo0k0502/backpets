@@ -197,3 +197,17 @@ export const all_area_data = {
 };
 
 export const all_countys = Object.keys(all_area_data);
+
+export const routeNametoTitle = (routeName) => {
+    switch (routeName) {
+        case 'PostsTab': return 'BackPets';
+        case 'ChangePassword': return '更改密碼';
+        case 'EditProfile': return '編輯個人資料';
+        case 'PetPassports': return '寵物護照列表';
+        case 'SelfMissions': return '發布過的貼文';
+        case 'Clue': return '線索';
+        case 'SelfClues': return '回報過的線索';
+        case 'Feedback': return '意見回饋';
+        default: return routeName;
+    }
+};

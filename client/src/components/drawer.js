@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ({ logoutback }) => {
+export default ({ navigation, logoutback }) => {
     const { colors } = useTheme();
 
     return (
@@ -21,7 +21,18 @@ export default ({ logoutback }) => {
                         title={title}
                         itemColor={colors.primary}
                         dividerColor={colors.accent}
-                        logoutback={logoutback}
+                        onItemPress={() => {
+                            switch (title) {
+                                case '意見回饋': {
+                                    navigation.navigate('Feedback');
+                                    break;
+                                }
+                                case '登出': {
+                                    logoutback();
+                                    break;
+                                }
+                            }
+                        }}
                     />
                 ))}
             </List.Section>
@@ -29,20 +40,13 @@ export default ({ logoutback }) => {
     );
 };
 
-const ListItem = ({ title, itemColor, dividerColor, logoutback }) => (
+const ListItem = ({ title, itemColor, dividerColor, onItemPress }) => (
     <>
         <List.Item
             title={title}
             style={{ backgroundColor: itemColor }}
             titleStyle={{ color: 'white', textAlign: 'center', marginLeft: -8 }}
-            onPress={() => {
-                switch (title) {
-                    case '登出': {
-                        logoutback();
-                        break;
-                    }
-                }
-            }}
+            onPress={onItemPress}
         />
         <Divider style={{ backgroundColor: dividerColor, height: 3 }} />
     </>

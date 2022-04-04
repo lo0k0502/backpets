@@ -12,8 +12,8 @@ import { ClueService } from './clue.service';
         MongooseModule.forFeature([{ name: Clue.name, schema: ClueSchema }]),
         JwtModule.register({}),
     ],
-    controllers: [ClueController],
     providers: [ClueService, AuthService],
+    controllers: [ClueController],
 })
 export class ClueModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {

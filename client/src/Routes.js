@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Image, StyleSheet, Alert } from 'react-native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useDispatch } from 'react-redux';
-import DrawerContent from './components/drawer';
 import BottomNavigation from './components/Home/BottomNavigation';
 import AllUsers from './components/DevOptions/AllUsers';
 import AuthRoute from './components/Auth/AuthRoute';
@@ -28,7 +26,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const Drawer = createDrawerNavigator();
 const Stacks = createStackNavigator();
 
 export default ({ signInStates: [signInState, setSignInState] }) => {
@@ -115,17 +112,7 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
             </Stacks.Screen>
           ) : signInState ? (
             <Stacks.Screen name='Main'>
-            {props => (
-              <Drawer.Navigator
-                {...props}
-                drawerContent={props => <DrawerContent {...props} logoutback={logout} />} 
-                screenOptions={{ headerShown: false }}
-              >
-                <Drawer.Screen name='BottomNavigation'>
-                {props => <BottomNavigation {...props} />}
-                </Drawer.Screen>
-              </Drawer.Navigator>
-            )}
+            {props => <BottomNavigation {...props} logoutback={logout} />}
             </Stacks.Screen>
           ) : (
             <>

@@ -77,4 +77,4 @@ export const updatePoints = createAsyncThunk(
             return rejectWithValue(error.response.data);
         }
     }
-)
+);
