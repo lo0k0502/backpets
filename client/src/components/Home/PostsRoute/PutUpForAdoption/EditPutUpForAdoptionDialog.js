@@ -19,6 +19,7 @@ import { editPutUpForAdoption } from '../../../../api';
 import { SERVERURL } from '../../../../api/API';
 import { usePet } from '../../../../hooks';
 import { constants } from '../../../../utils';
+import SelectButton from '../../SelectButton';
 
 export default ({ putUpForAdoption, visible, close, refreshPutUpForAdoptions }) => {
     const { pet, isFetching: isFetchingPet } = usePet(putUpForAdoption.petId);
@@ -105,62 +106,18 @@ export default ({ putUpForAdoption, visible, close, refreshPutUpForAdoptions }) 
                     </HelperText>
                     <View style={{ flexDirection: 'row', marginBottom: 5, alignItems: 'center' }}>
                         <Subheading>縣市: </Subheading>
-                        <Menu
-                            visible={countyMenu}
-                            onDismiss={() => setCountyMenu(false)}
-                            anchor={(
-                                <Button
-                                    mode='contained'
-                                    dark
-                                    disabled={isLoading}
-                                    onPress={() => setCountyMenu(true)}
-                                    style={{ elevation: 0 }}
-                                >
-                                    {county}
-                                </Button>
-                            )}
-                            theme={{ roundness: 0 }}
-                        >
-                            {constants.countys.map((_county, index) => (
-                                <Menu.Item
-                                    key={index}
-                                    title={_county}
-                                    onPress={() => {
-                                        setCounty(_county);
-                                        setDistrict(constants.area_data[_county][0]);
-                                        setCountyMenu(false);
-                                    }}
-                                />
-                            ))}
-                        </Menu>
+                        <SelectButton
+                            stateSet={[county, setCounty]}
+                            menuStateSet={[countyMenu, setCountyMenu]}
+                            options={constants.countys}
+                            optionOnPress={option => setDistrict(constants.area_data[option][0])}
+                        />
                         <Subheading> 地區: </Subheading>
-                        <Menu
-                            visible={districtMenu}
-                            onDismiss={() => setDistrictMenu(false)}
-                            anchor={(
-                                <Button
-                                    mode='contained'
-                                    dark
-                                    disabled={isLoading}
-                                    onPress={() => setDistrictMenu(true)}
-                                    style={{ elevation: 0 }}
-                                >
-                                    {district}
-                                </Button>
-                            )}
-                            theme={{ roundness: 0 }}
-                        >
-                            {constants.area_data[county].map((_district, index) => (
-                                <Menu.Item
-                                    key={index}
-                                    title={_district}
-                                    onPress={() => {
-                                        setDistrict(_district);
-                                        setDistrictMenu(false);
-                                    }}
-                                />
-                            ))}
-                        </Menu>
+                        <SelectButton
+                            stateSet={[district, setDistrict]}
+                            menuStateSet={[districtMenu, setDistrictMenu]}
+                            options={constants.area_data[county]}
+                        />
                     </View>
                     <Divider />
                     <HelperText></HelperText>
