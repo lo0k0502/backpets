@@ -79,6 +79,7 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
             if (isMounted) setSignInState(true);
           } catch (error) {
             if (isMounted) setSignInState(false);
+            await SecureStorage.deleteItemAsync('tokens');
             console.log('While refreshing:', error.message);
           }
         } else {

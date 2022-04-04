@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux';
 import { usePets, usePutUpForAdoptions, useFocusSelfPets } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
 import { constants } from '../../../../utils';
+import SelectButton from '../../SelectButton';
 import TagsView from '../TagsView';
 import EditPutUpForAdoptionDialog from './EditPutUpForAdoptionDialog';
 import PutUpForAdoptionCard from './PutUpForAdoptionCard';
@@ -111,60 +112,18 @@ export default ({ searchTextState }) => {
         }}
       >
           <Subheading>縣市: </Subheading>
-          <Menu
-              visible={countyMenu}
-              onDismiss={() => setCountyMenu(false)}
-              anchor={(
-                  <Button
-                      mode='contained'
-                      dark
-                      onPress={() => setCountyMenu(true)}
-                      style={{ elevation: 0 }}
-                  >
-                      {county}
-                  </Button>
-              )}
-              theme={{ roundness: 0 }}
-          >
-              {constants.all_countys.map((_county, index) => (
-                  <Menu.Item
-                      key={index}
-                      title={_county}
-                      onPress={() => {
-                          setCounty(_county);
-                          setDistrict(constants.all_area_data[_county][0]);
-                          setCountyMenu(false);
-                      }}
-                  />
-              ))}
-          </Menu>
+          <SelectButton
+            stateSet={[county, setCounty]}
+            menuStateSet={[countyMenu, setCountyMenu]}
+            options={constants.all_countys}
+            optionOnPress={option => setDistrict(constants.all_area_data[option][0])}
+          />
           <Subheading> 地區: </Subheading>
-          <Menu
-              visible={districtMenu}
-              onDismiss={() => setDistrictMenu(false)}
-              anchor={(
-                  <Button
-                      mode='contained'
-                      dark
-                      onPress={() => setDistrictMenu(true)}
-                      style={{ elevation: 0 }}
-                  >
-                      {district}
-                  </Button>
-              )}
-              theme={{ roundness: 0 }}
-          >
-              {constants.all_area_data[county].map((_district, index) => (
-                  <Menu.Item
-                      key={index}
-                      title={_district}
-                      onPress={() => {
-                          setDistrict(_district);
-                          setDistrictMenu(false);
-                      }}
-                  />
-              ))}
-          </Menu>
+          <SelectButton
+            stateSet={[district, setDistrict]}
+            menuStateSet={[districtMenu, setDistrictMenu]}
+            options={constants.all_area_data[county]}
+          />
       </View>
       <Divider />
       <ScrollView
