@@ -211,3 +211,5 @@ export const routeNametoTitle = (routeName) => {
         default: return routeName;
     }
 };
+
+export const completedOptions = ['全部', '已完成', '未完成'];

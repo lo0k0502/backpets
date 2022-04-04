@@ -12,6 +12,7 @@ import {
     Divider,
     FAB,
     Portal,
+    Subheading,
     Title,
     useTheme,
 } from 'react-native-paper';
@@ -24,6 +25,7 @@ import ClueDialog from './ClueDialog';
 import TagsView from '../TagsView';
 import EditMissionDialog from './EditMissionDialog';
 import { constants } from '../../../../utils';
+import SelectButton from '../../SelectButton';
 
 const styles = StyleSheet.create({
     root: {
@@ -65,16 +67,18 @@ export default ({ navigation, searchTextState }) => {
     const { colors } = useTheme();
 
     const [animalTags, setAnimalTags] = useState(constants.animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
+    const [completed, setCompleted] = useState(constants.completedOptions[0]);
 
     const [missionDialog, setMissionDialog] = useState(false);// Whether mission dialog is open
     const [editMissionDialog, setEditMissionDialog] = useState(false);// Whether edit mission dialog is open
     const [editMission, setEditMission] = useState({});
     const [clueDialog, setClueDialog] = useState(false);// Whether clue dialog is open
     const [addClueMissionId, setAddClueMissionId] = useState('');
+    const [completedMenu, setCompletedMenu] = useState(false);
 
     const selectedTags = constants.animalTagsArray.filter(tag => animalTags.find(_tag => _tag.name === tag && _tag.selected));
 
-    const checkMissionMatchTagAndSearchText = (mission) => {
+    const checkMissionMatchFilters = (mission) => {
         const pet = pets.find(_pet => _pet._id === mission.petId);
 
         return (
@@ -86,11 +90,15 @@ export default ({ navigation, searchTextState }) => {
                 || pet.breed.search(searchText) !== -1
                 || pet.feature.search(searchText) !== -1
                 || pet.gender.search(searchText) !== -1
+            ) && (
+                completed === constants.completedOptions[0]
+                || (completed === constants.completedOptions[1] && mission.completed)
+                || (completed === constants.completedOptions[2] && !mission.completed)
             )
         );
     };
 
-    const checkMissionsMatchTagAndSearchText = () => {
+    const checkMissionsMatchFilters = () => {
         const missionsMatchTag = selectedTags.length ? (
             missions.filter(mission => {
                 return selectedTags.includes(pets.find(_pet => _pet._id === mission.petId).tag);
@@ -111,14 +119,40 @@ export default ({ navigation, searchTextState }) => {
                 );
             })
         ) : missionsMatchTag;
+        if (!missionsMatchTagAndSearchText.length) return false;
 
-        return missionsMatchTagAndSearchText.length ? true : false;
+        const missionsMatchTagAndSearchTextAndCompleted = completed !== constants.completedOptions[0] ? (
+            missionsMatchTagAndSearchText.filter(mission => {
+                return (
+                    (completed === constants.completedOptions[1] && mission.completed)
+                    || (completed === constants.completedOptions[2] && !mission.completed)
+                );
+            })
+        ) : missionsMatchTagAndSearchText;
+
+        return !!missionsMatchTagAndSearchTextAndCompleted.length;
     };
-    
+console.log(completed)
     return (
         <>
             <TagsView tagsState={[animalTags, setAnimalTags]} />
             <Divider />
+      <View
+        style={{
+          flexDirection: 'row',
+          padding: '2%',
+          alignItems: 'center',
+          backgroundColor: 'white',
+        }}
+      >
+          <Subheading>完成狀態: </Subheading>
+          <SelectButton
+            stateSet={[completed, setCompleted]}
+            menuStateSet={[completedMenu, setCompletedMenu]}
+            options={constants.completedOptions}
+          />
+      </View>
+      <Divider />
             <ScrollView
                 style={styles.root}
                 refreshControl={(
@@ -163,9 +197,9 @@ export default ({ navigation, searchTextState }) => {
                         />
                     ) : (
                         missions.length ? (
-                            selectedTags.length || searchText ? (
-                                checkMissionsMatchTagAndSearchText() ? (
-                                    missions.filter(checkMissionMatchTagAndSearchText).map(mission => (
+                            selectedTags.length || searchText || completed !== constants.completedOptions[0] ? (
+                                checkMissionsMatchFilters() ? (
+                                    missions.filter(checkMissionMatchFilters).map(mission => (
                                         <MissionCard
                                             key={mission._id}
                                             mission={mission}
