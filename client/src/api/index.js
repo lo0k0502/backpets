@@ -14,6 +14,7 @@ export const fetchUserById = (userId) => API.get(`/user/fetchbyid/${userId}`);
 export const updateUserPassword = (payload) => API.post('/user/updatepassword', payload);
 export const updateUserProfile = (payload) => API.post('/user/updateprofile', payload);
 export const updateUserPoints = (payload) => API.post('/user/updatepoints', payload);
+export const updateUserSearchHistory = (payload) => API.post('/user/updatesearchhistory', payload);
 export const deleteUser = (payload) => API.post('/user/delete', payload);
 
 // pet

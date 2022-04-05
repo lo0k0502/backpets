@@ -103,6 +103,25 @@ export class UserController {
         }
     }
 
+    @Post('updatesearchhistory')
+    async UpdateSearchHistory(@Body() { userId, searchHistory }, @Res() res: Response) {
+        try {
+            const existUser = await this.userService.findOne({ _id: userId });
+            if (!existUser) return res.status(400).json({ message: '用戶不存在' });
+
+            let newSearchHistory = existUser.searchHistory;
+            newSearchHistory = newSearchHistory.filter(history => history !== searchHistory);
+            newSearchHistory.push(searchHistory);
+
+            const result = await this.userService.updateOne({ _id: userId }, { searchHistory: newSearchHistory });
+
+            return res.status(200).json({ result });
+        } catch (error) {
+            console.log(error);
+            return res.status(400).json({ message: '錯誤' });
+        }
+    }
+
     @Delete(':userid')
     async DeleteUser(@Param() { userid }, @Res() res: Response) {
         try {

@@ -49,7 +49,10 @@ export default ({
         onChangeText={onChangeText}
         onFocus={onFocus}
         onPressOut={onPressOut}
-        onSubmitEditing={e => e.nativeEvent.text && searchFunction()}
+        onSubmitEditing={e => {
+          if (!e.nativeEvent.text) return;
+          searchFunction();
+        }}
         dense
         style={{
           flex: 1,

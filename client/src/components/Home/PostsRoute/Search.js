@@ -3,20 +3,26 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
 import { List } from 'react-native-paper';
 
-export default ({ navigation, searchTextState }) => {
-  const [searchText, setSearchText] = searchTextState;
+export default ({
+  onItemPress = () => {},
+}) => {
   const user = useSelector(selectUser);
 
   return (
-    <List.Section style={{ flex: 1, backgroundColor: 'white', marginTop: 0 }}>
+    <List.Section
+      style={{
+        flex: 1,
+        flexDirection: 'column-reverse',
+        justifyContent: 'flex-end',
+        backgroundColor: 'white',
+        marginVertical: 0,
+      }}
+    >
       {user.info?.searchHistory.map((history, index) => (
         <List.Item
           key={index}
           title={history}
-          onPress={() => {
-            setSearchText(history);
-            navigation.navigate('PostsTab');
-          }}
+          onPress={() => onItemPress(history)}
           style={{ height: 50, justifyContent: 'center' }}
           right={() => <List.Icon icon='arrow-top-left' color='gray' />}
         />
