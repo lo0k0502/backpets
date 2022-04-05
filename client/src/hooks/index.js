@@ -13,6 +13,7 @@ import {
     fetchAllPets,
     fetchCluesByUserId,
     fetchPointRecordsByUserId,
+    fetchClue,
 } from '../api';
 import { useFocusEffect } from '@react-navigation/core';
 
@@ -21,8 +22,10 @@ export default {
     useCurrentLocation,
     useMissions,
     useSelfMissions,
+    useMission,
     useClues,
     useSelfClues,
+    useClue,
     useReports,
     usePutUpForAdoptions,
     useUser,
@@ -318,6 +321,62 @@ export const useSelfClues = (userId, dependencies = []) => {
     return {
         clues,
         refreshClues: fetchClues,
+        isFetching,
+    };
+};
+
+/**
+ * @param {*} clueId 
+ * @returns {{
+ *  clue: {
+ *      _id: String,
+ *      userId: String,
+ *      missionId: String,
+ *      content: String,
+ *      tag: String,
+ *      post_time: Number,
+ *      photoId: String,
+ *      location: {
+ *          latitude: Number,
+ *          longitude: Number,
+ *      },
+ *      awarded: Boolean,
+ *      pointsReceived: Boolean,
+ *  },
+ *  refreshClue: Function,
+ *  isFetching: boolean,
+ * }}
+ */
+export const useClue = (clueId) => {
+    const [clue, setClue] = useState({});
+    const isMounted = useRef(true);
+    const [isFetching, setIsFetching] = useState(false);
+
+    // Fetch the clue of this clue id
+    const fetchClueByClueId = async () => {
+        if (isMounted.current) setIsFetching(true);
+
+        try {
+            const result = await fetchClue(clueId);
+            if (isMounted.current) setClue(result.data.result);
+        } catch (error) {
+            console.log(error);
+        }
+
+        if (isMounted.current) setIsFetching(false);
+    };
+
+    useEffect(() => {
+        isMounted.current = true;
+
+        if (clueId) fetchClueByClueId();
+
+        return () => { isMounted.current = false };
+    }, [clueId]);
+
+    return {
+        clue,
+        refreshClue: fetchClueByClueId,
         isFetching,
     };
 };

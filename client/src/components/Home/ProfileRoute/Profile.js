@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Avatar, List, Divider, useTheme } from 'react-native-paper';
+import { Avatar, List, Divider, useTheme, Badge } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
 import { SERVERURL } from '../../../api/API';
+import { useSelfClues } from '../../../hooks';
 
 const styles = StyleSheet.create({
   root: {
@@ -33,6 +34,7 @@ const styles = StyleSheet.create({
 export default ({ navigation }) => {
   const user = useSelector(selectUser);
   const { colors } = useTheme();
+  const { clues } = useSelfClues(user.info?._id);
 
   return (
     <View style={styles.root}>
@@ -62,7 +64,49 @@ export default ({ navigation }) => {
           <ListItem
             key={index}
             title={title}
-            navigation={navigation}
+            right={() => (
+              <Badge
+                visible={title === '回報過的線索' && clues.filter(clue => clue.awarded).length}
+                style={{
+                  alignSelf: 'center',
+                  alignItems: 'center',
+                  textAlign: 'center'
+                }}
+              >
+                {clues.filter(clue => clue.awarded).length}
+              </Badge>
+            )}
+            onItemPress={() => {
+              switch (title) {
+                case '修改個人資料': {
+                  navigation.navigate('EditProfile');
+                  break;
+                }
+                case '寵物護照列表': {
+                  navigation.navigate('PetPassports');
+                  break;
+                }
+                case '發布過的貼文': {
+                  navigation.navigate('SelfMissions');
+                  break;
+                }
+                case '回報過的線索': {
+                  navigation.navigate('SelfClues');
+                  break;
+                }
+                case '點數紀錄': {
+                  navigation.navigate('PointRecord');
+                  break;
+                }
+                case '修改密碼': {
+                  navigation.navigate('ChangePassword');
+                  break;
+                }
+                default: {
+                  return;
+                }
+              }
+            }}
           />
         ))}
       </List.Section>
@@ -70,42 +114,13 @@ export default ({ navigation }) => {
   );
 };
 
-const ListItem = ({ title, navigation }) => (
+const ListItem = ({ title, right, onItemPress }) => (
   <>
     <List.Item
       title={title}
       titleEllipsizeMode='tail'
-      onPress={() => {
-        switch (title) {
-          case '修改個人資料': {
-            navigation.navigate('EditProfile');
-            break;
-          }
-          case '寵物護照列表': {
-            navigation.navigate('PetPassports');
-            break;
-          }
-          case '發布過的貼文': {
-            navigation.navigate('SelfMissions');
-            break;
-          }
-          case '回報過的線索': {
-            navigation.navigate('SelfClues');
-            break;
-          }
-          case '點數紀錄': {
-            navigation.navigate('PointRecord');
-            break;
-          }
-          case '修改密碼': {
-            navigation.navigate('ChangePassword');
-            break;
-          }
-          default: {
-            return;
-          }
-        }
-      }}
+      onPress={onItemPress}
+      right={right}
     />
     <Divider style={styles.divider} />
   </>

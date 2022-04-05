@@ -15,8 +15,9 @@ import moment from 'moment';
 import { useMission, usePet, useUser } from '../../hooks';
 import { SERVERURL } from '../../api/API';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updatePoints } from '../../redux/userReducer';
+import { selectUser } from '../../redux/userSlice';
 
 export default ({
     clue,
@@ -28,6 +29,7 @@ export default ({
     setSelectingErrorMsg = () => {},
 }) => {
     const [clueCheckBoxes, setClueCheckboxses] = clueCheckBoxesState || [[], () => {}];
+    const user = useSelector(selectUser);
     const { colors } = useTheme();
     const { user: poster } = useUser(clue.userId);
     const { mission } = useMission(clue.missionId);
@@ -151,8 +153,10 @@ export default ({
                         </>
                     ) : null
                 }
-                {
-                    clue.awarded ? (
+            </View>
+            {
+                clue.awarded && user.info?._id === poster._id ? (
+                    <>
                         <Divider
                             style={{
                                 backgroundColor: colors.primary,
@@ -161,22 +165,18 @@ export default ({
                                 alignSelf: 'center',
                             }}
                         />
-                    ) : null
-                }
-            </View>
-            {
-                clue.awarded ? (
-                    <Card.Actions style={{ flexDirection: 'row', padding: 0 }}>
-                        <Button
-                            dark
-                            disabled={clue.pointsReceived || isLoading}
-                            style={{ flexGrow: 1 }}
-                            theme={{ roundness: 0 }}
-                            onPress={receivePoints}
-                        >
-                            {clue.pointsReceived ? '點數已領取' : '領取點數'}
-                        </Button>
-                    </Card.Actions>
+                        <Card.Actions style={{ flexDirection: 'row', padding: 0 }}>
+                            <Button
+                                dark
+                                disabled={clue.pointsReceived || isLoading}
+                                style={{ flexGrow: 1 }}
+                                theme={{ roundness: 0 }}
+                                onPress={receivePoints}
+                            >
+                                {clue.pointsReceived ? '點數已領取' : '領取點數'}
+                            </Button>
+                        </Card.Actions>
+                    </>
                 ) : null
             }
         </Card>

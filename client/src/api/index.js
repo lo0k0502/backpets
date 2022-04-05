@@ -45,6 +45,7 @@ export const fetchMission = (missionid) => API.get(`/mission/${missionid}`);
 export const addClue = (payload) => API.post('/clue/add', payload);
 export const fetchCluesByMissionId = (missionId) => API.get(`/clue/fetchbymissionid/${missionId}`);
 export const fetchCluesByUserId = (userId) => API.get(`/clue/fetchbyuserid/${userId}`)
+export const fetchClue = (clueId) => API.get(`/clue/${clueId}`);
 
 // report
 export const addReport = (payload) => API.post('/report/add', payload);

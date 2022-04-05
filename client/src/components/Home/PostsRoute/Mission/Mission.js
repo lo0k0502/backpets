@@ -132,27 +132,27 @@ export default ({ navigation, searchTextState }) => {
 
         return !!missionsMatchTagAndSearchTextAndCompleted.length;
     };
-console.log(completed)
+
     return (
         <>
             <TagsView tagsState={[animalTags, setAnimalTags]} />
             <Divider />
-      <View
-        style={{
-          flexDirection: 'row',
-          padding: '2%',
-          alignItems: 'center',
-          backgroundColor: 'white',
-        }}
-      >
-          <Subheading>完成狀態: </Subheading>
-          <SelectButton
-            stateSet={[completed, setCompleted]}
-            menuStateSet={[completedMenu, setCompletedMenu]}
-            options={constants.completedOptions}
-          />
-      </View>
-      <Divider />
+            <View
+                style={{
+                flexDirection: 'row',
+                padding: '2%',
+                alignItems: 'center',
+                backgroundColor: 'white',
+                }}
+            >
+                <Subheading>完成狀態: </Subheading>
+                <SelectButton
+                    stateSet={[completed, setCompleted]}
+                    menuStateSet={[completedMenu, setCompletedMenu]}
+                    options={constants.completedOptions}
+                />
+            </View>
+            <Divider />
             <ScrollView
                 style={styles.root}
                 refreshControl={(
