@@ -3,7 +3,8 @@ import { Appbar } from 'react-native-paper';
 import { constants } from '../../utils';
 import { backIcon } from '../../utils/constants';
 
-export default ({ route, navigation }) => {
+export default ({ route, navigation, routeName }) => {
+    const _routeName = routeName || route.name;
 
     const onBackIconPress = () => {
         if (navigation.canGoBack()) return navigation.goBack();
@@ -12,17 +13,17 @@ export default ({ route, navigation }) => {
     return (
         <Appbar style={{ backgroundColor: 'white' }}>
         {
-            route.name === 'PostsTab' ? (
+            _routeName === 'PostsRoute' ? (
                 <Appbar.Action icon='menu' onPress={navigation.toggleDrawer} />
             ) : (
                 <Appbar.Action icon={backIcon} onPress={onBackIconPress} />
             )
         }
             <Appbar.Content
-                title={constants.routeNametoTitle(route.name)}
+                title={constants.routeNametoTitle(_routeName)}
             />
         {
-            route.name === 'PostsTab' ? (
+            _routeName === 'PostsRoute' ? (
                 <Appbar.Action icon='magnify' onPress={() => navigation.navigate('Search')} />
             ) : null
         }

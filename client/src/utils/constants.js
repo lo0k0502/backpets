@@ -200,7 +200,7 @@ export const all_countys = Object.keys(all_area_data);
 
 export const routeNametoTitle = (routeName) => {
     switch (routeName) {
-        case 'PostsTab': return 'BackPets';
+        case 'PostsRoute': return 'BackPets';
         case 'ChangePassword': return '更改密碼';
         case 'EditProfile': return '編輯個人資料';
         case 'PetPassports': return '寵物護照列表';

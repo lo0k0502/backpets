@@ -60,20 +60,18 @@ export default ({ navigation }) => {
       </View>
 
       <List.Section>
-        {[ '修改個人資料', '寵物護照列表', '發布過的貼文', '回報過的線索', '兌換紀錄', '點數紀錄', '修改密碼' ].map((title, index) => (
+        {['修改個人資料', '寵物護照列表', '發布過的貼文', '回報過的線索', '兌換紀錄', '點數紀錄', '修改密碼'].map((title, index) => (
           <ListItem
             key={index}
             title={title}
             right={() => (
               <Badge
-                visible={title === '回報過的線索' && clues.filter(clue => clue.awarded).length}
+                visible={title === '回報過的線索' && clues.filter(clue => clue.awarded && !clue.pointsReceived).length}
                 style={{
                   alignSelf: 'center',
-                  alignItems: 'center',
-                  textAlign: 'center'
                 }}
               >
-                {clues.filter(clue => clue.awarded).length}
+                {clues.filter(clue => clue.awarded && !clue.pointsReceived).length}
               </Badge>
             )}
             onItemPress={() => {

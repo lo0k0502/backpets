@@ -1,29 +1,43 @@
 import { useFocusEffect } from '@react-navigation/native';
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { Appbar, TextInput, useTheme } from 'react-native-paper';
 import { backIcon } from '../../utils/constants';
 
 export default ({
   route,
-  navigation,
-  searchTextState: [searchText, setSearchText],
-  autoFocus = false,
+  style = {},
+  inputStyle = {},
+  routeName,
+  value,
+  outlineColor,
+  activeOutlineColor,
+  onChangeText = () => {},
   onFocus = () => {},
+  onPressOut = () => {},
+  onBackPress = () => {},
+  onMenuPress = () => {},
+  onClearButtonPress = () => {},
   searchFunction = () => {},
 }) => {
+  const _routeName = routeName || route.name;
+
   const { colors } = useTheme();
   const textInputRef = useRef();
 
-  const isSearch = route.name === 'Search';
+  const isSearch = _routeName === 'Search';
 
-  useFocusEffect(useCallback(() => {
-    if (autoFocus) setTimeout(() => textInputRef.current.focus(), 200);
-  }, [navigation]));
+  useEffect(() => {
+    if (_routeName === 'Search') {
+      textInputRef.current.focus();
+    } else {
+      textInputRef.current.blur();
+    }
+  }, [_routeName]);
 
   return (
     <Appbar
       style={[
-        { backgroundColor: 'white' },
+        { backgroundColor: 'white', ...style },
         isSearch && { elevation: 0, shadowOpacity: 0 },
       ]}
     >
@@ -31,9 +45,10 @@ export default ({
         mode='outlined'
         placeholder='搜尋'
         selectTextOnFocus
-        value={searchText}
-        onChangeText={text => setSearchText(text)}
+        value={value}
+        onChangeText={onChangeText}
         onFocus={onFocus}
+        onPressOut={onPressOut}
         onSubmitEditing={e => e.nativeEvent.text && searchFunction()}
         dense
         style={{
@@ -41,40 +56,35 @@ export default ({
           paddingVertical: 0,
           justifyContent: 'center',
           marginHorizontal: '2%',
+          ...inputStyle,
         }}
         ref={textInputRef}
-        outlineColor='transparent'
-        activeOutlineColor={colors.background2}
+        outlineColor={outlineColor}
+        activeOutlineColor={activeOutlineColor}
         selectionColor={colors.primary}
         left={isSearch ? (
             <TextInput.Icon
               name={backIcon}
               color='gray'
               forceTextInputFocus={false}
-              onPress={() => {
-                setSearchText('');
-                navigation.pop(1);
-              }}
+              onPress={onBackPress}
             />
           ) : (
             <TextInput.Icon
               name='menu'
               color='gray'
               forceTextInputFocus={false}
-              onPress={navigation.toggleDrawer}
+              onPress={onMenuPress}
             />
           )
         }
-        right={
+        right={(
           <TextInput.Icon
             name='close'
             color='gray'
-            onPress={() => {
-              !isSearch && navigation.navigate('Search');
-              setSearchText('');
-            }}
+            onPress={onClearButtonPress}
           />
-        }
+        )}
       />
     </Appbar>
   );

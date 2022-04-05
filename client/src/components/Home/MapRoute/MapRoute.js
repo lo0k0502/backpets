@@ -2,7 +2,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import MapView, { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { Divider } from 'react-native-paper';
+import { Colors, Divider, useTheme } from 'react-native-paper';
 import { useCurrentLocation, useMissions, usePets } from '../../../hooks';
 import PostCallout from './PostCallout';
 import AppSearchbar from '../AppSearchbar';
@@ -10,12 +10,13 @@ import TagsView from '../PostsRoute/TagsView';
 import { constants } from '../../../utils';
 
 export default ({ route, navigation }) => {
-  
+
   // Location start
   const { location } = route.params ? route.params : { location: null }; // Location from post
 
   const { currentLatitude, currentLongitude } = useCurrentLocation();
   const { missions } = useMissions();
+  const { colors } = useTheme();
 
   const [region, setRegion] = useState({ latitude: currentLatitude, longitude: currentLongitude });
 
@@ -134,15 +135,18 @@ export default ({ route, navigation }) => {
       ))}
     </MapView>
 
-    <TagsView tagsState={[animalTags, setAnimalTags]} />
-    <Divider />
 
     <View style={{ flex: 1 }}>
       <AppSearchbar
+        style={{ backgroundColor: 'transparent', elevation: 10 }}
+        inputStyle={{ backgroundColor: 'white' }}
+        outlineColor={colors.primary}
+        activeOutlineColor={colors.background2}
         route={route}
         navigation={navigation}
         searchTextState={[searchText, setSearchText]}
       />
+      <TagsView style={{ backgroundColor: 'transparent' }} tagsState={[animalTags, setAnimalTags]} />
     </View>
 
   </>);
