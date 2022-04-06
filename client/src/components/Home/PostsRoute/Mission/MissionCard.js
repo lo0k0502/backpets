@@ -20,6 +20,7 @@ import { SERVERURL } from '../../../../api/API';
 import Tag from '../Tag';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
+import { isEmptyObject } from '../../../../utils';
 
 export default ({
     mission,
@@ -32,12 +33,18 @@ export default ({
     const navigation = useNavigation();
     const { colors } = useTheme();
     const user = useSelector(selectUser);
-    const { pet } = usePet(mission.petId);
-    const { user: poster } = useUser(pet?.userId);
+    const { pet, isFetching: isFetchingPet } = usePet(mission.petId);
+    const { user: poster, isFetching: isFetchingPoster } = useUser(pet?.userId);
 
     const [menu, setMenu] = useState(false);
 
-    return (
+    return !(
+        isFetchingPet
+        || isFetchingPoster
+        || isEmptyObject(pet)
+        || isEmptyObject(poster)
+        || !user.info?._id
+    ) ? (
         <Card
             style={{
                 justifyContent: 'center',
@@ -171,5 +178,5 @@ export default ({
                 </Button>
             </Card.Actions>
         </Card>
-    );
+    ) : null;
 };

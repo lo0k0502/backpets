@@ -17,6 +17,7 @@ import { useSelector } from 'react-redux';
 import { SERVERURL } from '../../../../api/API';
 import { useUser } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
+import { isEmptyObject } from '../../../../utils';
 import Tag from '../Tag';
 
 export default ({
@@ -28,11 +29,15 @@ export default ({
     const navigation = useNavigation();
     const { colors } = useTheme();
     const user = useSelector(selectUser);
-    const { user: poster } = useUser(report.userId);
+    const { user: poster, isFetching } = useUser(report.userId);
 
     const [menu, setMenu] = useState(false);
 
-    return (
+    return !(
+        isFetching
+        || isEmptyObject(poster)
+        || !user.info?._id
+    ) ? (
         <Card
             style={{
                 justifyContent: 'center',
@@ -50,7 +55,7 @@ export default ({
                     left={props => (
                         <Avatar.Image
                             {...props}
-                            source={{ uri: poster.photoId ? `${SERVERURL}/image/${poster.photoId}` : null }}
+                            source={{ uri: `${SERVERURL}/image/${poster.photoId}` }}
                             style={{ backgroundColor: 'white' }}
                         />
                     )}
@@ -119,5 +124,5 @@ export default ({
                 </Button>
             </Card.Actions>
         </Card>
-    );
+    ) : null;
 };

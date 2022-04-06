@@ -11,29 +11,25 @@ export default ({ pointRecord }) => {
     const { clue, isFetching: isFetchingClue } = useClue(pointRecord.clueId);
 
     return (
+        !(
+            isFetchingMission
+            || isFetchingPoster
+            || isFetchingPet
+            || isFetchingClue
+            || isEmptyObject(mission)
+            || isEmptyObject(poster)
+            || isEmptyObject(pet)
+            || isEmptyObject(clue)
+        ) && clue.pointsReceived
+    ) ? (
         <>
-            {
-                (
-                    !(
-                        isFetchingMission
-                        || isFetchingPoster
-                        || isFetchingPet
-                        || isFetchingClue
-                        || isEmptyObject(mission)
-                        || isEmptyObject(poster)
-                        || isEmptyObject(pet)
-                        || isEmptyObject(clue)
-                    ) && clue.pointsReceived
-                ) ? (
-                    <List.Item
-                        title={pointRecord.productId ? '兌換商品' : `完成任務${poster.username && pet.breed ? ` - ${poster.username}的${pet.breed}` : ''}`}
-                        description={`時間: ${moment(pointRecord.time).fromNow()}`}
-                        disabled
-                        right={props => <Caption {...props} style={{ alignSelf: 'center' }}>{`${pointRecord.points > 0 ? '+' : '-'}${Math.abs(pointRecord.points)}`}</Caption>}
-                    />
-                ) : null
-            }
+            <List.Item
+                title={pointRecord.productId ? '兌換商品' : `完成任務${poster.username && pet.breed ? ` - ${poster.username}的${pet.breed}` : ''}`}
+                description={`時間: ${moment(pointRecord.time).fromNow()}`}
+                disabled
+                right={props => <Caption {...props} style={{ alignSelf: 'center' }}>{`${pointRecord.points > 0 ? '+' : '-'}${Math.abs(pointRecord.points)}`}</Caption>}
+            />
             <Divider />
         </>
-    );
+    ) : null;
 };

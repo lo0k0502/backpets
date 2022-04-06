@@ -19,6 +19,7 @@ import { SERVERURL } from '../../../../api/API';
 import { usePet, useUser } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
 import Tag from '../Tag';
+import { isEmptyObject } from '../../../../utils';
 
 export default ({
     putUpForAdoption,
@@ -26,15 +27,20 @@ export default ({
     setEditPutUpForAdoption = () => {},
     setEditPutUpForAdoptionDialog = () => {},
 }) => {
-    const navigation = useNavigation();
     const { colors } = useTheme();
     const user = useSelector(selectUser);
-    const { pet } = usePet(putUpForAdoption.petId);
-    const { user: poster } = useUser(putUpForAdoption.userId);
+    const { pet, isFetching: isFetchingPet } = usePet(putUpForAdoption.petId);
+    const { user: poster, isFetching: isFetchingPoster } = useUser(putUpForAdoption.userId);
 
     const [menu, setMenu] = useState(false);
 
-    return (
+    return !(
+        isFetchingPet
+        || isFetchingPoster
+        || isEmptyObject(pet)
+        || isEmptyObject(poster)
+        || !user.info?._id
+    ) ? (
         <Card
             style={{
                 justifyContent: 'center',
@@ -52,12 +58,12 @@ export default ({
                     left={props => (
                         <Avatar.Image
                             {...props}
-                            source={{ uri: poster.photoId ? `${SERVERURL}/image/${poster.photoId}` : null }}
+                            source={{ uri: `${SERVERURL}/image/${poster.photoId}` }}
                             style={{ backgroundColor: 'white' }}
                         />
                     )}
                     right={props => (
-                        user.info?._id === poster._id ? (
+                        user.info._id === poster._id ? (
                             <Menu
                                 {...props}
                                 visible={menu}
@@ -85,7 +91,7 @@ export default ({
                     )}
                 />
                 {
-                    pet?.photoId ? (
+                    pet.photoId ? (
                         <Avatar.Image
                             source={{ uri: `${SERVERURL}/image/${pet.photoId}` }}
                             size={200}
@@ -98,30 +104,30 @@ export default ({
                 }
                 <Subheading style={{ padding: 10 }}>
                     <Text style={{ color: colors.primary }}>寵物名稱: </Text>
-                    {pet?.name}
+                    {pet.name}
                 </Subheading>
                 <Subheading style={{ padding: 10 }}>
                     <Text style={{ color: colors.primary }}>品種: </Text>
-                    {pet?.breed}
+                    {pet.breed}
                 </Subheading>
                 <Subheading style={{ padding: 10 }}>
                     <Text style={{ color: colors.primary }}>性別: </Text>
-                    {pet?.gender}
+                    {pet.gender}
                 </Subheading>
                 <Subheading style={{ padding: 10 }}>
                     <Text style={{ color: colors.primary }}>特徵: </Text>
-                    {pet?.feature}
+                    {pet.feature}
                 </Subheading>
                 <Subheading style={{ padding: 10 }}>
                     <Text style={{ color: colors.primary }}>是否結紮: </Text>
-                    {pet?.ligated ? '是' : '否'}
+                    {pet.ligated ? '是' : '否'}
                 </Subheading>
                 <Subheading style={{ padding: 10 }}>
                     <Text style={{ color: colors.primary }}>年齡: </Text>
-                    {pet?.age?.toString()}
+                    {pet.age.toString()}
                 </Subheading>
                 {
-                    pet?.microchip ? (
+                    pet.microchip ? (
                         <Subheading style={{ padding: 10 }}>
                             <Text style={{ color: colors.primary }}>寵物晶片號碼: </Text>
                             {pet?.microchip}
@@ -136,13 +142,9 @@ export default ({
                         </Paragraph>
                     ) : null
                 }
-                {
-                    pet?.tag ? (
-                        <View style={{ flexDirection: 'row', paddingHorizontal: 10, paddingBottom: 10 }}>
-                            <Tag tag={{ name: pet.tag, selected: tagSelected }} />
-                        </View>
-                    ) : null
-                }
+                <View style={{ flexDirection: 'row', paddingHorizontal: 10, paddingBottom: 10 }}>
+                    <Tag tag={{ name: pet.tag, selected: tagSelected }} />
+                </View>
                 <Subheading style={{ padding: 10 }}>
                     <Text style={{ color: colors.primary }}>地區: </Text>
                     {putUpForAdoption.county}{putUpForAdoption.district}
@@ -153,5 +155,5 @@ export default ({
                 </Subheading>
             </View>
         </Card>
-    );
+    ) : null;
 };

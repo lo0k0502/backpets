@@ -18,6 +18,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import { updatePoints } from '../../redux/userReducer';
 import { selectUser } from '../../redux/userSlice';
+import { isEmptyObject } from '../../utils';
 
 export default ({
     clue,
@@ -31,10 +32,10 @@ export default ({
     const [clueCheckBoxes, setClueCheckboxses] = clueCheckBoxesState || [[], () => {}];
     const user = useSelector(selectUser);
     const { colors } = useTheme();
-    const { user: poster } = useUser(clue.userId);
-    const { mission } = useMission(clue.missionId);
-    const { pet } = usePet(mission.petId);
-    const { user: missionPoster } = useUser(pet.userId);
+    const { user: poster, isFetching: isFetchingPoster } = useUser(clue.userId);
+    const { mission, isFetching: isFetchingMission } = useMission(clue.missionId);
+    const { pet, isFetching: isFetchingPet } = usePet(mission.petId);
+    const { user: missionPoster, isFetching: isFetchingMissionPoster } = useUser(pet.userId);
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -54,7 +55,17 @@ export default ({
         setIsLoading(false);
     };
 
-    return (
+    return !(
+        isFetchingPoster
+        || isFetchingMission
+        || isFetchingPet
+        || isFetchingMissionPoster
+        || isEmptyObject(poster)
+        || isEmptyObject(mission)
+        || isEmptyObject(pet)
+        || isEmptyObject(missionPoster)
+        || !user.info?._id
+    ) ? (
         <Card
             style={{
                 justifyContent: 'center',
@@ -72,7 +83,7 @@ export default ({
                     left={props => (
                         <Avatar.Image
                             {...props}
-                            source={{ uri: poster.photoId ? `${SERVERURL}/image/${poster.photoId}` : null }}
+                            source={{ uri: `${SERVERURL}/image/${poster.photoId}` }}
                             style={{ backgroundColor: 'white' }}
                         />
                     )}
@@ -144,7 +155,7 @@ export default ({
                                     left={props => (
                                         <Avatar.Image
                                             {...props}
-                                            source={{ uri: missionPoster.photoId ? `${SERVERURL}/image/${missionPoster.photoId}` : null }}
+                                            source={{ uri: `${SERVERURL}/image/${missionPoster.photoId}` }}
                                             style={{ backgroundColor: 'white' }}
                                         />
                                     )}
@@ -169,6 +180,7 @@ export default ({
                             <Button
                                 dark
                                 disabled={clue.pointsReceived || isLoading}
+                                loading={isLoading}
                                 style={{ flexGrow: 1 }}
                                 theme={{ roundness: 0 }}
                                 onPress={receivePoints}
@@ -180,5 +192,5 @@ export default ({
                 ) : null
             }
         </Card>
-    );
+    ) : null;
 };
