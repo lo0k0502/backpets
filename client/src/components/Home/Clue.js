@@ -147,7 +147,6 @@ export default ({ route }) => {
                                         bottom: 70,
                                         elevation: 1,
                                     }}
-                                    theme={{ colors: { accent: colors.primary } }}
                                     onPress={handleSubmit}
                                 />
                             </>
@@ -164,7 +163,6 @@ export default ({ route }) => {
                                     bottom: 70,
                                     elevation: 1,
                                 }}
-                                theme={{ colors: { accent: colors.primary } }}
                                 onPress={() => setSelecting(true)}
                             />
                         )

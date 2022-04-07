@@ -94,10 +94,9 @@ export default ({
                                 label='選擇'
                                 disabled={disabled}
                                 status={clueCheckBoxes.find(clueCheckbox => clueCheckbox.id === clue._id).status}
-                                theme={{ colors: { accent: colors.primary } }}
                                 onPress={() => {
                                     if (disabled) return;
-                                    if (clueCheckBoxes.find(clueCheckbox => clueCheckbox.userId === clue.userId && clueCheckbox.status === 'checked')) {
+                                    if (clueCheckBoxes.find(clueCheckbox => clueCheckbox.id !== clue._id && clueCheckbox.userId === clue.userId && clueCheckbox.status === 'checked')) {
                                         return setSelectingErrorMsg('不可選擇同一個人!');
                                     }
                                     if (clueCheckBoxes.filter(clueCheckbox => clueCheckbox.status === 'checked').length >= 3) {

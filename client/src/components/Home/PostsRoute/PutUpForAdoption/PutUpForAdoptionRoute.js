@@ -199,7 +199,6 @@ export default ({ searchTextState }) => {
           bottom: 70,
           elevation: 1,
         }}
-        theme={{ colors: { accent: colors.primary } }}
         onPress={() => {
           if (!selfPets.length) {
               return Alert.alert('沒有寵物!', '您的寵物護照目前沒有寵物喔!', [{ text: '知道了' }]);

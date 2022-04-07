@@ -66,7 +66,13 @@ export class MissionController {
 
             if (result.completed) return res.status(400).json({ message: '任務已完成' });
 
-            await this.missionService.updateOne({ _id: missionId }, { completed: true, chosen_clueIds });
+            await this.missionService.updateOne(
+                { _id: missionId },
+                {
+                    completed: true,
+                    chosen_clueIds: chosen_clueIds.map(chosen_clueId => new Types.ObjectId(chosen_clueId)),
+                },
+            );
 
             const now = moment().valueOf();
 

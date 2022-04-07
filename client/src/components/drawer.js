@@ -20,7 +20,7 @@ export default ({ navigation, logoutback }) => {
                         key={index}
                         title={title}
                         itemColor={colors.primary}
-                        dividerColor={colors.accent}
+                        dividerColor={colors.border}
                         onItemPress={() => {
                             switch (title) {
                                 case '意見回饋': {

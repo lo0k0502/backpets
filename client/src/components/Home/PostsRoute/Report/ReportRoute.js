@@ -126,7 +126,6 @@ export default ({ searchTextState }) => {
           bottom: 70,
           elevation: 1,
         }}
-        theme={{ colors: { accent: colors.primary } }}
         onPress={() => setReportDialog(true)}
       />
     </>

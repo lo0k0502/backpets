@@ -195,7 +195,7 @@ export default ({ navigation, setSignInState }) => {
             <Divider 
                 style={{
                     width: '90%',
-                    borderColor: colors.accent,
+                    borderColor: colors.border,
                     borderWidth: 1,
                     margin: 10,
                 }} 

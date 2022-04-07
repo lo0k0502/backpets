@@ -40,7 +40,7 @@ export default ({ navigation }) => {
     <View style={styles.root}>
       <View style={[ styles.profile, { backgroundColor: colors.primary } ]}>
         <Avatar.Image source={{ uri: user.info?.photoId ? `${SERVERURL}/image/${user.info?.photoId}` : null }} size={100} style={styles.avatar} />
-        <View style={{ alignItems: 'center', flex: 1, borderLeftWidth: 2, borderColor: colors.accent }}>
+        <View style={{ alignItems: 'center', flex: 1, borderLeftWidth: 2, borderColor: colors.border }}>
           <Text ellipsizeMode='tail' style={{ color: 'white', fontSize: 25 }}>
             {user.info?.username}
           </Text>
