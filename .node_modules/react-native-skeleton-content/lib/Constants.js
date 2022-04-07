@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DEFAULT_LOADING = exports.DEFAULT_EASING = exports.DEFAULT_HIGHLIGHT_COLOR = exports.DEFAULT_BONE_COLOR = exports.DEFAULT_ANIMATION_DIRECTION = exports.DEFAULT_ANIMATION_TYPE = exports.DEFAULT_DURATION = exports.DEFAULT_BORDER_RADIUS = void 0;
+const react_native_reanimated_1 = require("react-native-reanimated");
+exports.DEFAULT_BORDER_RADIUS = 4;
+exports.DEFAULT_DURATION = 1200;
+exports.DEFAULT_ANIMATION_TYPE = 'shiver';
+exports.DEFAULT_ANIMATION_DIRECTION = 'horizontalRight';
+exports.DEFAULT_BONE_COLOR = '#E1E9EE';
+exports.DEFAULT_HIGHLIGHT_COLOR = '#F2F8FC';
+exports.DEFAULT_EASING = react_native_reanimated_1.EasingNode.bezier(0.5, 0, 0.25, 1);
+exports.DEFAULT_LOADING = true;

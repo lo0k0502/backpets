@@ -26,6 +26,7 @@ import TagsView from '../TagsView';
 import EditMissionDialog from './EditMissionDialog';
 import { constants } from '../../../../utils';
 import SelectButton from '../../SelectButton';
+import SkeletonCard from '../../SkeletonCard';
 
 const styles = StyleSheet.create({
     root: {
@@ -190,11 +191,10 @@ export default ({ navigation, searchTextState }) => {
                 }
                 {
                     isFetching || isFetchingPets ? (
-                        <ActivityIndicator
-                            animating={true}
-                            size='large'
-                            style={{ marginTop: 50 }}
-                        />
+                        <>
+                            <SkeletonCard />
+                            <SkeletonCard />
+                        </>
                     ) : (
                         missions.length ? (
                             selectedTags.length || searchText || completed !== constants.completedOptions[0] ? (
