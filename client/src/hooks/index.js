@@ -410,9 +410,7 @@ export const useReports = (dependencies = []) => {
 
         try {
             const result = await fetchAllReports();
-            if (isMounted.current) {
-                setReports(result.data.result);
-            }
+            if (isMounted.current) setReports(result.data.result);
         } catch (error) {
             console.log(error);
         }
