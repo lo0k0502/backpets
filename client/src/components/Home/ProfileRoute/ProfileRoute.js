@@ -29,7 +29,7 @@ export default ({ route, navigation }) => {
                 headerShown: true,
             }}
         >
-            <ProfileStack.Screen name='Profile' options={{ headerShown: false }}>
+            <ProfileStack.Screen name='Profile'>
             {props => <Profile {...props} />}
             </ProfileStack.Screen>
             <ProfileStack.Screen name='EditProfile'>

@@ -13,7 +13,7 @@ export default ({ route, navigation, routeName }) => {
     return (
         <Appbar style={{ backgroundColor: 'white' }}>
         {
-            _routeName === 'PostsRoute' ? (
+            _routeName === 'PostsRoute' || _routeName === 'Profile' ? (
                 <Appbar.Action icon='menu' onPress={navigation.toggleDrawer} />
             ) : (
                 <Appbar.Action icon={backIcon} onPress={onBackIconPress} />
