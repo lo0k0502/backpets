@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme } from 'react-native-paper';
-import SkeletonContent from 'react-native-skeleton-content';
+import SkeletonContent from '@vitu.soares/react-native-skeleton-content';
 
 export default () => {
     const { colors } = useTheme();
