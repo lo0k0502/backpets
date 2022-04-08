@@ -1,15 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { Title } from 'react-native-paper';
-import { useSelector } from 'react-redux';
-import { useSelfMissions } from '../../../hooks';
-import { selectUser } from '../../../redux/userSlice';
+import Context from '../../../context';
 import MissionCard from '../PostsRoute/Mission/MissionCard';
 
 export default ({ navigation }) => {
-    const user = useSelector(selectUser);
-    const { missions, refreshMissions, isFetching } = useSelfMissions(user.info?._id);
-    
+    const { selfMissions, refreshSelfMissions, isFetchingSelfMissions } = useContext(Context);
+
     return (
         <ScrollView
             style={{
@@ -18,15 +15,15 @@ export default ({ navigation }) => {
             }}
             refreshControl={
                 <RefreshControl
-                    refreshing={isFetching}
-                    onRefresh={refreshMissions}
+                    refreshing={isFetchingSelfMissions}
+                    onRefresh={refreshSelfMissions}
                 />
             }
         >
             {
-                isFetching ? null : (
-                    missions.length ? (
-                        missions.map(mission => (
+                isFetchingSelfMissions ? null : (
+                    selfMissions.length ? (
+                        selfMissions.map(mission => (
                             <MissionCard
                                 key={mission._id}
                                 mission={mission}

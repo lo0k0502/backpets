@@ -18,7 +18,7 @@ import MissionDialog from './MissionDialog';
 import MissionCard from './MissionCard';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
-import { useFocusSelfPets, usePets } from '../../../../hooks';
+import { useFocusSelfPets, useMissions, usePets } from '../../../../hooks';
 import ClueDialog from './ClueDialog';
 import TagsView from '../TagsView';
 import EditMissionDialog from './EditMissionDialog';
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
 export default ({ navigation, searchTextState }) => {
     const [searchText, setSearchText] = searchTextState;
     const user = useSelector(selectUser);
-    const { allMissions, refreshAllMissions, isFetchingAllMissions } = useContext(Context);
+    const { allMissions, refreshAllMissions, isFetchingAllMissions } = useMissions();
     const { pets, isFetching: isFetchingPets } = usePets();
     const { pets: selfPets, isFetching: isFetchingSelfPets } = useFocusSelfPets(user.info?._id);
 

@@ -13,7 +13,7 @@ import {
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../redux/userSlice';
 import { completeMission } from '../../api';
-import { useClues } from '../../hooks';
+import { useMission, useMissionClues } from '../../hooks';
 import ClueCard from './ClueCard';
 import Context from '../../context';
 
@@ -21,10 +21,8 @@ export default ({ route }) => {
     const user = useSelector(selectUser);
     const { missionId } = route.params;
     const { colors } = useTheme();
-    const { getMissionById, refreshAllMissions, isFetchingAllMissions } = useContext(Context);
-    const { clues, refreshClues, isFetching: isFetchingClues } = useClues(missionId);
-
-    const mission = getMissionById(missionId);
+    const { mission, refreshMission, isFetchingMission } = useMission(missionId);
+    const { missionClues, refreshMissionClues, isFetchingMissionClues } = useMissionClues(missionId);
 
     const [selecting, setSelecting] = useState(false);
     const [clueCheckBoxes, setClueCheckboxses] = useState([]);
@@ -33,8 +31,8 @@ export default ({ route }) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const refreshPage = async () => {
-        await refreshAllMissions();
-        await refreshClues();
+        await refreshMission();
+        await refreshMissionClues();
     };
 
     const handleSubmit = async () => {
@@ -58,8 +56,8 @@ export default ({ route }) => {
     };
 
     useEffect(() => {
-        setClueCheckboxses(clues.map(clue => ({ id: clue._id, userId: clue.userId, status: 'unchecked' })));
-    }, [clues]);
+        setClueCheckboxses(missionClues.map(clue => ({ id: clue._id, userId: clue.userId, status: 'unchecked' })));
+    }, [missionClues]);
 
     return (
         <>
@@ -70,7 +68,7 @@ export default ({ route }) => {
                 }}
                 refreshControl={
                     <RefreshControl
-                        refreshing={isFetchingAllMissions || isFetchingClues}
+                        refreshing={isFetchingMission || isFetchingMissionClues}
                         onRefresh={refreshPage}
                     />
                 }
@@ -88,9 +86,9 @@ export default ({ route }) => {
                     ) : null
                 }
                 {
-                    isFetchingAllMissions || isFetchingClues ? null : (
-                        clues.length ? (
-                            clues.map(clue => (
+                    isFetchingMission || isFetchingMissionClues ? null : (
+                        missionClues.length ? (
+                            missionClues.map(clue => (
                                 <ClueCard
                                     key={clue._id}
                                     clue={clue}
@@ -109,10 +107,10 @@ export default ({ route }) => {
             </ScrollView>
             {
                 (
-                    isFetchingAllMissions
-                    || isFetchingClues
+                    isFetchingMission
+                    || isFetchingMissionClues
                 ) ? null : (
-                    clues.length ? (
+                    missionClues.length ? (
                         selecting ? (
                             <>
                                 <FAB

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { View } from 'react-native';
 import {
     Card,
@@ -12,7 +12,7 @@ import {
     Divider,
 } from 'react-native-paper';
 import moment from 'moment';
-import { usePet, useUser } from '../../hooks';
+import { useMission, usePet, useUser } from '../../hooks';
 import { SERVERURL } from '../../api/API';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,12 +20,11 @@ import { updatePoints } from '../../redux/userReducer';
 import { selectUser } from '../../redux/userSlice';
 import { isEmptyObject } from '../../utils';
 import { Skeleton } from './Skeleton';
-import Context from '../../context';
 
 export default ({
     clue,
     self = false,
-    refreshClues = () => {},
+    refreshSelfClues = () => {},
     selecting = false,
     disabled = false,
     clueCheckBoxesState,
@@ -35,9 +34,7 @@ export default ({
     const user = useSelector(selectUser);
     const { colors } = useTheme();
     const { user: poster, isFetching: isFetchingPoster } = useUser(clue.userId);
-    const { getMissionById, isFetchingAllMissions } = useContext(Context);
-
-    const mission = getMissionById(clue.missionId);
+    const { mission, isFetchingMission } = useMission(clue.missionId);
 
     const { pet, isFetching: isFetchingPet } = usePet(mission.petId);
     const { user: missionPoster, isFetching: isFetchingMissionPoster } = useUser(pet.userId);
@@ -52,7 +49,7 @@ export default ({
         try {
             unwrapResult(await dispatch(updatePoints({ clueId: clue._id, points: 10 })));
 
-            refreshClues();
+            refreshSelfClues();
         } catch (error) {
             console.log('While receiving points: ', error);
         }
@@ -62,7 +59,7 @@ export default ({
 
     return !(
         isFetchingPoster
-        || isFetchingAllMissions
+        || isFetchingMission
         || isFetchingPet
         || isFetchingMissionPoster
         || isEmptyObject(poster)

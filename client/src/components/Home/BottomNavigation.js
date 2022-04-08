@@ -13,21 +13,26 @@ import AdoptionRoute from './AdoptionRoute/AdoptionRoute';
 import Feedback from './Feedback';
 import Appbar from './Appbar';
 import Context from '../../context';
-import { useMissions } from '../../hooks';
+import { useSelfClues, useSelfMissions } from '../../hooks';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../redux/userSlice';
 
 const Drawer = createDrawerNavigator();
 const Tabs = createMaterialBottomTabNavigator();
 
 export default ({ logoutback }) => {
+    const user = useSelector(selectUser);
     const { colors } = useTheme();
-    const allMissionsHook = useMissions();
-    const { allMissions } = allMissionsHook;
+
+    const selfMissionsHook = useSelfMissions(user.info?._id);
+    const selfCluesHook = useSelfClues(user.info?._id);
 
     return (
         <Context.Provider
             value={{
-                ...allMissionsHook,
-                getMissionById: missionId => allMissions.find(_mission => _mission._id === missionId),
+                ...selfMissionsHook,
+                ...selfCluesHook,
+                getSelfClueByClueId: clueId => selfCluesHook.selfClues.find(_clue => _clue._id === clueId) || {},
             }}
         >
             <Drawer.Navigator

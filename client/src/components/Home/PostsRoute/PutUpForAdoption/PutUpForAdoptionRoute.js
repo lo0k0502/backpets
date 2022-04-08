@@ -11,10 +11,9 @@ import {
   Portal,
   Subheading,
   Title,
-  useTheme,
 } from 'react-native-paper';
 import { useSelector } from 'react-redux';
-import { usePets, usePutUpForAdoptions, useFocusSelfPets } from '../../../../hooks';
+import { usePets, useFocusSelfPets, usePutUpForAdoptions } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
 import { constants } from '../../../../utils';
 import SelectButton from '../../SelectButton';
@@ -26,10 +25,9 @@ import PutUpForAdoptionDialog from './PutUpForAdoptionDialog';
 export default ({ searchTextState }) => {
   const [searchText, setSearchText] = searchTextState;
   const user = useSelector(selectUser);
-  const { putUpForAdoptions, refreshPutUpForAdoptions, isFetching } = usePutUpForAdoptions();
+  const { allPutUpForAdoptions, refreshAllPutUpForAdoptions, isFetchingAllPutUpForAdoptions } = usePutUpForAdoptions();
   const { pets, isFetching: isFetchingPets } = usePets();
   const { pets: selfPets, isFetching: isFetchingSelfPets } = useFocusSelfPets(user.info?._id);
-  const { colors } = useTheme();
 
   const [putUpForAdoptionDialog, setPutUpForAdoptionDialog] = useState(false);// Whether putUpForAdoption dialog is open
   const [editPutUpForAdoptionDialog, setEditPutUpForAdoptionDialog] = useState(false);// Whether edit putUpForAdoption dialog is open
@@ -67,10 +65,10 @@ export default ({ searchTextState }) => {
 
   const checkPutUpForAdoptionsMatchTagAndSearchTextAndArea = () => {
       const putUpForAdoptionsMatchTag = selectedTags.length ? (
-          putUpForAdoptions.filter(putUpForAdoption => {
+          allPutUpForAdoptions.filter(putUpForAdoption => {
             return selectedTags.includes(pets.find(_pet => _pet._id === putUpForAdoption.petId).tag);
           })
-      ) : putUpForAdoptions;
+      ) : allPutUpForAdoptions;
       if (!putUpForAdoptionsMatchTag.length) return false;
       
       const putUpForAdoptionsMatchTagAndSearchText = searchText ? (
@@ -130,8 +128,8 @@ export default ({ searchTextState }) => {
         }}
         refreshControl={(
           <RefreshControl
-            refreshing={isFetching}
-            onRefresh={refreshPutUpForAdoptions}
+            refreshing={isFetchingAllPutUpForAdoptions}
+            onRefresh={refreshAllPutUpForAdoptions}
           />
         )}
       >
@@ -139,21 +137,23 @@ export default ({ searchTextState }) => {
           <PutUpForAdoptionDialog
             visible={putUpForAdoptionDialog}
             close={() => setPutUpForAdoptionDialog(false)}
-            refreshPutUpForAdoptions={refreshPutUpForAdoptions}
+            allPutUpForAdoptions={allPutUpForAdoptions}
+            refreshAllPutUpForAdoptions={refreshAllPutUpForAdoptions}
+            isFetchingAllPutUpForAdoptions={isFetchingAllPutUpForAdoptions}
           />
           <EditPutUpForAdoptionDialog
             putUpForAdoption={editPutUpForAdoption}
             visible={editPutUpForAdoptionDialog}
             close={() => setEditPutUpForAdoptionDialog(false)}
-            refreshPutUpForAdoptions={refreshPutUpForAdoptions}
+            refreshAllPutUpForAdoptions={refreshAllPutUpForAdoptions}
           />
         </Portal>
         {
-          isFetching || isFetchingPets ? null : (
-            putUpForAdoptions.length ? (
+          isFetchingAllPutUpForAdoptions || isFetchingPets ? null : (
+            allPutUpForAdoptions.length ? (
               selectedTags.length || searchText || county !== '全部' ? (
                 checkPutUpForAdoptionsMatchTagAndSearchTextAndArea() ? (
-                  putUpForAdoptions.filter(checkPutUpForAdoptionMatchTagAndSearchTextAndArea).map(putUpForAdoption => (
+                  allPutUpForAdoptions.filter(checkPutUpForAdoptionMatchTagAndSearchTextAndArea).map(putUpForAdoption => (
                     <PutUpForAdoptionCard
                       key={putUpForAdoption._id}
                       putUpForAdoption={putUpForAdoption}
@@ -166,7 +166,7 @@ export default ({ searchTextState }) => {
                   <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
                 )
               ) : (
-                putUpForAdoptions.map(putUpForAdoption => (
+                allPutUpForAdoptions.map(putUpForAdoption => (
                   <PutUpForAdoptionCard
                     key={putUpForAdoption._id}
                     putUpForAdoption={putUpForAdoption}

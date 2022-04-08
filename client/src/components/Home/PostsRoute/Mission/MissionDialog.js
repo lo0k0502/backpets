@@ -139,21 +139,20 @@ export default ({
                                 >
                                     <List.Section style={{ marginTop: 0 }}>
                                         {
-                                            !(
-                                                isFetchingAllMissions
-                                                || !allMissions?.length
-                                            ) ? (
-                                                pets.map(pet => (
-                                                    <ListItem
-                                                        key={pet._id}
-                                                        pet={pet}
-                                                        disabled={allMissions.find(mission => mission.petId === pet._id)}
-                                                        onPress={() => {
-                                                            setPetId(pet._id);
-                                                            setPetsDialog(false);
-                                                        }}
-                                                    />
-                                                ))
+                                            !isFetchingAllMissions ? (
+                                                allMissions.length ? (
+                                                    pets.map(pet => (
+                                                        <ListItem
+                                                            key={pet._id}
+                                                            pet={pet}
+                                                            disabled={allMissions.find(mission => mission.petId === pet._id)}
+                                                            onPress={() => {
+                                                                setPetId(pet._id);
+                                                                setPetsDialog(false);
+                                                            }}
+                                                        />
+                                                    ))
+                                                ) : null
                                             ) : null
                                         }
                                     </List.Section>

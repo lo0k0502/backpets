@@ -23,6 +23,12 @@ export class MissionController {
         return res.status(200).json({ result });
     }
 
+    @Get('fetchbyuserid/:userid')
+    async FetchByUserId(@Param() { userid }, @Res() res: Response) {
+        const result = await this.missionService.findSome({ userId: new Types.ObjectId(userid) });
+        return res.status(200).json({ result });
+    }
+
     @Get('fetchbypetid/:petid')
     async FetchByPetId(@Param() { petid }, @Res() res: Response) {
         const result = await this.missionService.findSome({ petId: new Types.ObjectId(petid) });

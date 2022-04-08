@@ -20,17 +20,22 @@ import {
 import { useSelector } from 'react-redux';
 import { addPutUpForAdoption } from '../../../../api';
 import { SERVERURL } from '../../../../api/API';
-import { usePutUpForAdoptions, useSelfPets } from '../../../../hooks';
+import { useSelfPets, useUpdateEffect } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
 import { constants } from '../../../../utils';
 import SelectButton from '../../SelectButton';
 
-export default ({ visible, close, refreshPutUpForAdoptions }) => {
+export default ({
+    visible,
+    close,
+    allPutUpForAdoptions,
+    refreshAllPutUpForAdoptions,
+    isFetchingAllPutUpForAdoptions,
+}) => {
     const [petsDialog, setPetsDialog] = useState(false);
 
     const user = useSelector(selectUser);
     const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id, [petsDialog]);
-    const { putUpForAdoptions } = usePutUpForAdoptions([petsDialog])
 
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
 
@@ -78,13 +83,17 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
 
             setIsLoading(false);
 
-            refreshPutUpForAdoptions();
+            refreshAllPutUpForAdoptions();
             handleClose();// Close the dialog
         } catch (error) {
             setIsLoading(false);
             console.log('While adding:', error);
         }
     };
+
+    useUpdateEffect(() => {
+        refreshAllPutUpForAdoptions();
+    }, [petsDialog]);
 
     return (
         <Dialog visible={visible} onDismiss={handleClose}>
@@ -108,17 +117,23 @@ export default ({ visible, close, refreshPutUpForAdoptions }) => {
                                     )}
                                 >
                                     <List.Section style={{ marginTop: 0 }}>
-                                        {pets.map(pet => (
-                                            <ListItem
-                                                key={pet._id}
-                                                pet={pet}
-                                                disabled={putUpForAdoptions.find(putUpForAdoption => putUpForAdoption.petId === pet._id)}
-                                                onPress={() => {
-                                                    setPetId(pet._id);
-                                                    setPetsDialog(false);
-                                                }}
-                                            />
-                                        ))}
+                                        {
+                                            !isFetchingAllPutUpForAdoptions ? (
+                                                allPutUpForAdoptions.length ? (
+                                                    pets.map(pet => (
+                                                        <ListItem
+                                                            key={pet._id}
+                                                            pet={pet}
+                                                            disabled={allPutUpForAdoptions.find(putUpForAdoption => putUpForAdoption.petId === pet._id)}
+                                                            onPress={() => {
+                                                                setPetId(pet._id);
+                                                                setPetsDialog(false);
+                                                            }}
+                                                        />
+                                                    ))
+                                                ) : null
+                                            ) : null
+                                        }
                                     </List.Section>
                                 </ScrollView>
                             </Dialog.ScrollArea>

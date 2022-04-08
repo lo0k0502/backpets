@@ -30,7 +30,7 @@ import { selectUser } from '../../../../redux/userSlice';
 import { reportTagsArray } from '../../../../utils/constants';
 import TagsView from '../TagsView';
 
-export default ({ visible, close, refreshReports }) => {
+export default ({ visible, close, refreshAllReports }) => {
     const user = useSelector(selectUser);
     const { currentLatitude, currentLongitude } = useCurrentLocation();
 
@@ -129,7 +129,7 @@ export default ({ visible, close, refreshReports }) => {
 
             setIsLoading(false);
 
-            refreshReports();
+            refreshAllReports();
             handleClose();// Close the dialog
         } catch (error) {
             setIsLoading(false);

@@ -16,7 +16,7 @@ export default ({ route, navigation }) => {
 
   const { currentLatitude, currentLongitude } = useCurrentLocation();
   const { allMissions } = useMissions();
-  const { reports } = useReports();
+  const { allReports } = useReports();
   const { colors } = useTheme();
 
   const [region, setRegion] = useState({ latitude: currentLatitude, longitude: currentLongitude });
@@ -87,8 +87,8 @@ export default ({ route, navigation }) => {
 
   const checkReportsMatchTagAndSearchText = () => {
     const reportsMatchTag = selectedTagsForReport.length ? (
-        reports.filter(report => selectedTagsForReport.includes(report.tag))
-    ) : reports;
+        allReports.filter(report => selectedTagsForReport.includes(report.tag))
+    ) : allReports;
     if (!reportsMatchTag.length) return false;
     
     const reportsMatchTagAndSearchText = searchText ? (
@@ -162,11 +162,11 @@ export default ({ route, navigation }) => {
       ))} 
 
       { //Start of Marker for Report
-      reports.map((report, index) => (
-        reports.length ? (
+      allReports.map((report, index) => (
+        allReports.length ? (
           selectedTagsForReport.length || searchText ? (
             checkReportsMatchTagAndSearchText() ? (
-              reports.filter(checkReportMatchTagAndSearchText).map(report => (
+              allReports.filter(checkReportMatchTagAndSearchText).map(report => (
                 <Marker
                   key={report._id}
                   coordinate={{

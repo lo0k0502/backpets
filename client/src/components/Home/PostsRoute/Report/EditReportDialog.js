@@ -29,7 +29,7 @@ import { useCurrentLocation } from '../../../../hooks';
 import { reportTagsArray } from '../../../../utils/constants';
 import TagsView from '../TagsView';
 
-export default ({ report, visible, close, refreshReports }) => {
+export default ({ report, visible, close, refreshAllReports }) => {
     const { currentLatitude, currentLongitude } = useCurrentLocation();
 
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
@@ -188,7 +188,7 @@ export default ({ report, visible, close, refreshReports }) => {
 
             setIsLoading(false);
 
-            refreshReports();
+            refreshAllReports();
             handleClose();// Close the dialog
         } catch (error) {
             setIsLoading(false);

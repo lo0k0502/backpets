@@ -39,6 +39,7 @@ export const editMission = (missionId, payload) => API.post(`/mission/${missionI
 export const completeMission = (payload) => API.post('/mission/completemission', payload);
 export const deleteMission = (missionId) => API.delete(`/mission/${missionId}`);
 export const fetchAllMissions = () => API.get('/mission/fetchall');
+export const fetchMissionsByUserId = (userId) => API.get(`/mission/fetchbyuserid/${userId}`);
 export const fetchMissionsByPetId = (petId) => API.get(`/mission/fetchbypetid/${petId}`);
 export const fetchMission = (missionid) => API.get(`/mission/${missionid}`);
 

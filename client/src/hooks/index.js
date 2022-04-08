@@ -7,12 +7,12 @@ import {
     fetchCluesByMissionId,
     fetchPet,
     fetchPetsByUserId,
-    fetchMissionsByPetId,
     fetchUserById,
     fetchAllPets,
     fetchCluesByUserId,
     fetchPointRecordsByUserId,
-    fetchClue,
+    fetchMissionsByUserId,
+    fetchMission,
 } from '../api';
 import { useFocusEffect } from '@react-navigation/core';
 
@@ -22,9 +22,9 @@ export default {
     useCurrentLocation,
     useMissions,
     useSelfMissions,
-    useClues,
+    useMission,
+    useMissionClues,
     useSelfClues,
-    useClue,
     useReports,
     usePutUpForAdoptions,
     useUser,
@@ -134,28 +134,20 @@ export const useMissions = (dependencies = []) => {
 
 /**
  * @param {any} userId
- * @returns {{ missions: Object[], refreshMissions: Function, isFetching: boolean }}
+ * @returns {{ selfMissions: Object[], refreshSelfMissions: Function, isFetchingSelfMissions: boolean }}
  */
 export const useSelfMissions = (userId, dependencies = []) => {
-    const { pets } = useFocusSelfPets(userId);
     const [missions, setMissions] = useState([]);
     const isMounted = useRef(true);
     const [isFetching, setIsFetching] = useState(false);
 
-    // Fetch missions by user ID
+    // Fetch missions by userId
     const fetchMissions = async () => {
         if (isMounted.current) setIsFetching(true);
 
         try {
-            const result = await pets.reduce(async (previousPromise, pet) => {
-                let previous = await previousPromise;
-
-                const fetchedMissions = await fetchMissionsByPetId(pet._id);
-
-                return previous.concat(fetchedMissions.data.result);
-            }, Promise.resolve([]));
-
-            if (isMounted.current) setMissions(result);
+            const result = await fetchMissionsByUserId(userId);
+            if (isMounted.current) setMissions(result.data.result);
         } catch (error) {
             console.log(error);
         }
@@ -163,25 +155,67 @@ export const useSelfMissions = (userId, dependencies = []) => {
         if (isMounted.current) setIsFetching(false);
     };
 
-    useFocusEffect(useCallback(() => {
+    useEffect(() => {
         isMounted.current = true;
 
-        if (userId && pets.length) fetchMissions();
+        if (userId) fetchMissions();
 
         return () => { isMounted.current = false };
-    }, [userId, pets, ...dependencies]));
+    }, [userId, ...dependencies]);
 
     return {
-        missions,
-        refreshMissions: fetchMissions,
-        isFetching,
+        selfMissions: missions,
+        refreshSelfMissions: fetchMissions,
+        isFetchingSelfMissions: isFetching,
+    };
+};
+
+/**
+ * @param {*} missionId 
+ * @returns {{
+ *  mission: {},
+ *  refreshMission: Function,
+ *  isFetchingMission: boolean,
+ * }}
+ */
+export const useMission = (missionId) => {
+    const [mission, setMission] = useState({});
+    const isMounted = useRef(true);
+    const [isFetching, setIsFetching] = useState(false);
+
+    // Fetch the mission of this mission id
+    const fetchMissionByMissionId = async () => {
+        if (isMounted.current) setIsFetching(true);
+
+        try {
+            const result = await fetchMission(missionId);
+            if (isMounted.current) setMission(result.data.result);
+        } catch (error) {
+            console.log(error);
+        }
+
+        if (isMounted.current) setIsFetching(false);
+    };
+
+    useEffect(() => {
+        isMounted.current = true;
+
+        if (missionId) fetchMissionByMissionId();
+
+        return () => { isMounted.current = false };
+    }, [missionId]);
+
+    return {
+        mission,
+        refreshMission: fetchMissionByMissionId,
+        isFetchingMission: isFetching,
     };
 };
 
 /**
  * @param {any} missionId
  * @returns {{
- *  clues: {
+ *  missionClues: {
  *      _id: String,
  *      userId: String,
  *      missionId: String,
@@ -196,11 +230,11 @@ export const useSelfMissions = (userId, dependencies = []) => {
  *      awarded: Boolean,
  *      pointsReceived: Boolean,
  *  }[],
- *  refreshClues: Function,
- *  isFetching: boolean,
+ *  refreshMissionClues: Function,
+ *  isFetchingMissionClues: boolean,
  * }}
  */
-export const useClues = (missionId, dependencies = []) => {
+export const useMissionClues = (missionId, dependencies = []) => {
     const [clues, setClues] = useState([]);
     const isMounted = useRef(true);
     const [isFetching, setIsFetching] = useState(false);
@@ -219,25 +253,25 @@ export const useClues = (missionId, dependencies = []) => {
         if (isMounted.current) setIsFetching(false);
     };
 
-    useFocusEffect(useCallback(() => {
+    useEffect(() => {
         isMounted.current = true;
 
         if (missionId) fetchClues();
 
         return () => { isMounted.current = false };
-    }, [missionId, ...dependencies]));
+    }, [missionId, ...dependencies]);
 
     return {
-        clues,
-        refreshClues: fetchClues,
-        isFetching,
+        missionClues: clues,
+        refreshMissionClues: fetchClues,
+        isFetchingMissionClues: isFetching,
     };
 };
 
 /**
  * @param {any} userId
  * @returns {{
- *  clues: {
+ *  selfClues: {
  *      _id: String,
  *      userId: String,
  *      missionId: String,
@@ -252,8 +286,8 @@ export const useClues = (missionId, dependencies = []) => {
  *      awarded: Boolean,
  *      pointsReceived: Boolean,
  *  }[],
- *  refreshClues: Function,
- *  isFetching: boolean,
+ *  refreshSelfClues: Function,
+ *  isFetchingSelfClues: boolean,
  * }}
  */
 export const useSelfClues = (userId, dependencies = []) => {
@@ -261,69 +295,13 @@ export const useSelfClues = (userId, dependencies = []) => {
     const isMounted = useRef(true);
     const [isFetching, setIsFetching] = useState(false);
 
-    // Fetch clues by user ID
+    // Fetch clues by userId
     const fetchClues = async () => {
         if (isMounted.current) setIsFetching(true);
 
         try {
-            const result = await fetchCluesByUserId(userId.toString());
+            const result = await fetchCluesByUserId(userId);
             if (isMounted.current) setClues(result.data.result);
-        } catch (error) {
-            console.log(error);
-        }
-
-        if (isMounted.current) setIsFetching(false);
-    };
-
-    useFocusEffect(useCallback(() => {
-        isMounted.current = true;
-
-        if (userId) fetchClues();
-
-        return () => { isMounted.current = false };
-    }, [userId, ...dependencies]));
-
-    return {
-        clues,
-        refreshClues: fetchClues,
-        isFetching,
-    };
-};
-
-/**
- * @param {*} clueId 
- * @returns {{
- *  clue: {
- *      _id: String,
- *      userId: String,
- *      missionId: String,
- *      content: String,
- *      tag: String,
- *      post_time: Number,
- *      photoId: String,
- *      location: {
- *          latitude: Number,
- *          longitude: Number,
- *      },
- *      awarded: Boolean,
- *      pointsReceived: Boolean,
- *  },
- *  refreshClue: Function,
- *  isFetching: boolean,
- * }}
- */
-export const useClue = (clueId) => {
-    const [clue, setClue] = useState({});
-    const isMounted = useRef(true);
-    const [isFetching, setIsFetching] = useState(false);
-
-    // Fetch the clue of this clue id
-    const fetchClueByClueId = async () => {
-        if (isMounted.current) setIsFetching(true);
-
-        try {
-            const result = await fetchClue(clueId);
-            if (isMounted.current) setClue(result.data.result);
         } catch (error) {
             console.log(error);
         }
@@ -334,21 +312,21 @@ export const useClue = (clueId) => {
     useEffect(() => {
         isMounted.current = true;
 
-        if (clueId) fetchClueByClueId();
+        if (userId) fetchClues();
 
         return () => { isMounted.current = false };
-    }, [clueId]);
+    }, [userId, ...dependencies]);
 
     return {
-        clue,
-        refreshClue: fetchClueByClueId,
-        isFetching,
+        selfClues: clues,
+        refreshSelfClues: fetchClues,
+        isFetchingSelfClues: isFetching,
     };
 };
 
 /**
  * @returns {{
- *  reports: {
+ *  allReports: {
  *      _id: String,
  *      userId: String,
  *      content: String,
@@ -360,8 +338,8 @@ export const useClue = (clueId) => {
  *          longitude: Number,
  *      },
  *  }[],
- *  refreshReports: Function,
- *  isFetching: boolean,
+ *  refreshAllReports: Function,
+ *  isFetchingAllReports: boolean,
  * }}
  */
 export const useReports = (dependencies = []) => {
@@ -392,15 +370,15 @@ export const useReports = (dependencies = []) => {
     }, [...dependencies]);
 
     return {
-        reports,
-        refreshReports: fetchReports,
-        isFetching,
+        allReports: reports,
+        refreshAllReports: fetchReports,
+        isFetchingAllReports: isFetching,
     };
 };
 
 /**
  * @returns {{
- *  putUpForAdoptions: {
+ *  allPutUpForAdoptions: {
  *      _id: String,
  *      petId: String,
  *      content: String,
@@ -410,8 +388,8 @@ export const useReports = (dependencies = []) => {
  *          longitude: Number,
  *      },
  *  }[],
- *  refreshPutUpForAdoptions: Function,
- *  isFetching: boolean,
+ *  refreshAllPutUpForAdoptions: Function,
+ *  isFetchingAllPutUpForAdoptions: boolean,
  * }}
  */
 export const usePutUpForAdoptions = (dependencies = []) => {
@@ -444,9 +422,9 @@ export const usePutUpForAdoptions = (dependencies = []) => {
     }, [...dependencies]);
 
     return {
-        putUpForAdoptions,
-        refreshPutUpForAdoptions: fetchPutUpForAdoptions,
-        isFetching,
+        allPutUpForAdoptions: putUpForAdoptions,
+        refreshAllPutUpForAdoptions: fetchPutUpForAdoptions,
+        isFetchingAllPutUpForAdoptions: isFetching,
     };
 };
 

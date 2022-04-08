@@ -21,7 +21,7 @@ import { usePet } from '../../../../hooks';
 import { constants } from '../../../../utils';
 import SelectButton from '../../SelectButton';
 
-export default ({ putUpForAdoption, visible, close, refreshPutUpForAdoptions }) => {
+export default ({ putUpForAdoption, visible, close, refreshAllPutUpForAdoptions }) => {
     const { pet, isFetching: isFetchingPet } = usePet(putUpForAdoption.petId);
 
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
@@ -68,7 +68,7 @@ export default ({ putUpForAdoption, visible, close, refreshPutUpForAdoptions }) 
 
             setIsLoading(false);
 
-            refreshPutUpForAdoptions();
+            refreshAllPutUpForAdoptions();
             handleClose();// Close the dialog
         } catch (error) {
             setIsLoading(false);

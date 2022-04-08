@@ -1,15 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
-import { Title, useTheme } from 'react-native-paper';
-import { useSelector } from 'react-redux';
-import { useSelfClues } from '../../../hooks';
-import { selectUser } from '../../../redux/userSlice';
+import { Title } from 'react-native-paper';
+import Context from '../../../context';
 import ClueCard from '../ClueCard';
 
 export default () => {
-    const user = useSelector(selectUser);
-    const { clues, refreshClues, isFetching } = useSelfClues(user.info?._id);
-    const { colors } = useTheme();
+    const { selfClues, refreshSelfClues, isFetchingSelfClues } = useContext(Context);
 
     return (
         <ScrollView
@@ -19,20 +15,20 @@ export default () => {
             }}
             refreshControl={
                 <RefreshControl
-                    refreshing={isFetching}
-                    onRefresh={refreshClues}
+                    refreshing={isFetchingSelfClues}
+                    onRefresh={refreshSelfClues}
                 />
             }
         >
             {
-                isFetching ? null : (
-                    clues.length ? (
-                        clues.map(clue => (
+                isFetchingSelfClues ? null : (
+                    selfClues.length ? (
+                        selfClues.map(clue => (
                             <ClueCard
                                 key={clue._id}
                                 clue={clue}
                                 self
-                                refreshClues={refreshClues}
+                                refreshSelfClues={refreshSelfClues}
                             />
                         ))
                     ) : (

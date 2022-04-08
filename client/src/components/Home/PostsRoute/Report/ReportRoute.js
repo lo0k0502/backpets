@@ -9,7 +9,6 @@ import {
   FAB,
   Portal,
   Title,
-  useTheme,
 } from 'react-native-paper';
 import { useReports } from '../../../../hooks';
 import { reportTagsArray } from '../../../../utils/constants';
@@ -20,8 +19,7 @@ import ReportDialog from './ReportDialog';
 
 export default ({ searchTextState }) => {
   const [searchText, setSearchText] = searchTextState;
-  const { reports, refreshReports, isFetching } = useReports();
-  const { colors } = useTheme();
+  const { allReports, refreshAllReports, isFetchingAllReports } = useReports();
 
   const [reportTags, setReportTags] = useState(reportTagsArray.map(tagName => ({ name: tagName, selected: false })));
 
@@ -38,10 +36,10 @@ export default ({ searchTextState }) => {
 
   const checkReportsMatchTagAndSearchText = () => {
     const reportsMatchTag = selectedTags.length ? (
-        reports.filter(report => selectedTags.includes(report.tag))
-    ) : reports;
+        allReports.filter(report => selectedTags.includes(report.tag))
+    ) : allReports;
     if (!reportsMatchTag.length) return false;
-    
+
     const reportsMatchTagAndSearchText = searchText ? (
         reportsMatchTag.filter(report => report.content.search(searchText) !== -1)
     ) : reportsMatchTag;
@@ -60,8 +58,8 @@ export default ({ searchTextState }) => {
         }}
         refreshControl={(
           <RefreshControl
-            refreshing={isFetching}
-            onRefresh={refreshReports}
+            refreshing={isFetchingAllReports}
+            onRefresh={refreshAllReports}
           />
         )}
       >
@@ -69,21 +67,21 @@ export default ({ searchTextState }) => {
           <ReportDialog
             visible={reportDialog}
             close={() => setReportDialog(false)}
-            refreshReports={refreshReports}
+            refreshAllReports={refreshAllReports}
           />
           <EditReportDialog
             report={editReport}
             visible={editReportDialog}
             close={() => setEditReportDialog(false)}
-            refreshReports={refreshReports}
+            refreshAllReports={refreshAllReports}
           />
         </Portal>
           {
-            isFetching ? null : (
-              reports.length ? (
+            isFetchingAllReports ? null : (
+              allReports.length ? (
                 selectedTags.length || searchText ? (
                   checkReportsMatchTagAndSearchText() ? (
-                    reports.filter(checkReportMatchTagAndSearchText).map(report => (
+                    allReports.filter(checkReportMatchTagAndSearchText).map(report => (
                       <ReportCard
                         key={report._id}
                         report={report}
@@ -96,7 +94,7 @@ export default ({ searchTextState }) => {
                     <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有通報QQ</Title>
                   )
                 ) : (
-                  reports.map(report => (
+                  allReports.map(report => (
                     <ReportCard
                       key={report._id}
                       report={report}

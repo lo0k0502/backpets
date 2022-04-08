@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Avatar, List, Divider, useTheme, Badge } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
 import { SERVERURL } from '../../../api/API';
-import { useSelfClues } from '../../../hooks';
+import Context from '../../../context';
 
 const styles = StyleSheet.create({
   root: {
@@ -34,11 +34,11 @@ const styles = StyleSheet.create({
 export default ({ navigation }) => {
   const user = useSelector(selectUser);
   const { colors } = useTheme();
-  const { clues } = useSelfClues(user.info?._id);
+  const { selfClues } = useContext(Context);
 
   return (
     <View style={styles.root}>
-      <View style={[ styles.profile, { backgroundColor: colors.primary } ]}>
+      <View style={[styles.profile, { backgroundColor: colors.primary }]}>
         <Avatar.Image source={{ uri: user.info?.photoId ? `${SERVERURL}/image/${user.info?.photoId}` : null }} size={100} style={styles.avatar} />
         <View style={{ alignItems: 'center', flex: 1, borderLeftWidth: 2, borderColor: colors.border }}>
           <Text ellipsizeMode='tail' style={{ color: 'white', fontSize: 25 }}>
@@ -59,19 +59,19 @@ export default ({ navigation }) => {
         </View>
       </View>
 
-      <List.Section>
+      <List.Section style={{ marginVertical: 0 }}>
         {['修改個人資料', '寵物護照列表', '發布過的貼文', '回報過的線索', '兌換紀錄', '點數紀錄', '修改密碼'].map((title, index) => (
           <ListItem
             key={index}
             title={title}
             right={() => (
               <Badge
-                visible={title === '回報過的線索' && clues.filter(clue => clue.awarded && !clue.pointsReceived).length}
+                visible={title === '回報過的線索' && selfClues.filter(clue => clue.awarded && !clue.pointsReceived).length}
                 style={{
                   alignSelf: 'center',
                 }}
               >
-                {clues.filter(clue => clue.awarded && !clue.pointsReceived).length}
+                {selfClues.filter(clue => clue.awarded && !clue.pointsReceived).length}
               </Badge>
             )}
             onItemPress={() => {
