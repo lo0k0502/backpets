@@ -22,7 +22,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import MapView from 'react-native-maps';
 import { SERVERURL } from '../../../../api/API';
 
-export default ({ mission, visible, close, refreshMissions }) => {
+export default ({ mission, visible, close, refreshAllMissions }) => {
     const { colors } = useTheme();
     const { pet, isFetching: isFetchingPet } = usePet(mission.petId);
     const { currentLatitude, currentLongitude } = useCurrentLocation();
@@ -108,7 +108,7 @@ export default ({ mission, visible, close, refreshMissions }) => {
 
             setIsLoading(false);
 
-            refreshMissions();
+            refreshAllMissions();
             handleClose();// Close the dialog
         } catch (error) {
             setIsLoading(false);

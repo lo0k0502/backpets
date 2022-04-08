@@ -21,17 +21,22 @@ import {
 import { addMission } from '../../../../api';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
-import { useCurrentLocation, useMissions, useSelfPets } from '../../../../hooks';
+import { useCurrentLocation, useSelfPets, useUpdateEffect } from '../../../../hooks';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import MapView from 'react-native-maps';
 import { SERVERURL } from '../../../../api/API';
 
-export default ({ visible, close, refreshMissions }) => {
+export default ({
+    visible,
+    close,
+    allMissions,
+    refreshAllMissions,
+    isFetchingAllMissions,
+}) => {
     const [petsDialog, setPetsDialog] = useState(false);
 
     const user = useSelector(selectUser);
     const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id, [petsDialog]);
-    const { missions } = useMissions([petsDialog]);
     const { colors } = useTheme();
     const { currentLatitude, currentLongitude } = useCurrentLocation();
 
@@ -54,15 +59,6 @@ export default ({ visible, close, refreshMissions }) => {
     const [dateTimePickerMode, setDateTimePickerMode] = useState('date');
 
     const [lostTimeErrorMsg, setLostTimeErrorMsg] = useState('');
-
-    useEffect(() => {
-        setMapViewRegion({
-            latitude: currentLatitude,
-            longitude: currentLongitude,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
-        });
-    }, [currentLatitude, currentLongitude]);
 
     // Close the dailog with configuration
     const handleClose = () => {
@@ -99,13 +95,26 @@ export default ({ visible, close, refreshMissions }) => {
 
             setIsLoading(false);
 
-            refreshMissions();
+            refreshAllMissions();
             handleClose();// Close the dialog
         } catch (error) {
             setIsLoading(false);
-            console.log('While adding:', error)
+            console.log('While adding mission:', error);
         }
     };
+
+    useEffect(() => {
+        setMapViewRegion({
+            latitude: currentLatitude,
+            longitude: currentLongitude,
+            latitudeDelta: 0.0122,
+            longitudeDelta: 0.003,
+        });
+    }, [currentLatitude, currentLongitude]);
+
+    useUpdateEffect(() => {
+        refreshAllMissions();
+    }, [petsDialog]);
 
     return (
         <Dialog visible={visible} onDismiss={handleClose}>
@@ -129,17 +138,24 @@ export default ({ visible, close, refreshMissions }) => {
                                     )}
                                 >
                                     <List.Section style={{ marginTop: 0 }}>
-                                        {pets.map(pet => (
-                                            <ListItem
-                                                key={pet._id}
-                                                pet={pet}
-                                                disabled={missions.find(mission => mission.petId === pet._id)}
-                                                onPress={() => {
-                                                    setPetId(pet._id);
-                                                    setPetsDialog(false);
-                                                }}
-                                            />
-                                        ))}
+                                        {
+                                            !(
+                                                isFetchingAllMissions
+                                                || !allMissions?.length
+                                            ) ? (
+                                                pets.map(pet => (
+                                                    <ListItem
+                                                        key={pet._id}
+                                                        pet={pet}
+                                                        disabled={allMissions.find(mission => mission.petId === pet._id)}
+                                                        onPress={() => {
+                                                            setPetId(pet._id);
+                                                            setPetsDialog(false);
+                                                        }}
+                                                    />
+                                                ))
+                                            ) : null
+                                        }
                                     </List.Section>
                                 </ScrollView>
                             </Dialog.ScrollArea>

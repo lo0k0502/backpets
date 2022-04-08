@@ -8,12 +8,17 @@ export default ({ route, navigation, routeName }) => {
 
     const onBackIconPress = () => {
         if (navigation.canGoBack()) return navigation.goBack();
+        return navigation.popToTop();
     };
 
     return (
         <Appbar style={{ backgroundColor: 'white' }}>
         {
-            _routeName === 'PostsRoute' || _routeName === 'Profile' ? (
+            (
+                _routeName === 'PostsRoute'
+                || _routeName === 'PostsTab'
+                || _routeName === 'Profile'
+            ) ? (
                 <Appbar.Action icon='menu' onPress={navigation.toggleDrawer} />
             ) : (
                 <Appbar.Action icon={backIcon} onPress={onBackIconPress} />
@@ -23,7 +28,10 @@ export default ({ route, navigation, routeName }) => {
                 title={constants.routeNametoTitle(_routeName)}
             />
         {
-            _routeName === 'PostsRoute' ? (
+            (
+                _routeName === 'PostsRoute'
+                || _routeName === 'PostsTab'
+            ) ? (
                 <Appbar.Action icon='magnify' onPress={() => navigation.navigate('Search')} />
             ) : null
         }

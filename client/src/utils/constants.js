@@ -201,6 +201,7 @@ export const all_countys = Object.keys(all_area_data);
 export const routeNametoTitle = (routeName) => {
     switch (routeName) {
         case 'PostsRoute':
+        case 'PostsTab':
         case 'Profile':
             return 'BackPets';
         case 'ChangePassword': return '更改密碼';

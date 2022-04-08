@@ -1,19 +1,23 @@
 import moment from 'moment';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Avatar, Caption, Divider, List } from 'react-native-paper';
-import { useClue, useMission, usePet, useUser } from '../../../hooks';
+import Context from '../../../context';
+import { useClue, usePet, useUser } from '../../../hooks';
 import { isEmptyObject } from '../../../utils';
 import { Skeleton } from '../Skeleton';
 
 export default ({ pointRecord }) => {
-    const { mission, isFetching: isFetchingMission } = useMission(pointRecord.missionId);
+    const { getMissionById, isFetchingAllMissions } = useContext(Context);
+
+    const mission = getMissionById(pointRecord.missionId);
+
     const { user: poster, isFetching: isFetchingPoster } = useUser(mission.userId);
     const { pet, isFetching: isFetchingPet } = usePet(mission.petId);
     const { clue, isFetching: isFetchingClue } = useClue(pointRecord.clueId);
 
     return (
         !(
-            isFetchingMission
+            isFetchingAllMissions
             || isFetchingPoster
             || isFetchingPet
             || isFetchingClue

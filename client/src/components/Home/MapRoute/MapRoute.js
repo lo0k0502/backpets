@@ -15,7 +15,7 @@ export default ({ route, navigation }) => {
   const { location } = route.params ? route.params : { location: null }; // Location from post
 
   const { currentLatitude, currentLongitude } = useCurrentLocation();
-  const { missions } = useMissions();
+  const { allMissions } = useMissions();
   const { reports } = useReports();
   const { colors } = useTheme();
 
@@ -52,10 +52,10 @@ export default ({ route, navigation }) => {
 
   const checkMissionsMatchTagAndSearchText = () => {
     const missionsMatchTag = selectedTagsForMission.length ? (
-      missions.filter(mission => {
+      allMissions.filter(mission => {
           return selectedTagsForMission.includes(pets.find(_pet => _pet._id === mission.petId).tag);
       })
-    ) : missions;
+    ) : allMissions;
     if (!missionsMatchTag.length) return false;
 
     const missionsMatchTagAndSearchText = searchText ? (
@@ -116,11 +116,11 @@ export default ({ route, navigation }) => {
     >
 
       { //Start of Marker for Mission
-      missions.map((mission, index) => (
-        missions.length ? (
+      allMissions.map((mission, index) => (
+        allMissions.length ? (
           selectedTagsForMission.length || searchText ? (
             checkMissionsMatchTagAndSearchText() ? (
-              missions.filter(checkMissionMatchTagAndSearchText).map( mission => (
+              allMissions.filter(checkMissionMatchTagAndSearchText).map( mission => (
                 <Marker
                   key={mission._id}
                   coordinate={{

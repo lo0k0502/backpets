@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
     StyleSheet,
     ScrollView,
@@ -18,12 +18,13 @@ import MissionDialog from './MissionDialog';
 import MissionCard from './MissionCard';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
-import { useFocusSelfPets, useMissions, usePets } from '../../../../hooks';
+import { useFocusSelfPets, usePets } from '../../../../hooks';
 import ClueDialog from './ClueDialog';
 import TagsView from '../TagsView';
 import EditMissionDialog from './EditMissionDialog';
 import { constants } from '../../../../utils';
 import SelectButton from '../../SelectButton';
+import Context from '../../../../context';
 
 const styles = StyleSheet.create({
     root: {
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
 export default ({ navigation, searchTextState }) => {
     const [searchText, setSearchText] = searchTextState;
     const user = useSelector(selectUser);
-    const { missions, refreshMissions, isFetching } = useMissions();
+    const { allMissions, refreshAllMissions, isFetchingAllMissions } = useContext(Context);
     const { pets, isFetching: isFetchingPets } = usePets();
     const { pets: selfPets, isFetching: isFetchingSelfPets } = useFocusSelfPets(user.info?._id);
 
@@ -97,10 +98,10 @@ export default ({ navigation, searchTextState }) => {
 
     const checkMissionsMatchFilters = () => {
         const missionsMatchTag = selectedTags.length ? (
-            missions.filter(mission => {
+            allMissions.filter(mission => {
                 return selectedTags.includes(pets.find(_pet => _pet._id === mission.petId).tag);
             })
-        ) : missions;
+        ) : allMissions;
         if (!missionsMatchTag.length) return false;
 
         const missionsMatchTagAndSearchText = searchText ? (
@@ -154,8 +155,8 @@ export default ({ navigation, searchTextState }) => {
                 style={styles.root}
                 refreshControl={(
                     <RefreshControl
-                        refreshing={isFetching}
-                        onRefresh={refreshMissions}
+                        refreshing={isFetchingAllMissions}
+                        onRefresh={refreshAllMissions}
                     />
                 )}
             >
@@ -163,13 +164,15 @@ export default ({ navigation, searchTextState }) => {
                     <MissionDialog
                         visible={missionDialog}
                         close={() => setMissionDialog(false)}
-                        refreshMissions={refreshMissions}
+                        allMissions={allMissions}
+                        refreshAllMissions={refreshAllMissions}
+                        isFetchingAllMissions={isFetchingAllMissions}
                     />
                     <EditMissionDialog
                         mission={editMission}
                         visible={editMissionDialog}
                         close={() => setEditMissionDialog(false)}
-                        refreshMissions={refreshMissions}
+                        refreshAllMissions={refreshAllMissions}
                     />
                     <ClueDialog
                         missionId={addClueMissionId}
@@ -186,11 +189,11 @@ export default ({ navigation, searchTextState }) => {
                     )
                 }
                 {
-                    isFetching || isFetchingPets ? null : (
-                        missions.length ? (
+                    isFetchingAllMissions || isFetchingPets ? null : (
+                        allMissions.length ? (
                             selectedTags.length || searchText || completed !== constants.completedOptions[0] ? (
                                 checkMissionsMatchFilters() ? (
-                                    missions.filter(checkMissionMatchFilters).map(mission => (
+                                    allMissions.filter(checkMissionMatchFilters).map(mission => (
                                         <MissionCard
                                             key={mission._id}
                                             mission={mission}
@@ -210,7 +213,7 @@ export default ({ navigation, searchTextState }) => {
                                     <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
                                 )
                             ) : (
-                                missions.map(mission => (
+                                allMissions.map(mission => (
                                     <MissionCard
                                         key={mission._id}
                                         mission={mission}

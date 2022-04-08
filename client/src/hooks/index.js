@@ -5,7 +5,6 @@ import {
     fetchAllPutUpForAdoptions,
     fetchAllReports,
     fetchCluesByMissionId,
-    fetchMission,
     fetchPet,
     fetchPetsByUserId,
     fetchMissionsByPetId,
@@ -18,11 +17,11 @@ import {
 import { useFocusEffect } from '@react-navigation/core';
 
 export default {
+    useUpdateEffect,
     useStateWithValidation,
     useCurrentLocation,
     useMissions,
     useSelfMissions,
-    useMission,
     useClues,
     useSelfClues,
     useClue,
@@ -33,6 +32,16 @@ export default {
     useSelfPets,
     useFocusSelfPets,
     usePet,
+};
+
+export const useUpdateEffect = (callback, dependencies = []) => {
+    const isFirst = useRef(true);
+
+    useEffect(() => {
+        if (isFirst.current) return isFirst.current = false;
+
+        return callback();
+    }, dependencies);
 };
 
 /**
@@ -87,7 +96,7 @@ export const useCurrentLocation = (dependencies = []) => {
 };
 
 /**
- * @returns {{ missions: Object[], refreshMissions: Function, isFetching: boolean }}
+ * @returns {{ allMissions: Object[], refreshAllMissions: Function, isFetchingAllMissions: boolean }}
  */
 export const useMissions = (dependencies = []) => {
     const [missions, setMissions] = useState([]);
@@ -100,9 +109,7 @@ export const useMissions = (dependencies = []) => {
 
         try {
             const result = await fetchAllMissions();
-            if (isMounted.current) {
-                setMissions(result.data.result);
-            }
+            if (isMounted.current) setMissions(result.data.result);
         } catch (error) {
             console.log(error);
         }
@@ -119,9 +126,9 @@ export const useMissions = (dependencies = []) => {
     }, [...dependencies]);
 
     return {
-        missions,
-        refreshMissions: fetchMissions,
-        isFetching,
+        allMissions: missions,
+        refreshAllMissions: fetchMissions,
+        isFetchingAllMissions: isFetching,
     };
 };
 
@@ -167,48 +174,6 @@ export const useSelfMissions = (userId, dependencies = []) => {
     return {
         missions,
         refreshMissions: fetchMissions,
-        isFetching,
-    };
-};
-
-/**
- * @param {*} missionId 
- * @returns {{
- *  mission: {},
- *  refreshMission: Function,
- *  isFetching: boolean,
- * }}
- */
-export const useMission = (missionId) => {
-    const [mission, setMission] = useState({});
-    const isMounted = useRef(true);
-    const [isFetching, setIsFetching] = useState(false);
-
-    // Fetch the mission of this mission id
-    const fetchMissionByMissionId = async () => {
-        if (isMounted.current) setIsFetching(true);
-
-        try {
-            const result = await fetchMission(missionId);
-            if (isMounted.current) setMission(result.data.result);
-        } catch (error) {
-            console.log(error);
-        }
-
-        if (isMounted.current) setIsFetching(false);
-    };
-
-    useEffect(() => {
-        isMounted.current = true;
-
-        if (missionId) fetchMissionByMissionId();
-
-        return () => { isMounted.current = false };
-    }, [missionId]);
-
-    return {
-        mission,
-        refreshMission: fetchMissionByMissionId,
         isFetching,
     };
 };

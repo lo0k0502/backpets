@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
     RefreshControl,
     ScrollView,
@@ -13,15 +13,18 @@ import {
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../redux/userSlice';
 import { completeMission } from '../../api';
-import { useClues, useMission } from '../../hooks';
+import { useClues } from '../../hooks';
 import ClueCard from './ClueCard';
+import Context from '../../context';
 
 export default ({ route }) => {
     const user = useSelector(selectUser);
     const { missionId } = route.params;
     const { colors } = useTheme();
-    const { mission, refreshMission, isFetching: isFetchingMission } = useMission(missionId);
+    const { getMissionById, refreshAllMissions, isFetchingAllMissions } = useContext(Context);
     const { clues, refreshClues, isFetching: isFetchingClues } = useClues(missionId);
+
+    const mission = getMissionById(missionId);
 
     const [selecting, setSelecting] = useState(false);
     const [clueCheckBoxes, setClueCheckboxses] = useState([]);
@@ -30,7 +33,7 @@ export default ({ route }) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const refreshPage = async () => {
-        await refreshMission();
+        await refreshAllMissions();
         await refreshClues();
     };
 
@@ -67,7 +70,7 @@ export default ({ route }) => {
                 }}
                 refreshControl={
                     <RefreshControl
-                        refreshing={isFetchingMission || isFetchingClues}
+                        refreshing={isFetchingAllMissions || isFetchingClues}
                         onRefresh={refreshPage}
                     />
                 }
@@ -85,7 +88,7 @@ export default ({ route }) => {
                     ) : null
                 }
                 {
-                    isFetchingMission || isFetchingClues ? null : (
+                    isFetchingAllMissions || isFetchingClues ? null : (
                         clues.length ? (
                             clues.map(clue => (
                                 <ClueCard
@@ -106,64 +109,60 @@ export default ({ route }) => {
             </ScrollView>
             {
                 (
-                    isFetchingMission
+                    isFetchingAllMissions
                     || isFetchingClues
                 ) ? null : (
-                    mission.completed ? null : (
-                        clues.length ? (
-                            selecting ? (
-                                <>
-                                    <FAB
-                                        icon='close'
-                                        label='取消'
-                                        color={isLoading ? 'white' : colors.primary}
-                                        extended
-                                        disabled={isLoading}
-                                        style={{
-                                            position: 'absolute',
-                                            right: 10,
-                                            bottom: 140,
-                                            elevation: 1,
-                                        }}
-                                        theme={{ colors: { accent: 'white' } }}
-                                        onPress={() => {
-                                            setSelectingErrorMsg('');
-                                            setSelecting(false);
-                                        }}
-                                    />
-                                    <FAB
-                                        icon='check'
-                                        label='確定選擇'
-                                        color='white'
-                                        extended
-                                        disabled={isLoading || !clueCheckBoxes.filter(clueCheckBox => clueCheckBox.status === 'checked').length}
-                                        style={{
-                                            position: 'absolute',
-                                            right: 10,
-                                            bottom: 70,
-                                            elevation: 1,
-                                        }}
-                                        onPress={handleSubmit}
-                                    />
-                                </>
-                            ) : (
+                    clues.length ? (
+                        selecting ? (
+                            <>
                                 <FAB
-                                    icon='check'
-                                    label='完成任務'
-                                    color='white'
+                                    icon='close'
+                                    label='取消'
+                                    color={isLoading ? 'white' : colors.primary}
                                     extended
                                     disabled={isLoading}
                                     style={{
                                         position: 'absolute',
                                         right: 10,
-                                        bottom: 70,
+                                        bottom: 140,
                                         elevation: 1,
                                     }}
-                                    onPress={() => setSelecting(true)}
+                                    theme={{ colors: { accent: 'white' } }}
+                                    onPress={() => {
+                                        setSelectingErrorMsg('');
+                                        setSelecting(false);
+                                    }}
                                 />
-                            )
-                        ) : null
-                    )
+                                <FAB
+                                    icon='check'
+                                    label='確定選擇'
+                                    color='white'
+                                    extended
+                                    disabled={isLoading || !clueCheckBoxes.filter(clueCheckBox => clueCheckBox.status === 'checked').length}
+                                    style={{
+                                        position: 'absolute',
+                                        right: 10,
+                                        bottom: 70,
+                                    }}
+                                    onPress={handleSubmit}
+                                />
+                            </>
+                        ) : (
+                            <FAB
+                                icon={mission.completed ? null : 'check'}
+                                label={mission.completed ? '任務已完成' : '完成任務'}
+                                color='white'
+                                extended
+                                disabled={isLoading || mission.completed}
+                                style={{
+                                    position: 'absolute',
+                                    right: 10,
+                                    bottom: 70,
+                                }}
+                                onPress={() => setSelecting(true)}
+                            />
+                        )
+                    ) : null
                 )
             }
         </>

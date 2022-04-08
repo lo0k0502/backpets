@@ -62,7 +62,7 @@ export default (props) => {
                                 setSearchText('');
                             }}
                         />
-                    ) : <Appbar {...props} />
+                    ) : <Appbar routeName={currentRoute?.name} {...props} />
                 ) : (
                     <Appbar routeName={currentRoute?.name} {...props} />
                 )

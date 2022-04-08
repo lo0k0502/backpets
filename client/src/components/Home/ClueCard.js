@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View } from 'react-native';
 import {
     Card,
@@ -12,7 +12,7 @@ import {
     Divider,
 } from 'react-native-paper';
 import moment from 'moment';
-import { useMission, usePet, useUser } from '../../hooks';
+import { usePet, useUser } from '../../hooks';
 import { SERVERURL } from '../../api/API';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,6 +20,7 @@ import { updatePoints } from '../../redux/userReducer';
 import { selectUser } from '../../redux/userSlice';
 import { isEmptyObject } from '../../utils';
 import { Skeleton } from './Skeleton';
+import Context from '../../context';
 
 export default ({
     clue,
@@ -34,7 +35,10 @@ export default ({
     const user = useSelector(selectUser);
     const { colors } = useTheme();
     const { user: poster, isFetching: isFetchingPoster } = useUser(clue.userId);
-    const { mission, isFetching: isFetchingMission } = useMission(clue.missionId);
+    const { getMissionById, isFetchingAllMissions } = useContext(Context);
+
+    const mission = getMissionById(clue.missionId);
+
     const { pet, isFetching: isFetchingPet } = usePet(mission.petId);
     const { user: missionPoster, isFetching: isFetchingMissionPoster } = useUser(pet.userId);
 
@@ -58,7 +62,7 @@ export default ({
 
     return !(
         isFetchingPoster
-        || isFetchingMission
+        || isFetchingAllMissions
         || isFetchingPet
         || isFetchingMissionPoster
         || isEmptyObject(poster)
