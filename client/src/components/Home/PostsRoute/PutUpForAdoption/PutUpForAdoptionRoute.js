@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Alert,
   RefreshControl,
@@ -12,9 +12,8 @@ import {
   Subheading,
   Title,
 } from 'react-native-paper';
-import { useSelector } from 'react-redux';
-import { usePets, useFocusSelfPets, usePutUpForAdoptions } from '../../../../hooks';
-import { selectUser } from '../../../../redux/userSlice';
+import Context from '../../../../context';
+import { usePets, usePutUpForAdoptions } from '../../../../hooks';
 import { constants } from '../../../../utils';
 import SelectButton from '../../SelectButton';
 import TagsView from '../TagsView';
@@ -24,10 +23,9 @@ import PutUpForAdoptionDialog from './PutUpForAdoptionDialog';
 
 export default ({ searchTextState }) => {
   const [searchText, setSearchText] = searchTextState;
-  const user = useSelector(selectUser);
   const { allPutUpForAdoptions, refreshAllPutUpForAdoptions, isFetchingAllPutUpForAdoptions } = usePutUpForAdoptions();
   const { pets, isFetching: isFetchingPets } = usePets();
-  const { pets: selfPets, isFetching: isFetchingSelfPets } = useFocusSelfPets(user.info?._id);
+  const { selfPets, refreshSelfPets, isFetchingSelfPets } = useContext(Context);
 
   const [putUpForAdoptionDialog, setPutUpForAdoptionDialog] = useState(false);// Whether putUpForAdoption dialog is open
   const [editPutUpForAdoptionDialog, setEditPutUpForAdoptionDialog] = useState(false);// Whether edit putUpForAdoption dialog is open
@@ -140,6 +138,9 @@ export default ({ searchTextState }) => {
             allPutUpForAdoptions={allPutUpForAdoptions}
             refreshAllPutUpForAdoptions={refreshAllPutUpForAdoptions}
             isFetchingAllPutUpForAdoptions={isFetchingAllPutUpForAdoptions}
+            selfPets={selfPets}
+            refreshSelfPets={refreshSelfPets}
+            isFetchingSelfPets={isFetchingSelfPets}
           />
           <EditPutUpForAdoptionDialog
             putUpForAdoption={editPutUpForAdoption}

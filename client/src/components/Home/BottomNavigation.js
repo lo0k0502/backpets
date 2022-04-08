@@ -13,7 +13,7 @@ import AdoptionRoute from './AdoptionRoute/AdoptionRoute';
 import Feedback from './Feedback';
 import Appbar from './Appbar';
 import Context from '../../context';
-import { useSelfClues, useSelfMissions } from '../../hooks';
+import { useSelfClues, useSelfMissions, useSelfPets } from '../../hooks';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../redux/userSlice';
 
@@ -26,6 +26,7 @@ export default ({ logoutback }) => {
 
     const selfMissionsHook = useSelfMissions(user.info?._id);
     const selfCluesHook = useSelfClues(user.info?._id);
+    const selfPetsHook = useSelfPets(user.info?._id);
 
     return (
         <Context.Provider
@@ -33,6 +34,7 @@ export default ({ logoutback }) => {
                 ...selfMissionsHook,
                 ...selfCluesHook,
                 getSelfClueByClueId: clueId => selfCluesHook.selfClues.find(_clue => _clue._id === clueId) || {},
+                ...selfPetsHook,
             }}
         >
             <Drawer.Navigator

@@ -19,9 +19,7 @@ import {
     Avatar,
 } from 'react-native-paper';
 import { addMission } from '../../../../api';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../../../../redux/userSlice';
-import { useCurrentLocation, useSelfPets, useUpdateEffect } from '../../../../hooks';
+import { useCurrentLocation, useUpdateEffect } from '../../../../hooks';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import MapView from 'react-native-maps';
 import { SERVERURL } from '../../../../api/API';
@@ -32,11 +30,12 @@ export default ({
     allMissions,
     refreshAllMissions,
     isFetchingAllMissions,
+    selfPets,
+    refreshSelfPets,
+    isFetchingSelfPets,
 }) => {
     const [petsDialog, setPetsDialog] = useState(false);
 
-    const user = useSelector(selectUser);
-    const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id, [petsDialog]);
     const { colors } = useTheme();
     const { currentLatitude, currentLongitude } = useCurrentLocation();
 
@@ -53,7 +52,7 @@ export default ({
         longitudeDelta: 0.003,
     });
 
-    const chosenPet = pets.find(pet => pet._id === petId);
+    const chosenPet = selfPets.find(pet => pet._id === petId);
 
     const [showDateTimePicker, setShowDateTimePicker] = useState(false);
     const [dateTimePickerMode, setDateTimePickerMode] = useState('date');
@@ -114,6 +113,7 @@ export default ({
 
     useUpdateEffect(() => {
         refreshAllMissions();
+        refreshSelfPets();
     }, [petsDialog]);
 
     return (
@@ -132,8 +132,8 @@ export default ({
                                     }}
                                     refreshControl={(
                                         <RefreshControl
-                                            refreshing={isFetching}
-                                            onRefresh={refreshPets}
+                                            refreshing={isFetchingSelfPets}
+                                            onRefresh={refreshSelfPets}
                                         />
                                     )}
                                 >
@@ -141,7 +141,7 @@ export default ({
                                         {
                                             !isFetchingAllMissions ? (
                                                 allMissions.length ? (
-                                                    pets.map(pet => (
+                                                    selfPets.map(pet => (
                                                         <ListItem
                                                             key={pet._id}
                                                             pet={pet}

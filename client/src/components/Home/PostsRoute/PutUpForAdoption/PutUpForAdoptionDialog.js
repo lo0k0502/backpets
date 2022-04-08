@@ -12,16 +12,13 @@ import {
     Divider,
     HelperText,
     List,
-    Menu,
     Portal,
     Subheading,
     TextInput,
 } from 'react-native-paper';
-import { useSelector } from 'react-redux';
 import { addPutUpForAdoption } from '../../../../api';
 import { SERVERURL } from '../../../../api/API';
-import { useSelfPets, useUpdateEffect } from '../../../../hooks';
-import { selectUser } from '../../../../redux/userSlice';
+import { useUpdateEffect } from '../../../../hooks';
 import { constants } from '../../../../utils';
 import SelectButton from '../../SelectButton';
 
@@ -31,11 +28,11 @@ export default ({
     allPutUpForAdoptions,
     refreshAllPutUpForAdoptions,
     isFetchingAllPutUpForAdoptions,
+    selfPets,
+    refreshSelfPets,
+    isFetchingSelfPets,
 }) => {
     const [petsDialog, setPetsDialog] = useState(false);
-
-    const user = useSelector(selectUser);
-    const { pets, refreshPets, isFetching } = useSelfPets(user.info?._id, [petsDialog]);
 
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
 
@@ -50,7 +47,7 @@ export default ({
 
     const [phoneErrorMsg, setPhoneErrorMsg] = useState('');
 
-    const chosenPet = pets.find(pet => pet._id === petId);
+    const chosenPet = selfPets.find(pet => pet._id === petId);
 
     const handleClose = () => {
         close();
@@ -93,6 +90,7 @@ export default ({
 
     useUpdateEffect(() => {
         refreshAllPutUpForAdoptions();
+        refreshSelfPets();
     }, [petsDialog]);
 
     return (
@@ -111,8 +109,8 @@ export default ({
                                     }}
                                     refreshControl={(
                                         <RefreshControl
-                                            refreshing={isFetching}
-                                            onRefresh={refreshPets}
+                                            refreshing={isFetchingSelfPets}
+                                            onRefresh={refreshSelfPets}
                                         />
                                     )}
                                 >
@@ -120,7 +118,7 @@ export default ({
                                         {
                                             !isFetchingAllPutUpForAdoptions ? (
                                                 allPutUpForAdoptions.length ? (
-                                                    pets.map(pet => (
+                                                    selfPets.map(pet => (
                                                         <ListItem
                                                             key={pet._id}
                                                             pet={pet}

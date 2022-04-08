@@ -24,13 +24,13 @@ import {
     requestMediaLibraryPermissionsAsync,
 } from 'expo-image-picker';
 import { useSelector } from 'react-redux';
-import { addPet, deleteImage, editPet, uploadImage } from '../../../api';
+import { deleteImage, editPet, uploadImage } from '../../../api';
 import { selectUser } from '../../../redux/userSlice';
 import TagsView from '../PostsRoute/TagsView';
 import { SERVERURL } from '../../../api/API';
 import { constants } from '../../../utils';
 
-export default ({ pet, visible, close, refreshPets }) => {
+export default ({ pet, visible, close, refreshSelfPets }) => {
     const user = useSelector(selectUser);
     const { colors } = useTheme();
 
@@ -192,7 +192,7 @@ export default ({ pet, visible, close, refreshPets }) => {
 
             setIsLoading(false);
 
-            refreshPets();
+            refreshSelfPets();
             handleClose();// Close the dialog
         } catch (error) {
             setIsLoading(false);

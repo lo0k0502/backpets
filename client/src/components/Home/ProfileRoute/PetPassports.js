@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Alert, RefreshControl, ScrollView } from 'react-native';
 import { Avatar, Divider, IconButton, List, Portal } from 'react-native-paper';
-import { useSelector } from 'react-redux';
 import { SERVERURL } from '../../../api/API';
-import { useFocusSelfPets } from '../../../hooks';
-import { selectUser } from '../../../redux/userSlice';
+import Context from '../../../context';
 import EditPetPassportDialog from './EditPetPassportDialog';
 import PetPassportDialog from './PetPassportDialog';
 
 export default ({ navigation }) =>  {
-    const user = useSelector(selectUser);
-    const { pets, refreshPets, isFetching } = useFocusSelfPets(user.info?._id);
+    const { selfPets, refreshSelfPets, isFetchingSelfPets } = useContext(Context);
 
     const [petPassportsDialog, setPetPassportDialog] = useState(false);// Whether petPassports dialog is open
     const [editPetPassportDialog, setEditPetPassportDialog] = useState(false);// Whether editPetPassports dialog is open
@@ -25,8 +22,8 @@ export default ({ navigation }) =>  {
                 }}
                 refreshControl={(
                     <RefreshControl
-                        refreshing={isFetching}
-                        onRefresh={refreshPets}
+                        refreshing={isFetchingSelfPets}
+                        onRefresh={refreshSelfPets}
                     />
                 )}
             >
@@ -34,32 +31,38 @@ export default ({ navigation }) =>  {
                     <PetPassportDialog
                         visible={petPassportsDialog}
                         close={() => setPetPassportDialog(false)}
-                        refreshPets={refreshPets}
+                        refreshSelfPets={refreshSelfPets}
                     />
                     <EditPetPassportDialog
                         pet={editPetPassport}
                         visible={editPetPassportDialog}
                         close={() => setEditPetPassportDialog(false)}
-                        refreshPets={refreshPets}
+                        refreshSelfPets={refreshSelfPets}
                     />
                 </Portal>
                 <List.Section style={{ flex: 1, marginTop: 0 }}>
-                    {pets.map(pet => (
-                        <ListItem
-                            key={pet._id}
-                            pet={pet}
-                            onEditPress={() => {
-                                setEditPetPassport(pet);
-                                setEditPetPassportDialog(true);
-                            }}
-                            onDeletePress={() => {
-                                Alert.alert('正在刪除寵物!', '這個動作將會刪除所有與此寵物有關的貼文!\n請問確定要刪除嗎?', [
-                                    { text: '取消' },
-                                    { text: '確定刪除', onPress: () => {} }
-                                ])
-                            }}
-                        />
-                    ))}
+                    {
+                        isFetchingSelfPets ? null : (
+                            selfPets.length ? (
+                                selfPets.map(pet => (
+                                    <ListItem
+                                        key={pet._id}
+                                        pet={pet}
+                                        onEditPress={() => {
+                                            setEditPetPassport(pet);
+                                            setEditPetPassportDialog(true);
+                                        }}
+                                        onDeletePress={() => {
+                                            Alert.alert('正在刪除寵物!', '這個動作將會刪除所有與此寵物有關的貼文!\n請問確定要刪除嗎?', [
+                                                { text: '取消' },
+                                                { text: '確定刪除', onPress: () => {} }
+                                            ])
+                                        }}
+                                    />
+                                ))
+                            ) : null
+                        )
+                    }
                     <List.Item
                         left={props => <List.Icon {...props} icon='plus' />}
                         title='新增寵物護照'

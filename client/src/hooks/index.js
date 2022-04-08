@@ -30,7 +30,6 @@ export default {
     useUser,
     usePets,
     useSelfPets,
-    useFocusSelfPets,
     usePet,
 };
 
@@ -531,7 +530,7 @@ export const usePets = (dependencies = []) => {
 
 /**
  * @returns {{
- *  pets: {
+ *  selfPets: {
  *      _id: String,
  *      name: String,
  *      userId: String,
@@ -544,8 +543,8 @@ export const usePets = (dependencies = []) => {
  *      age: Number,
  *      microchip: String,
  *  }[],
- *  refreshPets: Function,
- *  isFetching: boolean,
+ *  refreshSelfPets: Function,
+ *  isFetchingSelfPets: boolean,
  * }}
  */
 export const useSelfPets = (userId, dependencies = []) => {
@@ -559,9 +558,7 @@ export const useSelfPets = (userId, dependencies = []) => {
 
         try {
             const result = await fetchPetsByUserId(userId);
-            if (isMounted.current) {
-                setPets(result.data.result);
-            }
+            if (isMounted.current) setPets(result.data.result);
         } catch (error) {
             console.log(error);
         }
@@ -578,64 +575,9 @@ export const useSelfPets = (userId, dependencies = []) => {
     }, [userId, ...dependencies]);
 
     return {
-        pets,
-        refreshPets: fetchSelfPets,
-        isFetching,
-    };
-};
-
-/**
- * @returns {{
- *  pets: {
- *      _id: String,
- *      name: String,
- *      userId: String,
- *      tag: String,
- *      breed: String,
- *      feature: String,
- *      gender: String,
- *      photoId: String,
- *      ligated: boolean,
- *      age: Number,
- *      microchip: String,
- *  }[],
- *  refreshPets: Function,
- *  isFetching: boolean,
- * }}
- */
-export const useFocusSelfPets = (userId, dependencies = []) => {
-    const [pets, setPets] = useState([]);
-    const isMounted = useRef(true);
-    const [isFetching, setIsFetching] = useState(false);
-
-    // Fetch pets by userId
-    const fetchSelfPets = async () => {
-        if (isMounted.current) setIsFetching(true);
-
-        try {
-            const result = await fetchPetsByUserId(userId);
-            if (isMounted.current) {
-                setPets(result.data.result);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-
-        if (isMounted.current) setIsFetching(false);
-    };
-
-    useFocusEffect(useCallback(() => {
-        isMounted.current = true;
-
-        if (userId) fetchSelfPets();
-
-        return () => { isMounted.current = false };
-    }, [userId, ...dependencies]));
-
-    return {
-        pets,
-        refreshPets: fetchSelfPets,
-        isFetching,
+        selfPets: pets,
+        refreshSelfPets: fetchSelfPets,
+        isFetchingSelfPets: isFetching,
     };
 };
 

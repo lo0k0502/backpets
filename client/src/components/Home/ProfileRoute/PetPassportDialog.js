@@ -29,7 +29,7 @@ import { selectUser } from '../../../redux/userSlice';
 import TagsView from '../PostsRoute/TagsView';
 import { constants } from '../../../utils';
 
-export default ({ visible, close, refreshPets }) => {
+export default ({ visible, close, refreshSelfPets }) => {
     const user = useSelector(selectUser);
     const { colors } = useTheme();
 
@@ -176,7 +176,7 @@ export default ({ visible, close, refreshPets }) => {
 
             setIsLoading(false);
 
-            refreshPets();
+            refreshSelfPets();
             handleClose();// Close the dialog
         } catch (error) {
             setIsLoading(false);
