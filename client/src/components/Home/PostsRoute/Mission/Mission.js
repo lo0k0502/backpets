@@ -8,13 +8,11 @@ import {
     Alert,
 } from 'react-native';
 import {
-    ActivityIndicator,
     Divider,
     FAB,
     Portal,
     Subheading,
     Title,
-    useTheme,
 } from 'react-native-paper';
 import MissionDialog from './MissionDialog';
 import MissionCard from './MissionCard';
@@ -26,7 +24,6 @@ import TagsView from '../TagsView';
 import EditMissionDialog from './EditMissionDialog';
 import { constants } from '../../../../utils';
 import SelectButton from '../../SelectButton';
-import SkeletonCard from '../../SkeletonCard';
 
 const styles = StyleSheet.create({
     root: {
@@ -65,7 +62,6 @@ export default ({ navigation, searchTextState }) => {
     const { missions, refreshMissions, isFetching } = useMissions();
     const { pets, isFetching: isFetchingPets } = usePets();
     const { pets: selfPets, isFetching: isFetchingSelfPets } = useFocusSelfPets(user.info?._id);
-    const { colors } = useTheme();
 
     const [animalTags, setAnimalTags] = useState(constants.animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
     const [completed, setCompleted] = useState(constants.completedOptions[0]);
@@ -190,12 +186,7 @@ export default ({ navigation, searchTextState }) => {
                     )
                 }
                 {
-                    isFetching || isFetchingPets ? (
-                        <>
-                            <SkeletonCard />
-                            <SkeletonCard />
-                        </>
-                    ) : (
+                    isFetching || isFetchingPets ? null : (
                         missions.length ? (
                             selectedTags.length || searchText || completed !== constants.completedOptions[0] ? (
                                 checkMissionsMatchFilters() ? (

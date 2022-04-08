@@ -6,11 +6,8 @@ import {
   View,
 } from 'react-native';
 import {
-  ActivityIndicator,
-  Button,
   Divider,
   FAB,
-  Menu,
   Portal,
   Subheading,
   Title,
@@ -152,13 +149,7 @@ export default ({ searchTextState }) => {
           />
         </Portal>
         {
-          isFetching || isFetchingPets ? (
-            <ActivityIndicator
-              animating={true}
-              size='large'
-              style={{ marginTop: 50 }}
-            />
-          ) : (
+          isFetching || isFetchingPets ? null : (
             putUpForAdoptions.length ? (
               selectedTags.length || searchText || county !== '全部' ? (
                 checkPutUpForAdoptionsMatchTagAndSearchTextAndArea() ? (

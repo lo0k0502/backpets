@@ -21,7 +21,7 @@ import Tag from '../Tag';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
 import { isEmptyObject } from '../../../../utils';
-import SkeletonCard from '../../SkeletonCard';
+import { Skeleton } from '../../Skeleton';
 
 export default ({
     mission,
@@ -179,5 +179,5 @@ export default ({
                 </Button>
             </Card.Actions>
         </Card>
-    ) : <SkeletonCard />;
+    ) : <Skeleton />;
 };

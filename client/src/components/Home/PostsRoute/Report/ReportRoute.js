@@ -5,7 +5,6 @@ import {
   View,
 } from 'react-native';
 import {
-  ActivityIndicator,
   Divider,
   FAB,
   Portal,
@@ -80,13 +79,7 @@ export default ({ searchTextState }) => {
           />
         </Portal>
           {
-            isFetching ? (
-              <ActivityIndicator
-                animating={true}
-                size='large'
-                style={{ marginTop: 50 }}
-              />
-            ) : (
+            isFetching ? null : (
               reports.length ? (
                 selectedTags.length || searchText ? (
                   checkReportsMatchTagAndSearchText() ? (

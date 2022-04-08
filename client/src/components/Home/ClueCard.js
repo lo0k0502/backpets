@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updatePoints } from '../../redux/userReducer';
 import { selectUser } from '../../redux/userSlice';
 import { isEmptyObject } from '../../utils';
+import { Skeleton } from './Skeleton';
 
 export default ({
     clue,
@@ -191,5 +192,5 @@ export default ({
                 ) : null
             }
         </Card>
-    ) : null;
+    ) : <Skeleton />;
 };

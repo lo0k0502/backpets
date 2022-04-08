@@ -18,6 +18,7 @@ import { SERVERURL } from '../../../../api/API';
 import { useUser } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
 import { isEmptyObject } from '../../../../utils';
+import { Skeleton } from '../../Skeleton';
 import Tag from '../Tag';
 
 export default ({
@@ -124,5 +125,5 @@ export default ({
                 </Button>
             </Card.Actions>
         </Card>
-    ) : null;
+    ) : <Skeleton />;
 };

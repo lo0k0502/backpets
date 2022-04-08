@@ -5,7 +5,6 @@ import {
     View,
 } from 'react-native';
 import {
-    ActivityIndicator,
     FAB,
     HelperText,
     Title,
@@ -86,14 +85,7 @@ export default ({ route }) => {
                     ) : null
                 }
                 {
-                    isFetchingMission || isFetchingClues ? (
-                        <ActivityIndicator
-                            animating={true}
-                            color={colors.primary}
-                            size='large'
-                            style={{ marginTop: 50 }}
-                        />
-                    ) : (
+                    isFetchingMission || isFetchingClues ? null : (
                         clues.length ? (
                             clues.map(clue => (
                                 <ClueCard
@@ -113,61 +105,66 @@ export default ({ route }) => {
                 <View style={{ height: 70 }} />
             </ScrollView>
             {
-                mission.completed ? null : (
-                    !(isFetchingMission || isFetchingClues) && clues.length ? (
-                        selecting ? (
-                            <>
-                                <FAB
-                                    icon='close'
-                                    label='取消'
-                                    color={isLoading ? 'white' : colors.primary}
-                                    extended
-                                    disabled={isLoading}
-                                    style={{
-                                        position: 'absolute',
-                                        right: 10,
-                                        bottom: 140,
-                                        elevation: 1,
-                                    }}
-                                    theme={{ colors: { accent: 'white' } }}
-                                    onPress={() => {
-                                        setSelectingErrorMsg('');
-                                        setSelecting(false);
-                                    }}
-                                />
+                (
+                    isFetchingMission
+                    || isFetchingClues
+                ) ? null : (
+                    mission.completed ? null : (
+                        clues.length ? (
+                            selecting ? (
+                                <>
+                                    <FAB
+                                        icon='close'
+                                        label='取消'
+                                        color={isLoading ? 'white' : colors.primary}
+                                        extended
+                                        disabled={isLoading}
+                                        style={{
+                                            position: 'absolute',
+                                            right: 10,
+                                            bottom: 140,
+                                            elevation: 1,
+                                        }}
+                                        theme={{ colors: { accent: 'white' } }}
+                                        onPress={() => {
+                                            setSelectingErrorMsg('');
+                                            setSelecting(false);
+                                        }}
+                                    />
+                                    <FAB
+                                        icon='check'
+                                        label='確定選擇'
+                                        color='white'
+                                        extended
+                                        disabled={isLoading || !clueCheckBoxes.filter(clueCheckBox => clueCheckBox.status === 'checked').length}
+                                        style={{
+                                            position: 'absolute',
+                                            right: 10,
+                                            bottom: 70,
+                                            elevation: 1,
+                                        }}
+                                        onPress={handleSubmit}
+                                    />
+                                </>
+                            ) : (
                                 <FAB
                                     icon='check'
-                                    label='確定選擇'
+                                    label='完成任務'
                                     color='white'
                                     extended
-                                    disabled={isLoading || !clueCheckBoxes.filter(clueCheckBox => clueCheckBox.status === 'checked').length}
+                                    disabled={isLoading}
                                     style={{
                                         position: 'absolute',
                                         right: 10,
                                         bottom: 70,
                                         elevation: 1,
                                     }}
-                                    onPress={handleSubmit}
+                                    onPress={() => setSelecting(true)}
                                 />
-                            </>
-                        ) : (
-                            <FAB
-                                icon='check'
-                                label='完成任務'
-                                color='white'
-                                extended
-                                disabled={isLoading}
-                                style={{
-                                    position: 'absolute',
-                                    right: 10,
-                                    bottom: 70,
-                                    elevation: 1,
-                                }}
-                                onPress={() => setSelecting(true)}
-                            />
-                        )
-                    ) : null
-                ) 
+                            )
+                        ) : null
+                    )
+                )
             }
         </>
     );

@@ -1,6 +1,6 @@
 import React from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
-import { ActivityIndicator, Title, useTheme } from 'react-native-paper';
+import { Title } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { useSelfMissions } from '../../../hooks';
 import { selectUser } from '../../../redux/userSlice';
@@ -9,7 +9,6 @@ import MissionCard from '../PostsRoute/Mission/MissionCard';
 export default ({ navigation }) => {
     const user = useSelector(selectUser);
     const { missions, refreshMissions, isFetching } = useSelfMissions(user.info?._id);
-    const { colors } = useTheme();
     
     return (
         <ScrollView
@@ -25,14 +24,7 @@ export default ({ navigation }) => {
             }
         >
             {
-                isFetching ? (
-                    <ActivityIndicator
-                        animating={true}
-                        color={colors.primary}
-                        size='large'
-                        style={{ marginTop: 50 }}
-                    />
-                ) : (
+                isFetching ? null : (
                     missions.length ? (
                         missions.map(mission => (
                             <MissionCard

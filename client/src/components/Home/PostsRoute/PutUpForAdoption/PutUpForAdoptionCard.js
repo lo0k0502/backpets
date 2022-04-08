@@ -20,6 +20,7 @@ import { usePet, useUser } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
 import Tag from '../Tag';
 import { isEmptyObject } from '../../../../utils';
+import { Skeleton } from '../../Skeleton';
 
 export default ({
     putUpForAdoption,
@@ -155,5 +156,5 @@ export default ({
                 </Subheading>
             </View>
         </Card>
-    ) : null;
+    ) : <Skeleton />;
 };

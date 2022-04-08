@@ -1,6 +1,6 @@
 import React from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
-import { ActivityIndicator, Text, Title, useTheme } from 'react-native-paper';
+import { Title, useTheme } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { useSelfClues } from '../../../hooks';
 import { selectUser } from '../../../redux/userSlice';
@@ -25,14 +25,7 @@ export default () => {
             }
         >
             {
-                isFetching ? (
-                    <ActivityIndicator
-                        animating={true}
-                        color={colors.primary}
-                        size='large'
-                        style={{ marginTop: 50 }}
-                    />
-                ) : (
+                isFetching ? null : (
                     clues.length ? (
                         clues.map(clue => (
                             <ClueCard
