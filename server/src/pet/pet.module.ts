@@ -2,7 +2,7 @@ import { AuthMiddleware } from './../auth/auth.middleware';
 import { AuthService } from './../auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { PetService } from './pet.service';
 import { PetController } from './pet.controller';
 import { Pet, PetSchema } from './pet.schema';
@@ -19,6 +19,9 @@ export class PetModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .forRoutes('pet');
+      .forRoutes(
+        { path: 'pet', method: RequestMethod.POST },
+        { path: 'pet', method: RequestMethod.DELETE },
+      );
   };
 }

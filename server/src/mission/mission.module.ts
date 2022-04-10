@@ -2,7 +2,7 @@ import { Pet, PetSchema } from './../pet/pet.schema';
 import { Clue, ClueSchema } from './../clue/clue.schema';
 import { ClueService } from './../clue/clue.service';
 import { PointRecord, PointRecordSchema } from './../point-record/point-record.schema';
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthService } from '../auth/auth.service';
@@ -36,6 +36,9 @@ export class MissionModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .forRoutes('mission');
+      .forRoutes(
+        { path: 'mission', method: RequestMethod.POST },
+        { path: 'mission', method: RequestMethod.DELETE },
+      );
   };
 }

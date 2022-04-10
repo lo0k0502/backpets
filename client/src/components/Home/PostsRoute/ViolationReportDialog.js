@@ -89,16 +89,6 @@ export default ({
                             />
                         )}
                     />
-                    <Button
-                        onPress={() => {
-                            showSnackbar('已檢舉成功', {
-                                label: '取消檢舉',
-                                onPress: () => console.log('success'),
-                            });
-                        }}
-                    >
-                        Toggle
-                    </Button>
                     <Divider />
                     <HelperText>
                         請問您為何要檢舉此貼文?(必要)

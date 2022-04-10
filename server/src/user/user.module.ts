@@ -30,11 +30,8 @@ export class UserModule implements NestModule {
       consumer
         .apply(AuthMiddleware)
         .forRoutes(
-            { path: 'user/updateprofile', method: RequestMethod.POST },
-            { path: 'user/updatepassword', method: RequestMethod.POST },
-            { path: 'user/updatepoints', method: RequestMethod.POST },
-            { path: 'user/updatesearchhistory', method: RequestMethod.POST },
-            { path: 'user/fetchbyid', method: RequestMethod.GET },
+            { path: 'user', method: RequestMethod.POST },
+            { path: 'user', method: RequestMethod.DELETE },
         );
     };
 }
