@@ -64,3 +64,7 @@ export const fetchPointRecordsByUserId = (userId) => API.get(`/point-record/fetc
 
 // feedback
 export const addFeedback = (payload) => API.post('/feedback/add', payload);
+
+// violation report
+export const addViolationReport = (payload) => API.post('/violation-report/add', payload);
+export const deleteViolationReport = (violationReportId) => API.delete(`/violation-report/${violationReportId}`);

@@ -216,3 +216,21 @@ export const routeNametoTitle = (routeName) => {
 };
 
 export const completedOptions = ['全部', '已完成', '未完成'];
+
+export const postTypeENtoCH = (postType) => {
+    switch (postType) {
+        case 'mission': return '任務';
+        case 'report': return '通報';
+        case 'putUpForAdoption': return '送養';
+        default: throw new Error('Unknown postType!');
+    }
+};
+
+export const violationReportCategories = [
+    '不實資訊',
+    '垃圾訊息',
+    '暴力',
+    '騷擾',
+    '仇恨言論',
+    '其他',
+];

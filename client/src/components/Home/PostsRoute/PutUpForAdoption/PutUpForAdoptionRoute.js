@@ -17,6 +17,7 @@ import { usePets, usePutUpForAdoptions } from '../../../../hooks';
 import { constants } from '../../../../utils';
 import SelectButton from '../../SelectButton';
 import TagsView from '../TagsView';
+import ViolationReportDialog from '../ViolationReportDialog';
 import EditPutUpForAdoptionDialog from './EditPutUpForAdoptionDialog';
 import PutUpForAdoptionCard from './PutUpForAdoptionCard';
 import PutUpForAdoptionDialog from './PutUpForAdoptionDialog';
@@ -25,11 +26,13 @@ export default ({ searchTextState }) => {
   const [searchText, setSearchText] = searchTextState;
   const { allPutUpForAdoptions, refreshAllPutUpForAdoptions, isFetchingAllPutUpForAdoptions } = usePutUpForAdoptions();
   const { pets, isFetching: isFetchingPets } = usePets();
-  const { selfPets, refreshSelfPets, isFetchingSelfPets } = useContext(Context);
+  const { selfPets, refreshSelfPets, isFetchingSelfPets, showSnackbar } = useContext(Context);
 
   const [putUpForAdoptionDialog, setPutUpForAdoptionDialog] = useState(false);// Whether putUpForAdoption dialog is open
   const [editPutUpForAdoptionDialog, setEditPutUpForAdoptionDialog] = useState(false);// Whether edit putUpForAdoption dialog is open
   const [editPutUpForAdoption, setEditPutUpForAdoption] = useState({});
+  const [violationReportDialog, setViolationReportDialog] = useState(false);
+  const [editPutUpForAdoptionPoster, setEditPutUpForAdoptionPoster] = useState({});
 
   const [animalTags, setAnimalTags] = useState(constants.animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
   const [county, setCounty] = useState(constants.all_countys[0]);
@@ -148,6 +151,15 @@ export default ({ searchTextState }) => {
             close={() => setEditPutUpForAdoptionDialog(false)}
             refreshAllPutUpForAdoptions={refreshAllPutUpForAdoptions}
           />
+          <ViolationReportDialog
+            postType='putUpForAdoption'
+            post={editPutUpForAdoption}
+            poster={editPutUpForAdoptionPoster}
+            visible={violationReportDialog}
+            close={() => setViolationReportDialog(false)}
+            refreshPosts={refreshAllPutUpForAdoptions}
+            showSnackbar={showSnackbar}
+          />
         </Portal>
         {
           isFetchingAllPutUpForAdoptions || isFetchingPets ? null : (
@@ -161,6 +173,8 @@ export default ({ searchTextState }) => {
                       tagSelected={selectedTags.length}
                       setEditPutUpForAdoption={setEditPutUpForAdoption}
                       setEditPutUpForAdoptionDialog={setEditPutUpForAdoptionDialog}
+                      setViolationReportDialog={setViolationReportDialog}
+                      setEditPutUpForAdoptionPoster={setEditPutUpForAdoptionPoster}
                     />
                   ))
                 ) : (
@@ -173,6 +187,8 @@ export default ({ searchTextState }) => {
                     putUpForAdoption={putUpForAdoption}
                     setEditPutUpForAdoption={setEditPutUpForAdoption}
                     setEditPutUpForAdoptionDialog={setEditPutUpForAdoptionDialog}
+                    setViolationReportDialog={setViolationReportDialog}
+                    setEditPutUpForAdoptionPoster={setEditPutUpForAdoptionPoster}
                   />
                 ))
               )

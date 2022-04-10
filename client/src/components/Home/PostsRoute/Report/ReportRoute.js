@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
   RefreshControl,
   ScrollView,
@@ -10,9 +10,11 @@ import {
   Portal,
   Title,
 } from 'react-native-paper';
+import Context from '../../../../context';
 import { useReports } from '../../../../hooks';
 import { reportTagsArray } from '../../../../utils/constants';
 import TagsView from '../TagsView';
+import ViolationReportDialog from '../ViolationReportDialog';
 import EditReportDialog from './EditReportDialog';
 import ReportCard from './ReportCard';
 import ReportDialog from './ReportDialog';
@@ -20,12 +22,15 @@ import ReportDialog from './ReportDialog';
 export default ({ searchTextState }) => {
   const [searchText, setSearchText] = searchTextState;
   const { allReports, refreshAllReports, isFetchingAllReports } = useReports();
+  const { showSnackbar } = useContext(Context);
 
   const [reportTags, setReportTags] = useState(reportTagsArray.map(tagName => ({ name: tagName, selected: false })));
 
   const [reportDialog, setReportDialog] = useState(false);// Whether report dialog is open
   const [editReportDialog, setEditReportDialog] = useState(false);// Whether edit report dialog is open
   const [editReport, setEditReport] = useState({});
+  const [violationReportDialog, setViolationReportDialog] = useState(false);
+  const [editReportPoster, setEditReportPoster] = useState({});
 
   const selectedTags = reportTagsArray.filter(tag => reportTags.find(_tag => _tag.name === tag && _tag.selected));
 
@@ -75,6 +80,15 @@ export default ({ searchTextState }) => {
             close={() => setEditReportDialog(false)}
             refreshAllReports={refreshAllReports}
           />
+          <ViolationReportDialog
+            postType='report'
+            post={editReport}
+            poster={editReportPoster}
+            visible={violationReportDialog}
+            close={() => setViolationReportDialog(false)}
+            refreshPosts={refreshAllReports}
+            showSnackbar={showSnackbar}
+          />
         </Portal>
           {
             isFetchingAllReports ? null : (
@@ -88,6 +102,8 @@ export default ({ searchTextState }) => {
                         tagSelected={selectedTags.length}
                         setEditReport={setEditReport}
                         setEditReportDialog={setEditReportDialog}
+                        setViolationReportDialog={setViolationReportDialog}
+                        setEditReportPoster={setEditReportPoster}
                       />
                     ))
                   ) : (
@@ -100,6 +116,8 @@ export default ({ searchTextState }) => {
                       report={report}
                       setEditReport={setEditReport}
                       setEditReportDialog={setEditReportDialog}
+                      setViolationReportDialog={setViolationReportDialog}
+                      setEditReportPoster={setEditReportPoster}
                     />
                   ))
                 )

@@ -26,6 +26,8 @@ export default ({
     tagSelected = false,
     setEditReport = () => {},
     setEditReportDialog = () => {},
+    setViolationReportDialog = () => {},
+    setEditReportPoster = () => {},
 }) => {
     const navigation = useNavigation();
     const { colors } = useTheme();
@@ -61,31 +63,49 @@ export default ({
                         />
                     )}
                     right={props => (
-                        user.info?._id === poster._id ? (
-                            <Menu
-                                {...props}
-                                visible={menu}
-                                onDismiss={() => setMenu(false)}
-                                anchor={(
-                                    <IconButton
-                                        icon='dots-vertical'
-                                        size={30}
-                                        onPress={() => setMenu(true)}
-                                    />
-                                )}
-                                theme={{ roundness: 0 }}
-                            >
-                                <Menu.Item
-                                    title='編輯通報'
-                                    onPress={() => {
-                                        setMenu(false);
-                                        setEditReport(report);
-                                        setEditReportDialog(true);
-                                    }}
+                        <Menu
+                            {...props}
+                            visible={menu}
+                            onDismiss={() => setMenu(false)}
+                            anchor={(
+                                <IconButton
+                                    icon='dots-vertical'
+                                    size={30}
+                                    onPress={() => setMenu(true)}
                                 />
-                                <Menu.Item title='刪除通報' titleStyle={{ color: 'red' }} onPress={() => {}} />
-                            </Menu>
-                        ) : null
+                            )}
+                            theme={{ roundness: 0 }}
+                        >
+                            {
+
+                                user.info?._id === poster._id ? (
+                                    <>
+                                        <Menu.Item
+                                            title='編輯通報'
+                                            onPress={() => {
+                                                setMenu(false);
+                                                setEditReport(report);
+                                                setEditReportDialog(true);
+                                            }}
+                                        />
+                                        <Menu.Item title='刪除通報' titleStyle={{ color: 'red' }} onPress={() => {}} />
+                                    </>
+                                ) : (
+                                    <Menu.Item
+                                        title='檢舉貼文'
+                                        titleStyle={{
+                                            color: 'red',
+                                        }}
+                                        onPress={() => {
+                                            setMenu(false);
+                                            setEditReport(report);
+                                            setEditReportPoster(poster);
+                                            setViolationReportDialog(true);
+                                        }}
+                                    />
+                                )
+                            }
+                        </Menu>
                     )}
                 />
                 <Card.Cover

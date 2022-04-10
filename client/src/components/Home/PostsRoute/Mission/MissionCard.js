@@ -30,6 +30,8 @@ export default ({
     onViewCluePress = () => {},
     setEditMissionDialog = () => {},
     setEditMission = () => {},
+    setViolationReportDialog = () => {},
+    setEditMissionPoster = () => {},
 }) => {
     const navigation = useNavigation();
     const { colors } = useTheme();
@@ -70,32 +72,47 @@ export default ({
                     right={props => (
                         <View {...props} style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <Caption>{mission.completed ? '已完成' : '未完成'}</Caption>
-                            {
-                                user.info?._id === poster._id ? (
-                                    <Menu
-                                        visible={menu}
-                                        onDismiss={() => setMenu(false)}
-                                        anchor={(
-                                            <IconButton
-                                                icon='dots-vertical'
-                                                size={30}
-                                                onPress={() => setMenu(true)}
+                            <Menu
+                                visible={menu}
+                                onDismiss={() => setMenu(false)}
+                                anchor={(
+                                    <IconButton
+                                        icon='dots-vertical'
+                                        size={30}
+                                        onPress={() => setMenu(true)}
+                                    />
+                                )}
+                                theme={{ roundness: 0 }}
+                            >
+                                {
+                                    user.info?._id === poster._id ? (
+                                        <>
+                                            <Menu.Item
+                                                title='編輯任務'
+                                                onPress={() => {
+                                                    setMenu(false);
+                                                    setEditMission(mission);
+                                                    setEditMissionDialog(true);
+                                                }}
                                             />
-                                        )}
-                                        theme={{ roundness: 0 }}
-                                    >
+                                            <Menu.Item title='刪除任務' titleStyle={{ color: 'red' }} onPress={() => {}} />
+                                        </>
+                                    ) : (
                                         <Menu.Item
-                                            title='編輯任務'
+                                            title='檢舉貼文'
+                                            titleStyle={{
+                                                color: 'red',
+                                            }}
                                             onPress={() => {
                                                 setMenu(false);
                                                 setEditMission(mission);
-                                                setEditMissionDialog(true);
+                                                setEditMissionPoster(poster);
+                                                setViolationReportDialog(true);
                                             }}
                                         />
-                                        <Menu.Item title='刪除任務' titleStyle={{ color: 'red' }} onPress={() => {}} />
-                                    </Menu>
-                                ) : null
-                            }
+                                    )
+                                }
+                            </Menu>
                         </View>
                     )}
                 />

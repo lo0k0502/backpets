@@ -27,8 +27,8 @@ import { useSelector } from 'react-redux';
 import { addReport, uploadImage } from '../../../../api';
 import { useCurrentLocation } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
-import { reportTagsArray } from '../../../../utils/constants';
 import TagsView from '../TagsView';
+import { constants } from '../../../../utils';
 
 export default ({ visible, close, refreshAllReports }) => {
     const user = useSelector(selectUser);
@@ -39,7 +39,7 @@ export default ({ visible, close, refreshAllReports }) => {
     const [changingLocation, setChangingLocation] = useState(false);
 
     const [content, setContent] = useState('');
-    const [tags, setTags] = useState(reportTagsArray.map(tagName => ({ name: tagName, selected: false })));
+    const [tags, setTags] = useState(constants.reportTagsArray.map(tagName => ({ name: tagName, selected: false })));
     const [mapViewRegion, setMapViewRegion] = useState({
         latitude: currentLatitude,
         longitude: currentLongitude,
@@ -64,7 +64,7 @@ export default ({ visible, close, refreshAllReports }) => {
         close();
 
         setContent('');
-        setTags(reportTagsArray.map(tagName => ({ name: tagName, selected: false })));
+        setTags(constants.reportTagsArray.map(tagName => ({ name: tagName, selected: false })));
         setMapViewRegion({
             latitude: currentLatitude,
             longitude: currentLongitude,

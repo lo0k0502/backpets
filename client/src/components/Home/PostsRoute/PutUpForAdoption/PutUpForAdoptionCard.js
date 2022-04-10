@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 import { View } from 'react-native';
 import {
     Avatar,
-    Button,
     Card,
-    Divider,
     IconButton,
     Menu,
     Paragraph,
@@ -27,6 +24,8 @@ export default ({
     tagSelected = false,
     setEditPutUpForAdoption = () => {},
     setEditPutUpForAdoptionDialog = () => {},
+    setViolationReportDialog = () => {},
+    setEditPutUpForAdoptionPoster = () => {},
 }) => {
     const { colors } = useTheme();
     const user = useSelector(selectUser);
@@ -64,31 +63,48 @@ export default ({
                         />
                     )}
                     right={props => (
-                        user.info._id === poster._id ? (
-                            <Menu
-                                {...props}
-                                visible={menu}
-                                onDismiss={() => setMenu(false)}
-                                anchor={(
-                                    <IconButton
-                                        icon='dots-vertical'
-                                        size={30}
-                                        onPress={() => setMenu(true)}
-                                    />
-                                )}
-                                theme={{ roundness: 0 }}
-                            >
-                                <Menu.Item
-                                    title='編輯貼文'
-                                    onPress={() => {
-                                        setMenu(false);
-                                        setEditPutUpForAdoption(putUpForAdoption);
-                                        setEditPutUpForAdoptionDialog(true);
-                                    }}
+                        <Menu
+                            {...props}
+                            visible={menu}
+                            onDismiss={() => setMenu(false)}
+                            anchor={(
+                                <IconButton
+                                    icon='dots-vertical'
+                                    size={30}
+                                    onPress={() => setMenu(true)}
                                 />
-                                <Menu.Item title='刪除貼文' titleStyle={{ color: 'red' }} onPress={() => {}} />
-                            </Menu>
-                        ) : null
+                            )}
+                            theme={{ roundness: 0 }}
+                        >
+                            {
+                                user.info._id === poster._id ? (
+                                    <>
+                                        <Menu.Item
+                                            title='編輯貼文'
+                                            onPress={() => {
+                                                setMenu(false);
+                                                setEditPutUpForAdoption(putUpForAdoption);
+                                                setEditPutUpForAdoptionDialog(true);
+                                            }}
+                                        />
+                                        <Menu.Item title='刪除貼文' titleStyle={{ color: 'red' }} onPress={() => {}} />
+                                    </>
+                                ) : (
+                                    <Menu.Item
+                                        title='檢舉貼文'
+                                        titleStyle={{
+                                            color: 'red',
+                                        }}
+                                        onPress={() => {
+                                            setMenu(false);
+                                            setEditPutUpForAdoption(putUpForAdoption);
+                                            setEditPutUpForAdoptionPoster(poster);
+                                            setViolationReportDialog(true);
+                                        }}
+                                    />
+                                )
+                            }
+                        </Menu>
                     )}
                 />
                 {

@@ -1,5 +1,5 @@
-import React from 'react';
-import { useTheme } from 'react-native-paper';
+import React, { useState } from 'react';
+import { Portal, Snackbar, useTheme } from 'react-native-paper';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -24,6 +24,10 @@ export default ({ logoutback }) => {
     const user = useSelector(selectUser);
     const { colors } = useTheme();
 
+    const [snackbar, setSnackbar] = useState(false);
+    const [snackbarText, setSnackbarText] = useState('');
+    const [snackbarAction, setSnackbarAction] = useState({});
+
     const selfMissionsHook = useSelfMissions(user.info?._id);
     const selfCluesHook = useSelfClues(user.info?._id);
     const selfPetsHook = useSelfPets(user.info?._id);
@@ -35,6 +39,11 @@ export default ({ logoutback }) => {
                 ...selfCluesHook,
                 getSelfClueByClueId: clueId => selfCluesHook.selfClues.find(_clue => _clue._id === clueId) || {},
                 ...selfPetsHook,
+                showSnackbar: (text, action) => {
+                    setSnackbarText(text);
+                    setSnackbarAction(action);
+                    setSnackbar(true);
+                },
             }}
         >
             <Drawer.Navigator
@@ -116,6 +125,22 @@ export default ({ logoutback }) => {
                 {props => <Feedback {...props} />}
                 </Drawer.Screen>
             </Drawer.Navigator>
+            <Portal>
+                <Snackbar
+                    visible={snackbar}
+                    onDismiss={() => {
+                        setSnackbar(false);
+                        setSnackbarText('');
+                        setSnackbarAction({});
+                    }}
+                    duration={5000}
+                    action={snackbarAction}
+                    style={{ backgroundColor: colors.primary }}
+                    theme={{ colors: { surface: 'white', accent: colors.background2 } }}
+                >
+                    {snackbarText}
+                </Snackbar>
+            </Portal>
         </Context.Provider>
     );
 };

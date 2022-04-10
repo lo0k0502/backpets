@@ -1,3 +1,4 @@
+import { ViolationReportModule } from './../violation-report/violation-report.module';
 import { FeedbackModule } from './../feedback/feedback.module';
 import { PointRecordModule } from './../point-record/point-record.module';
 import { ClueModule } from './../clue/clue.module';
@@ -29,6 +30,7 @@ import { PetModule } from 'src/pet/pet.module';
     PetModule,
     PointRecordModule,
     FeedbackModule,
+    ViolationReportModule,
   ],
   controllers: [AppController],
 })

@@ -78,14 +78,13 @@ export default ({
                 phone,
             });
 
-            setIsLoading(false);
-
             refreshAllPutUpForAdoptions();
             handleClose();// Close the dialog
         } catch (error) {
-            setIsLoading(false);
-            console.log('While adding:', error);
+            console.log('While adding putUpForAdoption:', error);
         }
+
+        setIsLoading(false);
     };
 
     useUpdateEffect(() => {

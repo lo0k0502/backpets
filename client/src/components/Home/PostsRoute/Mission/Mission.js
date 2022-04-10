@@ -25,6 +25,7 @@ import EditMissionDialog from './EditMissionDialog';
 import { constants } from '../../../../utils';
 import SelectButton from '../../SelectButton';
 import Context from '../../../../context';
+import ViolationReportDialog from '../ViolationReportDialog';
 
 const styles = StyleSheet.create({
     root: {
@@ -62,7 +63,7 @@ export default ({ navigation, searchTextState }) => {
     const user = useSelector(selectUser);
     const { allMissions, refreshAllMissions, isFetchingAllMissions } = useMissions();
     const { pets, isFetching: isFetchingPets } = usePets();
-    const { selfPets, refreshSelfPets, isFetchingSelfPets } = useContext(Context);
+    const { selfPets, refreshSelfPets, isFetchingSelfPets, showSnackbar } = useContext(Context);
 
     const [animalTags, setAnimalTags] = useState(constants.animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
     const [completed, setCompleted] = useState(constants.completedOptions[0]);
@@ -70,6 +71,8 @@ export default ({ navigation, searchTextState }) => {
     const [missionDialog, setMissionDialog] = useState(false);// Whether mission dialog is open
     const [editMissionDialog, setEditMissionDialog] = useState(false);// Whether edit mission dialog is open
     const [editMission, setEditMission] = useState({});
+    const [violationReportDialog, setViolationReportDialog] = useState(false);
+    const [editMissionPoster, setEditMissionPoster] = useState({});
     const [clueDialog, setClueDialog] = useState(false);// Whether clue dialog is open
     const [addClueMissionId, setAddClueMissionId] = useState('');
     const [completedMenu, setCompletedMenu] = useState(false);
@@ -177,6 +180,15 @@ export default ({ navigation, searchTextState }) => {
                         close={() => setEditMissionDialog(false)}
                         refreshAllMissions={refreshAllMissions}
                     />
+                    <ViolationReportDialog
+                        postType='mission'
+                        post={editMission}
+                        poster={editMissionPoster}
+                        visible={violationReportDialog}
+                        close={() => setViolationReportDialog(false)}
+                        refreshPosts={refreshAllMissions}
+                        showSnackbar={showSnackbar}
+                    />
                     <ClueDialog
                         missionId={addClueMissionId}
                         visible={clueDialog}
@@ -210,6 +222,8 @@ export default ({ navigation, searchTextState }) => {
                                             }}
                                             setEditMission={setEditMission}
                                             setEditMissionDialog={setEditMissionDialog}
+                                            setViolationReportDialog={setViolationReportDialog}
+                                            setEditMissionPoster={setEditMissionPoster}
                                         />
                                     ))
                                 ) : (
@@ -229,6 +243,8 @@ export default ({ navigation, searchTextState }) => {
                                         }}
                                         setEditMission={setEditMission}
                                         setEditMissionDialog={setEditMissionDialog}
+                                        setViolationReportDialog={setViolationReportDialog}
+                                        setEditMissionPoster={setEditMissionPoster}
                                     />
                                 ))
                             )
