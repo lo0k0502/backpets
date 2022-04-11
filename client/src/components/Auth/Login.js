@@ -1,20 +1,23 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, StyleSheet, Image, Pressable, Text } from 'react-native';
-import { TextInput, Button, Divider, HelperText, useTheme } from 'react-native-paper';
+import { TextInput, Button, Divider, HelperText, useTheme, Checkbox } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import * as Google from 'expo-google-app-auth';
 import { useFocusEffect } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from '@env';
+import * as SecureStorage from 'expo-secure-store';
 
 import { loginUser, googleLogin } from '../../redux/userReducer';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { useUpdateEffect } from '../../hooks';
+import { isAsyncFunction } from '../../utils';
 
 const styles = StyleSheet.create({
     input: {
         color: 'black',
         backgroundColor: 'white',
-        marginBottom: 5,
+        marginBottom: 10,
     },
 });
 
@@ -24,6 +27,7 @@ export default ({ navigation, setSignInState }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordSecure, setPasswordSecure] = useState(true);
+    const [rememberMe, setRememberMe] = useState('unchecked');
 
     const [errorMsg, setErrorMsg] = useState('');
 
@@ -32,9 +36,13 @@ export default ({ navigation, setSignInState }) => {
 
     const dispatch = useDispatch();
 
-    useFocusEffect(useCallback(() => {
-        setErrorMsg('');
-    }, []));
+    const changeRememberMe = async (state) => {
+        const originalLocalState = JSON.parse(await SecureStorage.getItemAsync('localState'));
+        await SecureStorage.setItemAsync('localState', JSON.stringify({
+            ...originalLocalState,
+            rememberMe: state,
+        }));
+    };
 
     const handleLogin = async () => {
         if (!email || !password) {
@@ -101,6 +109,22 @@ export default ({ navigation, setSignInState }) => {
         setGoogleLoginLoading(false);
     };
 
+    useFocusEffect(useCallback(() => {
+        setErrorMsg('');
+    }, []));
+
+    useUpdateEffect(() => {
+        changeRememberMe(rememberMe);
+    }, async () => {
+        const originalLocalState = JSON.parse(await SecureStorage.getItemAsync('localState'));
+        await SecureStorage.setItemAsync('localState', JSON.stringify({
+            ...originalLocalState,
+            initialRoute: 'StoreRoute',
+        }))
+        if (!originalLocalState?.rememberMe) return;
+        setRememberMe(originalLocalState.rememberMe);
+    }, [rememberMe]);
+
     return (
         <View 
             style={{
@@ -147,6 +171,14 @@ export default ({ navigation, setSignInState }) => {
                             onPress={() => setPasswordSecure(!passwordSecure)}
                         />
                     }
+                />
+                <Checkbox.Item
+                    label='記住我'
+                    status={rememberMe}
+                    style={{ justifyContent: 'flex-start', padding: 0 }}
+                    labelStyle={{ textAlign: 'left' }}
+                    position='leading'
+                    onPress={() => setRememberMe(state => state === 'checked' ? 'unchecked' : 'checked')}
                 />
                 <Button 
                     mode='contained'

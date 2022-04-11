@@ -95,7 +95,7 @@ export default ({ logoutback }) => {
                         {props => <PostsRoute {...props} />}
                         </Tabs.Screen>
                         <Tabs.Screen
-                            name='Store'
+                            name='StoreRoute'
                             options={{
                                 title: '商店',
                                 tabBarIcon: ({ color }) => <MaterialCommunityIcons name='store-outline' color={color} size={20} />,
@@ -104,7 +104,7 @@ export default ({ logoutback }) => {
                         {props => <Store {...props} />}
                         </Tabs.Screen>
                         <Tabs.Screen
-                            name='Adoption'
+                            name='AdoptionRoute'
                             options={{
                                 title: '領養',
                                 tabBarIcon: ({ color }) => <MaterialCommunityIcons name='home-heart' color={color} size={20} />,

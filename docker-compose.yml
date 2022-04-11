@@ -7,7 +7,7 @@ services:
     env_file:
       - ./client/.env
     volumes:
-      - './client:/client'
+      - './client/src:/client/src:ro'
     ports:
       - "19000:19000"
       - "19001:19001"
@@ -16,8 +16,10 @@ services:
   web:
     build: './web'
     stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
     volumes:
-      - './web:/web'
+      - './web/src:/web/src:ro'
     ports:
       - '3000:3000'
   server:
@@ -26,6 +28,6 @@ services:
     env_file:
       - ./server/.env
     volumes:
-      - './server:/server'
+      - './server/src:/server/src:ro'
     ports:
       - '8000:8000'

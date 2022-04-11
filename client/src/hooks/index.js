@@ -33,11 +33,27 @@ export default {
     usePet,
 };
 
-export const useUpdateEffect = (callback, dependencies = []) => {
+export const useOnceUpdateEffect = (callback, dependencies) => {
     const isFirst = useRef(true);
+    const isSecond = useRef(true);
 
     useEffect(() => {
         if (isFirst.current) return isFirst.current = false;
+        if (!isSecond.current) return;
+        if (isSecond.current) isSecond.current = false;
+
+        return callback();
+    }, dependencies);
+};
+
+export const useUpdateEffect = (callback, firstCallback, dependencies, options) => {
+    const isFirst = useRef(true);
+
+    useEffect(() => {
+        if (isFirst.current) {
+            if (typeof firstCallback === 'function') firstCallback();
+            return isFirst.current = false;
+        }
 
         return callback();
     }, dependencies);

@@ -12,16 +12,17 @@ import * as Location from 'expo-location';
 import { Button, Text } from 'react-native-paper';
 import { Restart } from 'fiction-expo-restart';
 import AllImages from './components/DevOptions/AllImages';
+import { useOnceUpdateEffect } from './hooks';
 
 const styles = StyleSheet.create({
-  view: { 
-    flex: 1, 
+  view: {
+    flex: 1,
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  viewImage: { 
-    width: '100%', 
+  viewImage: {
+    width: '100%',
     height: '100%',
   },
 });
@@ -30,16 +31,22 @@ const Stacks = createStackNavigator();
 
 export default ({ signInStates: [signInState, setSignInState] }) => {
     const [errorMsg, setErrorMsg] = useState('');
+    const [localState, setLocalState] = useState({});
 
     const dispatch = useDispatch();
 
     // Logout with alert
     const logout = () => {
         Alert.alert('正在登出', '確定要登出嗎?', [
-            { 
-                text: '登出', 
+            {
+                text: '登出',
                 onPress: async () => {
                     try {
+                      const originalLocalState = JSON.parse(await SecureStorage.getItemAsync('localState'));
+                      await SecureStorage.setItemAsync('localState', JSON.stringify({
+                        ...originalLocalState,
+                        rememberMe: 'unchecked',
+                      }));
                         unwrapResult(await dispatch(logoutUser({})));
                         console.log('Not logged in, going back...');
                         setSignInState(false);
@@ -51,7 +58,7 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
             { text: '取消' },
         ]);
     };
-  
+
     // If local SecureStorage has token, check for location permission and try to refresh it.
     // If failed or has no token, display login page;
     // If refreshed, display home page.
@@ -59,6 +66,35 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
       let isMounted = true;
 
       (async () => {
+        const originalLocalState = JSON.parse(await SecureStorage.getItemAsync('localState'));
+        if (isMounted) setLocalState(originalLocalState);
+      })();
+
+      return () => { isMounted = false };
+    }, []);
+
+    useOnceUpdateEffect(() => {
+      let isMounted = true;
+
+      (async () => {
+        if (localState === null) {
+          await SecureStorage.setItemAsync('localState', JSON.stringify({
+            rememberMe: 'unchecked',
+            initialRoute: 'PostsRoute',
+          }));
+          if (isMounted) setLocalState({
+            rememberMe: 'unchecked',
+            initialRoute: 'PostsRoute',
+          });
+        }
+
+        const afterLocalState = JSON.parse(await SecureStorage.getItemAsync('localState'));
+        if (afterLocalState.rememberMe === 'unchecked') {
+          console.log('Don\'t remember me!');
+          if (isMounted) setSignInState(false);
+          return;
+        }
+
         const tokens = JSON.parse(await SecureStorage.getItemAsync('tokens'));
         if (tokens?.refreshToken) {
           try {
@@ -68,15 +104,15 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
                 return;
               }
             }
-            
+
             unwrapResult(await dispatch(tokenRefresh({ 
               refreshToken: tokens.refreshToken, 
             })));
 
             if (isMounted) setSignInState(true);
           } catch (error) {
-            if (isMounted) setSignInState(false);
             await SecureStorage.deleteItemAsync('tokens');
+            if (isMounted) setSignInState(false);
             console.log('While refreshing:', error.message);
           }
         } else {
@@ -85,7 +121,7 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
       })();
 
       return () => { isMounted = false };
-    }, []);
+    }, null, [localState]);
 
     return (
         <Stacks.Navigator screenOptions={{ headerShown: false }}>

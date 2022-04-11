@@ -90,7 +90,7 @@ export default ({
     useUpdateEffect(() => {
         refreshAllPutUpForAdoptions();
         refreshSelfPets();
-    }, [petsDialog]);
+    }, null, [petsDialog]);
 
     return (
         <Dialog visible={visible} onDismiss={handleClose}>

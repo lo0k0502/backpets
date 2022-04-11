@@ -234,3 +234,5 @@ export const violationReportCategories = [
     '仇恨言論',
     '其他',
 ];
+
+export const AsyncFunction = (async () => {}).constructor;

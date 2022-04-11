@@ -114,7 +114,7 @@ export default ({
     useUpdateEffect(() => {
         refreshAllMissions();
         refreshSelfPets();
-    }, [petsDialog]);
+    }, null, [petsDialog]);
 
     return (
         <Dialog visible={visible} onDismiss={handleClose}>
