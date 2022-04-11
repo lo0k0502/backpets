@@ -1,0 +1,31 @@
+version: '1'
+
+services:
+  client:
+    build: './client'
+    stdin_open: true
+    env_file:
+      - ./client/.env
+    volumes:
+      - './client:/client'
+    ports:
+      - "19000:19000"
+      - "19001:19001"
+      - "19002:19002"
+    
+  web:
+    build: './web'
+    stdin_open: true
+    volumes:
+      - './web:/web'
+    ports:
+      - '3000:3000'
+  server:
+    build: './server'
+    stdin_open: true
+    env_file:
+      - ./server/.env
+    volumes:
+      - './server:/server'
+    ports:
+      - '8000:8000'
