@@ -7,7 +7,7 @@ import { addViolationReport, deleteViolationReport } from '../../../api';
 import { SERVERURL } from '../../../api/API';
 import { selectUser } from '../../../redux/userSlice';
 import { constants, isEmptyObject } from '../../../utils';
-import { postTypeENtoCH } from '../../../utils/constants';
+import { postTypeENtoCH } from '../../../utils';
 import TagsView from './TagsView';
 
 export default ({

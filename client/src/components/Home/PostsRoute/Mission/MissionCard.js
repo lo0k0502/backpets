@@ -20,7 +20,7 @@ import { SERVERURL } from '../../../../api/API';
 import Tag from '../Tag';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
-import { isEmptyObject } from '../../../../utils';
+import { constants, isEmptyObject } from '../../../../utils';
 import { Skeleton } from '../../Skeleton';
 
 export default ({
@@ -190,7 +190,7 @@ export default ({
                     dark
                     style={{ flexGrow: 1, borderLeftWidth: 0.5, borderColor: colors.primary }}
                     theme={{ roundness: 0 }}
-                    onPress={() => navigation.navigate('Map', { location: mission.location })}
+                    onPress={() => navigation.navigate(constants.pageNames[1], { location: mission.location })}
                 >
                     前往地圖
                 </Button>

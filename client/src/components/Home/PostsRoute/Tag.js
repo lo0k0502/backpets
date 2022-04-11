@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Chip, useTheme } from 'react-native-paper';
-import { iconCHtoEN } from '../../../utils/constants';
+import { iconCHtoEN } from '../../../utils';
 
 export default ({
     tag,

@@ -13,6 +13,7 @@ import { Button, Text } from 'react-native-paper';
 import { Restart } from 'fiction-expo-restart';
 import AllImages from './components/DevOptions/AllImages';
 import { useOnceUpdateEffect } from './hooks';
+import { constants } from './utils';
 
 const styles = StyleSheet.create({
   view: {
@@ -31,7 +32,7 @@ const Stacks = createStackNavigator();
 
 export default ({ signInStates: [signInState, setSignInState] }) => {
     const [errorMsg, setErrorMsg] = useState('');
-    const [localState, setLocalState] = useState({});
+    const [initialLocalState, setInitialLocalState] = useState({});
 
     const dispatch = useDispatch();
 
@@ -47,9 +48,10 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
                         ...originalLocalState,
                         rememberMe: 'unchecked',
                       }));
-                        unwrapResult(await dispatch(logoutUser({})));
-                        console.log('Not logged in, going back...');
-                        setSignInState(false);
+                      setInitialLocalState(JSON.parse(await SecureStorage.getItemAsync('localState')));
+                      unwrapResult(await dispatch(logoutUser({})));
+                      console.log('Not logged in, going back...');
+                      setSignInState(false);
                     } catch (error) {
                         console.log('While logging out:', error);
                     }
@@ -67,7 +69,7 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
 
       (async () => {
         const originalLocalState = JSON.parse(await SecureStorage.getItemAsync('localState'));
-        if (isMounted) setLocalState(originalLocalState);
+        if (isMounted) setInitialLocalState(originalLocalState);
       })();
 
       return () => { isMounted = false };
@@ -77,14 +79,14 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
       let isMounted = true;
 
       (async () => {
-        if (localState === null) {
+        if (initialLocalState === null) {
           await SecureStorage.setItemAsync('localState', JSON.stringify({
             rememberMe: 'unchecked',
-            initialRoute: 'PostsRoute',
+            initialRoute: constants.pageNames[2],
           }));
-          if (isMounted) setLocalState({
+          if (isMounted) setInitialLocalState({
             rememberMe: 'unchecked',
-            initialRoute: 'PostsRoute',
+            initialRoute: constants.pageNames[2],
           });
         }
 
@@ -121,7 +123,7 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
       })();
 
       return () => { isMounted = false };
-    }, null, [localState]);
+    }, null, [initialLocalState]);
 
     return (
         <Stacks.Navigator screenOptions={{ headerShown: false }}>
@@ -148,7 +150,7 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
             </Stacks.Screen>
           ) : signInState ? (
             <Stacks.Screen name='Main'>
-            {props => <BottomNavigation {...props} logoutback={logout} />}
+            {props => <BottomNavigation {...props} logoutback={logout} initialLocalState={initialLocalState} />}
             </Stacks.Screen>
           ) : (
             <>

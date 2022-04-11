@@ -17,7 +17,7 @@ import { useSelector } from 'react-redux';
 import { SERVERURL } from '../../../../api/API';
 import { useUser } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
-import { isEmptyObject } from '../../../../utils';
+import { constants, isEmptyObject } from '../../../../utils';
 import { Skeleton } from '../../Skeleton';
 import Tag from '../Tag';
 
@@ -139,7 +139,7 @@ export default ({
                     dark
                     style={{ flexGrow: 1 }}
                     theme={{ roundness: 0 }}
-                    onPress={() => navigation.navigate('Map', { location: report.location })}
+                    onPress={() => navigation.navigate(constants.pageNames[1], { location: report.location })}
                 >
                     前往地圖
                 </Button>

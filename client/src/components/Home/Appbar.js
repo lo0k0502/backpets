@@ -1,7 +1,6 @@
 import React from 'react';
 import { Appbar } from 'react-native-paper';
-import { constants } from '../../utils';
-import { backIcon } from '../../utils/constants';
+import { constants, routeNametoTitle } from '../../utils';
 
 export default ({ route, navigation, routeName }) => {
     const _routeName = routeName || route.name;
@@ -15,21 +14,21 @@ export default ({ route, navigation, routeName }) => {
         <Appbar style={{ backgroundColor: 'white' }}>
         {
             (
-                _routeName === 'PostsRoute'
+                _routeName === constants.pageNames[2]
                 || _routeName === 'PostsTab'
                 || _routeName === 'Profile'
             ) ? (
                 <Appbar.Action icon='menu' onPress={navigation.toggleDrawer} />
             ) : (
-                <Appbar.Action icon={backIcon} onPress={onBackIconPress} />
+                <Appbar.Action icon={constants.backIcon} onPress={onBackIconPress} />
             )
         }
             <Appbar.Content
-                title={constants.routeNametoTitle(_routeName)}
+                title={routeNametoTitle(_routeName)}
             />
         {
             (
-                _routeName === 'PostsRoute'
+                _routeName === constants.pageNames[2]
                 || _routeName === 'PostsTab'
             ) ? (
                 <Appbar.Action icon='magnify' onPress={() => navigation.navigate('Search')} />

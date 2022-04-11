@@ -15,7 +15,7 @@ export default ({ navigation, logoutback }) => {
     return (
         <DrawerContentScrollView style={styles.root}>
             <List.Section style={{ flex: 1 }}>
-                {[ '意見回饋', '登出' ].map((title, index) => (
+                {['設定', '意見回饋', '登出'].map((title, index) => (
                     <ListItem 
                         key={index}
                         title={title}
@@ -23,6 +23,10 @@ export default ({ navigation, logoutback }) => {
                         dividerColor={colors.border}
                         onItemPress={() => {
                             switch (title) {
+                                case '設定': {
+                                    navigation.navigate('Setting');
+                                    break;
+                                }
                                 case '意見回饋': {
                                     navigation.navigate('Feedback');
                                     break;

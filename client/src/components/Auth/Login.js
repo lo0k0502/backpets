@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, StyleSheet, Image, Pressable, Text } from 'react-native';
 import { TextInput, Button, Divider, HelperText, useTheme, Checkbox } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
@@ -11,7 +11,6 @@ import * as SecureStorage from 'expo-secure-store';
 import { loginUser, googleLogin } from '../../redux/userReducer';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useUpdateEffect } from '../../hooks';
-import { isAsyncFunction } from '../../utils';
 
 const styles = StyleSheet.create({
     input: {
@@ -117,10 +116,6 @@ export default ({ navigation, setSignInState }) => {
         changeRememberMe(rememberMe);
     }, async () => {
         const originalLocalState = JSON.parse(await SecureStorage.getItemAsync('localState'));
-        await SecureStorage.setItemAsync('localState', JSON.stringify({
-            ...originalLocalState,
-            initialRoute: 'StoreRoute',
-        }))
         if (!originalLocalState?.rememberMe) return;
         setRememberMe(originalLocalState.rememberMe);
     }, [rememberMe]);

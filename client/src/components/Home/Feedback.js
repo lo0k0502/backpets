@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { View, TextInput as NativeTextInput, Linking, Alert } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, TextInput as NativeTextInput } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../redux/userSlice';
 import { addFeedback } from '../../api';
+import Context from '../../context';
 
 export default ({ navigation }) => {
     const user = useSelector(selectUser);
+    const { showSnackbar } = useContext(Context);
 
     const [content, setContent] = useState('');
 
@@ -21,13 +23,18 @@ export default ({ navigation }) => {
                 content,
             });
 
-            Alert.alert('謝謝您!', '我們已收到您的意見回饋!', [{ text: 'OK', onPress: navigation.goBack }]);
+            showSnackbar('謝謝您!我們已收到您的意見回饋!');
+            navigation.goBack();
         } catch (error) {
             console.log('While adding feedback: ', error);
         }
 
         setIsLoading(false);
     };
+
+    useEffect(() => {
+        setContent('');
+    }, []);
 
     return (
         <View

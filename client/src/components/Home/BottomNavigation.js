@@ -4,7 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import DrawerContent from '../drawer';
+import DrawerContent from './drawer';
 import PostsRoute from './PostsRoute/PostsRoute';
 import MapRoute from './MapRoute/MapRoute';
 import Store from './StoreRoute/StoreRoute';
@@ -16,11 +16,13 @@ import Context from '../../context';
 import { useSelfClues, useSelfMissions, useSelfPets } from '../../hooks';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../redux/userSlice';
+import Setting from './Setting';
+import { constants } from '../../utils';
 
 const Drawer = createDrawerNavigator();
 const Tabs = createMaterialBottomTabNavigator();
 
-export default ({ logoutback }) => {
+export default ({ logoutback, initialLocalState }) => {
     const user = useSelector(selectUser);
     const { colors } = useTheme();
 
@@ -48,14 +50,13 @@ export default ({ logoutback }) => {
         >
             <Drawer.Navigator
                 useLegacyImplementation={true}
-                drawerContent={props => <DrawerContent {...props} logoutback={logoutback} />} 
-                screenOptions={{ headerShown: false }}
+                drawerContent={props => <DrawerContent {...props} logoutback={logoutback} />}
             >
-                <Drawer.Screen name='BottomNavigation'>
+                <Drawer.Screen name='BottomNavigation' options={{ headerShown: false }}>
                 {() => (
                     <Tabs.Navigator
                         shifting
-                        initialRouteName='PostsRoute'
+                        initialRouteName={initialLocalState.initialRoute}
                         barStyle={{
                             position: 'absolute',
                             right: 10,
@@ -68,7 +69,7 @@ export default ({ logoutback }) => {
                         backBehavior='initialRoute'
                     >
                         <Tabs.Screen
-                            name='ProfileRoute'
+                            name={constants.pageNames[0]}
                             options={{
                                 title: '個人檔案',
                                 tabBarIcon: ({ color }) => <MaterialCommunityIcons name='account-circle-outline' color={color} size={20} />,
@@ -77,7 +78,7 @@ export default ({ logoutback }) => {
                         {props => <ProfileRoute {...props} />}
                         </Tabs.Screen>
                         <Tabs.Screen
-                            name='Map'
+                            name={constants.pageNames[1]}
                             options={{
                                 title: '地圖',
                                 tabBarIcon: ({ color }) => <MaterialCommunityIcons name='map' color={color} size={20} />,
@@ -86,7 +87,7 @@ export default ({ logoutback }) => {
                         {props => <MapRoute {...props} />}
                         </Tabs.Screen>
                         <Tabs.Screen
-                            name='PostsRoute'
+                            name={constants.pageNames[2]}
                             options={{
                                 title: '貼文',
                                 tabBarIcon: ({ color }) => <MaterialCommunityIcons name='note-text-outline' color={color} size={20} />,
@@ -95,7 +96,7 @@ export default ({ logoutback }) => {
                         {props => <PostsRoute {...props} />}
                         </Tabs.Screen>
                         <Tabs.Screen
-                            name='StoreRoute'
+                            name={constants.pageNames[3]}
                             options={{
                                 title: '商店',
                                 tabBarIcon: ({ color }) => <MaterialCommunityIcons name='store-outline' color={color} size={20} />,
@@ -104,7 +105,7 @@ export default ({ logoutback }) => {
                         {props => <Store {...props} />}
                         </Tabs.Screen>
                         <Tabs.Screen
-                            name='AdoptionRoute'
+                            name={constants.pageNames[4]}
                             options={{
                                 title: '領養',
                                 tabBarIcon: ({ color }) => <MaterialCommunityIcons name='home-heart' color={color} size={20} />,
@@ -117,12 +118,15 @@ export default ({ logoutback }) => {
                 </Drawer.Screen>
                 <Drawer.Screen
                     name='Feedback'
-                    options={{
-                        headerShown: true,
-                        header: props => <Appbar {...props} />
-                    }}
+                    options={{ header: props => <Appbar {...props} /> }}
                 >
                 {props => <Feedback {...props} />}
+                </Drawer.Screen>
+                <Drawer.Screen
+                    name='Setting'
+                    options={{ header: props => <Appbar {...props} /> }}
+                >
+                {props => <Setting {...props} />}
                 </Drawer.Screen>
             </Drawer.Navigator>
             <Portal>

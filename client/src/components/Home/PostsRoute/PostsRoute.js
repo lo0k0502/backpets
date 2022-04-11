@@ -11,6 +11,7 @@ import { useTheme } from 'react-native-paper';
 import { updateSearchHistory } from '../../../redux/userReducer';
 import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { constants } from '../../../utils';
 
 const PostsStack = createStackNavigator();
 
@@ -19,7 +20,7 @@ export default (props) => {
     const dispatch = useDispatch();
 
     const [searchText, setSearchText] = useState('');
-    const currentRouteState = useNavigationState(state => state.routes.find(route => route.name === 'PostsRoute').state);
+    const currentRouteState = useNavigationState(state => state.routes.find(route => route.name === constants.pageNames[2]).state);
     const currentRoute = currentRouteState?.routes[currentRouteState?.routes.length - 1];
 
     const addSearchHistory = async (text) => {

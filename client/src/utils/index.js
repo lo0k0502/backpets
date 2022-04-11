@@ -9,3 +9,71 @@ export const constants = _constants;
 
 export const isEmptyObject = (obj) => !Object.keys(obj).length;
 export const isAsyncFunction = (fn) => fn instanceof _constants.AsyncFunction;
+
+export const pageNameENtoCH = (pageName) => {
+    switch (pageName) {
+        case 'ProfileRoute': return '個人檔案';
+        case 'Map': return '地圖';
+        case 'PostsRoute': return '貼文';
+        case 'StoreRoute': return '商店';
+        case 'AdoptionRoute': return '領養專區';
+        default: throw new Error(`Unknown pageName: ${pageName}`);
+    }
+};
+
+export const routeNametoTitle = (routeName) => {
+    switch (routeName) {
+        case 'PostsRoute':
+        case 'PostsTab':
+        case 'Profile':
+            return 'BackPets';
+        case 'ChangePassword': return '更改密碼';
+        case 'EditProfile': return '編輯個人資料';
+        case 'PetPassports': return '寵物護照列表';
+        case 'SelfMissions': return '發布過的貼文';
+        case 'Clue': return '線索';
+        case 'SelfClues': return '回報過的線索';
+        case 'Feedback': return '意見回饋';
+        case 'Setting': return '設定';
+        default: return routeName;
+    }
+};
+
+export const postTypeENtoCH = (postType) => {
+    switch (postType) {
+        case 'mission': return '任務';
+        case 'report': return '通報';
+        case 'putUpForAdoption': return '送養';
+        default: throw new Error('Unknown postType!');
+    }
+};
+
+export const iconCHtoEN = (name) => {
+    switch (name) {
+        case '貓': return 'cat';
+        case '狗': return 'dog';
+        case '兔子': return 'rabbit';
+        case '魚': return 'fish';
+        case '昆蟲': return 'bee';
+        case '鳥類': return 'owl';
+        case '牛': return 'cow';
+        case '豬': return 'pig';
+        case '羊': return 'sheep';
+        case '烏龜': return 'tortoise';
+        case '驢': return 'donkey';
+        case '家禽': return 'duck';
+        case '大象': return 'elephant';
+        case '企鵝': return 'penguin';
+        case '貓頭鷹': return 'owl';
+        case '熊貓': return 'panda';
+        case '鼠類': return 'rodent';
+        case '爬蟲類': return 'google-downasaur';
+        case '蜘蛛': return 'spider';
+        case '流浪動物': return 'paw';
+        case '具攻擊性': return 'close-octagon-outline';
+        case '受傷動物': return 'needle';
+        case '死亡動物': return 'emoticon-dead-outline';
+        case '其他': return 'pound';
+        default: return null;
+    }
+};
