@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
 import { List } from 'react-native-paper';
+import { postsContext } from '../../../context';
 
-export default ({
-  onItemPress = () => {},
-}) => {
+export default () => {
   const user = useSelector(selectUser);
+  const { onSearchHistoryPress } = useContext(postsContext);
 
   return (
     <List.Section
@@ -22,7 +22,7 @@ export default ({
         <List.Item
           key={index}
           title={history}
-          onPress={() => onItemPress(history)}
+          onPress={() => onSearchHistoryPress(history)}
           style={{ height: 50, justifyContent: 'center' }}
           right={() => <List.Icon icon='arrow-top-left' color='gray' />}
         />

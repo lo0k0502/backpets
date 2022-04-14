@@ -1,13 +1,16 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Alert, RefreshControl, ScrollView } from 'react-native';
 import { Avatar, Divider, IconButton, List, Portal } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 import { SERVERURL } from '../../../api/API';
-import Context from '../../../context';
+import { useSelfPets } from '../../../hooks';
+import { selectUser } from '../../../redux/userSlice';
 import EditPetPassportDialog from './EditPetPassportDialog';
 import PetPassportDialog from './PetPassportDialog';
 
-export default ({ navigation }) =>  {
-    const { selfPets, refreshSelfPets, isFetchingSelfPets } = useContext(Context);
+export default () =>  {
+    const user = useSelector(selectUser);
+    const { selfPets, refreshSelfPets, isFetchingSelfPets } = useSelfPets(user.info?._id);
 
     const [petPassportsDialog, setPetPassportDialog] = useState(false);// Whether petPassports dialog is open
     const [editPetPassportDialog, setEditPetPassportDialog] = useState(false);// Whether editPetPassports dialog is open

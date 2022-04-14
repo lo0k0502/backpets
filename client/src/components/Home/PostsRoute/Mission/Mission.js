@@ -18,7 +18,7 @@ import MissionDialog from './MissionDialog';
 import MissionCard from './MissionCard';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
-import { useMissions, usePets } from '../../../../hooks';
+import { useMissions, usePets, useSelfPets } from '../../../../hooks';
 import ClueDialog from './ClueDialog';
 import TagsView from '../TagsView';
 import EditMissionDialog from './EditMissionDialog';
@@ -62,7 +62,8 @@ export default ({ navigation }) => {
     const user = useSelector(selectUser);
     const { allMissions, refreshAllMissions, isFetchingAllMissions } = useMissions();
     const { pets, isFetching: isFetchingPets } = usePets();
-    const { selfPets, refreshSelfPets, isFetchingSelfPets, showSnackbar } = useContext(Context);
+    const { selfPets, refreshSelfPets, isFetchingSelfPets } = useSelfPets(user.info?._id);
+    const { showSnackbar } = useContext(Context);
     const { searchText } = useContext(postsContext);
 
     const [animalTags, setAnimalTags] = useState(constants.animalTagsArray.map(tagName => ({ name: tagName, selected: false })));

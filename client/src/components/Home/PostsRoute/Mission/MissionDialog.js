@@ -112,6 +112,7 @@ export default ({
     }, [currentLatitude, currentLongitude]);
 
     useUpdateEffect(() => {
+        if (!petsDialog) return;
         refreshAllMissions();
         refreshSelfPets();
     }, null, [petsDialog]);

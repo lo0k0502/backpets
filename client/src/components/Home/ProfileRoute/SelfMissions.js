@@ -1,11 +1,14 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { Title } from 'react-native-paper';
-import Context from '../../../context';
+import { useSelector } from 'react-redux';
+import { useSelfMissions } from '../../../hooks';
+import { selectUser } from '../../../redux/userSlice';
 import MissionCard from '../PostsRoute/Mission/MissionCard';
 
 export default ({ navigation }) => {
-    const { selfMissions, refreshSelfMissions, isFetchingSelfMissions } = useContext(Context);
+    const user = useSelector(selectUser);
+    const { selfMissions, refreshSelfMissions, isFetchingSelfMissions } = useSelfMissions(user.info?._id);
 
     return (
         <ScrollView

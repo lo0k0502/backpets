@@ -72,25 +72,17 @@ export default (props) => {
             <postsContext.Provider
                 value={{
                     searchText,
+                    onSearchHistoryPress: item => {
+                        setSearchText(item);
+                        addSearchHistory(item);
+                        props.navigation.navigate('PostsTab');
+                    },
                 }}
             >
                 <PostsStack.Navigator screenOptions={{ headerShown: false }}>
                     <PostsStack.Screen name='PostsTab' component={PostsTab} />
-                    <PostsStack.Screen name='Search'>
-                    {props => (
-                        <Search
-                            {...props}
-                            onItemPress={item => {
-                                setSearchText(item);
-                                addSearchHistory(item);
-                                props.navigation.navigate('PostsTab');
-                            }}
-                        />
-                    )}
-                    </PostsStack.Screen>
-                    <PostsStack.Screen name='Clue'>
-                    {props => <Clue {...props} />}
-                    </PostsStack.Screen>
+                    <PostsStack.Screen name='Search' component={Search} />
+                    <PostsStack.Screen name='Clue' component={Clue} />
                 </PostsStack.Navigator>
             </postsContext.Provider>
         </>

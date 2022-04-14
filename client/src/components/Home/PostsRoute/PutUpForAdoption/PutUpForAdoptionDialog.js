@@ -88,6 +88,7 @@ export default ({
     };
 
     useUpdateEffect(() => {
+        if (!petsDialog) return;
         refreshAllPutUpForAdoptions();
         refreshSelfPets();
     }, null, [petsDialog]);

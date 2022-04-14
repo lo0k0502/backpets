@@ -1,46 +1,37 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Portal, Snackbar, useTheme } from 'react-native-paper';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import DrawerContent from './drawer';
 import PostsRoute from './PostsRoute/PostsRoute';
 import MapRoute from './MapRoute/MapRoute';
-import Store from './StoreRoute/StoreRoute';
+import StoreRoute from './StoreRoute/StoreRoute';
 import ProfileRoute from './ProfileRoute/ProfileRoute';
 import AdoptionRoute from './AdoptionRoute/AdoptionRoute';
-import Feedback from './Feedback';
-import Appbar from './Appbar';
-import Context from '../../context';
-import { useSelfClues, useSelfMissions, useSelfPets } from '../../hooks';
+import Context, { initialLocalStateContext } from '../../context';
+import { useSelfClues } from '../../hooks';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../redux/userSlice';
-import Setting from './Setting';
 import { constants } from '../../utils';
 
-const Drawer = createDrawerNavigator();
 const Tabs = createMaterialBottomTabNavigator();
 
-export default ({ logoutback, initialLocalState }) => {
+export default () => {
     const user = useSelector(selectUser);
     const { colors } = useTheme();
+    const initialLocalState = useContext(initialLocalStateContext);
 
     const [snackbar, setSnackbar] = useState(false);
     const [snackbarText, setSnackbarText] = useState('');
     const [snackbarAction, setSnackbarAction] = useState({});
 
-    const selfMissionsHook = useSelfMissions(user.info?._id);
     const selfCluesHook = useSelfClues(user.info?._id);
-    const selfPetsHook = useSelfPets(user.info?._id);
 
     return (
         <Context.Provider
             value={{
-                ...selfMissionsHook,
                 ...selfCluesHook,
                 getSelfClueByClueId: clueId => selfCluesHook.selfClues.find(_clue => _clue._id === clueId) || {},
-                ...selfPetsHook,
                 showSnackbar: (text, action) => {
                     setSnackbarText(text);
                     setSnackbarAction(action);
@@ -48,87 +39,61 @@ export default ({ logoutback, initialLocalState }) => {
                 },
             }}
         >
-            <Drawer.Navigator
-                useLegacyImplementation={true}
-                drawerContent={props => <DrawerContent {...props} logoutback={logoutback} />}
+            <Tabs.Navigator
+                shifting
+                initialRouteName={initialLocalState.initialRoute}
+                barStyle={{
+                    position: 'absolute',
+                    right: 10,
+                    left: 10,
+                    bottom: 5,
+                    borderRadius: 100,
+                    overflow: 'hidden',
+                }}
+                screenOptions={{ tabBarColor: colors.primary }}
+                backBehavior='initialRoute'
             >
-                <Drawer.Screen name='BottomNavigation' options={{ headerShown: false }}>
-                {() => (
-                    <Tabs.Navigator
-                        shifting
-                        initialRouteName={initialLocalState.initialRoute}
-                        barStyle={{
-                            position: 'absolute',
-                            right: 10,
-                            left: 10,
-                            bottom: 5,
-                            borderRadius: 100,
-                            overflow: 'hidden',
-                        }}
-                        screenOptions={{ tabBarColor: colors.primary }}
-                        backBehavior='initialRoute'
-                    >
-                        <Tabs.Screen
-                            name={constants.pageNames[0]}
-                            options={{
-                                title: '個人檔案',
-                                tabBarIcon: ({ color }) => <MaterialCommunityIcons name='account-circle-outline' color={color} size={20} />,
-                            }}
-                        >
-                        {props => <ProfileRoute {...props} />}
-                        </Tabs.Screen>
-                        <Tabs.Screen
-                            name={constants.pageNames[1]}
-                            options={{
-                                title: '地圖',
-                                tabBarIcon: ({ color }) => <MaterialCommunityIcons name='map' color={color} size={20} />,
-                            }}
-                        >
-                        {props => <MapRoute {...props} />}
-                        </Tabs.Screen>
-                        <Tabs.Screen
-                            name={constants.pageNames[2]}
-                            options={{
-                                title: '貼文',
-                                tabBarIcon: ({ color }) => <MaterialCommunityIcons name='note-text-outline' color={color} size={20} />,
-                            }}
-                        >
-                        {props => <PostsRoute {...props} />}
-                        </Tabs.Screen>
-                        <Tabs.Screen
-                            name={constants.pageNames[3]}
-                            options={{
-                                title: '商店',
-                                tabBarIcon: ({ color }) => <MaterialCommunityIcons name='store-outline' color={color} size={20} />,
-                            }}
-                        >
-                        {props => <Store {...props} />}
-                        </Tabs.Screen>
-                        <Tabs.Screen
-                            name={constants.pageNames[4]}
-                            options={{
-                                title: '領養',
-                                tabBarIcon: ({ color }) => <MaterialCommunityIcons name='home-heart' color={color} size={20} />,
-                            }}
-                        >
-                        {props => <AdoptionRoute {...props} />}
-                        </Tabs.Screen>
-                    </Tabs.Navigator>
-                )}
-                </Drawer.Screen>
-                <Drawer.Screen
-                    name='Feedback'
-                    options={{ header: props => <Appbar {...props} /> }}
-                >
-                {props => <Feedback {...props} />}
-                </Drawer.Screen>
-                <Drawer.Screen
-                    name='Setting'
-                    options={{ header: props => <Appbar {...props} /> }}
-                >
-                {props => <Setting {...props} />}
-                </Drawer.Screen>
-            </Drawer.Navigator>
+                <Tabs.Screen
+                    name={constants.pageNames[0]}
+                    options={{
+                        title: '個人檔案',
+                        tabBarIcon: ({ color }) => <MaterialCommunityIcons name='account-circle-outline' color={color} size={20} />,
+                    }}
+                    component={ProfileRoute}
+                />
+                <Tabs.Screen
+                    name={constants.pageNames[1]}
+                    options={{
+                        title: '地圖',
+                        tabBarIcon: ({ color }) => <MaterialCommunityIcons name='map' color={color} size={20} />,
+                    }}
+                    component={MapRoute}
+                />
+                <Tabs.Screen
+                    name={constants.pageNames[2]}
+                    options={{
+                        title: '貼文',
+                        tabBarIcon: ({ color }) => <MaterialCommunityIcons name='note-text-outline' color={color} size={20} />,
+                    }}
+                    component={PostsRoute}
+                />
+                <Tabs.Screen
+                    name={constants.pageNames[3]}
+                    options={{
+                        title: '商店',
+                        tabBarIcon: ({ color }) => <MaterialCommunityIcons name='store-outline' color={color} size={20} />,
+                    }}
+                    component={StoreRoute}
+                />
+                <Tabs.Screen
+                    name={constants.pageNames[4]}
+                    options={{
+                        title: '領養',
+                        tabBarIcon: ({ color }) => <MaterialCommunityIcons name='home-heart' color={color} size={20} />,
+                    }}
+                    component={AdoptionRoute}
+                />
+            </Tabs.Navigator>
             <Portal>
                 <Snackbar
                     visible={snackbar}

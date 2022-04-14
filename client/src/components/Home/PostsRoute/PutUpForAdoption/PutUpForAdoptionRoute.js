@@ -12,8 +12,10 @@ import {
   Subheading,
   Title,
 } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 import Context, { postsContext } from '../../../../context';
-import { usePets, usePutUpForAdoptions } from '../../../../hooks';
+import { usePets, usePutUpForAdoptions, useSelfPets } from '../../../../hooks';
+import { selectUser } from '../../../../redux/userSlice';
 import { constants } from '../../../../utils';
 import SelectButton from '../../SelectButton';
 import TagsView from '../TagsView';
@@ -23,9 +25,11 @@ import PutUpForAdoptionCard from './PutUpForAdoptionCard';
 import PutUpForAdoptionDialog from './PutUpForAdoptionDialog';
 
 export default () => {
+  const user = useSelector(selectUser);
   const { allPutUpForAdoptions, refreshAllPutUpForAdoptions, isFetchingAllPutUpForAdoptions } = usePutUpForAdoptions();
   const { pets, isFetching: isFetchingPets } = usePets();
-  const { selfPets, refreshSelfPets, isFetchingSelfPets, showSnackbar } = useContext(Context);
+  const { selfPets, refreshSelfPets, isFetchingSelfPets } = useSelfPets(user.info?._id);
+  const { showSnackbar } = useContext(Context);
   const { searchText } = useContext(postsContext);
 
   const [putUpForAdoptionDialog, setPutUpForAdoptionDialog] = useState(false);// Whether putUpForAdoption dialog is open
