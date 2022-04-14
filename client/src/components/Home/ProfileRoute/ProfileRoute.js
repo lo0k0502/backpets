@@ -29,30 +29,14 @@ export default ({ route, navigation }) => {
                 headerShown: true,
             }}
         >
-            <ProfileStack.Screen name='Profile'>
-            {props => <Profile {...props} />}
-            </ProfileStack.Screen>
-            <ProfileStack.Screen name='EditProfile'>
-            {props => <EditProfile {...props} />}
-            </ProfileStack.Screen>
-            <ProfileStack.Screen name='PetPassports'>
-            {props => <PetPassports {...props} />}
-            </ProfileStack.Screen>
-            <ProfileStack.Screen name='ChangePassword'>
-            {props => <ChangePassword {...props} />}
-            </ProfileStack.Screen>
-            <ProfileStack.Screen name='SelfMissions'>
-            {props => <SelfMissions {...props} />}
-            </ProfileStack.Screen>
-            <ProfileStack.Screen name='SelfClues'>
-            {props => <SelfClues {...props} />}
-            </ProfileStack.Screen>
-            <ProfileStack.Screen name='Clue'>
-            {props => <Clue {...props} />}
-            </ProfileStack.Screen>
-            <ProfileStack.Screen name='PointRecord'>
-            {props => <PointRecord {...props} />}
-            </ProfileStack.Screen>
+            <ProfileStack.Screen name='Profile' component={Profile} />
+            <ProfileStack.Screen name='EditProfile' component={EditProfile} />
+            <ProfileStack.Screen name='PetPassports' component={PetPassports} />
+            <ProfileStack.Screen name='ChangePassword' component={ChangePassword} />
+            <ProfileStack.Screen name='SelfMissions' component={SelfMissions} />
+            <ProfileStack.Screen name='SelfClues' component={SelfClues} />
+            <ProfileStack.Screen name='Clue' component={Clue} />
+            <ProfileStack.Screen name='PointRecord' component={PointRecord} />
         </ProfileStack.Navigator>
     );
 };

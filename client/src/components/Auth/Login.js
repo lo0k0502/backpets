@@ -58,7 +58,7 @@ export default ({ navigation, setSignInState }) => {
                     return;
                 }
             }
-            
+
             unwrapResult(await dispatch(loginUser({ email, password })));
 
             setEmail('');
@@ -71,7 +71,7 @@ export default ({ navigation, setSignInState }) => {
             console.log('While logging in:', error);
             setErrorMsg(error.message);
         }
-        
+
         setLoginLoading(false);
     };
 
