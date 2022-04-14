@@ -10,7 +10,7 @@ import {
   Portal,
   Title,
 } from 'react-native-paper';
-import Context from '../../../../context';
+import Context, { postsContext } from '../../../../context';
 import { useReports } from '../../../../hooks';
 import { reportTagsArray } from '../../../../utils/constants';
 import TagsView from '../TagsView';
@@ -19,10 +19,10 @@ import EditReportDialog from './EditReportDialog';
 import ReportCard from './ReportCard';
 import ReportDialog from './ReportDialog';
 
-export default ({ searchTextState }) => {
-  const [searchText, setSearchText] = searchTextState;
+export default () => {
   const { allReports, refreshAllReports, isFetchingAllReports } = useReports();
   const { showSnackbar } = useContext(Context);
+  const { searchText } = useContext(postsContext);
 
   const [reportTags, setReportTags] = useState(reportTagsArray.map(tagName => ({ name: tagName, selected: false })));
 

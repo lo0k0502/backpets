@@ -24,7 +24,7 @@ import TagsView from '../TagsView';
 import EditMissionDialog from './EditMissionDialog';
 import { constants } from '../../../../utils';
 import SelectButton from '../../SelectButton';
-import Context from '../../../../context';
+import Context, { postsContext } from '../../../../context';
 import ViolationReportDialog from '../ViolationReportDialog';
 
 const styles = StyleSheet.create({
@@ -58,12 +58,12 @@ const styles = StyleSheet.create({
         },
     });
 
-export default ({ navigation, searchTextState }) => {
-    const [searchText, setSearchText] = searchTextState;
+export default ({ navigation }) => {
     const user = useSelector(selectUser);
     const { allMissions, refreshAllMissions, isFetchingAllMissions } = useMissions();
     const { pets, isFetching: isFetchingPets } = usePets();
     const { selfPets, refreshSelfPets, isFetchingSelfPets, showSnackbar } = useContext(Context);
+    const { searchText } = useContext(postsContext);
 
     const [animalTags, setAnimalTags] = useState(constants.animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
     const [completed, setCompleted] = useState(constants.completedOptions[0]);

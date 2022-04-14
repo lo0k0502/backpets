@@ -12,6 +12,7 @@ import { updateSearchHistory } from '../../../redux/userReducer';
 import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { constants } from '../../../utils';
+import { postsContext } from '../../../context';
 
 const PostsStack = createStackNavigator();
 
@@ -55,7 +56,7 @@ export default (props) => {
                             }}
                             onBackPress={() => {
                                 setSearchText('');
-                                props.navigation.pop(1);
+                                if (currentRoute?.name === 'Search') props.navigation.navigate('PostsTab');
                             }}
                             onMenuPress={props.navigation.toggleDrawer}
                             onClearButtonPress={() => {
@@ -68,27 +69,30 @@ export default (props) => {
                     <Appbar routeName={currentRoute?.name} {...props} />
                 )
             }
-            <PostsStack.Navigator screenOptions={{ headerShown: false }}>
-                <PostsStack.Screen name='PostsTab'>
-                {props => <PostsTab {...props} searchTextState={[searchText, setSearchText]} />}
-                </PostsStack.Screen>
-                <PostsStack.Screen name='Search'>
-                {props => (
-                    <Search
-                        {...props}
-                        searchTextState={[searchText, setSearchText]}
-                        onItemPress={item => {
-                            setSearchText(item);
-                            addSearchHistory(item);
-                            props.navigation.navigate('PostsTab');
-                        }}
-                    />
-                )}
-                </PostsStack.Screen>
-                <PostsStack.Screen name='Clue'>
-                {props => <Clue {...props} />}
-                </PostsStack.Screen>
-            </PostsStack.Navigator>
+            <postsContext.Provider
+                value={{
+                    searchText,
+                }}
+            >
+                <PostsStack.Navigator screenOptions={{ headerShown: false }}>
+                    <PostsStack.Screen name='PostsTab' component={PostsTab} />
+                    <PostsStack.Screen name='Search'>
+                    {props => (
+                        <Search
+                            {...props}
+                            onItemPress={item => {
+                                setSearchText(item);
+                                addSearchHistory(item);
+                                props.navigation.navigate('PostsTab');
+                            }}
+                        />
+                    )}
+                    </PostsStack.Screen>
+                    <PostsStack.Screen name='Clue'>
+                    {props => <Clue {...props} />}
+                    </PostsStack.Screen>
+                </PostsStack.Navigator>
+            </postsContext.Provider>
         </>
     );
 };

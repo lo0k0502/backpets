@@ -12,7 +12,7 @@ import {
   Subheading,
   Title,
 } from 'react-native-paper';
-import Context from '../../../../context';
+import Context, { postsContext } from '../../../../context';
 import { usePets, usePutUpForAdoptions } from '../../../../hooks';
 import { constants } from '../../../../utils';
 import SelectButton from '../../SelectButton';
@@ -22,11 +22,11 @@ import EditPutUpForAdoptionDialog from './EditPutUpForAdoptionDialog';
 import PutUpForAdoptionCard from './PutUpForAdoptionCard';
 import PutUpForAdoptionDialog from './PutUpForAdoptionDialog';
 
-export default ({ searchTextState }) => {
-  const [searchText, setSearchText] = searchTextState;
+export default () => {
   const { allPutUpForAdoptions, refreshAllPutUpForAdoptions, isFetchingAllPutUpForAdoptions } = usePutUpForAdoptions();
   const { pets, isFetching: isFetchingPets } = usePets();
   const { selfPets, refreshSelfPets, isFetchingSelfPets, showSnackbar } = useContext(Context);
+  const { searchText } = useContext(postsContext);
 
   const [putUpForAdoptionDialog, setPutUpForAdoptionDialog] = useState(false);// Whether putUpForAdoption dialog is open
   const [editPutUpForAdoptionDialog, setEditPutUpForAdoptionDialog] = useState(false);// Whether edit putUpForAdoption dialog is open
