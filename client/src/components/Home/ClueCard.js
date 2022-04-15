@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
+import { Image, View } from 'react-native';
 import {
     Card,
     Avatar,
@@ -78,7 +78,7 @@ export default ({
                 elevation: 0,
             }}
         >
-            <View style={{ alignItems: 'flex-start' }}>
+            <View>
                 <Card.Title
                     title={poster.username}
                     subtitle={moment(clue.post_time).fromNow()}
@@ -124,14 +124,10 @@ export default ({
                         )
                     )}
                 />
-                <Card.Cover
+                <Image
                     source={{ uri: `${SERVERURL}/image/${clue.photoId}` }}
-                    style={{
-                        width: 300,
-                        height: 200,
-                        alignSelf: 'center',
-                        marginVertical: 5,
-                    }}
+                    style={{ height: 300 }}
+                    resizeMode='contain'
                 />
                 <Paragraph style={{ padding: 10 }}>
                     <Subheading style={{ color: colors.primary }}>{'說明:\n'}</Subheading>

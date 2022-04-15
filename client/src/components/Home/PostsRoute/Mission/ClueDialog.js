@@ -27,6 +27,7 @@ import { useSelector } from 'react-redux';
 import { addClue, uploadImage } from '../../../../api';
 import { useCurrentLocation } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
+import { shrinkImageToTargetSize } from '../../../../utils';
 
 export default ({ visible, close, missionId }) => {
     const user = useSelector(selectUser);
@@ -44,6 +45,10 @@ export default ({ visible, close, missionId }) => {
         longitudeDelta: 0.003,
     });
     const [photoUrl, setPhotoUrl] = useState('');
+    const [photoSize, setPhotoSize] = useState({
+        width: 300,
+        height: 200,
+    });
 
     const [contentErrorMsg, setContentErrorMsg] = useState('');
     const [photoUrlErrorMsg, setPhotoUrlErrorMsg] = useState('');
@@ -96,7 +101,6 @@ export default ({ visible, close, missionId }) => {
         let result = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [3, 2],
             quality: 1,
         });
 
@@ -107,6 +111,7 @@ export default ({ visible, close, missionId }) => {
         // If the final result is not cancelled, change the current photo url to the result photo's local url.
         if (!result.cancelled) setPhotoUrl(result.uri);
 
+        setPhotoSize(shrinkImageToTargetSize(result.width, result.height, 300));
 
         setIsImgLoading(false);
     };
@@ -248,8 +253,7 @@ export default ({ visible, close, missionId }) => {
                         <Card.Cover
                             source={{ uri: photoUrl }}
                             style={{ 
-                                width: 300,
-                                height: 200,
+                                ...photoSize,
                                 alignSelf: 'center',
                             }}
                         />

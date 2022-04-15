@@ -28,6 +28,7 @@ import { SERVERURL } from '../../../../api/API';
 import { useCurrentLocation } from '../../../../hooks';
 import { reportTagsArray } from '../../../../utils/constants';
 import TagsView from '../TagsView';
+import { shrinkImageToTargetSize } from '../../../../utils';
 
 export default ({ report, visible, close, refreshAllReports }) => {
     const { currentLatitude, currentLongitude } = useCurrentLocation();
@@ -45,6 +46,10 @@ export default ({ report, visible, close, refreshAllReports }) => {
         longitudeDelta: 0.003,
     });
     const [photoUrl, setPhotoUrl] = useState('');
+    const [photoSize, setPhotoSize] = useState({
+        width: 300,
+        height: 200,
+    });
 
     const [contentErrorMsg, setContentErrorMsg] = useState('');
     const [photoUrlErrorMsg, setPhotoUrlErrorMsg] = useState('');
@@ -128,7 +133,6 @@ export default ({ report, visible, close, refreshAllReports }) => {
         let result = await launchImageLibraryAsync({
             mediaTypes: MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [3, 2],
             quality: 1,
         });
 
@@ -139,6 +143,7 @@ export default ({ report, visible, close, refreshAllReports }) => {
         // If the final result is not cancelled, change the current photo url to the result photo's local url.
         if (!result.cancelled) setPhotoUrl(result.uri);
 
+        setPhotoSize(shrinkImageToTargetSize(result.width, result.height, 300));
 
         setIsImgLoading(false);
     };
@@ -294,9 +299,8 @@ export default ({ report, visible, close, refreshAllReports }) => {
                     {photoUrl ? (
                         <Card.Cover
                             source={{ uri: photoUrl }}
-                            style={{ 
-                                width: 300,
-                                height: 200,
+                            style={{
+                                ...photoSize,
                                 alignSelf: 'center',
                             }}
                         />

@@ -9,12 +9,11 @@ import AuthRoute from './components/Auth/AuthRoute';
 import * as SecureStorage from 'expo-secure-store';
 import { logoutUser, tokenRefresh } from './redux/userReducer';
 import { unwrapResult } from '@reduxjs/toolkit';
-import * as Location from 'expo-location';
 import { Button, Text } from 'react-native-paper';
 import { Restart } from 'fiction-expo-restart';
 import AllImages from './components/DevOptions/AllImages';
 import { useOnceUpdateEffect } from './hooks';
-import { constants } from './utils';
+import { askForLocationPermission, constants } from './utils';
 import Appbar from './components/Home/Appbar';
 import Feedback from './components/Home/Feedback';
 import Setting from './components/Home/Setting';
@@ -45,27 +44,27 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
 
   // Logout with alert
   const logout = () => {
-      Alert.alert('正在登出', '確定要登出嗎?', [
-          {
-              text: '登出',
-              onPress: async () => {
-                  try {
-                    const originalLocalState = JSON.parse(await SecureStorage.getItemAsync('localState'));
-                    await SecureStorage.setItemAsync('localState', JSON.stringify({
-                      ...originalLocalState,
-                      rememberMe: 'unchecked',
-                    }));
-                    setInitialLocalState(JSON.parse(await SecureStorage.getItemAsync('localState')));
-                    unwrapResult(await dispatch(logoutUser({})));
-                    console.log('Not logged in, going back...');
-                    setSignInState(false);
-                  } catch (error) {
-                      console.log('While logging out:', error);
-                  }
-              },
-          },
-          { text: '取消' },
-      ]);
+    Alert.alert('正在登出', '確定要登出嗎?', [
+      { text: '取消' },
+      {
+        text: '登出',
+        onPress: async () => {
+          try {
+            const originalLocalState = JSON.parse(await SecureStorage.getItemAsync('localState'));
+            await SecureStorage.setItemAsync('localState', JSON.stringify({
+              ...originalLocalState,
+              rememberMe: 'unchecked',
+            }));
+            setInitialLocalState(JSON.parse(await SecureStorage.getItemAsync('localState')));
+            unwrapResult(await dispatch(logoutUser({})));
+            console.log('Not logged in, going back...');
+            setSignInState(false);
+          } catch (error) {
+              console.log('While logging out:', error);
+          }
+        },
+      },
+    ]);
   };
 
   const Main = () => (
@@ -132,11 +131,10 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
       const tokens = JSON.parse(await SecureStorage.getItemAsync('tokens'));
       if (tokens?.refreshToken) {
         try {
-          if ((await Location.getForegroundPermissionsAsync()).status !== 'granted') {
-            if ((await Location.requestForegroundPermissionsAsync()).status !== 'granted') {
-              if (isMounted) setErrorMsg('權限不足!我們需要存取位置資訊來運行應用程式!');
-              return;
-            }
+          const granted = await askForLocationPermission();
+          if (!granted) {
+            if (isMounted) setErrorMsg('權限不足!我們需要存取位置資訊來運行應用程式!');
+            return;
           }
 
           unwrapResult(await dispatch(tokenRefresh({ 

@@ -4,13 +4,13 @@ import { TextInput, Button, Divider, HelperText, useTheme, Checkbox } from 'reac
 import { useDispatch } from 'react-redux';
 import * as Google from 'expo-google-app-auth';
 import { useFocusEffect } from '@react-navigation/native';
-import * as Location from 'expo-location';
 import { GOOGLE_ANDROID_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from '@env';
 import * as SecureStorage from 'expo-secure-store';
 
 import { loginUser, googleLogin } from '../../redux/userReducer';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useUpdateEffect } from '../../hooks';
+import { askForLocationPermission } from '../../utils';
 
 const styles = StyleSheet.create({
     input: {
@@ -51,12 +51,11 @@ export default ({ navigation, setSignInState }) => {
         setLoginLoading(true);
 
         try {
-            if ((await Location.getForegroundPermissionsAsync()).status !== 'granted') {
-                if ((await Location.requestForegroundPermissionsAsync()).status !== 'granted') {
-                    setErrorMsg('權限不足!我們需要存取位置資訊來運行應用程式!');
-                    setLoginLoading(false);
-                    return;
-                }
+            const granted = await askForLocationPermission();
+            if (!granted) {
+                setErrorMsg('權限不足!我們需要存取位置資訊來運行應用程式!');
+                setLoginLoading(false);
+                return;
             }
 
             unwrapResult(await dispatch(loginUser({ email, password })));

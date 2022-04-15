@@ -1,4 +1,5 @@
 import * as _constants from './constants';
+import * as Location from 'expo-location';
 
 export default {
     constants: _constants,
@@ -76,4 +77,68 @@ export const iconCHtoEN = (name) => {
         case '其他': return 'pound';
         default: return null;
     }
+};
+
+export const askForLocationPermission = async () => {
+    const previousPermission = await Location.getForegroundPermissionsAsync();
+    console.log('previousPermission: ', previousPermission)
+    if (previousPermission.status !== 'granted') {
+      const askedPermission = await Location.requestForegroundPermissionsAsync();
+      console.log('askedPermission: ', askedPermission)
+      if (askedPermission.status !== 'granted') {
+        return false;
+      }
+    }
+    return true;
+};
+
+/**
+ * 
+ * @param {Number} width 
+ * @param {Number} height 
+ * @param {Number} maxWidth 
+ * @param {Number} maxHeight 
+ * @param {Number} shrinkRatio 
+ * @returns {{
+ *  width: Number,
+ *  height: Number,
+ * }}
+ */
+export const shrinkImage = (width, height, maxWidth, maxHeight, shrinkRatio = 2 / 3) => {
+    let w = width;
+    let h = height;
+
+    maxWidth = maxWidth || Infinity;
+    maxHeight = maxHeight || Infinity;
+console.log(w, h)
+    while (w > maxWidth || h > maxHeight) {
+        w *= shrinkRatio;
+        h *= shrinkRatio;
+        console.log('after', w, h)
+    }
+
+    return {
+        width: w,
+        height: h,
+    };
+};
+
+export const shrinkImageToTargetSize = (width, height, targetWidth, targetHeight) => {
+    let w = width;
+    let h = height;
+
+    if (!!targetWidth) {
+        w = targetWidth;
+        h *= targetWidth / width;
+    } else {
+        if (!targetHeight) throw new Error('At least one target should be provided!');
+
+        h = targetHeight;
+        w *= targetHeight / height;
+    }
+
+    return {
+        width: w,
+        height: h,
+    };
 };

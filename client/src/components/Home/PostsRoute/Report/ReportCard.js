@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 import React, { useState } from 'react';
-import { View } from 'react-native';
+import { Image, View } from 'react-native';
 import {
     Avatar,
     Button,
@@ -51,7 +51,7 @@ export default ({
                 elevation: 0,
             }}
         >
-            <View style={{ alignItems: 'flex-start' }}>
+            <View>
                 <Card.Title
                     title={poster.username} 
                     subtitle={moment(report.post_time).fromNow()} 
@@ -108,14 +108,10 @@ export default ({
                         </Menu>
                     )}
                 />
-                <Card.Cover
+                <Image
                     source={{ uri: `${SERVERURL}/image/${report.photoId}` }}
-                    style={{
-                        width: 300,
-                        height: 200,
-                        alignSelf: 'center',
-                        marginVertical: 5,
-                    }}
+                    style={{ height: 300 }}
+                    resizeMode='contain'
                 />
                 <Paragraph style={{ padding: 10 }}>
                     <Subheading style={{ color: colors.primary }}>{'說明:\n'}</Subheading>
