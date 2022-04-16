@@ -1,13 +1,32 @@
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import MapView, { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { Colors, useTheme } from 'react-native-paper';
+import { Colors, useTheme, FAB } from 'react-native-paper';
 import { useCurrentLocation, useMissions, useReports, usePets } from '../../../hooks';
 import PostCallout from './PostCallout';
 import AppSearchbar from '../AppSearchbar';
 import TagsView from '../PostsRoute/TagsView';
 import { animalTagsArray, reportTagsArray } from '../../../utils/constants';
+
+const styles = StyleSheet.create({
+  map: {
+    ...StyleSheet.absoluteFillObject
+  },
+  fab: {
+    position: 'absolute',
+    right: 20,
+    bottom: 70,
+    elevation: 1,
+  },
+  appSearchBar: { 
+    backgroundColor: 'transparent', 
+    elevation: 10,
+  },
+  tagsView: { 
+    backgroundColor: 'transparent',
+  },
+})
 
 export default ({ route, navigation }) => {
 
@@ -24,6 +43,16 @@ export default ({ route, navigation }) => {
   useFocusEffect(useCallback(() => {
     setRegion(location === null ? { latitude: currentLatitude, longitude: currentLongitude } : location);
   }, [location, currentLatitude, currentLongitude]));
+
+  const mapView = React.createRef();
+  const backToCurrentLocation = () => {
+    mapView.current.animateToRegion({
+      latitude: currentLatitude,
+      longitude: currentLongitude,
+      latitudeDelta: 0.0122,
+      longitudeDelta: 0.003,
+    }, 1000)
+  };
 
   // Search Bar
   const [searchText, setSearchText] = useState('');
@@ -102,10 +131,9 @@ export default ({ route, navigation }) => {
 
     <>
     <MapView
+    ref={ mapView }
       provider='google'
-      style={{
-        ...StyleSheet.absoluteFillObject,
-      }}
+      style={ styles.map }
       region={{
         ...region,
         latitudeDelta: 0.0122,
@@ -113,6 +141,7 @@ export default ({ route, navigation }) => {
       }}
       showsUserLocation={true}
       followsUserLocation={true}
+      showsMyLocationButton={false}
     >
 
       { //Start of Marker for Mission
@@ -161,7 +190,7 @@ export default ({ route, navigation }) => {
       // End of Marker for Mission
       ))} 
 
-      { //Start of Marker for Report
+      {/* { //Start of Marker for Report
       allReports.map((report, index) => (
         allReports.length ? (
           selectedTagsForReport.length || searchText ? (
@@ -205,12 +234,19 @@ export default ({ route, navigation }) => {
           )
         ) : ( null )
       // End of Marker for Report
-      ))}
+      ))} */}
     </MapView>
+
+    <FAB
+      small
+      style = { styles.fab }
+      icon = 'map-marker'
+      onPress = { () => { backToCurrentLocation() }}
+    />
 
     <View style={{ flex: 1 }}>
       <AppSearchbar
-        style={{ backgroundColor: 'transparent', elevation: 10 }}
+        style={ styles.appSearchBar }
         inputStyle={{ backgroundColor: 'white' }}
         outlineColor={colors.primary}
         activeOutlineColor={colors.background2}
@@ -218,8 +254,10 @@ export default ({ route, navigation }) => {
         navigation={navigation}
         searchTextState={[searchText, setSearchText]}
       />
-      <TagsView style={{ backgroundColor: 'transparent' }} tagsState={[animalTags, setAnimalTags]} />
+      <TagsView 
+        style={ styles.tagsView } 
+        tagsState={[animalTags, setAnimalTags]}
+      />
     </View>
-
   </>);
 }
