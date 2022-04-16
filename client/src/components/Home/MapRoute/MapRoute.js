@@ -5,6 +5,7 @@ import MapView, { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Colors, useTheme, FAB } from 'react-native-paper';
 import { useCurrentLocation, useMissions, useReports, usePets } from '../../../hooks';
 import PostCallout from './PostCallout';
+import ReportCallout from './ReportCallout';
 import AppSearchbar from '../AppSearchbar';
 import TagsView from '../PostsRoute/TagsView';
 import { animalTagsArray, reportTagsArray } from '../../../utils/constants';
@@ -146,95 +147,91 @@ export default ({ route, navigation }) => {
 
       { //Start of Marker for Mission
       allMissions.map((mission, index) => (
-        allMissions.length ? (
-          selectedTagsForMission.length || searchText ? (
-            checkMissionsMatchTagAndSearchText() ? (
-              allMissions.filter(checkMissionMatchTagAndSearchText).map( mission => (
-                <Marker
-                  key={mission._id}
-                  coordinate={{
-                    latitude: mission.location.latitude,
-                    longitude: mission.location.longitude,
-                  }}
-                  description={mission.content}
-                  image={require('../../../../assets/map_marker.png')}
-                >
-                  <Callout
-                    tooltip
-                    onPress={() => { } }
-                  >
-                    <PostCallout mission={mission} />
-                  </Callout>
-                </Marker>
-              ))
-            ) : ( null )
-          ) : (
-            <Marker
-              key={index}
-              coordinate={{
-                latitude: mission.location.latitude,
-                longitude: mission.location.longitude,
-              }}
-              description={mission.content}
-              image={require('../../../../assets/map_marker.png')}
-            >
-              <Callout
-                tooltip
-                onPress={() => { } }
+        selectedTagsForMission.length || searchText ? (
+          checkMissionsMatchTagAndSearchText() ? (
+            allMissions.filter(checkMissionMatchTagAndSearchText).map( mission => (
+              <Marker
+                key={mission._id}
+                coordinate={{
+                  latitude: mission.location.latitude,
+                  longitude: mission.location.longitude,
+                }}
+                description={mission.content}
+                image={require('../../../../assets/map_marker.png')}
               >
-                <PostCallout mission={mission} />
-              </Callout>
-            </Marker>
-          )
-        ) : ( null )
+                <Callout
+                  tooltip
+                  onPress={() => { } }
+                >
+                  <PostCallout mission={mission} />
+                </Callout>
+              </Marker>
+            ))
+          ) : ( null )
+        ) : (
+          <Marker
+            key={index}
+            coordinate={{
+              latitude: mission.location.latitude,
+              longitude: mission.location.longitude,
+            }}
+            description={mission.content}
+            image={require('../../../../assets/map_marker.png')}
+          >
+            <Callout
+              tooltip
+              onPress={() => { } }
+            >
+              <PostCallout mission={mission} />
+            </Callout>
+          </Marker>
+        )
       // End of Marker for Mission
       ))} 
 
-      {/* { //Start of Marker for Report
+      { //Start of Marker for Report
       allReports.map((report, index) => (
-        allReports.length ? (
-          selectedTagsForReport.length || searchText ? (
-            checkReportsMatchTagAndSearchText() ? (
-              allReports.filter(checkReportMatchTagAndSearchText).map(report => (
-                <Marker
-                  key={report._id}
-                  coordinate={{
-                    latitude: report.location.latitude,
-                    longitude: report.location.longitude,
-                  }}
-                  description={report.content}
-                  image={require('../../../../assets/map_marker.png')}
-                >
-                  <Callout
-                    tooltip
-                    onPress={() => { } }
-                  >
-                    <PostCallout report={report} />
-                  </Callout>
-                </Marker>
-              ))
-            ) : ( null )
-          ) : (
-            <Marker
-              key={index}
-              coordinate={{
-                latitude: report.location.latitude,
-                longitude: report.location.longitude,
-              }}
-              description={report.content}
-              image={require('../../../../assets/map_marker.png')}
-            >
-              <Callout
-                tooltip
-                onPress={() => { } }
+        selectedTagsForReport.length || searchText ? (
+          checkReportsMatchTagAndSearchText() ? (
+            allReports.filter(checkReportMatchTagAndSearchText).map(report => (
+              <Marker
+                key={report._id}
+                coordinate={{
+                  latitude: report.location.latitude,
+                  longitude: report.location.longitude,
+                }}
+                description={report.content}
+                image={require('../../../../assets/map_marker.png')}
               >
-                <PostCallout report={report} />
-              </Callout>
-            </Marker>
-          )
-        ) : ( null )
+                <Callout
+                  tooltip
+                  onPress={() => { } }
+                >
+                  {/* <ReportCallout report={report} /> */}
+                </Callout>
+              </Marker>
+            ))
+          ) : ( null )
+        ) : (
+          <Marker
+            key={index}
+            coordinate={{
+              latitude: report.location.latitude,
+              longitude: report.location.longitude,
+            }}
+            description={report.content}
+            image={require('../../../../assets/map_marker.png')}
+          >
+            <Callout
+              tooltip
+              onPress={() => { } }
+            >
+              {/* <ReportCallout report={report} /> */}
+            </Callout>
+          </Marker>
+        )
       // End of Marker for Report
-      ))} */}
+      ))}
     </MapView>
 
     <FAB
