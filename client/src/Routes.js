@@ -19,6 +19,7 @@ import Feedback from './components/Home/Feedback';
 import Setting from './components/Home/Setting';
 import DrawerContent from './components/Home/drawer';
 import { initialLocalStateContext } from './context';
+import Clue from './components/Home/Clue';
 
 const styles = StyleSheet.create({
   view: {
@@ -87,6 +88,11 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
           name='Setting'
           options={{ header: props => <Appbar {...props} /> }}
           component={Setting}
+        />
+        <Drawer.Screen
+          name='Clue'
+          options={{ header: props => <Appbar {...props} /> }}
+          component={Clue}
         />
       </Drawer.Navigator>
     </initialLocalStateContext.Provider>

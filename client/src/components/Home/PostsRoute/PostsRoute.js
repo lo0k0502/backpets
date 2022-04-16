@@ -5,7 +5,6 @@ import PostsTab from './PostsTab';
 import Search from './Search';
 import AppSearchbar from '../AppSearchbar';
 import Appbar from '../Appbar';
-import Clue from '../Clue';
 import { useNavigationState } from '@react-navigation/native';
 import { useTheme } from 'react-native-paper';
 import { updateSearchHistory } from '../../../redux/userReducer';
@@ -82,7 +81,6 @@ export default (props) => {
                 <PostsStack.Navigator screenOptions={{ headerShown: false }}>
                     <PostsStack.Screen name='PostsTab' component={PostsTab} />
                     <PostsStack.Screen name='Search' component={Search} />
-                    <PostsStack.Screen name='Clue' component={Clue} />
                 </PostsStack.Navigator>
             </postsContext.Provider>
         </>
