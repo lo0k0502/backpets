@@ -1,38 +1,35 @@
-import { useFocusEffect } from '@react-navigation/native';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Appbar, TextInput, useTheme } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser, setSearchText } from '../../redux/userSlice';
 import { backIcon } from '../../utils/constants';
+import { useFocusEffect } from '@react-navigation/native';
+import { updateSearchHistory } from '../../redux/userReducer';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 export default ({
   route,
+  navigation,
   style = {},
   inputStyle = {},
-  routeName,
-  value,
   outlineColor,
   activeOutlineColor,
-  onChangeText = () => {},
-  onFocus = () => {},
-  onPressOut = () => {},
-  onBackPress = () => {},
-  onMenuPress = () => {},
-  onClearButtonPress = () => {},
-  searchFunction = () => {},
 }) => {
-  const _routeName = routeName || route.name;
+  const user = useSelector(selectUser);
 
   const { colors } = useTheme();
   const textInputRef = useRef();
+  const dispatch = useDispatch();
 
-  const isSearch = _routeName === 'Search';
+  const isSearch = route.name === 'Search';
 
-  useEffect(() => {
-    if (_routeName === 'Search') {
+  useFocusEffect(useCallback(() => {
+    if (isSearch) {
       textInputRef.current.focus();
     } else {
       textInputRef.current.blur();
     }
-  }, [_routeName]);
+  }, [route.name]));
 
   return (
     <Appbar
@@ -45,13 +42,16 @@ export default ({
         mode='outlined'
         placeholder='搜尋'
         selectTextOnFocus
-        value={value}
-        onChangeText={onChangeText}
-        onFocus={onFocus}
-        onPressOut={onPressOut}
-        onSubmitEditing={e => {
+        value={user.searchText}
+        onChangeText={text => dispatch(setSearchText(text))}
+        onPressOut={() => {
+          if (!isSearch) navigation.navigate('Search');
+        }}
+        onSubmitEditing={async e => {
           if (!e.nativeEvent.text) return;
-          searchFunction();
+
+          unwrapResult(await dispatch(updateSearchHistory({ searchHistory: text })));
+          if (isSearch) navigation.goBack();
         }}
         dense
         style={{
@@ -70,14 +70,17 @@ export default ({
               name={backIcon}
               color='gray'
               forceTextInputFocus={false}
-              onPress={onBackPress}
+              onPress={() => {
+                dispatch(setSearchText(''));
+                if (isSearch) navigation.goBack();
+              }}
             />
           ) : (
             <TextInput.Icon
               name='menu'
               color='gray'
               forceTextInputFocus={false}
-              onPress={onMenuPress}
+              onPress={navigation.toggleDrawer}
             />
           )
         }
@@ -85,7 +88,10 @@ export default ({
           <TextInput.Icon
             name='close'
             color='gray'
-            onPress={onClearButtonPress}
+            onPress={() => {
+              if (!isSearch) navigation.navigate('Search');
+              dispatch(setSearchText(''));
+            }}
           />
         )}
       />

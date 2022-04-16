@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Dimensions,
     StyleSheet,
@@ -6,7 +6,6 @@ import {
     VirtualizedList,
     Text,
 } from 'react-native';
-import AppSearchbar from '../AppSearchbar';
 
 const boxSize = Dimensions.get('window').width / 2 - 50;
 
@@ -49,16 +48,10 @@ const Item = ({ title }) => (
 );
 
 
-export default ({ route, navigation }) => {
-    const [searchText, setSearchText] = useState('');
+export default () => {
 
     return (
         <View style={styles.root}>
-            <AppSearchbar
-                route={route}
-                navigation={navigation}
-                searchTextState={[searchText, setSearchText]}
-            />
             <VirtualizedList 
                 data={DATA}
                 initialNumToRender={4}

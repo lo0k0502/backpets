@@ -1,12 +1,13 @@
-import React, { useContext } from 'react';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../../../redux/userSlice';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser, setSearchText } from '../../../redux/userSlice';
 import { List } from 'react-native-paper';
-import { postsContext } from '../../../context';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { updateSearchHistory } from '../../../redux/userReducer';
 
-export default () => {
+export default ({ navigation }) => {
   const user = useSelector(selectUser);
-  const { onSearchHistoryPress } = useContext(postsContext);
+  const dispatch = useDispatch();
 
   return (
     <List.Section
@@ -22,7 +23,11 @@ export default () => {
         <List.Item
           key={index}
           title={history}
-          onPress={() => onSearchHistoryPress(history)}
+          onPress={async () => {
+            dispatch(setSearchText(history));
+            unwrapResult(await dispatch(updateSearchHistory({ searchHistory: history })));
+            navigation.goBack();
+          }}
           style={{ height: 50, justifyContent: 'center' }}
           right={() => <List.Icon icon='arrow-top-left' color='gray' />}
         />

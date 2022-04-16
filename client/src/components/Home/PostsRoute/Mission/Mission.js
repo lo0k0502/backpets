@@ -24,7 +24,7 @@ import TagsView from '../TagsView';
 import EditMissionDialog from './EditMissionDialog';
 import { constants } from '../../../../utils';
 import SelectButton from '../../SelectButton';
-import Context, { postsContext } from '../../../../context';
+import Context from '../../../../context';
 import ViolationReportDialog from '../ViolationReportDialog';
 
 const styles = StyleSheet.create({
@@ -64,7 +64,6 @@ export default ({ navigation }) => {
     const { pets, isFetching: isFetchingPets } = usePets();
     const { selfPets, refreshSelfPets, isFetchingSelfPets } = useSelfPets(user.info?._id);
     const { showSnackbar } = useContext(Context);
-    const { searchText } = useContext(postsContext);
 
     const [animalTags, setAnimalTags] = useState(constants.animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
     const [completed, setCompleted] = useState(constants.completedOptions[0]);
@@ -86,12 +85,12 @@ export default ({ navigation }) => {
         return (
             (!selectedTags.length || selectedTags.includes(pet.tag))
             && (
-                !searchText
-                || mission.content.search(searchText) !== -1
-                || pet.name.search(searchText) !== -1
-                || pet.breed.search(searchText) !== -1
-                || pet.feature.search(searchText) !== -1
-                || pet.gender.search(searchText) !== -1
+                !user.searchText
+                || mission.content.search(user.searchText) !== -1
+                || pet.name.search(user.searchText) !== -1
+                || pet.breed.search(user.searchText) !== -1
+                || pet.feature.search(user.searchText) !== -1
+                || pet.gender.search(user.searchText) !== -1
             ) && (
                 completed === constants.completedOptions[0]
                 || (completed === constants.completedOptions[1] && mission.completed)
@@ -108,16 +107,16 @@ export default ({ navigation }) => {
         ) : allMissions;
         if (!missionsMatchTag.length) return false;
 
-        const missionsMatchTagAndSearchText = searchText ? (
+        const missionsMatchTagAndSearchText = user.searchText ? (
             missionsMatchTag.filter(mission => {
                 const pet = pets.find(_pet => _pet._id === mission.petId);
         
                 return (
-                    mission.content.search(searchText) !== -1
-                    || pet.name.search(searchText) !== -1
-                    || pet.breed.search(searchText) !== -1
-                    || pet.feature.search(searchText) !== -1
-                    || pet.gender.search(searchText) !== -1
+                    mission.content.search(user.searchText) !== -1
+                    || pet.name.search(user.searchText) !== -1
+                    || pet.breed.search(user.searchText) !== -1
+                    || pet.feature.search(user.searchText) !== -1
+                    || pet.gender.search(user.searchText) !== -1
                 );
             })
         ) : missionsMatchTag;
@@ -207,7 +206,7 @@ export default ({ navigation }) => {
                 {
                     isFetchingAllMissions || isFetchingPets ? null : (
                         allMissions.length ? (
-                            selectedTags.length || searchText || completed !== constants.completedOptions[0] ? (
+                            selectedTags.length || user.searchText || completed !== constants.completedOptions[0] ? (
                                 checkMissionsMatchFilters() ? (
                                     allMissions.filter(checkMissionMatchFilters).map(mission => (
                                         <MissionCard

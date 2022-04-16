@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
 import { SERVERURL } from '../../../api/API';
 import Context from '../../../context';
+import { constants } from '../../../utils';
 
 const styles = StyleSheet.create({
   root: {
@@ -60,13 +61,13 @@ export default ({ navigation }) => {
       </View>
 
       <List.Section style={{ marginVertical: 0 }}>
-        {['修改個人資料', '寵物護照列表', '發布過的貼文', '回報過的線索', '兌換紀錄', '點數紀錄', '修改密碼'].map((title, index) => (
+        {constants.profileRouteNamesCH.map((title, index) => (
           <ListItem
             key={index}
             title={title}
             right={() => (
               <Badge
-                visible={title === '回報過的線索' && selfClues.filter(clue => clue.awarded && !clue.pointsReceived).length}
+                visible={title === constants.profileRouteNamesCH[3] && selfClues.filter(clue => clue.awarded && !clue.pointsReceived).length}
                 style={{
                   alignSelf: 'center',
                 }}
@@ -74,37 +75,7 @@ export default ({ navigation }) => {
                 {selfClues.filter(clue => clue.awarded && !clue.pointsReceived).length}
               </Badge>
             )}
-            onItemPress={() => {
-              switch (title) {
-                case '修改個人資料': {
-                  navigation.navigate('EditProfile');
-                  break;
-                }
-                case '寵物護照列表': {
-                  navigation.navigate('PetPassports');
-                  break;
-                }
-                case '發布過的貼文': {
-                  navigation.navigate('SelfMissions');
-                  break;
-                }
-                case '回報過的線索': {
-                  navigation.navigate('SelfClues');
-                  break;
-                }
-                case '點數紀錄': {
-                  navigation.navigate('PointRecord');
-                  break;
-                }
-                case '修改密碼': {
-                  navigation.navigate('ChangePassword');
-                  break;
-                }
-                default: {
-                  return;
-                }
-              }
-            }}
+            onItemPress={() => navigation.navigate(constants.profileRouteNames[index])}
           />
         ))}
       </List.Section>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { memo, useContext, useState } from 'react';
 import { Portal, Snackbar, useTheme } from 'react-native-paper';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -8,18 +8,27 @@ import MapRoute from './MapRoute/MapRoute';
 import StoreRoute from './StoreRoute/StoreRoute';
 import ProfileRoute from './ProfileRoute/ProfileRoute';
 import AdoptionRoute from './AdoptionRoute/AdoptionRoute';
-import Context, { initialLocalStateContext } from '../../context';
+import Context, { initialContext } from '../../context';
 import { useSelfClues } from '../../hooks';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../redux/userSlice';
-import { constants } from '../../utils';
+import { constants, isPageInitialWithSearchbar } from '../../utils';
+import Appbar from './Appbar';
+import AppSearchbar from './AppSearchbar';
+import { useNavigationState } from '@react-navigation/native';
 
 const Tabs = createMaterialBottomTabNavigator();
 
-export default () => {
+export default memo((props) => {
     const user = useSelector(selectUser);
     const { colors } = useTheme();
-    const initialLocalState = useContext(initialLocalStateContext);
+    const state = useNavigationState(state => state);
+    const bottomNavigationState = state.routes.find(route => route.name === 'BottomNavigation').state;
+    const currentBottomNavigationRouteName = bottomNavigationState && bottomNavigationState.routes[bottomNavigationState.index].name;
+    const profileRouteState = bottomNavigationState?.routes.find(route => route.name === 'ProfileRoute').state;
+    const currentProfileRouteName = profileRouteState && profileRouteState.routes[profileRouteState.index].name;
+    console.log('state')
+    const { initialLocalState } = useContext(initialContext);
 
     const [snackbar, setSnackbar] = useState(false);
     const [snackbarText, setSnackbarText] = useState('');
@@ -39,6 +48,32 @@ export default () => {
                 },
             }}
         >
+            {
+                state.index === 0 ? (
+                    !!user.searchText || isPageInitialWithSearchbar(
+                        bottomNavigationState ? bottomNavigationState.index : (
+                            constants.pageNames.findIndex(routeName => routeName === initialLocalState.initialRoute)
+                        )
+                    ) ? (
+                        <AppSearchbar
+                            {...props}
+                            outlineColor='transparent'
+                            activeOutlineColor={colors.background2}
+                        />
+                    ) : (
+                        <Appbar
+                            {...props}
+                            routeName={
+                                bottomNavigationState && (
+                                    bottomNavigationState.index === 0 ? (
+                                        currentProfileRouteName || 'Profile'
+                                    ) : currentBottomNavigationRouteName
+                                )
+                            }
+                        />
+                    )
+                ) : null
+            }
             <Tabs.Navigator
                 shifting
                 initialRouteName={initialLocalState.initialRoute}
@@ -112,4 +147,4 @@ export default () => {
             </Portal>
         </Context.Provider>
     );
-};
+});

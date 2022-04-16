@@ -10,8 +10,10 @@ import {
   Portal,
   Title,
 } from 'react-native-paper';
-import Context, { postsContext } from '../../../../context';
+import { useSelector } from 'react-redux';
+import Context from '../../../../context';
 import { useReports } from '../../../../hooks';
+import { selectUser } from '../../../../redux/userSlice';
 import { reportTagsArray } from '../../../../utils/constants';
 import TagsView from '../TagsView';
 import ViolationReportDialog from '../ViolationReportDialog';
@@ -20,9 +22,9 @@ import ReportCard from './ReportCard';
 import ReportDialog from './ReportDialog';
 
 export default () => {
+  const user = useSelector(selectUser);
   const { allReports, refreshAllReports, isFetchingAllReports } = useReports();
   const { showSnackbar } = useContext(Context);
-  const { searchText } = useContext(postsContext);
 
   const [reportTags, setReportTags] = useState(reportTagsArray.map(tagName => ({ name: tagName, selected: false })));
 
@@ -36,7 +38,7 @@ export default () => {
 
   const checkReportMatchTagAndSearchText = (report) => (
     (!selectedTags.length || selectedTags.includes(report.tag))
-    && (!searchText || report.content.search(searchText) !== -1)
+    && (!user.searchText || report.content.search(user.searchText) !== -1)
   );
 
   const checkReportsMatchTagAndSearchText = () => {
@@ -45,8 +47,8 @@ export default () => {
     ) : allReports;
     if (!reportsMatchTag.length) return false;
 
-    const reportsMatchTagAndSearchText = searchText ? (
-        reportsMatchTag.filter(report => report.content.search(searchText) !== -1)
+    const reportsMatchTagAndSearchText = user.searchText ? (
+        reportsMatchTag.filter(report => report.content.search(user.searchText) !== -1)
     ) : reportsMatchTag;
 
     return reportsMatchTagAndSearchText.length ? true : false;
@@ -93,7 +95,7 @@ export default () => {
           {
             isFetchingAllReports ? null : (
               allReports.length ? (
-                selectedTags.length || searchText ? (
+                selectedTags.length || user.searchText ? (
                   checkReportsMatchTagAndSearchText() ? (
                     allReports.filter(checkReportMatchTagAndSearchText).map(report => (
                       <ReportCard

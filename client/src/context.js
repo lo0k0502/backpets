@@ -4,5 +4,4 @@ const Context = React.createContext({});
 
 export default Context;
 
-export const initialLocalStateContext = React.createContext({});
-export const postsContext = React.createContext('');
+export const initialContext = React.createContext({});

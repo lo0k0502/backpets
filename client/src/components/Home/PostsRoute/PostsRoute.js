@@ -1,88 +1,32 @@
-import React, { useState } from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-
-import PostsTab from './PostsTab';
-import Search from './Search';
-import AppSearchbar from '../AppSearchbar';
-import Appbar from '../Appbar';
-import { useNavigationState } from '@react-navigation/native';
+import React, { useCallback } from 'react';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import Mission from './Mission/Mission';
+import ReportRoute from './Report/ReportRoute';
+import PutUpForAdoptionRoute from './PutUpForAdoption/PutUpForAdoptionRoute';
 import { useTheme } from 'react-native-paper';
-import { updateSearchHistory } from '../../../redux/userReducer';
-import { useDispatch } from 'react-redux';
-import { unwrapResult } from '@reduxjs/toolkit';
-import { constants } from '../../../utils';
-import { postsContext } from '../../../context';
+import { useFocusEffect } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser, setSearchText } from '../../../redux/userSlice';
 
-const PostsStack = createStackNavigator();
+const PostsTab = createMaterialTopTabNavigator();
 
-export default (props) => {
+export default () => {
+    const user = useSelector(selectUser);
     const { colors } = useTheme();
     const dispatch = useDispatch();
 
-    const [searchText, setSearchText] = useState('');
-    const currentRouteState = useNavigationState(state => state.routes.find(route => route.name === constants.pageNames[2]).state);
-    const currentRoute = currentRouteState?.routes[currentRouteState?.routes.length - 1];
-
-    const addSearchHistory = async (text) => {
-        try {
-            unwrapResult(await dispatch(updateSearchHistory({ searchHistory: text })));
-        } catch (error) {
-            console.log('While updating search history: ', error);
-        }
-    };
+    useFocusEffect(useCallback(() => {
+        return () => {
+            console.log('focus: ', user.searchText);
+            if (user.searchText) dispatch(setSearchText(''));
+        };
+    }, []));
 
     return (
-        <>
-            {
-                currentRouteState ? (
-                    (
-                        currentRoute.name !== 'Clue'
-                        && !(currentRoute.name === 'PostsTab' && !searchText)
-                    ) ? (
-                        <AppSearchbar
-                            {...props}
-                            routeName={currentRoute?.name}
-                            value={searchText}
-                            outlineColor='transparent'
-                            activeOutlineColor={colors.background2}
-                            onChangeText={setSearchText}
-                            searchFunction={() => {
-                                addSearchHistory(searchText);
-                                if (currentRoute?.name === 'Search') props.navigation.navigate('PostsTab');
-                            }}
-                            onPressOut={() => {
-                                if (currentRoute?.name !== 'Search') props.navigation.navigate('Search');
-                            }}
-                            onBackPress={() => {
-                                setSearchText('');
-                                if (currentRoute?.name === 'Search') props.navigation.navigate('PostsTab');
-                            }}
-                            onMenuPress={props.navigation.toggleDrawer}
-                            onClearButtonPress={() => {
-                                if (currentRoute?.name !== 'Search') props.navigation.navigate('Search');
-                                setSearchText('');
-                            }}
-                        />
-                    ) : <Appbar routeName={currentRoute?.name} {...props} />
-                ) : (
-                    <Appbar routeName={currentRoute?.name} {...props} />
-                )
-            }
-            <postsContext.Provider
-                value={{
-                    searchText,
-                    onSearchHistoryPress: item => {
-                        setSearchText(item);
-                        addSearchHistory(item);
-                        props.navigation.navigate('PostsTab');
-                    },
-                }}
-            >
-                <PostsStack.Navigator screenOptions={{ headerShown: false }}>
-                    <PostsStack.Screen name='PostsTab' component={PostsTab} />
-                    <PostsStack.Screen name='Search' component={Search} />
-                </PostsStack.Navigator>
-            </postsContext.Provider>
-        </>
+        <PostsTab.Navigator screenOptions={{ tabBarIndicatorStyle: { backgroundColor: colors.primary } }}>
+            <PostsTab.Screen name='Mission' options={{ title: '任務' }} component={Mission} />
+            <PostsTab.Screen name='Report' options={{ title: '通報' }} component={ReportRoute} />
+            <PostsTab.Screen name='PutUpForAdoption' options={{ title: '送養' }} component={PutUpForAdoptionRoute} />
+        </PostsTab.Navigator>
     );
 };

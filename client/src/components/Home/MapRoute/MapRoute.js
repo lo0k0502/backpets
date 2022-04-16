@@ -5,11 +5,13 @@ import MapView, { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Colors, useTheme } from 'react-native-paper';
 import { useCurrentLocation, useMissions, useReports, usePets } from '../../../hooks';
 import PostCallout from './PostCallout';
-import AppSearchbar from '../AppSearchbar';
 import TagsView from '../PostsRoute/TagsView';
 import { animalTagsArray, reportTagsArray } from '../../../utils/constants';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../../redux/userSlice';
 
 export default ({ route, navigation }) => {
+  const user = useSelector(selectUser);
 
   // Location start
   const { location } = route.params ? route.params : { location: null }; // Location from post
@@ -25,9 +27,6 @@ export default ({ route, navigation }) => {
     setRegion(location === null ? { latitude: currentLatitude, longitude: currentLongitude } : location);
   }, [location, currentLatitude, currentLongitude]));
 
-  // Search Bar
-  const [searchText, setSearchText] = useState('');
-
   // Tag for Mission
   const { pets } = usePets();
   const [animalTags, setAnimalTags] = useState(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
@@ -40,12 +39,12 @@ export default ({ route, navigation }) => {
       return (
           (!selectedTagsForMission.length || selectedTagsForMission.includes(pet.tag))
           && (
-              !searchText
-              || mission.content.search(searchText) !== -1
-              || pet.name.search(searchText) !== -1
-              || pet.breed.search(searchText) !== -1
-              || pet.feature.search(searchText) !== -1
-              || pet.gender.search(searchText) !== -1
+              !user.searchText
+              || mission.content.search(user.searchText) !== -1
+              || pet.name.search(user.searchText) !== -1
+              || pet.breed.search(user.searchText) !== -1
+              || pet.feature.search(user.searchText) !== -1
+              || pet.gender.search(user.searchText) !== -1
           )
       );
   };
@@ -58,16 +57,16 @@ export default ({ route, navigation }) => {
     ) : allMissions;
     if (!missionsMatchTag.length) return false;
 
-    const missionsMatchTagAndSearchText = searchText ? (
+    const missionsMatchTagAndSearchText = user.searchText ? (
       missionsMatchTag.filter(mission => {
         const pet = pets.find(_pet => _pet._id === mission.petId);
 
         return (
-          mission.content.search(searchText) !== -1
-          || pet.name.search(searchText) !== -1
-          || pet.breed.search(searchText) !== -1
-          || pet.feature.search(searchText) !== -1
-          || pet.gender.search(searchText) !== -1
+          mission.content.search(user.searchText) !== -1
+          || pet.name.search(user.searchText) !== -1
+          || pet.breed.search(user.searchText) !== -1
+          || pet.feature.search(user.searchText) !== -1
+          || pet.gender.search(user.searchText) !== -1
         );
       })
     ) : missionsMatchTag;
@@ -82,7 +81,7 @@ export default ({ route, navigation }) => {
 
   const checkReportMatchTagAndSearchText = (report) => (
     (!selectedTagsForReport.length || selectedTagsForReport.includes(report.tag))
-    && (!searchText || report.content.search(searchText) !== -1)
+    && (!user.searchText || report.content.search(user.searchText) !== -1)
   );
 
   const checkReportsMatchTagAndSearchText = () => {
@@ -91,8 +90,8 @@ export default ({ route, navigation }) => {
     ) : allReports;
     if (!reportsMatchTag.length) return false;
     
-    const reportsMatchTagAndSearchText = searchText ? (
-        reportsMatchTag.filter(report => report.content.search(searchText) !== -1)
+    const reportsMatchTagAndSearchText = user.searchText ? (
+        reportsMatchTag.filter(report => report.content.search(user.searchText) !== -1)
     ) : reportsMatchTag;
 
     return reportsMatchTagAndSearchText.length ? true : false;
@@ -118,7 +117,7 @@ export default ({ route, navigation }) => {
       { //Start of Marker for Mission
       allMissions.map((mission, index) => (
         allMissions.length ? (
-          selectedTagsForMission.length || searchText ? (
+          selectedTagsForMission.length || user.searchText ? (
             checkMissionsMatchTagAndSearchText() ? (
               allMissions.filter(checkMissionMatchTagAndSearchText).map( mission => (
                 <Marker
@@ -164,7 +163,7 @@ export default ({ route, navigation }) => {
       { //Start of Marker for Report
       allReports.map((report, index) => (
         allReports.length ? (
-          selectedTagsForReport.length || searchText ? (
+          selectedTagsForReport.length || user.searchText ? (
             checkReportsMatchTagAndSearchText() ? (
               allReports.filter(checkReportMatchTagAndSearchText).map(report => (
                 <Marker
@@ -209,15 +208,6 @@ export default ({ route, navigation }) => {
     </MapView>
 
     <View style={{ flex: 1 }}>
-      <AppSearchbar
-        style={{ backgroundColor: 'transparent', elevation: 10 }}
-        inputStyle={{ backgroundColor: 'white' }}
-        outlineColor={colors.primary}
-        activeOutlineColor={colors.background2}
-        route={route}
-        navigation={navigation}
-        searchTextState={[searchText, setSearchText]}
-      />
       <TagsView style={{ backgroundColor: 'transparent' }} tagsState={[animalTags, setAnimalTags]} />
     </View>
 

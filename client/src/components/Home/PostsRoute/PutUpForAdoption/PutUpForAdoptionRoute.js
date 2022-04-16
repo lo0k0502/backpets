@@ -13,7 +13,7 @@ import {
   Title,
 } from 'react-native-paper';
 import { useSelector } from 'react-redux';
-import Context, { postsContext } from '../../../../context';
+import Context from '../../../../context';
 import { usePets, usePutUpForAdoptions, useSelfPets } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
 import { constants } from '../../../../utils';
@@ -30,7 +30,6 @@ export default () => {
   const { pets, isFetching: isFetchingPets } = usePets();
   const { selfPets, refreshSelfPets, isFetchingSelfPets } = useSelfPets(user.info?._id);
   const { showSnackbar } = useContext(Context);
-  const { searchText } = useContext(postsContext);
 
   const [putUpForAdoptionDialog, setPutUpForAdoptionDialog] = useState(false);// Whether putUpForAdoption dialog is open
   const [editPutUpForAdoptionDialog, setEditPutUpForAdoptionDialog] = useState(false);// Whether edit putUpForAdoption dialog is open
@@ -53,11 +52,11 @@ export default () => {
     return (
       (!selectedTags.length || selectedTags.includes(pet.tag))
       && (
-        !searchText
-        || putUpForAdoption.content.search(searchText) !== -1
-        || pet.name.search(searchText) !== -1
-        || pet.breed.search(searchText) !== -1
-        || pet.gender.search(searchText) !== -1
+        !user.searchText
+        || putUpForAdoption.content.search(user.searchText) !== -1
+        || pet.name.search(user.searchText) !== -1
+        || pet.breed.search(user.searchText) !== -1
+        || pet.gender.search(user.searchText) !== -1
       ) && (
         county !== '全部'
         && (
@@ -76,15 +75,15 @@ export default () => {
       ) : allPutUpForAdoptions;
       if (!putUpForAdoptionsMatchTag.length) return false;
       
-      const putUpForAdoptionsMatchTagAndSearchText = searchText ? (
+      const putUpForAdoptionsMatchTagAndSearchText = user.searchText ? (
           putUpForAdoptionsMatchTag.filter(putUpForAdoption => {
             const pet = pets.find(_pet => _pet._id === putUpForAdoption.petId);
 
             return (
-              putUpForAdoption.content.search(searchText) !== -1
-              || pet.name.search(searchText) !== -1
-              || pet.breed.search(searchText) !== -1
-              || pet.gender.search(searchText) !== -1
+              putUpForAdoption.content.search(user.searchText) !== -1
+              || pet.name.search(user.searchText) !== -1
+              || pet.breed.search(user.searchText) !== -1
+              || pet.gender.search(user.searchText) !== -1
             );
           })
       ) : putUpForAdoptionsMatchTag;
@@ -168,7 +167,7 @@ export default () => {
         {
           isFetchingAllPutUpForAdoptions || isFetchingPets ? null : (
             allPutUpForAdoptions.length ? (
-              selectedTags.length || searchText || county !== '全部' ? (
+              selectedTags.length || user.searchText || county !== '全部' ? (
                 checkPutUpForAdoptionsMatchTagAndSearchTextAndArea() ? (
                   allPutUpForAdoptions.filter(checkPutUpForAdoptionMatchTagAndSearchTextAndArea).map(putUpForAdoption => (
                     <PutUpForAdoptionCard

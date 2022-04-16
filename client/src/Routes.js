@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import { View, Image, StyleSheet, Alert } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -9,7 +9,7 @@ import AuthRoute from './components/Auth/AuthRoute';
 import * as SecureStorage from 'expo-secure-store';
 import { logoutUser, tokenRefresh } from './redux/userReducer';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { Button, Text } from 'react-native-paper';
+import { Button, Text, useTheme } from 'react-native-paper';
 import { Restart } from 'fiction-expo-restart';
 import AllImages from './components/DevOptions/AllImages';
 import { useOnceUpdateEffect } from './hooks';
@@ -18,8 +18,10 @@ import Appbar from './components/Home/Appbar';
 import Feedback from './components/Home/Feedback';
 import Setting from './components/Home/Setting';
 import DrawerContent from './components/Home/drawer';
-import { initialLocalStateContext } from './context';
+import { initialContext } from './context';
 import Clue from './components/Home/Clue';
+import Search from './components/Home/PostsRoute/Search';
+import AppSearchbar from './components/Home/AppSearchbar';
 
 const styles = StyleSheet.create({
   view: {
@@ -37,11 +39,12 @@ const styles = StyleSheet.create({
 const Stacks = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-export default ({ signInStates: [signInState, setSignInState] }) => {
+export default memo(({ signInStates: [signInState, setSignInState] }) => {
+  const { colors } = useTheme();
+  const dispatch = useDispatch();
+
   const [errorMsg, setErrorMsg] = useState('');
   const [initialLocalState, setInitialLocalState] = useState({});
-
-  const dispatch = useDispatch();
 
   // Logout with alert
   const logout = () => {
@@ -69,7 +72,11 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
   };
 
   const Main = () => (
-    <initialLocalStateContext.Provider value={initialLocalState}>
+    <initialContext.Provider
+      value={{
+        initialLocalState,
+      }}
+    >
       <Drawer.Navigator
         useLegacyImplementation={true}
         drawerContent={props => <DrawerContent {...props} logoutback={logout} />}
@@ -94,8 +101,21 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
           options={{ header: props => <Appbar {...props} /> }}
           component={Clue}
         />
+        <Drawer.Screen
+          name='Search'
+          options={{
+            header: props => (
+              <AppSearchbar
+                  {...props}
+                  outlineColor='transparent'
+                  activeOutlineColor={colors.background2}
+              />
+            )
+          }}
+          component={Search}
+        />
       </Drawer.Navigator>
-    </initialLocalStateContext.Provider>
+    </initialContext.Provider>
   );
 
   // If local SecureStorage has token, check for location permission and try to refresh it.
@@ -202,4 +222,4 @@ export default ({ signInStates: [signInState, setSignInState] }) => {
     }
     </Stacks.Navigator>
   );
-};
+});

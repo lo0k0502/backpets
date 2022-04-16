@@ -14,9 +14,10 @@ export default ({ route, navigation, routeName }) => {
         <Appbar style={{ backgroundColor: 'white' }}>
         {
             (
-                _routeName === constants.pageNames[2]
-                || _routeName === 'PostsTab'
+                _routeName === constants.pageNames[0]
+                || _routeName === constants.pageNames[2]
                 || _routeName === 'Profile'
+                || _routeName === 'BottomNavigation'
             ) ? (
                 <Appbar.Action icon='menu' onPress={navigation.toggleDrawer} />
             ) : (
@@ -29,7 +30,7 @@ export default ({ route, navigation, routeName }) => {
         {
             (
                 _routeName === constants.pageNames[2]
-                || _routeName === 'PostsTab'
+                || _routeName === 'BottomNavigation'
             ) ? (
                 <Appbar.Action icon='magnify' onPress={() => navigation.navigate('Search')} />
             ) : null

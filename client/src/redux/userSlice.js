@@ -16,8 +16,14 @@ export const userSlice = createSlice({
   name: 'user',
   initialState: {
     info: null,
+    searchText: '',
   },
-  reducers: {},
+  reducers: {
+    setSearchText: {
+      reducer: (state, action) => void(state.searchText = action.payload.text),
+      prepare: text => ({ payload: { text } }),
+    },
+  },
   extraReducers: {
     [loginUser.fulfilled]: (state, action) => {
       state.info = action.payload.result;
@@ -78,6 +84,6 @@ export const userSlice = createSlice({
     },
   },
 });
-export const { setState } = userSlice.actions;
+export const { setSearchText } = userSlice.actions;
 export default userSlice.reducer;
 export const selectUser = (state) => state.user;

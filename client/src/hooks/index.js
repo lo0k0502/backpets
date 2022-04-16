@@ -14,7 +14,6 @@ import {
     fetchMissionsByUserId,
     fetchMission,
 } from '../api';
-import { useFocusEffect } from '@react-navigation/core';
 
 export default {
     useUpdateEffect,
