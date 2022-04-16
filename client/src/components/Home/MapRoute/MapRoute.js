@@ -1,14 +1,34 @@
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import MapView, { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { Colors, useTheme } from 'react-native-paper';
+import { Colors, useTheme, FAB } from 'react-native-paper';
 import { useCurrentLocation, useMissions, useReports, usePets } from '../../../hooks';
 import PostCallout from './PostCallout';
+import ReportCallout from './ReportCallout';
 import TagsView from '../PostsRoute/TagsView';
 import { animalTagsArray, reportTagsArray } from '../../../utils/constants';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
+
+const styles = StyleSheet.create({
+  map: {
+    ...StyleSheet.absoluteFillObject
+  },
+  fab: {
+    position: 'absolute',
+    right: 20,
+    bottom: 70,
+    elevation: 1,
+  },
+  appSearchBar: { 
+    backgroundColor: 'transparent', 
+    elevation: 10,
+  },
+  tagsView: { 
+    backgroundColor: 'transparent',
+  },
+})
 
 export default ({ route, navigation }) => {
   const user = useSelector(selectUser);
@@ -26,6 +46,16 @@ export default ({ route, navigation }) => {
   useFocusEffect(useCallback(() => {
     setRegion(location === null ? { latitude: currentLatitude, longitude: currentLongitude } : location);
   }, [location, currentLatitude, currentLongitude]));
+
+  const mapView = React.createRef();
+  const backToCurrentLocation = () => {
+    mapView.current.animateToRegion({
+      latitude: currentLatitude,
+      longitude: currentLongitude,
+      latitudeDelta: 0.0122,
+      longitudeDelta: 0.003,
+    }, 1000)
+  };
 
   // Tag for Mission
   const { pets } = usePets();
@@ -101,10 +131,9 @@ export default ({ route, navigation }) => {
 
     <>
     <MapView
+    ref={ mapView }
       provider='google'
-      style={{
-        ...StyleSheet.absoluteFillObject,
-      }}
+      style={ styles.map }
       region={{
         ...region,
         latitudeDelta: 0.0122,
@@ -112,104 +141,110 @@ export default ({ route, navigation }) => {
       }}
       showsUserLocation={true}
       followsUserLocation={true}
+      showsMyLocationButton={false}
     >
 
       { //Start of Marker for Mission
       allMissions.map((mission, index) => (
-        allMissions.length ? (
-          selectedTagsForMission.length || user.searchText ? (
-            checkMissionsMatchTagAndSearchText() ? (
-              allMissions.filter(checkMissionMatchTagAndSearchText).map( mission => (
-                <Marker
-                  key={mission._id}
-                  coordinate={{
-                    latitude: mission.location.latitude,
-                    longitude: mission.location.longitude,
-                  }}
-                  description={mission.content}
-                  image={require('../../../../assets/map_marker.png')}
-                >
-                  <Callout
-                    tooltip
-                    onPress={() => { } }
-                  >
-                    <PostCallout mission={mission} />
-                  </Callout>
-                </Marker>
-              ))
-            ) : ( null )
-          ) : (
-            <Marker
-              key={index}
-              coordinate={{
-                latitude: mission.location.latitude,
-                longitude: mission.location.longitude,
-              }}
-              description={mission.content}
-              image={require('../../../../assets/map_marker.png')}
-            >
-              <Callout
-                tooltip
-                onPress={() => { } }
+        selectedTagsForMission.length || user.searchText ? (
+          checkMissionsMatchTagAndSearchText() ? (
+            allMissions.filter(checkMissionMatchTagAndSearchText).map( mission => (
+              <Marker
+                key={mission._id}
+                coordinate={{
+                  latitude: mission.location.latitude,
+                  longitude: mission.location.longitude,
+                }}
+                description={mission.content}
+                image={require('../../../../assets/map_marker.png')}
               >
-                <PostCallout mission={mission} />
-              </Callout>
-            </Marker>
-          )
-        ) : ( null )
+                <Callout
+                  tooltip
+                  onPress={() => { } }
+                >
+                  <PostCallout mission={mission} />
+                </Callout>
+              </Marker>
+            ))
+          ) : ( null )
+        ) : (
+          <Marker
+            key={index}
+            coordinate={{
+              latitude: mission.location.latitude,
+              longitude: mission.location.longitude,
+            }}
+            description={mission.content}
+            image={require('../../../../assets/map_marker.png')}
+          >
+            <Callout
+              tooltip
+              onPress={() => { } }
+            >
+              <PostCallout mission={mission} />
+            </Callout>
+          </Marker>
+        )
       // End of Marker for Mission
       ))} 
 
       { //Start of Marker for Report
       allReports.map((report, index) => (
-        allReports.length ? (
-          selectedTagsForReport.length || user.searchText ? (
-            checkReportsMatchTagAndSearchText() ? (
-              allReports.filter(checkReportMatchTagAndSearchText).map(report => (
-                <Marker
-                  key={report._id}
-                  coordinate={{
-                    latitude: report.location.latitude,
-                    longitude: report.location.longitude,
-                  }}
-                  description={report.content}
-                  image={require('../../../../assets/map_marker.png')}
-                >
-                  <Callout
-                    tooltip
-                    onPress={() => { } }
-                  >
-                    <PostCallout report={report} />
-                  </Callout>
-                </Marker>
-              ))
-            ) : ( null )
-          ) : (
-            <Marker
-              key={index}
-              coordinate={{
-                latitude: report.location.latitude,
-                longitude: report.location.longitude,
-              }}
-              description={report.content}
-              image={require('../../../../assets/map_marker.png')}
-            >
-              <Callout
-                tooltip
-                onPress={() => { } }
+        selectedTagsForReport.length || user.searchText ? (
+          checkReportsMatchTagAndSearchText() ? (
+            allReports.filter(checkReportMatchTagAndSearchText).map(report => (
+              <Marker
+                key={report._id}
+                coordinate={{
+                  latitude: report.location.latitude,
+                  longitude: report.location.longitude,
+                }}
+                description={report.content}
+                image={require('../../../../assets/map_marker.png')}
               >
-                <PostCallout report={report} />
-              </Callout>
-            </Marker>
-          )
-        ) : ( null )
+                <Callout
+                  tooltip
+                  onPress={() => { } }
+                >
+                  {/* <ReportCallout report={report} /> */}
+                </Callout>
+              </Marker>
+            ))
+          ) : ( null )
+        ) : (
+          <Marker
+            key={index}
+            coordinate={{
+              latitude: report.location.latitude,
+              longitude: report.location.longitude,
+            }}
+            description={report.content}
+            image={require('../../../../assets/map_marker.png')}
+          >
+            <Callout
+              tooltip
+              onPress={() => { } }
+            >
+              {/* <ReportCallout report={report} /> */}
+            </Callout>
+          </Marker>
+        )
       // End of Marker for Report
       ))}
     </MapView>
 
-    <View style={{ flex: 1 }}>
-      <TagsView style={{ backgroundColor: 'transparent' }} tagsState={[animalTags, setAnimalTags]} />
-    </View>
+    <FAB
+      small
+      style = { styles.fab }
+      icon = 'map-marker'
+      onPress = { () => { backToCurrentLocation() }}
+    />
 
+    <View style={{ flex: 1 }}>
+      <TagsView 
+        style={ styles.tagsView } 
+        tagsState={[animalTags, setAnimalTags]}
+      />
+    </View>
   </>);
 }
