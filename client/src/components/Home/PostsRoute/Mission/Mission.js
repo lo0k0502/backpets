@@ -140,10 +140,10 @@ export default ({ navigation }) => {
             <Divider />
             <View
                 style={{
-                flexDirection: 'row',
-                padding: '2%',
-                alignItems: 'center',
-                backgroundColor: 'white',
+                    flexDirection: 'row',
+                    padding: '2%',
+                    alignItems: 'center',
+                    backgroundColor: 'white',
                 }}
             >
                 <Subheading>完成狀態: </Subheading>

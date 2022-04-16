@@ -23,6 +23,10 @@ import { useCurrentLocation, useUpdateEffect } from '../../../../hooks';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import MapView from 'react-native-maps';
 import { SERVERURL } from '../../../../api/API';
+import SelectDateTime from '../../../common/SelectDateTime';
+import TextArea from '../../../common/TextArea';
+import SelectLocation from '../../../common/SelectLocation';
+import DialogActions from '../../../common/DialogActions';
 
 export default ({
     visible,
@@ -194,160 +198,64 @@ export default ({
                     <HelperText>
                         請選擇遺失日期與時間(必要)
                     </HelperText>
-                    <View style={{ flexDirection: 'row' }}>
-                        <View style={{ alignItems: 'center' }}>
-                            <Text style={{ color: colors.primary }}>日期</Text>
-                            <Button
-                                mode='contained'
-                                dark
-                                uppercase={false}
-                                disabled={isLoading}
-                                onPress={() => {
-                                    setShowDateTimePicker(true);
-                                    setDateTimePickerMode('date');
-                                }}
-                                style={{
-                                    borderTopRightRadius: 0,
-                                    borderBottomRightRadius: 0,
-                                    elevation: 0,
-                                }}
-                            >
-                                {lostTime.getFullYear() + '/' + (lostTime.getMonth() + 1) + '/' + lostTime.getDate()}
-                            </Button>
-                        </View>
-                        <View style={{ alignItems: 'center' }}>
-                            <Text style={{ color: colors.primary }}>時間</Text>
-                            <Button
-                                mode='contained'
-                                dark
-                                uppercase={false}
-                                disabled={isLoading}
-                                onPress={() => {
-                                    setShowDateTimePicker(true);
-                                    setDateTimePickerMode('time');
-                                }}
-                                style={{
-                                    borderTopLeftRadius: 0,
-                                    borderBottomLeftRadius: 0,
-                                    elevation: 0,
-                                }}
-                            >
-                                {lostTime.getHours() + '時' + lostTime.getMinutes() + '分'}
-                            </Button>
-                        </View>
-                        {
-                            showDateTimePicker ? (
-                                <DateTimePicker
-                                    testID="dateTimePicker"
-                                    value={lostTime}
-                                    mode={dateTimePickerMode}
-                                    is24Hour
-                                    display='spinner'
-                                    onChange={(e, dateTime) => {
-                                        setShowDateTimePicker(false);
-                                        if (dateTime) {
-                                            if (dateTime > new Date()) return setLostTimeErrorMsg('不可選取未來的時間!');
-                                            setLostTimeErrorMsg('');
-                                            setLostTime(dateTime);
-                                        }
-                                    }}
-                                />
-                            ) : null
-                        }
-                    </View>
-                    <HelperText type='error'>
-                        {lostTimeErrorMsg}
-                    </HelperText>
+                    <SelectDateTime
+                        show={showDateTimePicker}
+                        value={lostTime}
+                        disabled={isLoading}
+                        dateTimePickerMode={dateTimePickerMode}
+                        errorMsg={lostTimeErrorMsg}
+                        onDatePress={() => {
+                            setShowDateTimePicker(true);
+                            setDateTimePickerMode('date');
+                        }}
+                        onTimePress={() => {
+                            setShowDateTimePicker(true);
+                            setDateTimePickerMode('time');
+                        }}
+                        onChange={(e, dateTime) => {
+                            setShowDateTimePicker(false);
+                            if (dateTime) {
+                                if (dateTime > new Date()) return setLostTimeErrorMsg('不可選取未來的時間!');
+                                setLostTimeErrorMsg('');
+                                setLostTime(dateTime);
+                            }
+                        }}
+                    />
                     <Divider style={lostTimeErrorMsg && { backgroundColor: 'red' }} />
                     <HelperText>
                         位置(必要)
                     </HelperText>
-                    <View style={[ { width: '100%', height: 200 }, !changingLocation && { opacity: 0.7 } ]}>
-                        <Image
-                            source={require('../../../../../assets/map_marker.png')}
-                            style={{
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                width: 36,
-                                height: 45,
-                                zIndex: 100,
-                                transform: [
-                                    { translateX: -18 },
-                                    { translateY: -45 },
-                                ],
-                            }}
-                            width={10}
-                            height={10}
-                        />
-                        <MapView
-                            style={{ flex: 1 }}
-                            showsUserLocation={!isLoading && changingLocation}
-                            scrollEnabled={!isLoading && changingLocation}
-                            region={mapViewRegion}
-                            onRegionChangeComplete={setMapViewRegion}
-                        />
-                    </View>
-                    <Button
-                        mode='contained'
-                        dark
-                        style={{ marginVertical: 10, elevation: 0 }}
-                        onPress={() => setChangingLocation(state => !state)}
-                    >
-                        {changingLocation ? '確定位置' : '更改位置'}
-                    </Button>
-                    <Text>{'緯度: ' + mapViewRegion.latitude.toString()}</Text>
-                    <Text>{'經度: ' + mapViewRegion.longitude.toString()}</Text>
+                    <SelectLocation
+                        region={mapViewRegion}
+                        onChange={setMapViewRegion}
+                        isLoading={isLoading}
+                        changingLocation={changingLocation}
+                        setChangingLocation={setChangingLocation}
+                    />
                     <Divider />
-                    <TextInput
-                        mode='outlined'
+                    <TextArea
                         label='補充(非必要)'
                         disabled={isLoading}
                         value={content}
-                        multiline
                         maxLength={50}
-                        right={<TextInput.Affix text={`${content.length}/50`} />}
-                        render={(innerProps) => (
-                            <NativeTextInput
-                                {...innerProps}
-                                style={[
-                                    innerProps.style,
-                                    innerProps.multiline ? {
-                                        paddingTop: 8,
-                                        paddingBottom: 8,
-                                        height: 200,
-                                    } : null,
-                                ]}
-                            />
-                        )}
                         onChangeText={setContent}
                     />
                     <View style={{ height: 50 }} />
                 </ScrollView>
             </Dialog.ScrollArea>
-            <Dialog.Actions>
-                <Button
-                    disabled={isLoading}
-                    onPress={handleClose}
-                    contentStyle={{ paddingHorizontal: 10 }}
-                >
-                    取消
-                </Button>
-                <Button
-                    mode='contained'
-                    dark
-                    disabled={
-                        isLoading
-                        || !petId
-                        || changingLocation
-                    }
-                    loading={isLoading}
-                    onPress={handleSubmit}
-                    contentStyle={{ paddingHorizontal: 10 }}
-                >
-                    發佈
-                </Button>
-            </Dialog.Actions>
+            <DialogActions
+                cancelBtnLabel='取消'
+                submitBtnLabel='發佈'
+                cancelBtnDisabled={isLoading}
+                submitBtnDisabled={
+                    isLoading
+                    || !petId
+                    || changingLocation
+                }
+                isLoading={isLoading}
+                onSubmit={handleSubmit}
+                onCancel={handleClose}
+            />
         </Dialog>
     );
 };

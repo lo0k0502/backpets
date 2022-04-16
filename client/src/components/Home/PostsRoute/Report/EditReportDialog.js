@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
     Alert,
-    Image,
     ScrollView,
-    TextInput as NativeTextInput,
     View,
 } from 'react-native';
 import {
@@ -14,21 +12,20 @@ import {
     requestMediaLibraryPermissionsAsync,
 } from 'expo-image-picker';
 import {
-    Button,
     Dialog,
     HelperText,
-    Text,
-    TextInput,
     Divider,
-    Card,
 } from 'react-native-paper';
-import MapView from 'react-native-maps';
 import { deleteImage, editReport, uploadImage } from '../../../../api';
 import { SERVERURL } from '../../../../api/API';
 import { useCurrentLocation } from '../../../../hooks';
 import { reportTagsArray } from '../../../../utils/constants';
 import TagsView from '../TagsView';
 import { shrinkImageToTargetSize } from '../../../../utils';
+import TextArea from '../../../common/TextArea';
+import SelectLocation from '../../../common/SelectLocation';
+import SelectPhoto from '../../../common/SelectPhoto';
+import DialogActions from '../../../common/DialogActions';
 
 export default ({ report, visible, close, refreshAllReports }) => {
     const { currentLatitude, currentLongitude } = useCurrentLocation();
@@ -209,33 +206,15 @@ export default ({ report, visible, close, refreshAllReports }) => {
             <Dialog.Title>編輯通報</Dialog.Title>
             <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
                 <ScrollView style={{ height: '80%', paddingHorizontal: 20 }}>
-                    <TextInput
-                        mode='outlined'
+                    <HelperText></HelperText>
+                    <TextArea
                         label='說明(必要)'
-                        error={contentErrorMsg}
+                        errorMsg={contentErrorMsg}
                         disabled={isImgLoading || isLoading}
                         value={content}
-                        multiline
                         maxLength={50}
-                        right={<TextInput.Affix text={`${content.length}/50`} />}
-                        render={(innerProps) => (
-                            <NativeTextInput
-                                {...innerProps}
-                                style={[
-                                    innerProps.style,
-                                    innerProps.multiline ? {
-                                        paddingTop: 8,
-                                        paddingBottom: 8,
-                                        height: 200,
-                                    } : null,
-                                ]}
-                            />
-                        )}
                         onChangeText={checkContent}
                     />
-                    <HelperText type='error'>
-                        {contentErrorMsg}
-                    </HelperText>
                     <Divider />
                     <HelperText>
                         請選擇一個標籤(必要)
@@ -245,94 +224,41 @@ export default ({ report, visible, close, refreshAllReports }) => {
                     <HelperText>
                         位置(必要)
                     </HelperText>
-                    <View style={[ { width: '100%', height: 200 }, !changingLocation && { opacity: 0.7 } ]}>
-                        <Image
-                            source={require('../../../../../assets/map_marker.png')}
-                            style={{
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                width: 36,
-                                height: 45,
-                                zIndex: 100,
-                                transform: [
-                                    { translateX: -18 },
-                                    { translateY: -45 },
-                                ],
-                            }}
-                            width={10}
-                            height={10}
-                        />
-                        <MapView
-                            style={{ flex: 1 }}
-                            showsUserLocation={!(isImgLoading || isLoading) && changingLocation}
-                            scrollEnabled={!(isImgLoading || isLoading) && changingLocation}
-                            region={mapViewRegion}
-                            onRegionChangeComplete={setMapViewRegion}
-                        />
-                    </View>
-                    <Button
-                        mode='contained'
-                        dark
-                        style={{ marginVertical: 10, elevation: 0 }}
-                        onPress={() => setChangingLocation(state => !state)}
-                    >
-                        {changingLocation ? '確定位置' : '更改位置'}
-                    </Button>
-                    <Text>{'緯度: ' + mapViewRegion.latitude.toString()}</Text>
-                    <Text>{'經度: ' + mapViewRegion.longitude.toString()}</Text>
+                    <SelectLocation
+                        region={mapViewRegion}
+                        onChange={setMapViewRegion}
+                        isLoading={isImgLoading || isLoading}
+                        changingLocation={changingLocation}
+                        setChangingLocation={setChangingLocation}
+                    />
                     <Divider />
-                    <Button 
-                        mode='contained'
-                        icon='plus'
-                        dark
+                    <SelectPhoto
+                        label={photoUrl ? '更改圖片' : '新增圖片(必要)'}
+                        photoUrl={photoUrl}
+                        photoSize={photoSize}
+                        errorMsg={photoUrlErrorMsg}
                         disabled={isImgLoading || isLoading}
-                        loading={isImgLoading}
-                        style={{ marginVertical: 10, elevation: 0 }}
-                        onPress={handleChangeImg}
-                    >
-                        {photoUrl ? '更改圖片' : '新增圖片(必要)'}
-                    </Button>
-                    <HelperText type='error'>
-                        {photoUrlErrorMsg}
-                    </HelperText>
-                    {photoUrl ? (
-                        <Card.Cover
-                            source={{ uri: photoUrl }}
-                            style={{
-                                ...photoSize,
-                                alignSelf: 'center',
-                            }}
-                        />
-                    ) : null}
+                        isLoading={isImgLoading}
+                        onChange={handleChangeImg}
+                    />
                     <View style={{ height: 50 }} />
                 </ScrollView>
             </Dialog.ScrollArea>
-            <Dialog.Actions>
-                <Button
-                    disabled={isImgLoading || isLoading}
-                    onPress={handleClose}
-                    contentStyle={{ paddingHorizontal: 10 }}
-                >
-                    取消
-                </Button>
-                <Button
-                    mode='contained'
-                    dark
-                    disabled={
-                        isImgLoading
-                        || isLoading
-                        || !content
-                        || !tags.find(tag => tag.selected)
-                        || changingLocation
-                    }
-                    loading={isLoading}
-                    onPress={handleSubmit}
-                    contentStyle={{ paddingHorizontal: 10 }}
-                >
-                    完成
-                </Button>
-            </Dialog.Actions>
+            <DialogActions
+                cancelBtnLabel='取消'
+                submitBtnLabel='完成'
+                cancelBtnDisabled={isImgLoading || isLoading}
+                submitBtnDisabled={
+                    isImgLoading
+                    || isLoading
+                    || !content
+                    || !tags.find(tag => tag.selected)
+                    || changingLocation
+                }
+                isLoading={isLoading}
+                onSubmit={handleSubmit}
+                onCancel={handleClose}
+            />
         </Dialog>
     );
 };

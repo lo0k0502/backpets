@@ -1,27 +1,19 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { View, Image, StyleSheet, Alert } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useDispatch } from 'react-redux';
-import BottomNavigation from './components/Home/BottomNavigation';
 import AllUsers from './components/DevOptions/AllUsers';
 import AuthRoute from './components/Auth/AuthRoute';
 import * as SecureStorage from 'expo-secure-store';
 import { logoutUser, tokenRefresh } from './redux/userReducer';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { Button, Text, useTheme } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { Restart } from 'fiction-expo-restart';
 import AllImages from './components/DevOptions/AllImages';
 import { useOnceUpdateEffect } from './hooks';
 import { askForLocationPermission, constants } from './utils';
-import Appbar from './components/Home/Appbar';
-import Feedback from './components/Home/Feedback';
-import Setting from './components/Home/Setting';
-import DrawerContent from './components/Home/drawer';
 import { initialContext } from './context';
-import Clue from './components/Home/Clue';
-import Search from './components/Home/PostsRoute/Search';
-import AppSearchbar from './components/Home/AppSearchbar';
+import MainRoutes from './MainRoutes';
 
 const styles = StyleSheet.create({
   view: {
@@ -37,10 +29,8 @@ const styles = StyleSheet.create({
 });
 
 const Stacks = createStackNavigator();
-const Drawer = createDrawerNavigator();
 
 export default memo(({ signInStates: [signInState, setSignInState] }) => {
-  const { colors } = useTheme();
   const dispatch = useDispatch();
 
   const [errorMsg, setErrorMsg] = useState('');
@@ -77,44 +67,7 @@ export default memo(({ signInStates: [signInState, setSignInState] }) => {
         initialLocalState,
       }}
     >
-      <Drawer.Navigator
-        useLegacyImplementation={true}
-        drawerContent={props => <DrawerContent {...props} logoutback={logout} />}
-      >
-        <Drawer.Screen
-          name='BottomNavigation'
-          options={{ headerShown: false }}
-          component={BottomNavigation}
-        />
-        <Drawer.Screen
-          name='Feedback'
-          options={{ header: props => <Appbar {...props} /> }}
-          component={Feedback}
-        />
-        <Drawer.Screen
-          name='Setting'
-          options={{ header: props => <Appbar {...props} /> }}
-          component={Setting}
-        />
-        <Drawer.Screen
-          name='Clue'
-          options={{ header: props => <Appbar {...props} /> }}
-          component={Clue}
-        />
-        <Drawer.Screen
-          name='Search'
-          options={{
-            header: props => (
-              <AppSearchbar
-                  {...props}
-                  outlineColor='transparent'
-                  activeOutlineColor={colors.background2}
-              />
-            )
-          }}
-          component={Search}
-        />
-      </Drawer.Navigator>
+      <MainRoutes logout={logout} />
     </initialContext.Provider>
   );
 

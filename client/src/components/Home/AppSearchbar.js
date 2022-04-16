@@ -25,7 +25,7 @@ export default ({
 
   useFocusEffect(useCallback(() => {
     if (isSearch) {
-      textInputRef.current.focus();
+      setTimeout(() => textInputRef.current.focus(), 100);
     } else {
       textInputRef.current.blur();
     }
