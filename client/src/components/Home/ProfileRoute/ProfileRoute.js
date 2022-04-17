@@ -9,6 +9,7 @@ import PetPassports from './PetPassports';
 import SelfClues from './SelfClues';
 import PointRecord from './PointRecord';
 import { Text } from 'react-native-paper';
+import SelfPutUpForAdoptions from './SelfPutUpForAdoptions';
 
 const ProfileStack = createStackNavigator();
 
@@ -27,6 +28,7 @@ export default ({ route, navigation }) => {
             <ProfileStack.Screen name='EditProfile' component={EditProfile} />
             <ProfileStack.Screen name='PetPassports' component={PetPassports} />
             <ProfileStack.Screen name='SelfMissions' component={SelfMissions} />
+            <ProfileStack.Screen name='SelfPutUpForAdoptions' component={SelfPutUpForAdoptions} />
             <ProfileStack.Screen name='SelfClues' component={SelfClues} />
             <ProfileStack.Screen name='ExchangeRecord'>
                 {props => <Text {...props}>yo</Text>}

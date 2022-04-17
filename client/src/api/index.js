@@ -37,11 +37,11 @@ export const deleteImage = (photoId) => API.delete(`/image/${photoId}`);
 export const addMission = (payload) => API.post('/mission/add', payload);
 export const editMission = (missionId, payload) => API.post(`/mission/${missionId}`, payload);
 export const completeMission = (payload) => API.post('/mission/completemission', payload);
-export const deleteMission = (missionId) => API.delete(`/mission/${missionId}`);
 export const fetchAllMissions = () => API.get('/mission/fetchall');
 export const fetchMissionsByUserId = (userId) => API.get(`/mission/fetchbyuserid/${userId}`);
 export const fetchMissionsByPetId = (petId) => API.get(`/mission/fetchbypetid/${petId}`);
 export const fetchMission = (missionid) => API.get(`/mission/${missionid}`);
+export const deleteMission = (missionId) => API.delete(`/mission/${missionId}`);
 
 // clue
 export const addClue = (payload) => API.post('/clue/add', payload);
@@ -58,6 +58,7 @@ export const fetchAllReports = () => API.get('/report/fetchall');
 export const addPutUpForAdoption = (payload) => API.post('/put-up-for-adoption/add', payload);
 export const editPutUpForAdoption = (putUpForAdoptionId, payload) => API.post(`/put-up-for-adoption/${putUpForAdoptionId}`, payload);
 export const fetchAllPutUpForAdoptions = () => API.get('/put-up-for-adoption/fetchall');
+export const fetchPutUpForAdoptionsByUserId = (userId) => API.get(`/put-up-for-adoption/fetchbyuserid/${userId}`);
 
 // point record
 export const fetchPointRecordsByUserId = (userId) => API.get(`/point-record/fetchbyuserid/${userId}`);

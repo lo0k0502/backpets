@@ -35,7 +35,8 @@ export const routeNametoTitle = (routeName) => {
             return 'BackPets';
         case 'EditProfile': return '編輯個人資料';
         case 'PetPassports': return '寵物護照列表';
-        case 'SelfMissions': return '發布過的貼文';
+        case 'SelfMissions': return '發布過的任務';
+        case 'SelfPutUpForAdoptions': return '發布過的送養貼文';
         case 'SelfClues': return '回報過的線索';
         case 'ExchangeRecord': return '兌換紀錄';
         case 'PointRecord': return '點數紀錄';

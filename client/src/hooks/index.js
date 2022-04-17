@@ -13,6 +13,7 @@ import {
     fetchPointRecordsByUserId,
     fetchMissionsByUserId,
     fetchMission,
+    fetchPutUpForAdoptionsByUserId,
 } from '../api';
 
 export default {
@@ -26,6 +27,7 @@ export default {
     useSelfClues,
     useReports,
     usePutUpForAdoptions,
+    useSelfPutUpForAdoptions,
     useUser,
     usePets,
     useSelfPets,
@@ -395,12 +397,12 @@ export const useReports = (dependencies = []) => {
  *  allPutUpForAdoptions: {
  *      _id: String,
  *      petId: String,
+ *      userId: String,
  *      content: String,
  *      post_time: Number,
- *      location: {
- *          latitude: Number,
- *          longitude: Number,
- *      },
+ *      county: String,
+ *      district: String,
+ *      phone: String,
  *  }[],
  *  refreshAllPutUpForAdoptions: Function,
  *  isFetchingAllPutUpForAdoptions: boolean,
@@ -439,6 +441,57 @@ export const usePutUpForAdoptions = (dependencies = []) => {
         allPutUpForAdoptions: putUpForAdoptions,
         refreshAllPutUpForAdoptions: fetchPutUpForAdoptions,
         isFetchingAllPutUpForAdoptions: isFetching,
+    };
+};
+
+/**
+ * @param {any} userId
+ * @returns {{
+ *  selfPutUpForAdoptions: {
+ *      _id: String,
+ *      petId: String,
+ *      userId: String,
+ *      content: String,
+ *      post_time: Number,
+ *      county: String,
+ *      district: String,
+ *      phone: String,
+ *  }[],
+ *  refreshSelfPutUpForAdoptions: Function,
+ *  isFetchingSelfPutUpForAdoptions: boolean
+ * }}
+ */
+export const useSelfPutUpForAdoptions = (userId, dependencies = []) => {
+    const [putUpForAdoptions, setPutUpForAdoptions] = useState([]);
+    const isMounted = useRef(true);
+    const [isFetching, setIsFetching] = useState(false);
+
+    // Fetch putUpForAdoptions by userId
+    const fetchPutUpForAdoptions = async () => {
+        if (isMounted.current) setIsFetching(true);
+
+        try {
+            const result = await fetchPutUpForAdoptionsByUserId(userId);
+            if (isMounted.current) setPutUpForAdoptions(result.data.result);
+        } catch (error) {
+            console.log(error);
+        }
+
+        if (isMounted.current) setIsFetching(false);
+    };
+
+    useEffect(() => {
+        isMounted.current = true;
+
+        if (userId) fetchPutUpForAdoptions();
+
+        return () => { isMounted.current = false };
+    }, [userId, ...dependencies]);
+
+    return {
+        selfPutUpForAdoptions: putUpForAdoptions,
+        refreshSelfPutUpForAdoptions: fetchPutUpForAdoptions,
+        isFetchingSelfPutUpForAdoptions: isFetching,
     };
 };
 

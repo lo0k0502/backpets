@@ -32,7 +32,6 @@ export default () => {
   const { showSnackbar } = useContext(Context);
 
   const [putUpForAdoptionDialog, setPutUpForAdoptionDialog] = useState(false);// Whether putUpForAdoption dialog is open
-  const [editPutUpForAdoptionDialog, setEditPutUpForAdoptionDialog] = useState(false);// Whether edit putUpForAdoption dialog is open
   const [editPutUpForAdoption, setEditPutUpForAdoption] = useState({});
   const [violationReportDialog, setViolationReportDialog] = useState(false);
   const [editPutUpForAdoptionPoster, setEditPutUpForAdoptionPoster] = useState({});
