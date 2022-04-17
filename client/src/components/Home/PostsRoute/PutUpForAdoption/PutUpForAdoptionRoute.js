@@ -20,7 +20,6 @@ import { constants } from '../../../../utils';
 import SelectButton from '../../SelectButton';
 import TagsView from '../TagsView';
 import ViolationReportDialog from '../ViolationReportDialog';
-import EditPutUpForAdoptionDialog from './EditPutUpForAdoptionDialog';
 import PutUpForAdoptionCard from './PutUpForAdoptionCard';
 import PutUpForAdoptionDialog from './PutUpForAdoptionDialog';
 
@@ -58,11 +57,8 @@ export default () => {
         || pet.breed.search(user.searchText) !== -1
         || pet.gender.search(user.searchText) !== -1
       ) && (
-        county !== '全部'
-        && (
-          putUpForAdoption.county === county
-          && putUpForAdoption.district === district
-        )
+        (county === '全部' || putUpForAdoption.county === county)
+        && (district === '全部' || putUpForAdoption.district === district)
       )
     );
   };
@@ -89,14 +85,27 @@ export default () => {
       ) : putUpForAdoptionsMatchTag;
       if (!putUpForAdoptionsMatchTagAndSearchText.length) return false
 
-      const putUpForAdoptionsMatchTagAndSearchTextAndArea = county !== '全部' ? (
-        putUpForAdoptionsMatchTagAndSearchText.filter(putUpForAdoption => {
-          return putUpForAdoption.county === county && putUpForAdoption.district === district;
-        })
-      ) : putUpForAdoptionsMatchTagAndSearchText;
+      const putUpForAdoptionsMatchTagAndSearchTextAndArea = putUpForAdoptionsMatchTagAndSearchText.filter(putUpForAdoption => {
+        return (
+          (county === '全部' || putUpForAdoption.county === county)
+          && (district === '全部' || putUpForAdoption.district === district)
+        );
+      });
 
       return putUpForAdoptionsMatchTagAndSearchTextAndArea.length ? true : false;
   };
+
+  const PutUpForAdoptionItem = putUpForAdoption => (
+    <PutUpForAdoptionCard
+      key={putUpForAdoption._id}
+      putUpForAdoption={putUpForAdoption}
+      tagSelected={selectedTags.length}
+      setEditPutUpForAdoption={setEditPutUpForAdoption}
+      setPutUpForAdoptionDialog={setPutUpForAdoptionDialog}
+      setViolationReportDialog={setViolationReportDialog}
+      setEditPutUpForAdoptionPoster={setEditPutUpForAdoptionPoster}
+    />
+  );
 
   return (
     <>
@@ -141,18 +150,14 @@ export default () => {
           <PutUpForAdoptionDialog
             visible={putUpForAdoptionDialog}
             close={() => setPutUpForAdoptionDialog(false)}
+            putUpForAdoption={editPutUpForAdoption}
+            setPutUpForAdoption={setEditPutUpForAdoption}
             allPutUpForAdoptions={allPutUpForAdoptions}
             refreshAllPutUpForAdoptions={refreshAllPutUpForAdoptions}
             isFetchingAllPutUpForAdoptions={isFetchingAllPutUpForAdoptions}
             selfPets={selfPets}
             refreshSelfPets={refreshSelfPets}
             isFetchingSelfPets={isFetchingSelfPets}
-          />
-          <EditPutUpForAdoptionDialog
-            putUpForAdoption={editPutUpForAdoption}
-            visible={editPutUpForAdoptionDialog}
-            close={() => setEditPutUpForAdoptionDialog(false)}
-            refreshAllPutUpForAdoptions={refreshAllPutUpForAdoptions}
           />
           <ViolationReportDialog
             postType='putUpForAdoption'
@@ -169,32 +174,11 @@ export default () => {
             allPutUpForAdoptions.length ? (
               selectedTags.length || user.searchText || county !== '全部' ? (
                 checkPutUpForAdoptionsMatchTagAndSearchTextAndArea() ? (
-                  allPutUpForAdoptions.filter(checkPutUpForAdoptionMatchTagAndSearchTextAndArea).map(putUpForAdoption => (
-                    <PutUpForAdoptionCard
-                      key={putUpForAdoption._id}
-                      putUpForAdoption={putUpForAdoption}
-                      tagSelected={selectedTags.length}
-                      setEditPutUpForAdoption={setEditPutUpForAdoption}
-                      setEditPutUpForAdoptionDialog={setEditPutUpForAdoptionDialog}
-                      setViolationReportDialog={setViolationReportDialog}
-                      setEditPutUpForAdoptionPoster={setEditPutUpForAdoptionPoster}
-                    />
-                  ))
+                  allPutUpForAdoptions.filter(checkPutUpForAdoptionMatchTagAndSearchTextAndArea).map(PutUpForAdoptionItem)
                 ) : (
                   <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
                 )
-              ) : (
-                allPutUpForAdoptions.map(putUpForAdoption => (
-                  <PutUpForAdoptionCard
-                    key={putUpForAdoption._id}
-                    putUpForAdoption={putUpForAdoption}
-                    setEditPutUpForAdoption={setEditPutUpForAdoption}
-                    setEditPutUpForAdoptionDialog={setEditPutUpForAdoptionDialog}
-                    setViolationReportDialog={setViolationReportDialog}
-                    setEditPutUpForAdoptionPoster={setEditPutUpForAdoptionPoster}
-                  />
-                ))
-              )
+              ) : allPutUpForAdoptions.map(PutUpForAdoptionItem)
             ) : <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
           )
         }

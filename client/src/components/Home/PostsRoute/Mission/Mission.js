@@ -132,6 +132,25 @@ export default ({ navigation }) => {
         return !!missionsMatchTagAndSearchTextAndCompleted.length;
     };
 
+    const MissionItem = mission => (
+        <MissionCard
+            key={mission._id}
+            mission={mission}
+            tagSelected={selectedTags.length}
+            onViewCluePress={() => {
+                navigation.navigate('Clue', { missionId: mission._id });
+            }}
+            onReportCluePress={() => {
+                setAddClueMissionId(mission._id);
+                setClueDialog(true);
+            }}
+            setEditMission={setEditMission}
+            setMissionDialog={setMissionDialog}
+            setViolationReportDialog={setViolationReportDialog}
+            setEditMissionPoster={setEditMissionPoster}
+        />
+    );
+
     return (
         <>
             <TagsView tagsState={[animalTags, setAnimalTags]} />
@@ -202,46 +221,11 @@ export default ({ navigation }) => {
                         allMissions.length ? (
                             selectedTags.length || user.searchText || completed !== constants.completedOptions[0] ? (
                                 checkMissionsMatchFilters() ? (
-                                    allMissions.filter(checkMissionMatchFilters).map(mission => (
-                                        <MissionCard
-                                            key={mission._id}
-                                            mission={mission}
-                                            tagSelected={selectedTags.length}
-                                            onViewCluePress={() => {
-                                                navigation.navigate('Clue', { missionId: mission._id });
-                                            }}
-                                            onReportCluePress={() => {
-                                                setAddClueMissionId(mission._id);
-                                                setClueDialog(true);
-                                            }}
-                                            setEditMission={setEditMission}
-                                            setMissionDialog={setMissionDialog}
-                                            setViolationReportDialog={setViolationReportDialog}
-                                            setEditMissionPoster={setEditMissionPoster}
-                                        />
-                                    ))
+                                    allMissions.filter(checkMissionMatchFilters).map(MissionItem)
                                 ) : (
                                     <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
                                 )
-                            ) : (
-                                allMissions.map(mission => (
-                                    <MissionCard
-                                        key={mission._id}
-                                        mission={mission}
-                                        onViewCluePress={() => {
-                                            navigation.navigate('Clue', { missionId: mission._id });
-                                        }}
-                                        onReportCluePress={() => {
-                                            setAddClueMissionId(mission._id);
-                                            setClueDialog(true);
-                                        }}
-                                        setEditMission={setEditMission}
-                                        setMissionDialog={setMissionDialog}
-                                        setViolationReportDialog={setViolationReportDialog}
-                                        setEditMissionPoster={setEditMissionPoster}
-                                    />
-                                ))
-                            )
+                            ) : allMissions.map(MissionItem)
                         ) : <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
                     )
                 }

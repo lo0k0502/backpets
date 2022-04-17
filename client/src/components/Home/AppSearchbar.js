@@ -50,7 +50,7 @@ export default ({
         onSubmitEditing={async e => {
           if (!e.nativeEvent.text) return;
 
-          unwrapResult(await dispatch(updateSearchHistory({ searchHistory: text })));
+          unwrapResult(await dispatch(updateSearchHistory({ searchHistory: user.searchText })));
           if (isSearch) navigation.goBack();
         }}
         dense

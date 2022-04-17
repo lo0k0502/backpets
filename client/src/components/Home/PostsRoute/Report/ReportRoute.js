@@ -28,7 +28,6 @@ export default () => {
   const [reportTags, setReportTags] = useState(constants.reportTagsArray.map(tagName => ({ name: tagName, selected: false })));
 
   const [reportDialog, setReportDialog] = useState(false);// Whether report dialog is open
-  const [editReportDialog, setEditReportDialog] = useState(false);// Whether edit report dialog is open
   const [editReport, setEditReport] = useState({});
   const [violationReportDialog, setViolationReportDialog] = useState(false);
   const [editReportPoster, setEditReportPoster] = useState({});
@@ -52,6 +51,18 @@ export default () => {
 
     return reportsMatchTagAndSearchText.length ? true : false;
   };
+
+  const ReportItem = report => (
+    <ReportCard
+      key={report._id}
+      report={report}
+      tagSelected={selectedTags.length}
+      setEditReport={setEditReport}
+      setReportDialog={setReportDialog}
+      setViolationReportDialog={setViolationReportDialog}
+      setEditReportPoster={setEditReportPoster}
+    />
+  );
 
   return (
     <>
@@ -92,32 +103,11 @@ export default () => {
               allReports.length ? (
                 selectedTags.length || user.searchText ? (
                   checkReportsMatchTagAndSearchText() ? (
-                    allReports.filter(checkReportMatchTagAndSearchText).map(report => (
-                      <ReportCard
-                        key={report._id}
-                        report={report}
-                        tagSelected={selectedTags.length}
-                        setEditReport={setEditReport}
-                        setReportDialog={setReportDialog}
-                        setViolationReportDialog={setViolationReportDialog}
-                        setEditReportPoster={setEditReportPoster}
-                      />
-                    ))
+                    allReports.filter(checkReportMatchTagAndSearchText).map(ReportItem)
                   ) : (
                     <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有通報QQ</Title>
                   )
-                ) : (
-                  allReports.map(report => (
-                    <ReportCard
-                      key={report._id}
-                      report={report}
-                      setEditReport={setEditReport}
-                      setReportDialog={setReportDialog}
-                      setViolationReportDialog={setViolationReportDialog}
-                      setEditReportPoster={setEditReportPoster}
-                    />
-                  ))
-                )
+                ) : allReports.map(ReportItem)
               ) : <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有通報QQ</Title>
             )
           }

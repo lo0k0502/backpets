@@ -23,7 +23,7 @@ export default ({
     putUpForAdoption,
     tagSelected = false,
     setEditPutUpForAdoption = () => {},
-    setEditPutUpForAdoptionDialog = () => {},
+    setPutUpForAdoptionDialog = () => {},
     setViolationReportDialog = () => {},
     setEditPutUpForAdoptionPoster = () => {},
 }) => {
@@ -84,7 +84,7 @@ export default ({
                                             onPress={() => {
                                                 setMenu(false);
                                                 setEditPutUpForAdoption(putUpForAdoption);
-                                                setEditPutUpForAdoptionDialog(true);
+                                                setPutUpForAdoptionDialog(true);
                                             }}
                                         />
                                         <Menu.Item title='刪除貼文' titleStyle={{ color: 'red' }} onPress={() => {}} />

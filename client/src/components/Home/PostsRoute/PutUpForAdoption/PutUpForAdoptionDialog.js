@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     ScrollView,
     View,
-    TextInput as NativeTextInput,
     RefreshControl,
 } from 'react-native';
 import {
@@ -16,15 +15,20 @@ import {
     Subheading,
     TextInput,
 } from 'react-native-paper';
-import { addPutUpForAdoption } from '../../../../api';
+import { addPutUpForAdoption, editPutUpForAdoption } from '../../../../api';
 import { SERVERURL } from '../../../../api/API';
-import { useUpdateEffect } from '../../../../hooks';
-import { constants } from '../../../../utils';
+import { usePet, useUpdateEffect } from '../../../../hooks';
+import { constants, isEmptyObject } from '../../../../utils';
+import DialogActions from '../../../common/DialogActions';
+import TextArea from '../../../common/TextArea';
 import SelectButton from '../../SelectButton';
+import { Skeleton } from '../../Skeleton';
 
 export default ({
     visible,
     close,
+    putUpForAdoption,
+    setPutUpForAdoption = () => {},
     allPutUpForAdoptions,
     refreshAllPutUpForAdoptions,
     isFetchingAllPutUpForAdoptions,
@@ -32,6 +36,8 @@ export default ({
     refreshSelfPets,
     isFetchingSelfPets,
 }) => {
+    const { pet, isFetching: isFetchingPet } = usePet(putUpForAdoption.petId);
+
     const [petsDialog, setPetsDialog] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
@@ -52,11 +58,15 @@ export default ({
     const handleClose = () => {
         close();
 
+        setPutUpForAdoption({});
+
         setPetId('');
         setContent('');
         setCounty(constants.countys[0]);
-        setDistrict(constants.area_data[county][0]);
+        setDistrict(constants.area_data[constants.countys[0]][0]);
         setPhone('');
+
+        setPhoneErrorMsg('');
     };
 
     const checkPhone = (text) => {
@@ -69,14 +79,27 @@ export default ({
         setIsLoading(true);
         
         try {
-            // Add the put up for adoption
-            await addPutUpForAdoption({
-                petId,
-                content,
-                county,
-                district,
-                phone,
-            });
+            if (isEmptyObject(putUpForAdoption)) {
+                // Add the put up for adoption
+                await addPutUpForAdoption({
+                    petId,
+                    content,
+                    county,
+                    district,
+                    phone,
+                });
+            } else {
+                // Edit the put up for adoption
+                await editPutUpForAdoption(
+                    putUpForAdoption._id,
+                    {
+                        content,
+                        county,
+                        district,
+                        phone,
+                    }
+                );
+            }
 
             refreshAllPutUpForAdoptions();
             handleClose();// Close the dialog
@@ -88,83 +111,110 @@ export default ({
     };
 
     useUpdateEffect(() => {
-        if (!petsDialog) return;
+        if (isEmptyObject(putUpForAdoption) || !petsDialog) return;
         refreshAllPutUpForAdoptions();
         refreshSelfPets();
     }, null, [petsDialog]);
 
+    useEffect(() => {
+        if (isEmptyObject(putUpForAdoption)) return;
+
+        setContent(putUpForAdoption.content);
+        setCounty(putUpForAdoption.county);
+        setDistrict(putUpForAdoption.district);
+        setPhone(putUpForAdoption.phone);
+    }, [putUpForAdoption]);
+
+    useEffect(() => {
+        if (isEmptyObject(pet)) return;
+        setPetId(pet._id);
+    }, [pet]);
+
     return (
         <Dialog visible={visible} onDismiss={handleClose}>
-            <Dialog.Title>發佈送養貼文</Dialog.Title>
+            <Dialog.Title>{isEmptyObject(putUpForAdoption) ? '發布' : '編輯'}送養貼文</Dialog.Title>
             <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
                 <ScrollView style={{ height: '80%', paddingHorizontal: 20 }}>
-                    <Portal>
-                        <Dialog visible={petsDialog} onDismiss={() => setPetsDialog(false)}>
-                            <Dialog.Title>請選擇一個寵物</Dialog.Title>
-                            <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
-                                <ScrollView
-                                    style={{
-                                        height: '80%',
-                                        padding: 20,
-                                    }}
-                                    refreshControl={(
-                                        <RefreshControl
-                                            refreshing={isFetchingSelfPets}
-                                            onRefresh={refreshSelfPets}
-                                        />
-                                    )}
-                                >
-                                    <List.Section style={{ marginTop: 0 }}>
-                                        {
-                                            !isFetchingAllPutUpForAdoptions ? (
-                                                allPutUpForAdoptions.length ? (
-                                                    selfPets.map(pet => (
-                                                        <ListItem
-                                                            key={pet._id}
-                                                            pet={pet}
-                                                            disabled={allPutUpForAdoptions.find(putUpForAdoption => putUpForAdoption.petId === pet._id)}
-                                                            onPress={() => {
-                                                                setPetId(pet._id);
-                                                                setPetsDialog(false);
-                                                            }}
-                                                        />
-                                                    ))
-                                                ) : null
-                                            ) : null
-                                        }
-                                    </List.Section>
-                                </ScrollView>
-                            </Dialog.ScrollArea>
-                            <Dialog.Actions>
-                                <Button
-                                    disabled={isLoading}
-                                    onPress={() => setPetsDialog(false)}
-                                    contentStyle={{ paddingHorizontal: 10 }}
-                                >
-                                    取消
-                                </Button>
-                            </Dialog.Actions>
-                        </Dialog>
-                    </Portal>
-                    <Button 
-                        mode='contained'
-                        dark
-                        disabled={isLoading}
-                        style={{ marginVertical: 10, elevation: 0 }}
-                        onPress={() => setPetsDialog(true)}
-                    >
-                        {petId ? '更改寵物' : '選擇寵物(必要)'}
-                    </Button>
                     {
-                        petId ? (
+                        isEmptyObject(putUpForAdoption) ? (
                             <>
-                                <HelperText>送養寵物:</HelperText>
-                                <List.Item
-                                    title={chosenPet.name}
-                                    left={() => <Avatar.Image source={{ uri: `${SERVERURL}/image/${chosenPet.photoId}` }} style={{ backgroundColor: 'white' }} />}
-                                />
+                                <Portal>
+                                    <Dialog visible={petsDialog} onDismiss={() => setPetsDialog(false)}>
+                                        <Dialog.Title>請選擇一個寵物</Dialog.Title>
+                                        <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
+                                            <ScrollView
+                                                style={{
+                                                    height: '80%',
+                                                    padding: 20,
+                                                }}
+                                                refreshControl={(
+                                                    <RefreshControl
+                                                        refreshing={isFetchingSelfPets}
+                                                        onRefresh={refreshSelfPets}
+                                                    />
+                                                )}
+                                            >
+                                                <List.Section style={{ marginTop: 0 }}>
+                                                    {
+                                                        !isFetchingAllPutUpForAdoptions ? (
+                                                            allPutUpForAdoptions.length ? (
+                                                                selfPets.map(pet => (
+                                                                    <ListItem
+                                                                        key={pet._id}
+                                                                        pet={pet}
+                                                                        disabled={allPutUpForAdoptions.find(putUpForAdoption => putUpForAdoption.petId === pet._id)}
+                                                                        onPress={() => {
+                                                                            setPetId(pet._id);
+                                                                            setPetsDialog(false);
+                                                                        }}
+                                                                    />
+                                                                ))
+                                                            ) : null
+                                                        ) : null
+                                                    }
+                                                </List.Section>
+                                            </ScrollView>
+                                        </Dialog.ScrollArea>
+                                        <Dialog.Actions>
+                                            <Button
+                                                disabled={isLoading}
+                                                onPress={() => setPetsDialog(false)}
+                                                contentStyle={{ paddingHorizontal: 10 }}
+                                            >
+                                                取消
+                                            </Button>
+                                        </Dialog.Actions>
+                                    </Dialog>
+                                </Portal>
+                                <Button 
+                                    mode='contained'
+                                    dark
+                                    disabled={isLoading}
+                                    style={{ marginVertical: 10, elevation: 0 }}
+                                    onPress={() => setPetsDialog(true)}
+                                >
+                                    {petId ? '更改寵物' : '選擇寵物(必要)'}
+                                </Button>
                             </>
                         ) : null
+                    }
+                    <HelperText>送養寵物:</HelperText>
+                    {
+                        isFetchingPet ? (
+                            <Skeleton mode='item' />
+                        ) : (
+                            petId ? (
+                                <List.Item
+                                    title={chosenPet.name}
+                                    left={() => (
+                                        <Avatar.Image
+                                            source={{ uri: `${SERVERURL}/image/${chosenPet.photoId}` }}
+                                            style={{ backgroundColor: 'white' }}
+                                        />
+                                    )}
+                                />
+                            ) : null
+                        )
                     }
                     <Divider />
                     <HelperText>
@@ -201,55 +251,29 @@ export default ({
                     <HelperText type='error'>
                         {phoneErrorMsg}
                     </HelperText>
-                    <TextInput
-                        mode='outlined'
+                    <TextArea
                         label='補充(非必要)'
                         disabled={isLoading}
                         value={content}
-                        multiline
                         maxLength={50}
-                        right={<TextInput.Affix text={`${content.length}/50`} />}
-                        render={(innerProps) => (
-                            <NativeTextInput
-                                {...innerProps}
-                                style={[
-                                    innerProps.style,
-                                    innerProps.multiline ? {
-                                        paddingTop: 8,
-                                        paddingBottom: 8,
-                                        height: 200,
-                                    } : null,
-                                ]}
-                            />
-                        )}
                         onChangeText={setContent}
                     />
                     <View style={{ height: 50 }} />
                 </ScrollView>
             </Dialog.ScrollArea>
-            <Dialog.Actions>
-                <Button
-                    disabled={isLoading}
-                    onPress={handleClose}
-                    contentStyle={{ paddingHorizontal: 10 }}
-                >
-                    取消
-                </Button>
-                <Button
-                    mode='contained'
-                    dark
-                    disabled={
-                        isLoading
-                        || !petId
-                        || !phone
-                    }
-                    loading={isLoading}
-                    onPress={handleSubmit}
-                    contentStyle={{ paddingHorizontal: 10 }}
-                >
-                    發佈
-                </Button>
-            </Dialog.Actions>
+            <DialogActions
+                cancelBtnLabel='取消'
+                submitBtnLabel={isEmptyObject(putUpForAdoption) ? '發布' : '編輯'}
+                cancelBtnDisabled={isLoading}
+                submitBtnDisabled={
+                    isLoading
+                    || !petId
+                    || !phone
+                }
+                isLoading={isLoading}
+                onSubmit={handleSubmit}
+                onCancel={handleClose}
+            />
         </Dialog>
     );
 };
