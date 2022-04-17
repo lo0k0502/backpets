@@ -1,14 +1,14 @@
 import React from 'react';
 import { RefreshControl, ScrollView } from 'react-native';
-import { List, Title, useTheme } from 'react-native-paper';
+import { List, Title } from 'react-native-paper';
 import { useSelector } from 'react-redux';
-import { useSelfPointRecords } from '../../../hooks';
+import { useSelfPutAdoptionRecords } from '../../../hooks';
 import { selectUser } from '../../../redux/userSlice';
-import PointRecordItem from './PointRecordItem';
+import PutAdoptionRecordItem from './PutAdoptionRecordItem';
 
 export default () => {
     const user = useSelector(selectUser);
-    const { pointRecords, refreshPointRecords, isFetching } = useSelfPointRecords(user.info?._id);
+    const { selfPutAdoptionRecords, refreshSelfPutAdoptionRecords, isFetchingSelfPutAdoptionRecords } = useSelfPutAdoptionRecords(user.info?._id);
 
     return (
         <ScrollView
@@ -18,17 +18,17 @@ export default () => {
             }}
             refreshControl={(
                 <RefreshControl
-                    refreshing={isFetching}
-                    onRefresh={refreshPointRecords}
+                    refreshing={isFetchingSelfPutAdoptionRecords}
+                    onRefresh={refreshSelfPutAdoptionRecords}
                 />
             )}
         >
             <List.Section style={{ flex: 1, marginTop: 0 }}>
                 {
-                    isFetching ? null : (
-                        pointRecords.length ? (
-                            pointRecords.map(pointRecord => (
-                                <PointRecordItem key={pointRecord._id} pointRecord={pointRecord} />
+                    isFetchingSelfPutAdoptionRecords ? null : (
+                        selfPutAdoptionRecords.length ? (
+                            selfPutAdoptionRecords.map(selfPutAdoptionRecord => (
+                                <PutAdoptionRecordItem key={selfPutAdoptionRecord._id} selfPutAdoptionRecord={selfPutAdoptionRecord} />
                             ))
                         ) : (
                             <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有紀錄QQ</Title>

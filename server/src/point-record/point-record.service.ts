@@ -16,7 +16,7 @@ export class PointRecordService {
     }
 
     async findSome(pointRecordFilterQuery: FilterQuery<PointRecordDocument>): Promise<PointRecord[]> {
-        return this.pointRecordModel.find(pointRecordFilterQuery).exec();
+        return this.pointRecordModel.find(pointRecordFilterQuery).sort({ time: -1 }).exec();
     }
 
     async updateOne(pointRecordFilterQuery: FilterQuery<PointRecordDocument>, pointRecord: Partial<PointRecord>): Promise<PointRecord> {

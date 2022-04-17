@@ -16,7 +16,7 @@ export class ReportService {
     }
 
     async findSome(reportFilterQuery: FilterQuery<ReportDocument>): Promise<Report[]> {
-        return this.reportModel.find(reportFilterQuery).exec();
+        return this.reportModel.find(reportFilterQuery).sort({ post_time: -1 }).exec();
     }
 
     async findAll(): Promise<Report[]> {

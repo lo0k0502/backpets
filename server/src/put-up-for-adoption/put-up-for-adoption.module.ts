@@ -1,3 +1,7 @@
+import { AdoptionRecordService } from './../adoption-record/adoption-record.service';
+import { AdoptionRecord, AdoptionRecordSchema } from './../adoption-record/adoption-record.schema';
+import { UserService } from './../user/user.service';
+import { User, UserSchema } from './../user/user.schema';
 import { Pet, PetSchema } from './../pet/pet.schema';
 import { AuthMiddleware } from './../auth/auth.middleware';
 import { PutUpForAdoption, PutUpForAdoptionSchema } from './put-up-for-adoption.schema';
@@ -14,6 +18,8 @@ import { PetService } from 'src/pet/pet.service';
     MongooseModule.forFeature([
       { name: PutUpForAdoption.name, schema: PutUpForAdoptionSchema },
       { name: Pet.name, schema: PetSchema },
+      { name: User.name, schema: UserSchema },
+      { name: AdoptionRecord.name, schema: AdoptionRecordSchema },
     ]),
     JwtModule.register({}),
   ],
@@ -21,6 +27,8 @@ import { PetService } from 'src/pet/pet.service';
     PutUpForAdoptionService,
     AuthService,
     PetService,
+    UserService,
+    AdoptionRecordService,
   ],
   controllers: [PutUpForAdoptionController]
 })

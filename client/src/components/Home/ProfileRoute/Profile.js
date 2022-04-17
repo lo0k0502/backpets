@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Avatar, List, Divider, useTheme, Badge } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
@@ -60,25 +60,28 @@ export default ({ navigation }) => {
         </View>
       </View>
 
-      <List.Section style={{ marginVertical: 0 }}>
-        {constants.profileRouteNamesCH.map((title, index) => (
-          <ListItem
-            key={index}
-            title={title}
-            right={() => (
-              <Badge
-                visible={title === constants.profileRouteNamesCH[3] && selfClues.filter(clue => clue.awarded && !clue.pointsReceived).length}
-                style={{
-                  alignSelf: 'center',
-                }}
-              >
-                {selfClues.filter(clue => clue.awarded && !clue.pointsReceived).length}
-              </Badge>
-            )}
-            onItemPress={() => navigation.navigate(constants.profileRouteNames[index])}
-          />
-        ))}
-      </List.Section>
+      <ScrollView>
+        <List.Section style={{ marginVertical: 0 }}>
+          {constants.profileRouteNamesCH.map((title, index) => (
+            <ListItem
+              key={index}
+              title={title}
+              right={() => (
+                <Badge
+                  visible={title === constants.profileRouteNamesCH[3] && selfClues.filter(clue => clue.awarded && !clue.pointsReceived).length}
+                  style={{
+                    alignSelf: 'center',
+                  }}
+                >
+                  {selfClues.filter(clue => clue.awarded && !clue.pointsReceived).length}
+                </Badge>
+              )}
+              onItemPress={() => navigation.navigate(constants.profileRouteNames[index])}
+            />
+          ))}
+        </List.Section>
+        <View style={{ height: 70 }} />
+      </ScrollView>
     </View>
   );
 };

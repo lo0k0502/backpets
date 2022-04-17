@@ -38,6 +38,8 @@ export const routeNametoTitle = (routeName) => {
         case 'SelfMissions': return '發布過的任務';
         case 'SelfPutUpForAdoptions': return '發布過的送養貼文';
         case 'SelfClues': return '回報過的線索';
+        case 'PutAdoptionRecord': return '送養紀錄';
+        case 'AdoptionRecord': return '領養紀錄';
         case 'ExchangeRecord': return '兌換紀錄';
         case 'PointRecord': return '點數紀錄';
         case 'ChangePassword': return '更改密碼';

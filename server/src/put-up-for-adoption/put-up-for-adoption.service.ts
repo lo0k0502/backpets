@@ -16,7 +16,7 @@ export class PutUpForAdoptionService {
     }
   
     async findSome(putUpForAdoptionFilterQuery: FilterQuery<PutUpForAdoptionDocument>): Promise<PutUpForAdoption[]> {
-      return this.putUpForAdoptionModel.find(putUpForAdoptionFilterQuery).exec();
+      return this.putUpForAdoptionModel.find(putUpForAdoptionFilterQuery).sort({ completed: 1, post_time: -1 }).exec();
     }
   
     async findAll(): Promise<PutUpForAdoption[]> {

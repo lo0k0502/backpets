@@ -25,6 +25,12 @@ export class PutUpForAdoption {
 
   @Prop({ required: true })
   phone: String;
+
+  @Prop({ required: true })
+  completed: Boolean;
+
+  @Prop()
+  adoptedUserId: Types.ObjectId;
 }
 
 export const PutUpForAdoptionSchema = SchemaFactory.createForClass(PutUpForAdoption);

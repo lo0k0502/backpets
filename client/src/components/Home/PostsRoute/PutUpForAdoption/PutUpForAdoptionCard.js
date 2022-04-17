@@ -3,6 +3,7 @@ import moment from 'moment';
 import { View } from 'react-native';
 import {
     Avatar,
+    Caption,
     Card,
     IconButton,
     Menu,
@@ -63,48 +64,51 @@ export default ({
                         />
                     )}
                     right={props => (
-                        <Menu
-                            {...props}
-                            visible={menu}
-                            onDismiss={() => setMenu(false)}
-                            anchor={(
-                                <IconButton
-                                    icon='dots-vertical'
-                                    size={30}
-                                    onPress={() => setMenu(true)}
-                                />
-                            )}
-                            theme={{ roundness: 0 }}
-                        >
-                            {
-                                user.info._id === poster._id ? (
-                                    <>
+                        <View {...props} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Caption>{putUpForAdoption.completed ? '已完成' : '未完成'}</Caption>
+                            <Menu
+                                {...props}
+                                visible={menu}
+                                onDismiss={() => setMenu(false)}
+                                anchor={(
+                                    <IconButton
+                                        icon='dots-vertical'
+                                        size={30}
+                                        onPress={() => setMenu(true)}
+                                    />
+                                )}
+                                theme={{ roundness: 0 }}
+                            >
+                                {
+                                    user.info._id === poster._id ? (
+                                        <>
+                                            <Menu.Item
+                                                title='編輯貼文'
+                                                onPress={() => {
+                                                    setMenu(false);
+                                                    setEditPutUpForAdoption(putUpForAdoption);
+                                                    setPutUpForAdoptionDialog(true);
+                                                }}
+                                            />
+                                            <Menu.Item title='刪除貼文' titleStyle={{ color: 'red' }} onPress={() => {}} />
+                                        </>
+                                    ) : (
                                         <Menu.Item
-                                            title='編輯貼文'
+                                            title='檢舉貼文'
+                                            titleStyle={{
+                                                color: 'red',
+                                            }}
                                             onPress={() => {
                                                 setMenu(false);
                                                 setEditPutUpForAdoption(putUpForAdoption);
-                                                setPutUpForAdoptionDialog(true);
+                                                setEditPutUpForAdoptionPoster(poster);
+                                                setViolationReportDialog(true);
                                             }}
                                         />
-                                        <Menu.Item title='刪除貼文' titleStyle={{ color: 'red' }} onPress={() => {}} />
-                                    </>
-                                ) : (
-                                    <Menu.Item
-                                        title='檢舉貼文'
-                                        titleStyle={{
-                                            color: 'red',
-                                        }}
-                                        onPress={() => {
-                                            setMenu(false);
-                                            setEditPutUpForAdoption(putUpForAdoption);
-                                            setEditPutUpForAdoptionPoster(poster);
-                                            setViolationReportDialog(true);
-                                        }}
-                                    />
-                                )
-                            }
-                        </Menu>
+                                    )
+                                }
+                            </Menu>
+                        </View>
                     )}
                 />
                 {

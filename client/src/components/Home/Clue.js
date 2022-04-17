@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     RefreshControl,
     ScrollView,
@@ -10,15 +10,11 @@ import {
     Title,
     useTheme,
 } from 'react-native-paper';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../../redux/userSlice';
 import { completeMission } from '../../api';
 import { useMission, useMissionClues } from '../../hooks';
 import ClueCard from './ClueCard';
-import Context from '../../context';
 
 export default ({ route }) => {
-    const user = useSelector(selectUser);
     const { missionId } = route.params;
     const { colors } = useTheme();
     const { mission, refreshMission, isFetchingMission } = useMission(missionId);
@@ -40,11 +36,10 @@ export default ({ route }) => {
         setIsLoading(true);
 
         try {
-            await completeMission({
+            await completeMission(
                 missionId,
-                userId: user.info._id,
-                chosen_clueIds: clueCheckBoxes.filter(clueCheckBox => clueCheckBox.status === 'checked').map(clueCheckBox => clueCheckBox.id),
-            });
+                { chosen_clueIds: clueCheckBoxes.filter(clueCheckBox => clueCheckBox.status === 'checked').map(clueCheckBox => clueCheckBox.id) }
+            );
 
             refreshPage();
             setSelecting(false);

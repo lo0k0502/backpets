@@ -36,7 +36,7 @@ export const deleteImage = (photoId) => API.delete(`/image/${photoId}`);
 // mission
 export const addMission = (payload) => API.post('/mission/add', payload);
 export const editMission = (missionId, payload) => API.post(`/mission/${missionId}`, payload);
-export const completeMission = (payload) => API.post('/mission/completemission', payload);
+export const completeMission = (missionId, payload) => API.post(`/mission/completemission/${missionId}`, payload);
 export const fetchAllMissions = () => API.get('/mission/fetchall');
 export const fetchMissionsByUserId = (userId) => API.get(`/mission/fetchbyuserid/${userId}`);
 export const fetchMissionsByPetId = (petId) => API.get(`/mission/fetchbypetid/${petId}`);
@@ -69,3 +69,7 @@ export const addFeedback = (payload) => API.post('/feedback/add', payload);
 // violation report
 export const addViolationReport = (payload) => API.post('/violation-report/add', payload);
 export const deleteViolationReport = (violationReportId) => API.delete(`/violation-report/${violationReportId}`);
+
+// adoption record
+export const fetchAdoptionRecordsByUserId = (userId) => API.get(`/adoption-record/fetchbyuserid/${userId}`);
+export const fetchAdoptionRecordsByPutUserId = (userId) => API.get(`/adoption-record/fetchbyputuserid/${userId}`);

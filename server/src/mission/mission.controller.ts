@@ -64,16 +64,16 @@ export class MissionController {
         }
     }
 
-    @Post('completemission')
-    async CompleteMission(@Body() { missionId, userId, chosen_clueIds }, @Res() res: Response) {
+    @Post('completemission/:missionid')
+    async CompleteMission(@Param() { missionid }, @Body() { chosen_clueIds }, @Res() res: Response) {
         try {
-            const result = await this.missionService.findOne({ _id: missionId });
-            if (!result) return res.status(400).json({ message: '任務不存在' });
+            const existMission = await this.missionService.findOne({ _id: missionid });
+            if (!existMission) return res.status(400).json({ message: '任務不存在' });
 
-            if (result.completed) return res.status(400).json({ message: '任務已完成' });
+            if (existMission.completed) return res.status(400).json({ message: '任務已完成' });
 
             await this.missionService.updateOne(
-                { _id: missionId },
+                { _id: missionid },
                 {
                     completed: true,
                     chosen_clueIds: chosen_clueIds.map(chosen_clueId => new Types.ObjectId(chosen_clueId)),
@@ -87,7 +87,7 @@ export class MissionController {
 
                 await this.pointRecordService.create({
                     points: 10,
-                    missionId: new Types.ObjectId(missionId),
+                    missionId: new Types.ObjectId(missionid),
                     userId: existCluePoster.userId,
                     clueId: new Types.ObjectId(clueId),
                     productId: null,
@@ -109,8 +109,8 @@ export class MissionController {
     @Post(':missionid')
     async EditMission(@Param() { missionid }, @Body() { content, lost_time, location }, @Res() res: Response) {
         try {
-            const result = await this.missionService.findOne({ _id: missionid });
-            if (!result) return res.status(400).json({ message: '任務不存在' });
+            const existMission = await this.missionService.findOne({ _id: missionid });
+            if (!existMission) return res.status(400).json({ message: '任務不存在' });
 
             await this.missionService.updateOne({ _id: missionid }, { content, lost_time, location });
             return res.status(200).json({ success: true });
@@ -123,8 +123,8 @@ export class MissionController {
     @Delete(':missionid')
     async DeleteMission(@Param() { missionid }, @Res() res: Response) {
         try {
-            const result = await this.missionService.findOne({ _id: missionid });
-            if (!result) return res.status(400).json({ message: '任務不存在' });
+            const existMission = await this.missionService.findOne({ _id: missionid });
+            if (!existMission) return res.status(400).json({ message: '任務不存在' });
     
             await this.missionService.deleteOne({ _id: missionid });
             return res.status(200).json({ success: true });

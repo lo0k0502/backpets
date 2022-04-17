@@ -14,25 +14,9 @@ import {
     fetchMissionsByUserId,
     fetchMission,
     fetchPutUpForAdoptionsByUserId,
+    fetchAdoptionRecordsByUserId,
+    fetchAdoptionRecordsByPutUserId,
 } from '../api';
-
-export default {
-    useUpdateEffect,
-    useStateWithValidation,
-    useCurrentLocation,
-    useMissions,
-    useSelfMissions,
-    useMission,
-    useMissionClues,
-    useSelfClues,
-    useReports,
-    usePutUpForAdoptions,
-    useSelfPutUpForAdoptions,
-    useUser,
-    usePets,
-    useSelfPets,
-    usePet,
-};
 
 export const useOnceUpdateEffect = (callback, dependencies) => {
     const isFirst = useRef(true);
@@ -403,6 +387,7 @@ export const useReports = (dependencies = []) => {
  *      county: String,
  *      district: String,
  *      phone: String,
+ *      completed: Boolean,
  *  }[],
  *  refreshAllPutUpForAdoptions: Function,
  *  isFetchingAllPutUpForAdoptions: boolean,
@@ -456,6 +441,7 @@ export const usePutUpForAdoptions = (dependencies = []) => {
  *      county: String,
  *      district: String,
  *      phone: String,
+ *      completed: Boolean,
  *  }[],
  *  refreshSelfPutUpForAdoptions: Function,
  *  isFetchingSelfPutUpForAdoptions: boolean
@@ -745,5 +731,122 @@ export const useSelfPointRecords = (userId, dependencies = []) => {
         pointRecords,
         refreshPointRecords: fetchPointRecords,
         isFetching,
-    }
+    };
+};
+
+/**
+ * @param {String} userId 
+ * @param {any[]} dependencies 
+ * @returns {{
+ *  selfAdoptionRecords: {
+ *      _id: String,
+ *      putUpForAdoptionId: String,
+ *      userId: String,
+ *      petId: String,
+ *      time: Number,
+ *  }[],
+ *  refreshSelfAdoptionRecords: Function,
+ *  isFetchingSelfAdoptionRecords: boolean,
+ * }}
+ */
+export const useSelfAdoptionRecords = (userId, dependencies = []) => {
+    const [adoptionRecords, setAdoptionRecords] = useState([]);
+    const isMounted = useRef(true);
+    const [isFetching, setIsFetching] = useState(false);
+
+    const fetchAdoptionRecords = async () => {
+        if (isMounted.current) setIsFetching(true);
+
+        try {
+            const result = await fetchAdoptionRecordsByUserId(userId);
+            if (isMounted.current) setAdoptionRecords(result.data.result);
+        } catch (error) {
+            console.log(error);
+        }
+
+        if (isMounted.current) setIsFetching(false);
+    };
+
+    useEffect(() => {
+        isMounted.current = true;
+
+        if (userId) fetchAdoptionRecords();
+
+        return () => { isMounted.current = false };
+    }, [userId, ...dependencies]);
+    
+    return {
+        selfAdoptionRecords: adoptionRecords,
+        refreshAdoptionRecords: fetchAdoptionRecords,
+        isFetchingSelfAdoptionRecords: isFetching,
+    };
+};
+
+/**
+ * @param {String} userId 
+ * @param {any[]} dependencies 
+ * @returns {{
+ *  selfPutAdoptionRecords: {
+ *      _id: String,
+ *      putUpForAdoptionId: String,
+ *      userId: String,
+ *      petId: String,
+ *      time: Number,
+ *  }[],
+ *  refreshSelfPutAdoptionRecords: Function,
+ *  isFetchingSelfPutAdoptionRecords: boolean,
+ * }}
+ */
+export const useSelfPutAdoptionRecords = (userId, dependencies = []) => {
+    const [putAdoptionRecords, setPutAdoptionRecords] = useState([]);
+    const isMounted = useRef(true);
+    const [isFetching, setIsFetching] = useState(false);
+
+    const fetchPutAdoptionRecords = async () => {
+        if (isMounted.current) setIsFetching(true);
+
+        try {
+            const result = await fetchAdoptionRecordsByPutUserId(userId);
+            if (isMounted.current) setPutAdoptionRecords(result.data.result);
+        } catch (error) {
+            console.log(error);
+        }
+
+        if (isMounted.current) setIsFetching(false);
+    };
+
+    useEffect(() => {
+        isMounted.current = true;
+
+        if (userId) fetchPutAdoptionRecords();
+
+        return () => { isMounted.current = false };
+    }, [userId, ...dependencies]);
+    
+    return {
+        selfPutAdoptionRecords: putAdoptionRecords,
+        refreshPutAdoptionRecords: fetchPutAdoptionRecords,
+        isFetchingSelfPutAdoptionRecords: isFetching,
+    };
+};
+
+export default {
+    useUpdateEffect,
+    useStateWithValidation,
+    useCurrentLocation,
+    useMissions,
+    useSelfMissions,
+    useMission,
+    useMissionClues,
+    useSelfClues,
+    useReports,
+    usePutUpForAdoptions,
+    useSelfPutUpForAdoptions,
+    useUser,
+    usePets,
+    useSelfPets,
+    usePet,
+    useSelfPointRecords,
+    useSelfAdoptionRecords,
+    useSelfPutAdoptionRecords,
 };

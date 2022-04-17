@@ -16,7 +16,7 @@ export class MissionService {
   }
 
   async findSome(missionFilterQuery: FilterQuery<MissionDocument>): Promise<Mission[]> {
-    return this.missionModel.find(missionFilterQuery).exec();
+    return this.missionModel.find(missionFilterQuery).sort({ completed: 1, post_time: -1 }).exec();
   }
 
   async findAll(): Promise<Mission[]> {
