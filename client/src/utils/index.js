@@ -1,4 +1,4 @@
-import * as _constants from './constants';
+import _constants from './constants';
 import * as Location from 'expo-location';
 
 export default {

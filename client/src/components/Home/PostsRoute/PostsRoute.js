@@ -17,7 +17,6 @@ export default () => {
 
     useFocusEffect(useCallback(() => {
         return () => {
-            console.log('focus: ', user.searchText);
             if (user.searchText) dispatch(setSearchText(''));
         };
     }, []));

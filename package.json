@@ -1,6 +1,9 @@
 {
     "scripts": {
         "start": "sudo docker-compose up --build",
+        "shclient": "sudo docker-compose -f docker-compose.yml exec client sh",
+        "shweb": "sudo docker-compose -f docker-compose.yml exec web sh",
+        "shserver": "sudo docker-compose -f docker-compose.yml exec server sh",
         "down": "sudo docker-compose down",
         "ps": "sudo docker-compose ps"
     }

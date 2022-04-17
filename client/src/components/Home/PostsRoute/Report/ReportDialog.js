@@ -40,8 +40,7 @@ export default ({ visible, close, refreshAllReports }) => {
     const [mapViewRegion, setMapViewRegion] = useState({
         latitude: currentLatitude,
         longitude: currentLongitude,
-        latitudeDelta: 0.0122,
-        longitudeDelta: 0.003,
+        ...constants.locationDeltas,
     });
     const [photoUrl, setPhotoUrl] = useState('');
     const [photoSize, setPhotoSize] = useState({
@@ -56,8 +55,7 @@ export default ({ visible, close, refreshAllReports }) => {
         setMapViewRegion({
             latitude: currentLatitude,
             longitude: currentLongitude,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
+            ...constants.locationDeltas,
         });
     }, [currentLatitude, currentLongitude]);
 
@@ -69,8 +67,7 @@ export default ({ visible, close, refreshAllReports }) => {
         setMapViewRegion({
             latitude: currentLatitude,
             longitude: currentLongitude,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
+            ...constants.locationDeltas,
         });
         setPhotoUrl('');
 

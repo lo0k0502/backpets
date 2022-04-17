@@ -27,7 +27,7 @@ import { useSelector } from 'react-redux';
 import { addClue, uploadImage } from '../../../../api';
 import { useCurrentLocation } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
-import { shrinkImageToTargetSize } from '../../../../utils';
+import { constants, shrinkImageToTargetSize } from '../../../../utils';
 
 export default ({ visible, close, missionId }) => {
     const user = useSelector(selectUser);
@@ -41,8 +41,7 @@ export default ({ visible, close, missionId }) => {
     const [mapViewRegion, setMapViewRegion] = useState({
         latitude: currentLatitude,
         longitude: currentLongitude,
-        latitudeDelta: 0.0122,
-        longitudeDelta: 0.003,
+        ...constants.locationDeltas,
     });
     const [photoUrl, setPhotoUrl] = useState('');
     const [photoSize, setPhotoSize] = useState({
@@ -57,8 +56,7 @@ export default ({ visible, close, missionId }) => {
         setMapViewRegion({
             latitude: currentLatitude,
             longitude: currentLongitude,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
+            ...constants.locationDeltas,
         });
     }, [currentLatitude, currentLongitude]);
 
@@ -70,8 +68,7 @@ export default ({ visible, close, missionId }) => {
         setMapViewRegion({
             latitude: currentLatitude,
             longitude: currentLongitude,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
+            ...constants.locationDeltas,
         });
         setPhotoUrl('');
 

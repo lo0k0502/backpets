@@ -21,7 +21,6 @@ import { selectUser } from '../../../../redux/userSlice';
 import { useMissions, usePets, useSelfPets } from '../../../../hooks';
 import ClueDialog from './ClueDialog';
 import TagsView from '../TagsView';
-import EditMissionDialog from './EditMissionDialog';
 import { constants } from '../../../../utils';
 import SelectButton from '../../SelectButton';
 import Context from '../../../../context';
@@ -69,7 +68,6 @@ export default ({ navigation }) => {
     const [completed, setCompleted] = useState(constants.completedOptions[0]);
 
     const [missionDialog, setMissionDialog] = useState(false);// Whether mission dialog is open
-    const [editMissionDialog, setEditMissionDialog] = useState(false);// Whether edit mission dialog is open
     const [editMission, setEditMission] = useState({});
     const [violationReportDialog, setViolationReportDialog] = useState(false);
     const [editMissionPoster, setEditMissionPoster] = useState({});
@@ -167,18 +165,14 @@ export default ({ navigation }) => {
                     <MissionDialog
                         visible={missionDialog}
                         close={() => setMissionDialog(false)}
+                        mission={editMission}
+                        setMission={setEditMission}
                         allMissions={allMissions}
                         refreshAllMissions={refreshAllMissions}
                         isFetchingAllMissions={isFetchingAllMissions}
                         selfPets={selfPets}
                         refreshSelfPets={refreshSelfPets}
                         isFetchingSelfPets={isFetchingSelfPets}
-                    />
-                    <EditMissionDialog
-                        mission={editMission}
-                        visible={editMissionDialog}
-                        close={() => setEditMissionDialog(false)}
-                        refreshAllMissions={refreshAllMissions}
                     />
                     <ViolationReportDialog
                         postType='mission'
@@ -221,7 +215,7 @@ export default ({ navigation }) => {
                                                 setClueDialog(true);
                                             }}
                                             setEditMission={setEditMission}
-                                            setEditMissionDialog={setEditMissionDialog}
+                                            setMissionDialog={setMissionDialog}
                                             setViolationReportDialog={setViolationReportDialog}
                                             setEditMissionPoster={setEditMissionPoster}
                                         />
@@ -242,7 +236,7 @@ export default ({ navigation }) => {
                                             setClueDialog(true);
                                         }}
                                         setEditMission={setEditMission}
-                                        setEditMissionDialog={setEditMissionDialog}
+                                        setMissionDialog={setMissionDialog}
                                         setViolationReportDialog={setViolationReportDialog}
                                         setEditMissionPoster={setEditMissionPoster}
                                     />

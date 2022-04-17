@@ -19,9 +19,8 @@ import {
 import { deleteImage, editReport, uploadImage } from '../../../../api';
 import { SERVERURL } from '../../../../api/API';
 import { useCurrentLocation } from '../../../../hooks';
-import { reportTagsArray } from '../../../../utils/constants';
 import TagsView from '../TagsView';
-import { shrinkImageToTargetSize } from '../../../../utils';
+import { constants, shrinkImageToTargetSize } from '../../../../utils';
 import TextArea from '../../../common/TextArea';
 import SelectLocation from '../../../common/SelectLocation';
 import SelectPhoto from '../../../common/SelectPhoto';
@@ -35,12 +34,11 @@ export default ({ report, visible, close, refreshAllReports }) => {
     const [changingLocation, setChangingLocation] = useState(false);
 
     const [content, setContent] = useState('');
-    const [tags, setTags] = useState(reportTagsArray.map(tagName => ({ name: tagName, selected: false })));
+    const [tags, setTags] = useState(constants.reportTagsArray.map(tagName => ({ name: tagName, selected: false })));
     const [mapViewRegion, setMapViewRegion] = useState({
         latitude: currentLatitude,
         longitude: currentLongitude,
-        latitudeDelta: 0.0122,
-        longitudeDelta: 0.003,
+        ...constants.locationDeltas,
     });
     const [photoUrl, setPhotoUrl] = useState('');
     const [photoSize, setPhotoSize] = useState({
@@ -55,23 +53,20 @@ export default ({ report, visible, close, refreshAllReports }) => {
         setMapViewRegion({
             latitude: currentLatitude,
             longitude: currentLongitude,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
+            ...constants.locationDeltas,
         });
     }, [currentLatitude, currentLongitude]);
 
     useEffect(() => {
         setContent(report.content || '');
-        setTags(reportTagsArray.map(tagName => ({ name: tagName, selected: tagName === report.tag })));
+        setTags(constants.reportTagsArray.map(tagName => ({ name: tagName, selected: tagName === report.tag })));
         setMapViewRegion(report.location ? {
             ...report.location,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
+            ...constants.locationDeltas,
         } : {
             latitude: currentLatitude,
             longitude: currentLongitude,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
+            ...constants.locationDeltas,
         });
         setPhotoUrl(report.photoId ? `${SERVERURL}/image/${report.photoId}` : '');
     }, [report]);
@@ -80,16 +75,14 @@ export default ({ report, visible, close, refreshAllReports }) => {
         close();
 
         setContent(report.content || '');
-        setTags(reportTagsArray.map(tagName => ({ name: tagName, selected: tagName === report.tag })));
+        setTags(constants.reportTagsArray.map(tagName => ({ name: tagName, selected: tagName === report.tag })));
         setMapViewRegion(report.location ? {
             ...report.location,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
+            ...constants.locationDeltas,
         } : {
             latitude: currentLatitude,
             longitude: currentLongitude,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
+            ...constants.locationDeltas,
         });
         setPhotoUrl(report.photoId ? `${SERVERURL}/image/${report.photoId}` : '');
 

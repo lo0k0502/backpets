@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 
-export const animalTagsArray = [
+const animalTagsArray = [
     '貓',
     '狗',
     '兔子',
@@ -15,7 +15,7 @@ export const animalTagsArray = [
     '其他',
 ];
 
-export const reportTagsArray = [
+const reportTagsArray = [
     '流浪動物',
     '具攻擊性',
     '受傷動物',
@@ -23,9 +23,9 @@ export const reportTagsArray = [
     '其他',
 ];
 
-export const backIcon = Platform.OS === 'ios' ? 'chevron-left' : 'arrow-left';
+const backIcon = Platform.OS === 'ios' ? 'chevron-left' : 'arrow-left';
 
-export const area_data = {
+const area_data = {
     '臺北市': [
         '中正區', '大同區', '中山區', '萬華區', '信義區', '松山區', '大安區', '南港區', '北投區', '內湖區', '士林區', '文山區'
     ],
@@ -94,9 +94,9 @@ export const area_data = {
     ]
 };
 
-export const countys = Object.keys(area_data);
+const countys = Object.keys(area_data);
 
-export const all_area_data = {
+const all_area_data = {
     '全部': ['全部'],
     '臺北市': [
         '中正區', '大同區', '中山區', '萬華區', '信義區', '松山區', '大安區', '南港區', '北投區', '內湖區', '士林區', '文山區'
@@ -166,16 +166,16 @@ export const all_area_data = {
     ]
 };
 
-export const all_countys = Object.keys(all_area_data);
+const all_countys = Object.keys(all_area_data);
 
-export const pageNames = ['ProfileRoute', 'Map', 'PostsRoute', 'StoreRoute', 'AdoptionRoute'];
+const pageNames = ['ProfileRoute', 'Map', 'PostsRoute', 'StoreRoute', 'AdoptionRoute'];
 
-export const profileRouteNames = ['EditProfile', 'PetPassports', 'SelfMissions', 'SelfClues', 'ExchangeRecord', 'PointRecord', 'ChangePassword'];
-export const profileRouteNamesCH = ['修改個人資料', '寵物護照列表', '發布過的貼文', '回報過的線索', '兌換紀錄', '點數紀錄', '修改密碼'];
+const profileRouteNames = ['EditProfile', 'PetPassports', 'SelfMissions', 'SelfClues', 'ExchangeRecord', 'PointRecord', 'ChangePassword'];
+const profileRouteNamesCH = ['修改個人資料', '寵物護照列表', '發布過的貼文', '回報過的線索', '兌換紀錄', '點數紀錄', '修改密碼'];
 
-export const completedOptions = ['全部', '已完成', '未完成'];
+const completedOptions = ['全部', '已完成', '未完成'];
 
-export const violationReportCategories = [
+const violationReportCategories = [
     '不實資訊',
     '垃圾訊息',
     '暴力',
@@ -184,4 +184,26 @@ export const violationReportCategories = [
     '其他',
 ];
 
-export const AsyncFunction = (async () => {}).constructor;
+const AsyncFunction = (async () => {}).constructor;
+
+const locationDeltas = {
+    latitudeDelta: 0.0122,
+    longitudeDelta: 0.003,
+};
+
+export default {
+    animalTagsArray,
+    reportTagsArray,
+    backIcon,
+    area_data,
+    countys,
+    all_area_data,
+    all_countys,
+    pageNames,
+    profileRouteNames,
+    profileRouteNamesCH,
+    completedOptions,
+    violationReportCategories,
+    AsyncFunction,
+    locationDeltas,
+};

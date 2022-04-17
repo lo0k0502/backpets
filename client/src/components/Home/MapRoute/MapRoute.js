@@ -7,9 +7,9 @@ import { useCurrentLocation, useMissions, useReports, usePets } from '../../../h
 import PostCallout from './PostCallout';
 import ReportCallout from './ReportCallout';
 import TagsView from '../PostsRoute/TagsView';
-import { animalTagsArray, reportTagsArray } from '../../../utils/constants';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
+import { constants } from '../../../utils';
 
 const styles = StyleSheet.create({
   map: {
@@ -52,16 +52,15 @@ export default ({ route, navigation }) => {
     mapView.current.animateToRegion({
       latitude: currentLatitude,
       longitude: currentLongitude,
-      latitudeDelta: 0.0122,
-      longitudeDelta: 0.003,
+      ...constants.locationDeltas,
     }, 1000)
   };
 
   // Tag for Mission
   const { pets } = usePets();
-  const [animalTags, setAnimalTags] = useState(animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
+  const [animalTags, setAnimalTags] = useState(constants.animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
 
-  const selectedTagsForMission = animalTagsArray.filter(tag => animalTags.find(_tag => _tag.name === tag && _tag.selected));
+  const selectedTagsForMission = constants.animalTagsArray.filter(tag => animalTags.find(_tag => _tag.name === tag && _tag.selected));
 
   const checkMissionMatchTagAndSearchText = (mission) => {
       const pet = pets.find(_pet => _pet._id === mission.petId);
@@ -105,9 +104,9 @@ export default ({ route, navigation }) => {
   };
   
   //Tag for Report
-  const [reportTags, setReportTags] = useState(reportTagsArray.map(tagName => ({ name: tagName, selected: false })));
+  const [reportTags, setReportTags] = useState(constants.reportTagsArray.map(tagName => ({ name: tagName, selected: false })));
 
-  const selectedTagsForReport = reportTagsArray.filter(tag => reportTags.find(_tag => _tag.name === tag && _tag.selected));
+  const selectedTagsForReport = constants.reportTagsArray.filter(tag => reportTags.find(_tag => _tag.name === tag && _tag.selected));
 
   const checkReportMatchTagAndSearchText = (report) => (
     (!selectedTagsForReport.length || selectedTagsForReport.includes(report.tag))
@@ -136,8 +135,7 @@ export default ({ route, navigation }) => {
       style={ styles.map }
       region={{
         ...region,
-        latitudeDelta: 0.0122,
-        longitudeDelta: 0.003,
+        ...constants.locationDeltas,
       }}
       showsUserLocation={true}
       followsUserLocation={true}

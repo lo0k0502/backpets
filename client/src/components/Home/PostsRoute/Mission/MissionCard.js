@@ -28,7 +28,7 @@ export default ({
     tagSelected = false,
     onReportCluePress = () => {},
     onViewCluePress = () => {},
-    setEditMissionDialog = () => {},
+    setMissionDialog = () => {},
     setEditMission = () => {},
     setViolationReportDialog = () => {},
     setEditMissionPoster = () => {},
@@ -92,7 +92,7 @@ export default ({
                                                 onPress={() => {
                                                     setMenu(false);
                                                     setEditMission(mission);
-                                                    setEditMissionDialog(true);
+                                                    setMissionDialog(true);
                                                 }}
                                             />
                                             <Menu.Item title='刪除任務' titleStyle={{ color: 'red' }} onPress={() => {}} />

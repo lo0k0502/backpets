@@ -2,10 +2,10 @@ import React, { useCallback, useRef } from 'react';
 import { Appbar, TextInput, useTheme } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser, setSearchText } from '../../redux/userSlice';
-import { backIcon } from '../../utils/constants';
 import { useFocusEffect } from '@react-navigation/native';
 import { updateSearchHistory } from '../../redux/userReducer';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { constants } from '../../utils';
 
 export default ({
   route,
@@ -67,7 +67,7 @@ export default ({
         selectionColor={colors.primary}
         left={isSearch ? (
             <TextInput.Icon
-              name={backIcon}
+              name={constants.backIcon}
               color='gray'
               forceTextInputFocus={false}
               onPress={() => {
@@ -84,7 +84,7 @@ export default ({
             />
           )
         }
-        right={(
+        right={!isSearch && !user.searchText ? null : (
           <TextInput.Icon
             name='close'
             color='gray'

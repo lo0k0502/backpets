@@ -90,19 +90,17 @@ export default memo(({ signInStates: [signInState, setSignInState] }) => {
 
     (async () => {
       if (initialLocalState === null) {
-        await SecureStorage.setItemAsync('localState', JSON.stringify({
+        const initialState = {
           rememberMe: 'unchecked',
           initialRoute: constants.pageNames[2],
-        }));
-        if (isMounted) setInitialLocalState({
-          rememberMe: 'unchecked',
-          initialRoute: constants.pageNames[2],
-        });
+        };
+        await SecureStorage.setItemAsync('localState', JSON.stringify(initialState));
+        if (isMounted) setInitialLocalState(initialState);
       }
 
       const afterLocalState = JSON.parse(await SecureStorage.getItemAsync('localState'));
+      console.log('rememberMe: ', afterLocalState.rememberMe);
       if (afterLocalState.rememberMe === 'unchecked') {
-        console.log('Don\'t remember me!');
         if (isMounted) setSignInState(false);
         return;
       }

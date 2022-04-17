@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 import Context from '../../../../context';
 import { useReports } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
-import { reportTagsArray } from '../../../../utils/constants';
+import { constants } from '../../../../utils';
 import TagsView from '../TagsView';
 import ViolationReportDialog from '../ViolationReportDialog';
 import EditReportDialog from './EditReportDialog';
@@ -26,7 +26,7 @@ export default () => {
   const { allReports, refreshAllReports, isFetchingAllReports } = useReports();
   const { showSnackbar } = useContext(Context);
 
-  const [reportTags, setReportTags] = useState(reportTagsArray.map(tagName => ({ name: tagName, selected: false })));
+  const [reportTags, setReportTags] = useState(constants.reportTagsArray.map(tagName => ({ name: tagName, selected: false })));
 
   const [reportDialog, setReportDialog] = useState(false);// Whether report dialog is open
   const [editReportDialog, setEditReportDialog] = useState(false);// Whether edit report dialog is open
@@ -34,7 +34,7 @@ export default () => {
   const [violationReportDialog, setViolationReportDialog] = useState(false);
   const [editReportPoster, setEditReportPoster] = useState({});
 
-  const selectedTags = reportTagsArray.filter(tag => reportTags.find(_tag => _tag.name === tag && _tag.selected));
+  const selectedTags = constants.reportTagsArray.filter(tag => reportTags.find(_tag => _tag.name === tag && _tag.selected));
 
   const checkReportMatchTagAndSearchText = (report) => (
     (!selectedTags.length || selectedTags.includes(report.tag))

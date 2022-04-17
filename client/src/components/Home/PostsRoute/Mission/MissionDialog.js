@@ -1,36 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import {
-    TextInput as NativeTextInput,
     ScrollView,
     View,
-    Image,
     RefreshControl,
 } from 'react-native';
 import {
-    TextInput,
     Dialog,
     Button,
     HelperText,
     useTheme,
     Divider,
-    Text,
     Portal,
     List,
     Avatar,
 } from 'react-native-paper';
-import { addMission } from '../../../../api';
-import { useCurrentLocation, useUpdateEffect } from '../../../../hooks';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import MapView from 'react-native-maps';
+import { addMission, editMission } from '../../../../api';
+import { useCurrentLocation, usePet, useUpdateEffect } from '../../../../hooks';
 import { SERVERURL } from '../../../../api/API';
 import SelectDateTime from '../../../common/SelectDateTime';
 import TextArea from '../../../common/TextArea';
 import SelectLocation from '../../../common/SelectLocation';
 import DialogActions from '../../../common/DialogActions';
+import { constants, isEmptyObject } from '../../../../utils';
+import { Skeleton } from '../../Skeleton';
 
-export default ({
+export default memo(({
     visible,
     close,
+    mission,
+    setMission = () => {},
     allMissions,
     refreshAllMissions,
     isFetchingAllMissions,
@@ -38,9 +36,7 @@ export default ({
     refreshSelfPets,
     isFetchingSelfPets,
 }) => {
-    const [petsDialog, setPetsDialog] = useState(false);
-
-    const { colors } = useTheme();
+    const { pet, isFetching: isFetchingPet } = usePet(mission.petId);
     const { currentLatitude, currentLongitude } = useCurrentLocation();
 
     const [isLoading, setIsLoading] = useState(false);// Whether it is during posting, if so, disable inputs and buttons.
@@ -52,11 +48,12 @@ export default ({
     const [mapViewRegion, setMapViewRegion] = useState({
         latitude: currentLatitude,
         longitude: currentLongitude,
-        latitudeDelta: 0.0122,
-        longitudeDelta: 0.003,
+        ...constants.locationDeltas,
     });
+    
+    const [petsDialog, setPetsDialog] = useState(false);
 
-    const chosenPet = selfPets.find(pet => pet._id === petId);
+    const chosenPet = selfPets.find(_pet => _pet._id === petId);
 
     const [showDateTimePicker, setShowDateTimePicker] = useState(false);
     const [dateTimePickerMode, setDateTimePickerMode] = useState('date');
@@ -67,14 +64,15 @@ export default ({
     const handleClose = () => {
         close();
 
+        setMission({});
+
         setPetId('');
         setContent('');
         setLostTime(new Date());
         setMapViewRegion({
             latitude: currentLatitude,
             longitude: currentLongitude,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
+            ...constants.locationDeltas,
         });
 
         setLostTimeErrorMsg('');
@@ -85,16 +83,31 @@ export default ({
         setIsLoading(true);
         
         try {
-            // Add the post
-            await addMission({
-                petId,
-                content,
-                lost_time: lostTime.toISOString(),
-                location: {
-                    latitude: mapViewRegion.latitude, 
-                    longitude: mapViewRegion.longitude, 
-                },
-            });
+            if (isEmptyObject(mission)) {
+                // Add the post
+                await addMission({
+                    petId,
+                    content,
+                    lost_time: lostTime.toISOString(),
+                    location: {
+                        latitude: mapViewRegion.latitude, 
+                        longitude: mapViewRegion.longitude, 
+                    },
+                });
+            } else {
+                // Edit the post
+                await editMission(
+                    mission._id,
+                    {
+                        content,
+                        lost_time: lostTime.toISOString(),
+                        location: {
+                            latitude: mapViewRegion.latitude, 
+                            longitude: mapViewRegion.longitude, 
+                        },
+                    },
+                );
+            }
 
             setIsLoading(false);
 
@@ -102,7 +115,7 @@ export default ({
             handleClose();// Close the dialog
         } catch (error) {
             setIsLoading(false);
-            console.log('While adding mission:', error);
+            console.log(`While ${isEmptyObject(mission) ? 'adding' : 'editing'} mission:`, error);
         }
     };
 
@@ -110,89 +123,121 @@ export default ({
         setMapViewRegion({
             latitude: currentLatitude,
             longitude: currentLongitude,
-            latitudeDelta: 0.0122,
-            longitudeDelta: 0.003,
+            ...constants.locationDeltas,
         });
     }, [currentLatitude, currentLongitude]);
 
     useUpdateEffect(() => {
-        if (!petsDialog) return;
+        if (isEmptyObject(mission) || !petsDialog) return;
         refreshAllMissions();
         refreshSelfPets();
     }, null, [petsDialog]);
 
+    useEffect(() => {
+        if (isEmptyObject(mission)) return;
+
+        setContent(mission.content);
+        setLostTime(new Date(mission.lost_time));
+        setMapViewRegion(mission.location ? {
+            ...mission.location,
+            ...constants.locationDeltas,
+        } : {
+            latitude: currentLatitude,
+            longitude: currentLongitude,
+            ...constants.locationDeltas,
+        });
+    }, [mission]);
+
+    useEffect(() => {
+        if (isEmptyObject(pet)) return;
+        setPetId(pet._id);
+    }, [pet]);
+
     return (
         <Dialog visible={visible} onDismiss={handleClose}>
-            <Dialog.Title>發佈任務</Dialog.Title>
+            <Dialog.Title>{isEmptyObject(mission) ? '發布' : '編輯'}任務</Dialog.Title>
             <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
                 <ScrollView style={{ height: '80%', paddingHorizontal: 20 }}>
-                    <Portal>
-                        <Dialog visible={petsDialog} onDismiss={() => setPetsDialog(false)}>
-                            <Dialog.Title>請選擇一個寵物</Dialog.Title>
-                            <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
-                                <ScrollView
-                                    style={{
-                                        height: '80%',
-                                        padding: 20,
-                                    }}
-                                    refreshControl={(
-                                        <RefreshControl
-                                            refreshing={isFetchingSelfPets}
-                                            onRefresh={refreshSelfPets}
-                                        />
-                                    )}
-                                >
-                                    <List.Section style={{ marginTop: 0 }}>
-                                        {
-                                            !isFetchingAllMissions ? (
-                                                allMissions.length ? (
-                                                    selfPets.map(pet => (
-                                                        <ListItem
-                                                            key={pet._id}
-                                                            pet={pet}
-                                                            disabled={allMissions.find(mission => mission.petId === pet._id)}
-                                                            onPress={() => {
-                                                                setPetId(pet._id);
-                                                                setPetsDialog(false);
-                                                            }}
-                                                        />
-                                                    ))
-                                                ) : null
-                                            ) : null
-                                        }
-                                    </List.Section>
-                                </ScrollView>
-                            </Dialog.ScrollArea>
-                            <Dialog.Actions>
-                                <Button
-                                    disabled={isLoading}
-                                    onPress={() => setPetsDialog(false)}
-                                    contentStyle={{ paddingHorizontal: 10 }}
-                                >
-                                    取消
-                                </Button>
-                            </Dialog.Actions>
-                        </Dialog>
-                    </Portal>
-                    <Button 
-                        mode='contained'
-                        dark
-                        disabled={isLoading}
-                        style={{ marginVertical: 10, elevation: 0 }}
-                        onPress={() => setPetsDialog(true)}
-                    >
-                        {petId ? '更改寵物' : '選擇寵物(必要)'}
-                    </Button>
                     {
-                        petId ? (
+                        isEmptyObject(mission) ? (
                             <>
-                                <HelperText>遺失寵物:</HelperText>
-                                <List.Item
-                                    title={chosenPet.name}
-                                    left={() => <Avatar.Image source={{ uri: `${SERVERURL}/image/${chosenPet.photoId}` }} style={{ backgroundColor: 'white' }} />}
-                                />
+                                <Portal>
+                                    <Dialog visible={petsDialog} onDismiss={() => setPetsDialog(false)}>
+                                        <Dialog.Title>請選擇一個寵物</Dialog.Title>
+                                        <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
+                                            <ScrollView
+                                                style={{
+                                                    height: '80%',
+                                                    padding: 20,
+                                                }}
+                                                refreshControl={(
+                                                    <RefreshControl
+                                                        refreshing={isFetchingSelfPets}
+                                                        onRefresh={refreshSelfPets}
+                                                    />
+                                                )}
+                                            >
+                                                <List.Section style={{ marginTop: 0 }}>
+                                                    {
+                                                        !isFetchingAllMissions ? (
+                                                            allMissions.length ? (
+                                                                selfPets.map(pet => (
+                                                                    <ListItem
+                                                                        key={pet._id}
+                                                                        pet={pet}
+                                                                        disabled={allMissions.find(mission => mission.petId === pet._id)}
+                                                                        onPress={() => {
+                                                                            setPetId(pet._id);
+                                                                            setPetsDialog(false);
+                                                                        }}
+                                                                    />
+                                                                ))
+                                                            ) : null
+                                                        ) : null
+                                                    }
+                                                </List.Section>
+                                            </ScrollView>
+                                        </Dialog.ScrollArea>
+                                        <Dialog.Actions>
+                                            <Button
+                                                disabled={isLoading}
+                                                onPress={() => setPetsDialog(false)}
+                                                contentStyle={{ paddingHorizontal: 10 }}
+                                            >
+                                                取消
+                                            </Button>
+                                        </Dialog.Actions>
+                                    </Dialog>
+                                </Portal>
+                                <Button 
+                                    mode='contained'
+                                    dark
+                                    disabled={isLoading}
+                                    style={{ marginVertical: 10, elevation: 0 }}
+                                    onPress={() => setPetsDialog(true)}
+                                >
+                                    {petId ? '更改寵物' : '選擇寵物(必要)'}
+                                </Button>
                             </>
                         ) : null
+                    }
+                    <HelperText>遺失寵物:</HelperText>
+                    {
+                        isFetchingPet ? (
+                            <Skeleton mode='item' />
+                        ) : (
+                            petId ? (
+                                <List.Item
+                                    title={chosenPet.name}
+                                    left={() => (
+                                        <Avatar.Image
+                                            source={{ uri: `${SERVERURL}/image/${chosenPet.photoId}` }}
+                                            style={{ backgroundColor: 'white' }}
+                                        />
+                                    )}
+                                />
+                            ) : null
+                        )
                     }
                     <Divider style={lostTimeErrorMsg && { backgroundColor: 'red' }} />
                     <HelperText>
@@ -233,6 +278,7 @@ export default ({
                         setChangingLocation={setChangingLocation}
                     />
                     <Divider />
+                    <HelperText></HelperText>
                     <TextArea
                         label='補充(非必要)'
                         disabled={isLoading}
@@ -249,7 +295,7 @@ export default ({
                 cancelBtnDisabled={isLoading}
                 submitBtnDisabled={
                     isLoading
-                    || !petId
+                    || (isEmptyObject(mission) && !petId)
                     || changingLocation
                 }
                 isLoading={isLoading}
@@ -258,7 +304,7 @@ export default ({
             />
         </Dialog>
     );
-};
+});
 
 const ListItem = ({ pet, disabled = false, onPress }) => {
     return (
