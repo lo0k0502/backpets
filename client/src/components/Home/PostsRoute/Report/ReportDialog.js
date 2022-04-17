@@ -17,17 +17,24 @@ import {
     Divider,
 } from 'react-native-paper';
 import { useSelector } from 'react-redux';
-import { addReport, uploadImage } from '../../../../api';
+import { addReport, deleteImage, editReport, uploadImage } from '../../../../api';
 import { useCurrentLocation } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
 import TagsView from '../TagsView';
-import { constants, shrinkImageToTargetSize } from '../../../../utils';
+import { constants, isEmptyObject, shrinkImageToTargetSize } from '../../../../utils';
 import DialogActions from '../../../common/DialogActions';
 import SelectPhoto from '../../../common/SelectPhoto';
 import SelectLocation from '../../../common/SelectLocation';
 import TextArea from '../../../common/TextArea';
+import { SERVERURL } from '../../../../api/API';
 
-export default ({ visible, close, refreshAllReports }) => {
+export default ({
+    visible,
+    close,
+    report,
+    setReport = () => {},
+    refreshAllReports,
+}) => {
     const user = useSelector(selectUser);
     const { currentLatitude, currentLongitude } = useCurrentLocation();
 
@@ -51,16 +58,10 @@ export default ({ visible, close, refreshAllReports }) => {
     const [contentErrorMsg, setContentErrorMsg] = useState('');
     const [photoUrlErrorMsg, setPhotoUrlErrorMsg] = useState('');
 
-    useEffect(() => {
-        setMapViewRegion({
-            latitude: currentLatitude,
-            longitude: currentLongitude,
-            ...constants.locationDeltas,
-        });
-    }, [currentLatitude, currentLongitude]);
-
     const handleClose = () => {
         close();
+
+        setReport({});
 
         setContent('');
         setTags(constants.reportTagsArray.map(tagName => ({ name: tagName, selected: false })));
@@ -89,53 +90,6 @@ export default ({ visible, close, refreshAllReports }) => {
         }));
 
         return false;
-    };
-
-    const handleSubmit = async () => {
-        // Start posting
-        setIsLoading(true);
-        
-        try {
-            let formData = new FormData();
-            const filename = photoUrl.split('/').pop();
-            const mediatype = filename.split('.').pop();
-
-            if (!(mediatype === 'jpg' || mediatype === 'jpeg' || mediatype === 'png')) {
-                setIsLoading(false);
-                return;
-            }
-
-            formData.append('image', {
-                uri: photoUrl,
-                name: filename,
-                type: 'image/jpeg',
-            });
-            
-            const { data } = await uploadImage(formData);
-
-            // Add the report
-            await addReport({
-                userId: user.info._id.toString(),
-                content,
-                tag: tags.find(tag => tag.selected).name,
-                photoId: data.photoId,
-                location: {
-                    latitude: mapViewRegion.latitude, 
-                    longitude: mapViewRegion.longitude, 
-                },
-            });
-
-            setIsLoading(false);
-
-            refreshAllReports();
-            handleClose();// Close the dialog
-        } catch (error) {
-            setIsLoading(false);
-            if (error.response.data.message) {
-                console.log('While adding:', error.response.data.message)
-                setPhotoUrlErrorMsg(error.response.data.message);
-            }
-        }
     };
 
     // Change image
@@ -170,9 +124,104 @@ export default ({ visible, close, refreshAllReports }) => {
         setIsImgLoading(false);
     };
 
+    const handleSubmit = async () => {
+        // Start posting
+        setIsLoading(true);
+        
+        try {
+            let sendPhotoId = report.photoId;
+
+            if (isEmptyObject(report) || (!isEmptyObject(report) && photoUrl !== `${SERVERURL}/image/${report.photoId}`)) {
+                let formData = new FormData();
+                const filename = photoUrl.split('/').pop();
+                const mediatype = filename.split('.').pop();
+    
+                if (!(mediatype === 'jpg' || mediatype === 'jpeg' || mediatype === 'png')) {
+                    setIsLoading(false);
+                    return;
+                }
+    
+                formData.append('image', {
+                    uri: photoUrl,
+                    name: filename,
+                    type: 'image/jpeg',
+                });
+
+                const { data } = await uploadImage(formData);
+                sendPhotoId = data.photoId;
+
+                if (!isEmptyObject(report) && photoUrl !== `${SERVERURL}/image/${report.photoId}`) {
+                    // If the previous image is in our database, delete it.
+                    await deleteImage(report.photoId);
+                }
+            }
+
+            if (isEmptyObject(report)) {
+                // Add the report
+                await addReport({
+                    userId: user.info._id.toString(),
+                    content,
+                    tag: tags.find(tag => tag.selected).name,
+                    photoId: sendPhotoId,
+                    location: {
+                        latitude: mapViewRegion.latitude, 
+                        longitude: mapViewRegion.longitude, 
+                    },
+                });
+            } else {
+                // Edit the report
+                await editReport(
+                    report._id,
+                    {
+                        content,
+                        tag: tags.find(tag => tag.selected).name,
+                        photoId: sendPhotoId,
+                        location: {
+                            latitude: mapViewRegion.latitude, 
+                            longitude: mapViewRegion.longitude, 
+                        },
+                    },
+                );
+            }
+
+            setIsLoading(false);
+
+            refreshAllReports();
+            handleClose();// Close the dialog
+        } catch (error) {
+            setIsLoading(false);
+            if (error.response.data.message) {
+                console.log(`While ${isEmptyObject(report) ? 'adding' : 'editing'} report:`, error.response.data.message)
+                setPhotoUrlErrorMsg(error.response.data.message);
+            } else {
+                console.log(`While ${isEmptyObject(report) ? 'adding' : 'editing'} report:`, error)
+            }
+        }
+    };
+
+    useEffect(() => {
+        setMapViewRegion({
+            latitude: currentLatitude,
+            longitude: currentLongitude,
+            ...constants.locationDeltas,
+        });
+    }, [currentLatitude, currentLongitude]);
+
+    useEffect(() => {
+        if (isEmptyObject(report)) return;
+
+        setContent(report.content);
+        setTags(constants.reportTagsArray.map(tagName => ({ name: tagName, selected: tagName === report.tag })));
+        setMapViewRegion({
+            ...report.location,
+            ...constants.locationDeltas,
+        });
+        setPhotoUrl(`${SERVERURL}/image/${report.photoId}`);
+    }, [report]);
+
     return (
         <Dialog visible={visible} onDismiss={handleClose}>
-            <Dialog.Title>發佈通報</Dialog.Title>
+            <Dialog.Title>{isEmptyObject(report) ? '發布' : '編輯'}通報</Dialog.Title>
             <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
                 <ScrollView style={{ height: '80%', paddingHorizontal: 20 }}>
                     <HelperText></HelperText>
@@ -215,7 +264,7 @@ export default ({ visible, close, refreshAllReports }) => {
             </Dialog.ScrollArea>
             <DialogActions
                 cancelBtnLabel='取消'
-                submitBtnLabel='發佈'
+                submitBtnLabel={isEmptyObject(report) ? '發布' : '編輯'}
                 cancelBtnDisabled={isImgLoading || isLoading}
                 submitBtnDisabled={
                     isImgLoading

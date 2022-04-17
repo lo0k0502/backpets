@@ -44,13 +44,20 @@ export default memo(({ signInStates: [signInState, setSignInState] }) => {
         text: '登出',
         onPress: async () => {
           try {
+            setSignInState(null);
+
+            unwrapResult(await dispatch(logoutUser({})));
+
             const originalLocalState = JSON.parse(await SecureStorage.getItemAsync('localState'));
             await SecureStorage.setItemAsync('localState', JSON.stringify({
               ...originalLocalState,
               rememberMe: 'unchecked',
             }));
-            setInitialLocalState(JSON.parse(await SecureStorage.getItemAsync('localState')));
-            unwrapResult(await dispatch(logoutUser({})));
+            setInitialLocalState({
+              ...originalLocalState,
+              rememberMe: 'unchecked',
+            });
+
             console.log('Not logged in, going back...');
             setSignInState(false);
           } catch (error) {
@@ -60,16 +67,6 @@ export default memo(({ signInStates: [signInState, setSignInState] }) => {
       },
     ]);
   };
-
-  const Main = () => (
-    <initialContext.Provider
-      value={{
-        initialLocalState,
-      }}
-    >
-      <MainRoutes logout={logout} />
-    </initialContext.Provider>
-  );
 
   // If local SecureStorage has token, check for location permission and try to refresh it.
   // If failed or has no token, display login page;
@@ -133,44 +130,57 @@ export default memo(({ signInStates: [signInState, setSignInState] }) => {
   }, null, [initialLocalState]);
 
   return (
-    <Stacks.Navigator screenOptions={{ headerShown: false }}>
-    {
-      signInState === null ? (
-        <Stacks.Screen name='Splash'>
-        {props => (
-          <View {...props} style={ styles.view }>
-            {
-              errorMsg ? (
-                <>
-                  <Text style={{ color: 'red', fontWeight: 'bold', margin: 10 }}>{errorMsg}</Text>
-                  <Text>請檢查您的權限設定並重新啟動應用程式</Text>
-                  <Button onPress={() => Restart()}>
-                    重新啟動
-                  </Button>
-                </>
-              ) : (
-                  <Image source={require('../assets/1647972285878.gif')} style={ styles.viewImage } />
-              )
-            }
-          </View>
-        )}
-        </Stacks.Screen>
-      ) : signInState ? (
-        <Stacks.Screen name='Main' component={Main} />
-      ) : (
-        <>
-            <Stacks.Screen name='AuthRoute'>
-            {props => <AuthRoute {...props} setSignInState={setSignInState} />}
-            </Stacks.Screen>
-            <Stacks.Screen name='AllUsers' options={{ headerShown: true }}>
-            {props => <AllUsers {...props} />}
-            </Stacks.Screen>
-            <Stacks.Screen name='AllImages' options={{ headerShown: true }}>
-            {props => <AllImages {...props} />}
-            </Stacks.Screen>
-        </>
-      )
-    }
-    </Stacks.Navigator>
+    <initialContext.Provider
+      value={{
+        initialLocalState,
+        logout,
+        setSignInState,
+      }}
+    >
+      <Stacks.Navigator screenOptions={{ headerShown: false }}>
+      {
+        signInState === null ? (
+          <Stacks.Screen name='Splash'>
+          {props => (
+            <View {...props} style={ styles.view }>
+              {
+                errorMsg ? (
+                  <>
+                    <Text style={{ color: 'red', fontWeight: 'bold', margin: 10 }}>{errorMsg}</Text>
+                    <Text>請檢查您的權限設定並重新啟動應用程式</Text>
+                    <Button onPress={() => Restart()}>
+                      重新啟動
+                    </Button>
+                  </>
+                ) : (
+                    <Image source={require('../assets/1647972285878.gif')} style={ styles.viewImage } />
+                )
+              }
+            </View>
+          )}
+          </Stacks.Screen>
+        ) : signInState ? (
+          <Stacks.Screen name='Main' component={MainRoutes} />
+        ) : (
+          <>
+              <Stacks.Screen
+                name='AuthRoute'
+                component={AuthRoute}
+              />
+              <Stacks.Screen
+                name='AllUsers'
+                options={{ headerShown: true }}
+                component={AllUsers}
+              />
+              <Stacks.Screen
+                name='AllImages'
+                options={{ headerShown: true }}
+                component={AllImages}
+              />
+          </>
+        )
+      }
+      </Stacks.Navigator>
+    </initialContext.Provider>
   );
 });

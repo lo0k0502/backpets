@@ -17,7 +17,6 @@ import { selectUser } from '../../../../redux/userSlice';
 import { constants } from '../../../../utils';
 import TagsView from '../TagsView';
 import ViolationReportDialog from '../ViolationReportDialog';
-import EditReportDialog from './EditReportDialog';
 import ReportCard from './ReportCard';
 import ReportDialog from './ReportDialog';
 
@@ -74,12 +73,8 @@ export default () => {
           <ReportDialog
             visible={reportDialog}
             close={() => setReportDialog(false)}
-            refreshAllReports={refreshAllReports}
-          />
-          <EditReportDialog
             report={editReport}
-            visible={editReportDialog}
-            close={() => setEditReportDialog(false)}
+            setReport={setEditReport}
             refreshAllReports={refreshAllReports}
           />
           <ViolationReportDialog
@@ -103,7 +98,7 @@ export default () => {
                         report={report}
                         tagSelected={selectedTags.length}
                         setEditReport={setEditReport}
-                        setEditReportDialog={setEditReportDialog}
+                        setReportDialog={setReportDialog}
                         setViolationReportDialog={setViolationReportDialog}
                         setEditReportPoster={setEditReportPoster}
                       />
@@ -117,7 +112,7 @@ export default () => {
                       key={report._id}
                       report={report}
                       setEditReport={setEditReport}
-                      setEditReportDialog={setEditReportDialog}
+                      setReportDialog={setReportDialog}
                       setViolationReportDialog={setViolationReportDialog}
                       setEditReportPoster={setEditReportPoster}
                     />

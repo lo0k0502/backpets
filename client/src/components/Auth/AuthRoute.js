@@ -38,34 +38,43 @@ const DevOptions = ({ navigation }) => {
 };
 
 // Contains the login route and the development options route.
-const LoginDrawer = ({ checkUnLogin, setSignInState }) => {
+const LoginDrawer = () => {
   return (
     <Drawers.Navigator screenOptions={{ headerShown: false }}>
-      <Drawers.Screen name='Login' options={{ title: '登入' }}>
-      {props => <Login {...props} checkUnLogin={checkUnLogin} setSignInState={setSignInState} />}
-      </Drawers.Screen>
-      <Drawers.Screen name='DevOptions'>
-      {props => <DevOptions {...props} />}
-      </Drawers.Screen>
+      <Drawers.Screen
+        name='Login'
+        options={{ title: '登入' }}
+        component={Login}
+      />
+      <Drawers.Screen
+        name='DevOptions'
+        component={DevOptions}
+      />
     </Drawers.Navigator>
   );
 };
 
 // Contains authorization related routes.
-const AuthRoute = ({ setSignInState }) => {
+const AuthRoute = () => {
   const { colors } = useTheme();
 
   return (
     <AuhtStacks.Navigator screenOptions={{ headerStyle: { backgroundColor: colors.background2 } }}>
-      <AuhtStacks.Screen name='LoginDrawer' options={{ headerShown: false }}>
-      {props => <LoginDrawer {...props} setSignInState={setSignInState} />}
-      </AuhtStacks.Screen>
-      <AuhtStacks.Screen name='Register' options={{ title: '註冊' }}>
-      {props => <Register {...props} />}
-      </AuhtStacks.Screen>
-      <AuhtStacks.Screen name='ForgetPassword' options={{ title: '忘記密碼' }}>
-      {props => <ForgetPassword {...props} />}
-      </AuhtStacks.Screen>
+      <AuhtStacks.Screen
+        name='LoginDrawer'
+        options={{ headerShown: false }}
+        component={LoginDrawer}
+      />
+      <AuhtStacks.Screen
+        name='Register'
+        options={{ title: '註冊' }}
+        component={Register}
+      />
+      <AuhtStacks.Screen
+        name='ForgetPassword'
+        options={{ title: '忘記密碼' }}
+        component={ForgetPassword}
+      />
     </AuhtStacks.Navigator>
   );
 };

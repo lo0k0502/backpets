@@ -25,7 +25,7 @@ export default ({
     report,
     tagSelected = false,
     setEditReport = () => {},
-    setEditReportDialog = () => {},
+    setReportDialog = () => {},
     setViolationReportDialog = () => {},
     setEditReportPoster = () => {},
 }) => {
@@ -85,7 +85,7 @@ export default ({
                                             onPress={() => {
                                                 setMenu(false);
                                                 setEditReport(report);
-                                                setEditReportDialog(true);
+                                                setReportDialog(true);
                                             }}
                                         />
                                         <Menu.Item title='刪除通報' titleStyle={{ color: 'red' }} onPress={() => {}} />

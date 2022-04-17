@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { View, StyleSheet, Image, Pressable, Text } from 'react-native';
 import { TextInput, Button, Divider, HelperText, useTheme, Checkbox } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
@@ -11,6 +11,7 @@ import { loginUser, googleLogin } from '../../redux/userReducer';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useUpdateEffect } from '../../hooks';
 import { askForLocationPermission } from '../../utils';
+import { initialContext } from '../../context';
 
 const styles = StyleSheet.create({
     input: {
@@ -20,8 +21,10 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ({ navigation, setSignInState }) => {
+export default ({ navigation }) => {
     const { colors } = useTheme();
+    const { setSignInState } = useContext(initialContext);
+    const dispatch = useDispatch();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -32,8 +35,6 @@ export default ({ navigation, setSignInState }) => {
 
     const [loginLoading, setLoginLoading] = useState(false);
     const [googleLoginLoading, setGoogleLoginLoading] = useState(false);
-
-    const dispatch = useDispatch();
 
     const changeRememberMe = async (state) => {
         const originalLocalState = JSON.parse(await SecureStorage.getItemAsync('localState'));

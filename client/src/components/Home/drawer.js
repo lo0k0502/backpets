@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { List, useTheme, Divider } from 'react-native-paper';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { StyleSheet } from 'react-native';
+import { initialContext } from '../../context';
 
 const styles = StyleSheet.create({
     root: {
@@ -9,8 +10,9 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ({ navigation, logoutback }) => {
+export default ({ navigation }) => {
     const { colors } = useTheme();
+    const { logout } = useContext(initialContext);
 
     return (
         <DrawerContentScrollView style={styles.root}>
@@ -32,7 +34,7 @@ export default ({ navigation, logoutback }) => {
                                     break;
                                 }
                                 case '登出': {
-                                    logoutback();
+                                    logout();
                                     break;
                                 }
                             }

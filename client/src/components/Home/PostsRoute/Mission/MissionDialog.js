@@ -8,7 +8,6 @@ import {
     Dialog,
     Button,
     HelperText,
-    useTheme,
     Divider,
     Portal,
     List,
@@ -138,12 +137,8 @@ export default memo(({
 
         setContent(mission.content);
         setLostTime(new Date(mission.lost_time));
-        setMapViewRegion(mission.location ? {
+        setMapViewRegion({
             ...mission.location,
-            ...constants.locationDeltas,
-        } : {
-            latitude: currentLatitude,
-            longitude: currentLongitude,
             ...constants.locationDeltas,
         });
     }, [mission]);
@@ -291,7 +286,7 @@ export default memo(({
             </Dialog.ScrollArea>
             <DialogActions
                 cancelBtnLabel='取消'
-                submitBtnLabel='發佈'
+                submitBtnLabel={isEmptyObject(mission) ? '發布' : '編輯'}
                 cancelBtnDisabled={isLoading}
                 submitBtnDisabled={
                     isLoading

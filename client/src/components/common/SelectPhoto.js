@@ -1,4 +1,5 @@
 import React from 'react';
+import { Image } from 'react-native';
 import { Button, Card, HelperText } from 'react-native-paper';
 
 export default ({
@@ -27,12 +28,13 @@ export default ({
                 {errorMsg}
             </HelperText>
             {photoUrl ? (
-                <Card.Cover
+                <Image
                     source={{ uri: photoUrl }}
                     style={{
                         ...photoSize,
                         alignSelf: 'center',
                     }}
+                    resizeMode='contain'
                 />
             ) : null}
         </>
