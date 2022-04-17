@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import {
     StyleSheet,
     ScrollView,
@@ -25,6 +25,7 @@ import { constants } from '../../../../utils';
 import SelectButton from '../../SelectButton';
 import Context from '../../../../context';
 import ViolationReportDialog from '../ViolationReportDialog';
+import { useFocusEffect } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
     root: {
@@ -150,6 +151,10 @@ export default ({ navigation }) => {
             setEditMissionPoster={setEditMissionPoster}
         />
     );
+
+    useFocusEffect(useCallback(() => {
+        refreshSelfPets();
+    }, []));
 
     return (
         <>

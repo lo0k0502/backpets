@@ -1,4 +1,5 @@
-import React, { useContext, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import React, { useCallback, useContext, useState } from 'react';
 import {
   Alert,
   RefreshControl,
@@ -106,6 +107,10 @@ export default () => {
       setEditPutUpForAdoptionPoster={setEditPutUpForAdoptionPoster}
     />
   );
+
+  useFocusEffect(useCallback(() => {
+      refreshSelfPets();
+  }, []));
 
   return (
     <>
