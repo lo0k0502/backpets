@@ -68,7 +68,7 @@ export default ({ navigation }) => {
               title={title}
               right={() => (
                 <Badge
-                  visible={title === constants.profileRouteNamesCH[3] && selfClues.filter(clue => clue.awarded && !clue.pointsReceived).length}
+                  visible={title === '回報過的線索' && selfClues.filter(clue => clue.awarded && !clue.pointsReceived).length}
                   style={{
                     alignSelf: 'center',
                   }}

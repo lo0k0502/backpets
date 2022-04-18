@@ -57,8 +57,10 @@ export const fetchAllReports = () => API.get('/report/fetchall');
 // put up for adoption
 export const addPutUpForAdoption = (payload) => API.post('/put-up-for-adoption/add', payload);
 export const editPutUpForAdoption = (putUpForAdoptionId, payload) => API.post(`/put-up-for-adoption/${putUpForAdoptionId}`, payload);
+export const completePutUpForAdoption = (putUpForAdoptionId, payload) => API.post(`/put-up-for-adoption/completeputupforadoption/${putUpForAdoptionId}`, payload);
 export const fetchAllPutUpForAdoptions = () => API.get('/put-up-for-adoption/fetchall');
 export const fetchPutUpForAdoptionsByUserId = (userId) => API.get(`/put-up-for-adoption/fetchbyuserid/${userId}`);
+export const fetchPutUpForAdoption = (putUpForAdoptionId) => API.get(`/put-up-for-adoption/${putUpForAdoptionId}`);
 
 // point record
 export const fetchPointRecordsByUserId = (userId) => API.get(`/point-record/fetchbyuserid/${userId}`);

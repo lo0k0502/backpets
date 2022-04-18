@@ -34,7 +34,7 @@ export default ({ pointRecord }) => {
         <>
             <List.Item
                 title={pointRecord.productId ? '兌換商品' : `完成任務${poster.username && pet.breed ? ` - ${poster.username}的${pet.breed}` : ''}`}
-                description={`時間: ${moment(pointRecord.time).fromNow()}`}
+                description={`時間: ${moment(pointRecord.time).fromNow()} - ${moment(mission.post_time).fromNow()}的${pointRecord.productId ? '兌換' : '任務'}`}
                 disabled
                 left={props => <Avatar.Icon {...props} icon={pointRecord.productId ? 'shopping-outline' : 'text-box-check-outline'} style={{ backgroundColor: 'white' }} />}
                 right={props => <Caption {...props} style={{ alignSelf: 'center' }}>{`${pointRecord.points > 0 ? '+' : '-'}${Math.abs(pointRecord.points)}`}</Caption>}

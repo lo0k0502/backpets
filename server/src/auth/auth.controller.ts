@@ -30,6 +30,7 @@ export class AuthController {
           
         const hashedPassword = await hash(password, 10);
         const result = await this.userService.create({
+          _id: null,
           username,
           password: hashedPassword,
           email,

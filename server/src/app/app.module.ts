@@ -14,6 +14,8 @@ import { AppController } from './app.controller';
 import { ReportModule } from '../report/report.module';
 import { PutUpForAdoptionModule } from 'src/put-up-for-adoption/put-up-for-adoption.module';
 import { PetModule } from 'src/pet/pet.module';
+import { AppService } from './app.service';
+import { Test, TestSchema } from './app.schema';
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { PetModule } from 'src/pet/pet.module';
       isGlobal: true,
     }),
     MongooseModule.forRoot(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, }),
+    MongooseModule.forFeature([{ name: Test.name, schema: TestSchema }]),
     UserModule,
     AuthModule,
     FileModule,
@@ -35,5 +38,6 @@ import { PetModule } from 'src/pet/pet.module';
     AdoptionRecordModule,
   ],
   controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

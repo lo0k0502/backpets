@@ -3,8 +3,10 @@ import moment from 'moment';
 import { View } from 'react-native';
 import {
     Avatar,
+    Button,
     Caption,
     Card,
+    Divider,
     IconButton,
     Menu,
     Paragraph,
@@ -27,9 +29,10 @@ export default ({
     setPutUpForAdoptionDialog = () => {},
     setViolationReportDialog = () => {},
     setEditPutUpForAdoptionPoster = () => {},
+    onCompletePress = () => {},
 }) => {
-    const { colors } = useTheme();
     const user = useSelector(selectUser);
+    const { colors } = useTheme();
     const { pet, isFetching: isFetchingPet } = usePet(putUpForAdoption.petId);
     const { user: poster, isFetching: isFetchingPoster } = useUser(putUpForAdoption.userId);
 
@@ -174,7 +177,34 @@ export default ({
                     <Text style={{ color: colors.primary }}>電話: </Text>
                     {putUpForAdoption.phone}
                 </Subheading>
+                {
+                    poster._id === user.info?._id ? (
+                        <Divider
+                            style={{
+                                backgroundColor: colors.primary,
+                                width: '95%',
+                                height: 1,
+                                alignSelf: 'center',
+                            }}
+                        />
+                    ) : null
+                }
             </View>
+            {
+                poster._id === user.info?._id ? (
+                    <Card.Actions style={{ flexDirection: 'row', padding: 0 }}>
+                        <Button
+                            dark
+                            disabled={putUpForAdoption.completed}
+                            style={{ flexGrow: 1 }}
+                            theme={{ roundness: 0 }}
+                            onPress={onCompletePress}
+                        >
+                            完成送養
+                        </Button>
+                    </Card.Actions>
+                ) : null
+            }
         </Card>
     ) : <Skeleton />;
 };

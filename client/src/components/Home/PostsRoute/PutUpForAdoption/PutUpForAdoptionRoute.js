@@ -21,6 +21,7 @@ import { constants } from '../../../../utils';
 import SelectButton from '../../SelectButton';
 import TagsView from '../TagsView';
 import ViolationReportDialog from '../ViolationReportDialog';
+import CompletePutUpForAdoptionDialog from './CompletePutUpForAdoptionDialog';
 import PutUpForAdoptionCard from './PutUpForAdoptionCard';
 import PutUpForAdoptionDialog from './PutUpForAdoptionDialog';
 
@@ -35,6 +36,8 @@ export default () => {
   const [editPutUpForAdoption, setEditPutUpForAdoption] = useState({});
   const [violationReportDialog, setViolationReportDialog] = useState(false);
   const [editPutUpForAdoptionPoster, setEditPutUpForAdoptionPoster] = useState({});
+  const [completeDialog, setCompleteDialog] = useState(false);
+  const [completeId, setCompleteId] = useState('');
 
   const [animalTags, setAnimalTags] = useState(constants.animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
   const [county, setCounty] = useState(constants.all_countys[0]);
@@ -104,6 +107,10 @@ export default () => {
       setPutUpForAdoptionDialog={setPutUpForAdoptionDialog}
       setViolationReportDialog={setViolationReportDialog}
       setEditPutUpForAdoptionPoster={setEditPutUpForAdoptionPoster}
+      onCompletePress={() => {
+        setCompleteId(putUpForAdoption._id);
+        setCompleteDialog(true);
+      }}
     />
   );
 
@@ -171,6 +178,16 @@ export default () => {
             close={() => setViolationReportDialog(false)}
             refreshPosts={refreshAllPutUpForAdoptions}
             showSnackbar={showSnackbar}
+          />
+          <CompletePutUpForAdoptionDialog
+            visible={completeDialog}
+            close={() => {
+              setCompleteDialog(false);
+              setCompleteId('');
+            }}
+            putUpForAdoptionId={completeId}
+            refreshAllPutUpForAdoptions={refreshAllPutUpForAdoptions}
+            refreshSelfPets={refreshSelfPets}
           />
         </Portal>
         {

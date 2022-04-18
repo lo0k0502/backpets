@@ -25,7 +25,10 @@ export class AdoptionRecordController {
             const existUser = await this.userService.findOne({ _id: putuserid });
             if (!existUser) return res.status(400).json({ message: '用戶不存在' });
 
-            const result = await this.putUpForAdoptionService.findSome({ userId: new Types.ObjectId(putuserid), completed: true });
+            const selfPutUpForAdoptions = await this.putUpForAdoptionService.findSome({ userId: new Types.ObjectId(putuserid), completed: true });
+
+            const result = await Promise.all(selfPutUpForAdoptions.map(async putUpForAdoption => await this.adoptionRecordService.findOne({ putUpForAdoptionId: new Types.ObjectId(putUpForAdoption._id) })));
+            
             return res.status(200).json({ result });
         } catch (error) {
             console.log(error);

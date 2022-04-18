@@ -39,6 +39,7 @@ export class PutUpForAdoptionController {
         try {
             const existPet = await this.petService.findOne({ _id: petId });
             const result = await this.putUpForAdoptionService.create({
+                _id: null,
                 petId: new Types.ObjectId(petId),
                 userId: existPet.userId,
                 content,
@@ -57,12 +58,12 @@ export class PutUpForAdoptionController {
     }
 
     @Post('completeputupforadoption/:putupforadoptionid')
-    async CompletePutUpForAdoption(@Param() { putupforadoptionid }, @Body() { adoptedUserId }, @Res() res: Response) {
+    async CompletePutUpForAdoption(@Param() { putupforadoptionid }, @Body() { adoptedUsername, adoptedUserEmail }, @Res() res: Response) {
         try {
             const existPutUpForAdoption = await this.putUpForAdoptionService.findOne({ _id: putupforadoptionid });
             if (!existPutUpForAdoption) return res.status(400).json({ message: '送養貼文不存在' });
 
-            const existUser = await this.userService.findOne({ _id: adoptedUserId });
+            const existUser = await this.userService.findOne({ username: adoptedUsername, email: adoptedUserEmail });
             if (!existUser) return res.status(400).json({ message: '用戶不存在' });
 
             if (existPutUpForAdoption.completed) return res.status(400).json({ message: '送養貼文已完成' });
@@ -71,18 +72,18 @@ export class PutUpForAdoptionController {
                 { _id: putupforadoptionid },
                 {
                     completed: true,
-                    adoptedUserId: new Types.ObjectId(adoptedUserId),
+                    adoptedUserId: existUser._id,
                 },
             );
 
             await this.petService.updateOne(
                 { _id: existPutUpForAdoption.petId },
-                { userId: new Types.ObjectId(adoptedUserId) },
+                { userId: existUser._id },
             );
 
             await this.adoptionRecordService.create({
                 putUpForAdoptionId: new Types.ObjectId(putupforadoptionid),
-                userId: new Types.ObjectId(adoptedUserId),
+                userId: existUser._id,
                 petId: existPutUpForAdoption.petId,
                 time: moment().valueOf(),
             });

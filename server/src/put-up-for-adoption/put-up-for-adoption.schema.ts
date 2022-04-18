@@ -5,6 +5,8 @@ export type PutUpForAdoptionDocument = PutUpForAdoption & Document;
 
 @Schema()
 export class PutUpForAdoption {
+  _id: Types.ObjectId;
+
   @Prop({ required: true })
   petId: Types.ObjectId;
 

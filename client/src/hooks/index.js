@@ -16,6 +16,7 @@ import {
     fetchPutUpForAdoptionsByUserId,
     fetchAdoptionRecordsByUserId,
     fetchAdoptionRecordsByPutUserId,
+    fetchPutUpForAdoption,
 } from '../api';
 
 export const useOnceUpdateEffect = (callback, dependencies) => {
@@ -482,6 +483,58 @@ export const useSelfPutUpForAdoptions = (userId, dependencies = []) => {
 };
 
 /**
+ * @param {any} userId
+ * @returns {{
+ *  putUpForAdoption: {
+ *      _id: String,
+ *      petId: String,
+ *      userId: String,
+ *      content: String,
+ *      post_time: Number,
+ *      county: String,
+ *      district: String,
+ *      phone: String,
+ *      completed: Boolean,
+ *  },
+ *  refreshPutUpForAdoption: Function,
+ *  isFetchingPutUpForAdoption: boolean
+ * }}
+ */
+export const usePutUpForAdoption = (putUpForAdoptionId, dependencies = []) => {
+    const [putUpForAdoption, setPutUpForAdoption] = useState({});
+    const isMounted = useRef(true);
+    const [isFetching, setIsFetching] = useState(false);
+
+    // Fetch putUpForAdoption by putUpForAdoptionId
+    const fetchPutUpForAdoptionById = async () => {
+        if (isMounted.current) setIsFetching(true);
+
+        try {
+            const result = await fetchPutUpForAdoption(putUpForAdoptionId);
+            if (isMounted.current) setPutUpForAdoption(result.data.result);
+        } catch (error) {
+            console.log(error);
+        }
+
+        if (isMounted.current) setIsFetching(false);
+    };
+
+    useEffect(() => {
+        isMounted.current = true;
+
+        if (putUpForAdoptionId) fetchPutUpForAdoptionById();
+
+        return () => { isMounted.current = false };
+    }, [putUpForAdoptionId, ...dependencies]);
+
+    return {
+        putUpForAdoption,
+        refreshPutUpForAdoption: fetchPutUpForAdoption,
+        isFetchingPutUpForAdoption: isFetching,
+    };
+};
+
+/**
  * @param {String} userId
  * @returns {{
  *  user: {
@@ -841,6 +894,7 @@ export default {
     useSelfClues,
     useReports,
     usePutUpForAdoptions,
+    usePutUpForAdoption,
     useSelfPutUpForAdoptions,
     useUser,
     usePets,
