@@ -76,34 +76,22 @@ export default memo(({ signInStates: [signInState, setSignInState] }) => {
 
     (async () => {
       const originalLocalState = JSON.parse(await SecureStorage.getItemAsync('localState'));
-      if (isMounted) setInitialLocalState(originalLocalState);
-    })();
+      const initialState = originalLocalState || {
+        rememberMe: 'unchecked',
+        initialRoute: constants.pageNames[2],
+      };
 
-    return () => { isMounted = false };
-  }, []);
-
-  useOnceUpdateEffect(() => {
-    let isMounted = true;
-
-    (async () => {
-      if (initialLocalState === null) {
-        const initialState = {
-          rememberMe: 'unchecked',
-          initialRoute: constants.pageNames[2],
-        };
-        await SecureStorage.setItemAsync('localState', JSON.stringify(initialState));
-        if (isMounted) setInitialLocalState(initialState);
-      }
-
-      const afterLocalState = JSON.parse(await SecureStorage.getItemAsync('localState'));
-      console.log('rememberMe: ', afterLocalState.rememberMe);
-      if (afterLocalState.rememberMe === 'unchecked') {
-        if (isMounted) setSignInState(false);
-        return;
-      }
+      if (!originalLocalState) await SecureStorage.setItemAsync('localState', JSON.stringify(initialState));
+      if (isMounted) setInitialLocalState(initialState);
 
       const tokens = JSON.parse(await SecureStorage.getItemAsync('tokens'));
       if (tokens?.refreshToken) {
+        console.log('rememberMe: ', initialState.rememberMe);
+        if (initialState.rememberMe === 'unchecked') {
+          if (isMounted) setSignInState(false);
+          return;
+        }
+  
         try {
           const granted = await askForLocationPermission();
           if (!granted) {
@@ -122,13 +110,21 @@ export default memo(({ signInStates: [signInState, setSignInState] }) => {
           console.log('While refreshing:', error.message);
         }
       } else {
+        if (initialState.rememberMe === 'checked') {
+          const uncheckedState = {
+            ...initialState,
+            rememberMe: 'unchecked',
+          };
+          await SecureStorage.setItemAsync('localState', JSON.stringify(uncheckedState));
+          if (isMounted) setInitialLocalState(uncheckedState);
+        }
         if (isMounted) setSignInState(false);
       }
     })();
 
     return () => { isMounted = false };
-  }, null, [initialLocalState]);
-
+  }, []);
+  
   return (
     <initialContext.Provider
       value={{
