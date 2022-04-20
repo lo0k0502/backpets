@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Portal, Snackbar, useTheme } from 'react-native-paper';
 import Context from '../../context';
-import { useSelfClues } from '../../hooks';
+import { useSelfClues, useSelfCoupons } from '../../hooks';
 
 export default ({ children, userId }) => {
     const { colors } = useTheme();
@@ -11,11 +11,13 @@ export default ({ children, userId }) => {
     const [snackbarAction, setSnackbarAction] = useState({});
 
     const selfCluesHook = useSelfClues(userId);
+    const selfCouponsHook = useSelfCoupons(userId);
 
     return (
         <Context.Provider
             value={{
                 ...selfCluesHook,
+                ...selfCouponsHook,
                 getSelfClueByClueId: clueId => selfCluesHook.selfClues.find(_clue => _clue._id === clueId) || {},
                 showSnackbar: (text, action) => {
                     setSnackbarText(text);

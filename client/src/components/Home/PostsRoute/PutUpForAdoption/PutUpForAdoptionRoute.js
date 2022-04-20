@@ -66,37 +66,7 @@ export default () => {
     );
   };
 
-  const checkPutUpForAdoptionsMatchTagAndSearchTextAndArea = () => {
-      const putUpForAdoptionsMatchTag = selectedTags.length ? (
-          allPutUpForAdoptions.filter(putUpForAdoption => {
-            return selectedTags.includes(pets.find(_pet => _pet._id === putUpForAdoption.petId).tag);
-          })
-      ) : allPutUpForAdoptions;
-      if (!putUpForAdoptionsMatchTag.length) return false;
-      
-      const putUpForAdoptionsMatchTagAndSearchText = user.searchText ? (
-          putUpForAdoptionsMatchTag.filter(putUpForAdoption => {
-            const pet = pets.find(_pet => _pet._id === putUpForAdoption.petId);
-
-            return (
-              putUpForAdoption.content.search(user.searchText) !== -1
-              || pet.name.search(user.searchText) !== -1
-              || pet.breed.search(user.searchText) !== -1
-              || pet.gender.search(user.searchText) !== -1
-            );
-          })
-      ) : putUpForAdoptionsMatchTag;
-      if (!putUpForAdoptionsMatchTagAndSearchText.length) return false
-
-      const putUpForAdoptionsMatchTagAndSearchTextAndArea = putUpForAdoptionsMatchTagAndSearchText.filter(putUpForAdoption => {
-        return (
-          (county === '全部' || putUpForAdoption.county === county)
-          && (district === '全部' || putUpForAdoption.district === district)
-        );
-      });
-
-      return putUpForAdoptionsMatchTagAndSearchTextAndArea.length ? true : false;
-  };
+  const passedCheckPutUpForAdoptions = allPutUpForAdoptions.filter(checkPutUpForAdoptionMatchTagAndSearchTextAndArea);
 
   const PutUpForAdoptionItem = putUpForAdoption => (
     <PutUpForAdoptionCard
@@ -194,8 +164,8 @@ export default () => {
           isFetchingAllPutUpForAdoptions || isFetchingPets ? null : (
             allPutUpForAdoptions.length ? (
               selectedTags.length || user.searchText || county !== '全部' ? (
-                checkPutUpForAdoptionsMatchTagAndSearchTextAndArea() ? (
-                  allPutUpForAdoptions.filter(checkPutUpForAdoptionMatchTagAndSearchTextAndArea).map(PutUpForAdoptionItem)
+                passedCheckPutUpForAdoptions.length ? (
+                  passedCheckPutUpForAdoptions.map(PutUpForAdoptionItem)
                 ) : (
                   <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
                 )

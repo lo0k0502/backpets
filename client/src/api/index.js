@@ -75,3 +75,11 @@ export const deleteViolationReport = (violationReportId) => API.delete(`/violati
 // adoption record
 export const fetchAdoptionRecordsByUserId = (userId) => API.get(`/adoption-record/fetchbyuserid/${userId}`);
 export const fetchAdoptionRecordsByPutUserId = (userId) => API.get(`/adoption-record/fetchbyputuserid/${userId}`);
+
+// product
+export const fetchAllProducts = () => API.get('/product/fetchall');
+export const fetchProductById = (productId) => API.get(`/product/${productId}`);
+
+// coupon
+export const generateCoupon = (payload) => API.post('/coupon/generatecoupon', payload);
+export const fetchCouponsByUserId = (userId) => API.get(`/coupon/fetchbyuserid/${userId}`);

@@ -1,3 +1,5 @@
+import { CouponModule } from './../coupon/coupon.module';
+import { ProductModule } from './../product/product.module';
 import { AdoptionRecordModule } from './../adoption-record/adoption-record.module';
 import { ViolationReportModule } from './../violation-report/violation-report.module';
 import { FeedbackModule } from './../feedback/feedback.module';
@@ -36,6 +38,8 @@ import { Test, TestSchema } from './app.schema';
     FeedbackModule,
     ViolationReportModule,
     AdoptionRecordModule,
+    ProductModule,
+    CouponModule,
   ],
   controllers: [AppController],
   providers: [AppService],

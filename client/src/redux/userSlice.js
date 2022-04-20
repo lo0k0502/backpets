@@ -9,6 +9,7 @@ import {
   updateProfile,
   updatePoints,
   updateSearchHistory,
+  exchangeProduct,
 } from './userReducer';
 
 // The redux state instance, contains state control and the configuration when the dispatched function finish its work.
@@ -81,6 +82,9 @@ export const userSlice = createSlice({
     },
     [updateSearchHistory.fulfilled]: (state, action) => {
       state.info = action.payload.result;
+    },
+    [exchangeProduct.fulfilled]: (state, action) => {
+      state.info.points = action.payload.result.points;
     },
   },
 });

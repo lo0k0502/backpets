@@ -46,7 +46,7 @@ export default ({
                 justifyContent: 'center',
                 borderRadius: 0,
                 borderBottomWidth: 10,
-                borderColor: '#be9a78',
+                borderColor: colors.primary,
                 marginHorizontal: '5%',
                 elevation: 0,
             }}

@@ -9,8 +9,8 @@ import StoreRoute from './StoreRoute/StoreRoute';
 import ProfileRoute from './ProfileRoute/ProfileRoute';
 import AdoptionRoute from './AdoptionRoute/AdoptionRoute';
 import { initialContext } from '../../context';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../../redux/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser, setSearchText } from '../../redux/userSlice';
 import { constants } from '../../utils';
 import PrimaryAppbar from './PrimaryAppbar';
 import BottomNavigationContainer from './BottomNavigationContainer';
@@ -20,6 +20,7 @@ const Tabs = createMaterialBottomTabNavigator();
 export default memo((props) => {
     const user = useSelector(selectUser);
     const { colors } = useTheme();
+    const dispatch = useDispatch();
 
     const { initialLocalState } = useContext(initialContext);
 
@@ -42,6 +43,11 @@ export default memo((props) => {
                     overflow: 'hidden',
                 }}
                 screenOptions={{ tabBarColor: colors.primary }}
+                screenListeners={{
+                    tabPress: () => {
+                        if (user.searchText) dispatch(setSearchText(''));
+                    },
+                }}
                 backBehavior='initialRoute'
             >
                 <Tabs.Screen
@@ -50,6 +56,7 @@ export default memo((props) => {
                         title: '個人檔案',
                         tabBarIcon: ({ color }) => <MaterialCommunityIcons name='account-circle-outline' color={color} size={20} />,
                     }}
+                    listeners={{ tabPress: null }}
                     component={ProfileRoute}
                 />
                 <Tabs.Screen

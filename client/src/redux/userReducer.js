@@ -7,6 +7,7 @@ import {
     updateUserProfile,
     updateUserPoints,
     updateUserSearchHistory,
+    generateCoupon,
 } from '../api';
 
 // All requests that will affect redux state or SecureStorage should be configured by redux, 
@@ -92,6 +93,17 @@ export const updateSearchHistory = createAsyncThunk(
             const { user: { info } } = getState();
 
             const response = await updateUserSearchHistory({ userId: info._id, searchHistory });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+export const exchangeProduct = createAsyncThunk(
+    'coupon/generatecoupon',
+    async ({ userId, productId }, { rejectWithValue }) => {
+        try {
+            const response = await generateCoupon({ userId, productId });
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);

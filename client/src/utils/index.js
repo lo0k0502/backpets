@@ -23,7 +23,7 @@ export const pageNameENtoCH = (pageName) => {
 };
 
 export const isPageInitialWithSearchbar = (index) => {
-    return [false, true, false, true, true][index];
+    return [false, true, false, false, false][index];
 };
 
 export const routeNametoTitle = (routeName) => {
@@ -31,8 +31,11 @@ export const routeNametoTitle = (routeName) => {
         case 'BottomNavigation':
         case 'ProfileRoute':
         case 'PostsRoute':
+        case 'StoreRoute':
+        case 'AdoptionRoute':
         case 'Profile':
             return 'BackPets';
+        case 'Coupon': return '持有兌換券';
         case 'EditProfile': return '編輯個人資料';
         case 'PetPassports': return '寵物護照列表';
         case 'SelfMissions': return '發布過的任務';
@@ -40,7 +43,6 @@ export const routeNametoTitle = (routeName) => {
         case 'SelfClues': return '回報過的線索';
         case 'PutAdoptionRecord': return '送養紀錄';
         case 'AdoptionRecord': return '領養紀錄';
-        case 'ExchangeRecord': return '兌換紀錄';
         case 'PointRecord': return '點數紀錄';
         case 'ChangePassword': return '更改密碼';
         case 'Clue': return '線索';

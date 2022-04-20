@@ -1,4 +1,4 @@
-import API from "./API";
+import API from './API';
 
 // user
 export const fetchAllUsers = () => API.get('/user/fetchall');

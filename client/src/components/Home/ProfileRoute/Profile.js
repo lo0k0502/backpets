@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { Avatar, List, Divider, useTheme, Badge } from 'react-native-paper';
+import { Avatar, List, Divider, useTheme, Badge, TouchableRipple } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 export default ({ navigation }) => {
   const user = useSelector(selectUser);
   const { colors } = useTheme();
-  const { selfClues } = useContext(Context);
+  const { selfClues, selfCoupons } = useContext(Context);
 
   return (
     <View style={styles.root}>
@@ -46,16 +46,18 @@ export default ({ navigation }) => {
             {user.info?.username}
           </Text>
           <View style={{ flexDirection: 'row' }}>
-            <View style={{ alignItems: 'center', marginRight: 5 }}>
+            <View style={{ alignItems: 'center', paddingHorizontal: '10%' }}>
               <MaterialCommunityIcons name='currency-usd' color='white' size={25} />
               <Text style={styles.points}>點數</Text>
               <Text style={styles.points}>{user.info?.points}</Text>
             </View>
-            <View style={{ alignItems: 'center' }}>
-              <MaterialCommunityIcons name='ticket-confirmation-outline' color='white' size={25} />
-              <Text style={styles.points}>禮券</Text>
-              <Text style={styles.points}>{user.info?.couponIds.length}</Text>
-            </View>
+            <TouchableRipple onPress={() => navigation.navigate('Coupon')}>
+              <View style={{ alignItems: 'center', paddingHorizontal: '10%' }}>
+                <MaterialCommunityIcons name='ticket-confirmation-outline' color='white' size={25} />
+                <Text style={styles.points}>兌換券</Text>
+                <Text style={styles.points}>{selfCoupons.length}</Text>
+              </View>
+            </TouchableRipple>
           </View>
         </View>
       </View>

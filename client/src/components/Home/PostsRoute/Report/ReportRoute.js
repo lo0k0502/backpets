@@ -39,18 +39,7 @@ export default () => {
     && (!user.searchText || report.content.search(user.searchText) !== -1)
   );
 
-  const checkReportsMatchTagAndSearchText = () => {
-    const reportsMatchTag = selectedTags.length ? (
-        allReports.filter(report => selectedTags.includes(report.tag))
-    ) : allReports;
-    if (!reportsMatchTag.length) return false;
-
-    const reportsMatchTagAndSearchText = user.searchText ? (
-        reportsMatchTag.filter(report => report.content.search(user.searchText) !== -1)
-    ) : reportsMatchTag;
-
-    return reportsMatchTagAndSearchText.length ? true : false;
-  };
+  const passedCheckReports = allReports.filter(checkReportMatchTagAndSearchText);
 
   const ReportItem = report => (
     <ReportCard
@@ -98,19 +87,19 @@ export default () => {
             showSnackbar={showSnackbar}
           />
         </Portal>
-          {
-            isFetchingAllReports ? null : (
-              allReports.length ? (
-                selectedTags.length || user.searchText ? (
-                  checkReportsMatchTagAndSearchText() ? (
-                    allReports.filter(checkReportMatchTagAndSearchText).map(ReportItem)
-                  ) : (
-                    <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有通報QQ</Title>
-                  )
-                ) : allReports.map(ReportItem)
-              ) : <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有通報QQ</Title>
-            )
-          }
+        {
+          isFetchingAllReports ? null : (
+            allReports.length ? (
+              selectedTags.length || user.searchText ? (
+                passedCheckReports.length ? (
+                  passedCheckReports.map(ReportItem)
+                ) : (
+                  <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有通報QQ</Title>
+                )
+              ) : allReports.map(ReportItem)
+            ) : <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有通報QQ</Title>
+          )
+        }
         <View style={{ height: 70 }} />
       </ScrollView>
       <FAB

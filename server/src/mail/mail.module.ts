@@ -18,7 +18,7 @@ import { join } from 'path';
           },
         },
         defaults: {
-          from: `"BackPets" <${process.env.MAIL_FROM}>`,
+          from: `'BackPets' <${process.env.MAIL_FROM}>`,
         },
         template: {
           dir: join(__dirname, '../templates/mail'),

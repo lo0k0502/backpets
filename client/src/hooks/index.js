@@ -17,6 +17,9 @@ import {
     fetchAdoptionRecordsByUserId,
     fetchAdoptionRecordsByPutUserId,
     fetchPutUpForAdoption,
+    fetchAllProducts,
+    fetchProductById,
+    fetchCouponsByUserId,
 } from '../api';
 
 export const useOnceUpdateEffect = (callback, dependencies) => {
@@ -883,6 +886,149 @@ export const useSelfPutAdoptionRecords = (userId, dependencies = []) => {
     };
 };
 
+/**
+ * @returns {{
+ *  allProducts: {
+ *      _id: String,
+ *      product_name: String,
+ *      description: String,
+ *      company_name: String,
+ *      company_telephone: String,
+ *      company_address: String,
+ *      photoId: String,
+ *      points: Number,
+ *  }[],
+ *  refreshAllProducts: Function,
+ *  isFetchingAllProducts: boolean,
+ * }}
+ */
+export const useProducts = (dependencies = []) => {
+    const [products, setProducts] = useState([]);
+    const isMounted = useRef(true);
+    const [isFetching, setIsFetching] = useState(false);
+
+    // Fetch all products
+    const fetchProducts = async () => {
+        if (isMounted.current) setIsFetching(true);
+
+        try {
+            const result = await fetchAllProducts();
+            if (isMounted.current) setProducts(result.data.result);
+        } catch (error) {
+            console.log(error);
+        }
+
+        if (isMounted.current) setIsFetching(false);
+    };
+
+    useEffect(() => {
+        isMounted.current = true;
+
+        fetchProducts();
+
+        return () => { isMounted.current = false };
+    }, [...dependencies]);
+
+    return {
+        allProducts: products,
+        refreshAllProducts: fetchProducts,
+        isFetchingAllProducts: isFetching,
+    };
+};
+
+/**
+ * @param {String} productId
+ * @returns {{
+ *  product: {
+ *      _id: String,
+ *      product_name: String,
+ *      description: String,
+ *      company_name: String,
+ *      company_telephone: String,
+ *      company_address: String,
+ *      photoId: String,
+ *      points: Number,
+ *  },
+ *  isFetchingProduct: boolean,
+ * }}
+ */
+export const useProduct = (productId, dependencies = []) => {
+    const [product, setProduct] = useState({});
+    const isMounted = useRef(true);
+    const [isFetching, setIsFetching] = useState(false);
+
+    // Fetch the product of this product id
+    const fetchProduct = async () => {
+        if (isMounted.current) setIsFetching(true);
+
+        try {
+            const result = await fetchProductById(productId);
+            if (isMounted.current) setProduct(result.data.result);
+        } catch (error) {
+            console.log(error);
+        }
+
+        if (isMounted.current) setIsFetching(false);
+    };
+
+    useEffect(() => {
+        isMounted.current = true;
+
+        if (productId) fetchProduct();
+
+        return () => { isMounted.current = false };
+    }, [productId, ...dependencies]);
+
+    return { product, isFetchingProduct: isFetching };
+};
+
+/**
+ * @returns {{
+ *  selfCoupons: {
+ *      _id: String,
+ *      userId: String,
+ *      productId: String,
+ *      due_time: Number,
+ *      exchanged: Boolean,
+ *  }[],
+ *  refreshSelfCoupons: Function,
+ *  isFetchingSelfCoupons: boolean,
+ * }}
+ */
+export const useSelfCoupons = (userId, dependencies = []) => {
+    const [coupons, setCoupons] = useState([]);
+    const isMounted = useRef(true);
+    const [isFetching, setIsFetching] = useState(false);
+
+    // Fetch coupons by userId
+    const fetchSelfCoupons = async () => {
+        if (isMounted.current) setIsFetching(true);
+
+        try {
+            const result = await fetchCouponsByUserId(userId);
+            if (isMounted.current) setCoupons(result.data.result);
+        } catch (error) {
+            console.log(error);
+        }
+
+        if (isMounted.current) setIsFetching(false);
+    };
+
+    useEffect(() => {
+        isMounted.current = true;
+
+        if (userId) fetchSelfCoupons();
+
+        return () => { isMounted.current = false };
+    }, [userId, ...dependencies]);
+
+    return {
+        selfCoupons: coupons,
+        refreshSelfCoupons: fetchSelfCoupons,
+        isFetchingSelfCoupons: isFetching,
+    };
+};
+
 export default {
     useUpdateEffect,
     useStateWithValidation,
@@ -903,4 +1049,7 @@ export default {
     useSelfPointRecords,
     useSelfAdoptionRecords,
     useSelfPutAdoptionRecords,
+    useProducts,
+    useProduct,
+    useSelfCoupons,
 };

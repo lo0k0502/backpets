@@ -98,40 +98,7 @@ export default ({ navigation }) => {
         );
     };
 
-    const checkMissionsMatchFilters = () => {
-        const missionsMatchTag = selectedTags.length ? (
-            allMissions.filter(mission => {
-                return selectedTags.includes(pets.find(_pet => _pet._id === mission.petId).tag);
-            })
-        ) : allMissions;
-        if (!missionsMatchTag.length) return false;
-
-        const missionsMatchTagAndSearchText = user.searchText ? (
-            missionsMatchTag.filter(mission => {
-                const pet = pets.find(_pet => _pet._id === mission.petId);
-        
-                return (
-                    mission.content.search(user.searchText) !== -1
-                    || pet.name.search(user.searchText) !== -1
-                    || pet.breed.search(user.searchText) !== -1
-                    || pet.feature.search(user.searchText) !== -1
-                    || pet.gender.search(user.searchText) !== -1
-                );
-            })
-        ) : missionsMatchTag;
-        if (!missionsMatchTagAndSearchText.length) return false;
-
-        const missionsMatchTagAndSearchTextAndCompleted = completed !== constants.completedOptions[0] ? (
-            missionsMatchTagAndSearchText.filter(mission => {
-                return (
-                    (completed === constants.completedOptions[1] && mission.completed)
-                    || (completed === constants.completedOptions[2] && !mission.completed)
-                );
-            })
-        ) : missionsMatchTagAndSearchText;
-
-        return !!missionsMatchTagAndSearchTextAndCompleted.length;
-    };
+    const passedCheckMissions = allMissions.filter(checkMissionMatchFilters);
 
     const MissionItem = mission => (
         <MissionCard
@@ -225,8 +192,8 @@ export default ({ navigation }) => {
                     isFetchingAllMissions || isFetchingPets ? null : (
                         allMissions.length ? (
                             selectedTags.length || user.searchText || completed !== constants.completedOptions[0] ? (
-                                checkMissionsMatchFilters() ? (
-                                    allMissions.filter(checkMissionMatchFilters).map(MissionItem)
+                                passedCheckMissions.length ? (
+                                    passedCheckMissions.map(MissionItem)
                                 ) : (
                                     <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
                                 )

@@ -16,6 +16,8 @@ export default ({ route, navigation, routeName }) => {
             (
                 _routeName === constants.pageNames[0]
                 || _routeName === constants.pageNames[2]
+                || _routeName === constants.pageNames[3]
+                || _routeName === constants.pageNames[4]
                 || _routeName === 'Profile'
                 || _routeName === 'BottomNavigation'
             ) ? (
@@ -30,6 +32,8 @@ export default ({ route, navigation, routeName }) => {
         {
             (
                 _routeName === constants.pageNames[2]
+                || _routeName === constants.pageNames[3]
+                || _routeName === constants.pageNames[4]
                 || _routeName === 'BottomNavigation'
             ) ? (
                 <Appbar.Action icon='magnify' onPress={() => navigation.navigate('Search')} />

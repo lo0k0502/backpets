@@ -167,14 +167,13 @@ export default ({ navigation }) => {
                         />
                     }
                 />
-                <Checkbox.Item
-                    label='記住我'
-                    status={rememberMe}
-                    style={{ justifyContent: 'flex-start', padding: 0 }}
-                    labelStyle={{ textAlign: 'left' }}
-                    position='leading'
-                    onPress={() => setRememberMe(state => state === 'checked' ? 'unchecked' : 'checked')}
-                />
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Checkbox.Android
+                        status={rememberMe}
+                        onPress={() => setRememberMe(state => state === 'checked' ? 'unchecked' : 'checked')}
+                    />
+                    <Text>記住我</Text>
+                </View>
                 <Button 
                     mode='contained'
                     disabled={loginLoading || googleLoginLoading}

@@ -12,6 +12,7 @@ import { Text } from 'react-native-paper';
 import SelfPutUpForAdoptions from './SelfPutUpForAdoptions';
 import AdoptionRecord from './AdoptionRecord';
 import PutAdoptionRecord from './PutAdoptionRecord';
+import Coupon from './Coupon';
 
 const ProfileStack = createStackNavigator();
 
@@ -34,11 +35,9 @@ export default ({ route, navigation }) => {
             <ProfileStack.Screen name='SelfClues' component={SelfClues} />
             <ProfileStack.Screen name='PutAdoptionRecord' component={PutAdoptionRecord} />
             <ProfileStack.Screen name='AdoptionRecord' component={AdoptionRecord} />
-            <ProfileStack.Screen name='ExchangeRecord'>
-                {props => <Text {...props}>yo</Text>}
-            </ProfileStack.Screen>
             <ProfileStack.Screen name='PointRecord' component={PointRecord} />
             <ProfileStack.Screen name='ChangePassword' component={ChangePassword} />
+            <ProfileStack.Screen name='Coupon' component={Coupon} />
         </ProfileStack.Navigator>
     );
 };
