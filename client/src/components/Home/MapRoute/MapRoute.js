@@ -53,7 +53,7 @@ export default ({ route, navigation }) => {
       latitude: currentLatitude,
       longitude: currentLongitude,
       ...constants.locationDeltas,
-    }, 1000)
+    }, 500)
   };
 
   // Tag for Mission
