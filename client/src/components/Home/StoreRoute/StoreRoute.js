@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { RefreshControl, View } from 'react-native';
 import { FlatGrid } from 'react-native-super-grid';
-import { Portal, Text, Title } from 'react-native-paper';
+import { Portal, Title } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { useProducts } from '../../../hooks';
 import { selectUser } from '../../../redux/userSlice';
@@ -28,31 +28,6 @@ export default () => {
 
     const passedCheckProducts = allProducts.filter(checkProductMatchSearchText);
 
-    const showProducts = (products) => (
-        <FlatGrid
-            style={{
-                flex: 1,
-                backgroundColor: 'white',
-            }}
-            contentContainerStyle={{ paddingBottom: 70 }}
-            refreshControl={(
-                <RefreshControl
-                    refreshing={isFetchingAllProducts}
-                    onRefresh={refreshAllProducts}
-                />
-            )}
-            itemDimension={constants.boxSize}
-            data={products}
-            renderItem={({ item }) => (
-                <ProductCard
-                    product={item}
-                    setExchangeDialog={setExchangeDialog}
-                    setExchangeProduct={setExchangeProduct}
-                />
-            )}
-        />
-    );
-
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <Portal>
@@ -66,13 +41,32 @@ export default () => {
             </Portal>
             {
                 isFetchingAllProducts ? null : (
-                    allProducts.length ? (
-                        user.searchText ? (
-                            passedCheckProducts.length ? showProducts(passedCheckProducts) : (
-                                <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有商品QQ</Title>
-                            )
-                        ) : showProducts(allProducts)
-                    ) : <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有商品QQ</Title>
+                    passedCheckProducts.length ? (
+                        <FlatGrid
+                            style={{
+                                flex: 1,
+                                backgroundColor: 'white',
+                            }}
+                            contentContainerStyle={{ paddingBottom: 70 }}
+                            refreshControl={(
+                                <RefreshControl
+                                    refreshing={isFetchingAllProducts}
+                                    onRefresh={refreshAllProducts}
+                                />
+                            )}
+                            itemDimension={constants.boxSize}
+                            data={passedCheckProducts}
+                            renderItem={({ item }) => (
+                                <ProductCard
+                                    product={item}
+                                    setExchangeDialog={setExchangeDialog}
+                                    setExchangeProduct={setExchangeProduct}
+                                />
+                            )}
+                        />
+                    ) : (
+                        <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有商品QQ</Title>
+                    )
                 )
             }
         </View>

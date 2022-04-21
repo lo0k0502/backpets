@@ -190,15 +190,11 @@ export default ({ navigation }) => {
                 }
                 {
                     isFetchingAllMissions || isFetchingPets ? null : (
-                        allMissions.length ? (
-                            selectedTags.length || user.searchText || completed !== constants.completedOptions[0] ? (
-                                passedCheckMissions.length ? (
-                                    passedCheckMissions.map(MissionItem)
-                                ) : (
-                                    <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
-                                )
-                            ) : allMissions.map(MissionItem)
-                        ) : <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
+                        passedCheckMissions.length ? (
+                            passedCheckMissions.map(MissionItem)
+                        ) : (
+                            <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
+                        )
                     )
                 }
                 <View style={{ height: 70 }} />

@@ -89,15 +89,11 @@ export default () => {
         </Portal>
         {
           isFetchingAllReports ? null : (
-            allReports.length ? (
-              selectedTags.length || user.searchText ? (
-                passedCheckReports.length ? (
-                  passedCheckReports.map(ReportItem)
-                ) : (
-                  <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有通報QQ</Title>
-                )
-              ) : allReports.map(ReportItem)
-            ) : <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有通報QQ</Title>
+            passedCheckReports.length ? (
+              passedCheckReports.map(ReportItem)
+            ) : (
+              <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有通報QQ</Title>
+            )
           )
         }
         <View style={{ height: 70 }} />

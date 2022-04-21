@@ -34,6 +34,26 @@ export class CouponController {
         return res.status(200).json({ result });
     }
 
+    @Get('complete/:couponid')
+    async CompleteExchange(@Param() { couponid }, @Req() req: Request, @Res() res: Response) {
+        const accessToken = req.headers.authorization?.split(' ')[1];
+
+        if (accessToken !== process.env.EXCHANGE_ACCESS_TOKEN) return res.render('NotFound');
+
+        const existCoupon = await this.couponService.findOne({ _id: couponid });
+        if (!existCoupon) return res.status(400).json({ message: '兌換券不存在' });
+
+        const existUser = await this.userService.findOne({ _id: existCoupon.userId });
+        if (!existUser) return res.status(400).json({ message: '用戶不存在' });
+
+        const existProduct = await this.productService.findOne({ _id: existCoupon.productId });
+        if (!existProduct) return res.status(400).json({ message: '商品不存在' });
+        
+        await this.couponService.updateOne({ _id: couponid }, { exchanged: true });
+
+        return res.render('CompleteExchange');
+    }
+
     @Post('generatecoupon')
     async GenerateCoupon(@Body() { userId, productId }, @Res() res: Response) {
         try {
@@ -60,13 +80,5 @@ export class CouponController {
             console.error(error);
             return res.status(400).json({ message: '錯誤' });
         }
-    }
-
-    @Post('complete/:couponid')
-    async CompleteExchange(@Param() { couponid }, @Req() req: Request, @Res() res: Response) {
-        const accessToken = req.headers.authorization?.split(' ')[1];
-
-        if (accessToken !== process.env.EXCHANGE_ACCESS_TOKEN) return res.render('NotFound');
-        return res.status(200).json({ message: couponid });
     }
 }

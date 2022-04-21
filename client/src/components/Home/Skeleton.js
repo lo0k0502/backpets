@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTheme } from 'react-native-paper';
 import SkeletonContent from '@vitu.soares/react-native-skeleton-content';
+import { constants } from '../../utils';
 
 export const Skeleton = ({ mode = 'card' }) => {
     const { colors } = useTheme();
@@ -21,6 +22,12 @@ export const Skeleton = ({ mode = 'card' }) => {
             flexWrap: 'wrap',
             flexDirection: 'row',
             alignItems: 'center',
+        },
+        'grid': {
+            borderRadius: 0,
+            borderBottomWidth: 5,
+            borderColor: colors.primary,
+            elevation: 0,
         }
     };
 
@@ -103,6 +110,13 @@ export const Skeleton = ({ mode = 'card' }) => {
                 marginRight: 15,
                 borderRadius: 20,
             },
+        ],
+        'grid': [
+            {
+                key: 'image',
+                width: '100%',
+                height: constants.boxSize,
+            }
         ],
     };
 

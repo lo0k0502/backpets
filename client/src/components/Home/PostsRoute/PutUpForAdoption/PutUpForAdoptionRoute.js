@@ -162,15 +162,11 @@ export default () => {
         </Portal>
         {
           isFetchingAllPutUpForAdoptions || isFetchingPets ? null : (
-            allPutUpForAdoptions.length ? (
-              selectedTags.length || user.searchText || county !== '全部' ? (
-                passedCheckPutUpForAdoptions.length ? (
-                  passedCheckPutUpForAdoptions.map(PutUpForAdoptionItem)
-                ) : (
-                  <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
-                )
-              ) : allPutUpForAdoptions.map(PutUpForAdoptionItem)
-            ) : <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
+            passedCheckPutUpForAdoptions.length ? (
+              passedCheckPutUpForAdoptions.map(PutUpForAdoptionItem)
+            ) : (
+              <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有貼文QQ</Title>
+            )
           )
         }
         <View style={{ marginBottom: 70 }} />
