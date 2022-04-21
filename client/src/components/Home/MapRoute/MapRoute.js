@@ -204,7 +204,7 @@ export default ({ route, navigation }) => {
                   tooltip
                   onPress={() => { } }
                 >
-                  {/* <ReportCallout report={report} /> */}
+                  <ReportCallout report={report} />
                 </Callout>
               </Marker>
             ))
@@ -223,7 +223,7 @@ export default ({ route, navigation }) => {
               tooltip
               onPress={() => { } }
             >
-              {/* <ReportCallout report={report} /> */}
+              <ReportCallout report={report} />
             </Callout>
           </Marker>
         )

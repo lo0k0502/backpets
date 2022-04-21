@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Headline, Avatar, Text } from 'react-native-paper';
+import { Svg, Image as ImageSvg } from 'react-native-svg';
+import { Headline, Text } from 'react-native-paper';
 import { SERVERURL } from '../../../api/API';
 import { usePet } from '../../../hooks';
 
@@ -14,12 +15,10 @@ const styles = StyleSheet.create({
     //   alignSelf: 'flex-start',
     },
     bubble: {
-        width: 140,
         flexDirection: 'row',
         alignSelf: 'flex-start',
+        paddingBottom: 5,
         backgroundColor: '#be9a78',
-        paddingHorizontal: 10,
-        paddingVertical: 6,
         borderRadius: 10,
         borderColor: '#007a87',
         borderWidth: 0,
@@ -30,7 +29,7 @@ const styles = StyleSheet.create({
         borderColor: 'transparent',
         borderTopColor: '#be9a78',
         alignSelf: 'center',
-        marginTop: -1,
+        marginTop: 0,
     },
     arrowBorder: {
         backgroundColor: 'transparent',
@@ -42,6 +41,14 @@ const styles = StyleSheet.create({
     },
     image: {
         alignSelf: 'auto',
+        marginHorizontal: 10,
+        marginTop: 10,
+        borderRadius: 10,
+        borderWidth: 0,
+    },
+    text: {
+        fontWeight: '900',
+        marginLeft: 10,
     },
 });
 
@@ -49,22 +56,27 @@ export default ({ mission }) => {
     const navigation = useNavigation();
     const { pet } = usePet(mission.petId);
 
-    return (
+    return ( 
         <View style={styles.container}>
             <View style={styles.bubble}>
                 <View style={styles.root}>
-                    <Avatar.Image
-                        size={150}
-                        source={{ uri: `${SERVERURL}/image/${pet.photoID}`}}
-                        style={styles.image}
-                    />
-                    <Text style={{ fontWeight: '900' }}>
+
+                    <Svg width={220} height={120} style={styles.image}>
+                        <ImageSvg
+                            width={'100%'}
+                            height={'100%'}
+                            preserveAspectRatio="xMidYMid slice"
+                            href={{ uri: `${SERVERURL}/image/${pet.photoId}` }}
+                        />
+                    </Svg>
+
+                    <Text style={ styles.text }>
                         寵物名稱：{pet.name}
                     </Text>
-                    <Text style={{ fontWeight: '900' }}>
+                    <Text style={ styles.text }>
                         寵物品種：{pet.breed}
                     </Text>
-                    <Text style={{ fontWeight: '900' }}>
+                    <Text style={ styles.text }>
                         寵物特徵：{pet.feature}
                     </Text>
                 </View>
