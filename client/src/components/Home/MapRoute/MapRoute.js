@@ -6,7 +6,7 @@ import { Colors, useTheme, FAB } from 'react-native-paper';
 import { useCurrentLocation, useMissions, useReports, usePets } from '../../../hooks';
 import PostCallout from './PostCallout';
 import ReportCallout from './ReportCallout';
-import TagsView from '../PostsRoute/TagsView';
+import TagsView from '../../common/TagsView';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../redux/userSlice';
 import { constants } from '../../../utils';

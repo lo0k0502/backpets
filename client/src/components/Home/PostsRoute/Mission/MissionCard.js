@@ -17,7 +17,7 @@ import {
 import moment from 'moment';
 import { usePet, useUser } from '../../../../hooks';
 import { SERVERURL } from '../../../../api/API';
-import Tag from '../Tag';
+import Tag from '../../../common/Tag';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
 import { constants, isEmptyObject } from '../../../../utils';

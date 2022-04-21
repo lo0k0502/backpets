@@ -19,7 +19,7 @@ import { useUser } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
 import { constants, isEmptyObject } from '../../../../utils';
 import { Skeleton } from '../../Skeleton';
-import Tag from '../Tag';
+import Tag from '../../../common/Tag';
 
 export default ({
     report,

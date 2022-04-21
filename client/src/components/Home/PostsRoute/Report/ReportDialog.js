@@ -20,7 +20,7 @@ import { useSelector } from 'react-redux';
 import { addReport, deleteImage, editReport, uploadImage } from '../../../../api';
 import { useCurrentLocation } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
-import TagsView from '../TagsView';
+import TagsView from '../../../common/TagsView';
 import { constants, isEmptyObject, shrinkImageToTargetSize } from '../../../../utils';
 import DialogActions from '../../../common/DialogActions';
 import SelectPhoto from '../../../common/SelectPhoto';

@@ -4,8 +4,8 @@ import { Portal, Title } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { useSelfPets, useSelfPutUpForAdoptions } from '../../../hooks';
 import { selectUser } from '../../../redux/userSlice';
-import PutUpForAdoptionCard from '../PostsRoute/PutUpForAdoption/PutUpForAdoptionCard';
-import PutUpForAdoptionDialog from '../PostsRoute/PutUpForAdoption/PutUpForAdoptionDialog';
+import PutUpForAdoptionCard from '../AdoptionRoute/PutUpForAdoption/PutUpForAdoptionCard';
+import PutUpForAdoptionDialog from '../AdoptionRoute/PutUpForAdoption/PutUpForAdoptionDialog';
 
 export default () => {
     const user = useSelector(selectUser);

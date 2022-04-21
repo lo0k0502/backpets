@@ -8,7 +8,7 @@ import { SERVERURL } from '../../../api/API';
 import { selectUser } from '../../../redux/userSlice';
 import { constants, isEmptyObject } from '../../../utils';
 import { postTypeENtoCH } from '../../../utils';
-import TagsView from './TagsView';
+import TagsView from '../../common/TagsView';
 
 export default ({
     postType,

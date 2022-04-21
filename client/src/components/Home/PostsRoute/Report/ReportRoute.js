@@ -15,7 +15,7 @@ import Context from '../../../../context';
 import { useReports } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
 import { constants } from '../../../../utils';
-import TagsView from '../TagsView';
+import TagsView from '../../../common/TagsView';
 import ViolationReportDialog from '../ViolationReportDialog';
 import ReportCard from './ReportCard';
 import ReportDialog from './ReportDialog';

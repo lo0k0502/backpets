@@ -20,7 +20,7 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
 import { useMissions, usePets, useSelfPets } from '../../../../hooks';
 import ClueDialog from './ClueDialog';
-import TagsView from '../TagsView';
+import TagsView from '../../../common/TagsView';
 import { constants } from '../../../../utils';
 import SelectButton from '../../SelectButton';
 import Context from '../../../../context';

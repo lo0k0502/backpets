@@ -18,7 +18,7 @@ import { useSelector } from 'react-redux';
 import { SERVERURL } from '../../../../api/API';
 import { usePet, useUser } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
-import Tag from '../Tag';
+import Tag from '../../../common/Tag';
 import { isEmptyObject } from '../../../../utils';
 import { Skeleton } from '../../Skeleton';
 

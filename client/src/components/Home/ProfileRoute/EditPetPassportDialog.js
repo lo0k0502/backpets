@@ -26,9 +26,9 @@ import {
 import { useSelector } from 'react-redux';
 import { deleteImage, editPet, uploadImage } from '../../../api';
 import { selectUser } from '../../../redux/userSlice';
-import TagsView from '../PostsRoute/TagsView';
 import { SERVERURL } from '../../../api/API';
 import { constants } from '../../../utils';
+import TagsView from '../../common/TagsView';
 
 export default ({ pet, visible, close, refreshSelfPets }) => {
     const user = useSelector(selectUser);
