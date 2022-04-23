@@ -22,6 +22,7 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../../../../redux/userSlice';
 import { constants, isEmptyObject } from '../../../../utils';
 import { Skeleton } from '../../Skeleton';
+import PostSubheading from '../../../common/PostSubheading';
 
 export default ({
     mission,
@@ -37,7 +38,7 @@ export default ({
     const { colors } = useTheme();
     const user = useSelector(selectUser);
     const { pet, isFetching: isFetchingPet } = usePet(mission.petId);
-    const { user: poster, isFetching: isFetchingPoster } = useUser(pet?.userId);
+    const { user: poster, isFetching: isFetchingPoster } = useUser(pet.userId);
 
     const [menu, setMenu] = useState(false);
 
@@ -117,7 +118,7 @@ export default ({
                     )}
                 />
                 {
-                    pet?.photoId ? (
+                    pet.photoId ? (
                         <Avatar.Image
                             source={{ uri: `${SERVERURL}/image/${pet.photoId}` }}
                             size={200}
@@ -128,26 +129,21 @@ export default ({
                         />
                     ) : null
                 }
-                <Subheading style={{ padding: 10 }}>
-                    <Text style={{ color: colors.primary }}>寵物名稱: </Text>
-                    {pet?.name}
-                </Subheading>
-                <Subheading style={{ padding: 10 }}>
-                    <Text style={{ color: colors.primary }}>品種: </Text>
-                    {pet?.breed}
-                </Subheading>
-                <Subheading style={{ padding: 10 }}>
-                    <Text style={{ color: colors.primary }}>特徵: </Text>
-                    {pet?.feature}
-                </Subheading>
-                <Subheading style={{ padding: 10 }}>
-                    <Text style={{ color: colors.primary }}>性別: </Text>
-                    {pet?.gender}
-                </Subheading>
-                <Subheading style={{ padding: 10 }}>
-                    <Text style={{ color: colors.primary }}>遺失時間: </Text>
+                <PostSubheading label='寵物名稱'>
+                    {pet.name}
+                </PostSubheading>
+                <PostSubheading label='品種'>
+                    {pet.breed}
+                </PostSubheading>
+                <PostSubheading label='特徵'>
+                    {pet.feature}
+                </PostSubheading>
+                <PostSubheading label='性別'>
+                    {pet.gender}
+                </PostSubheading>
+                <PostSubheading label='遺失時間'>
                     {(new Date(mission.lost_time)).toISOString().replace('T', ' ').slice(0, -8)}
-                </Subheading>
+                </PostSubheading>
                 {
                     mission.content ? (
                         <Paragraph style={{ padding: 10 }}>
@@ -157,7 +153,7 @@ export default ({
                     ) : null
                 }
                 {
-                    pet?.tag ? (
+                    pet.tag ? (
                         <View style={{ flexDirection: 'row', paddingHorizontal: 10, paddingBottom: 10 }}>
                             <Tag tag={{ name: pet.tag, selected: tagSelected }} />
                         </View>

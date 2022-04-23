@@ -29,46 +29,47 @@ export default () => {
     const passedCheckProducts = allProducts.filter(checkProductMatchSearchText);
 
     return (
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <>
             <Portal>
                 <ExchangeDialog
                     visible={exchangeDialog}
-                    close={() => setExchangeDialog(false)}
+                    close={() => {
+                        setExchangeDialog(false);
+                        setExchangeProduct({});
+                    }}
                     product={exchangeProduct}
                     refreshAllProducts={refreshAllProducts}
                     refreshSelfCoupons={refreshSelfCoupons}
                 />
             </Portal>
             {
-                isFetchingAllProducts ? null : (
-                    passedCheckProducts.length ? (
-                        <FlatGrid
-                            style={{
-                                flex: 1,
-                                backgroundColor: 'white',
-                            }}
-                            contentContainerStyle={{ paddingBottom: 70 }}
-                            refreshControl={(
-                                <RefreshControl
-                                    refreshing={isFetchingAllProducts}
-                                    onRefresh={refreshAllProducts}
-                                />
-                            )}
-                            itemDimension={constants.boxSize}
-                            data={passedCheckProducts}
-                            renderItem={({ item }) => (
-                                <ProductCard
-                                    product={item}
-                                    setExchangeDialog={setExchangeDialog}
-                                    setExchangeProduct={setExchangeProduct}
-                                />
-                            )}
-                        />
-                    ) : (
-                        <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有商品QQ</Title>
-                    )
-                )
+            !isFetchingAllProducts && !passedCheckProducts.length ? (
+                <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有商品QQ</Title>
+            ) : null
             }
-        </View>
+            <FlatGrid
+                style={{
+                    flex: 1,
+                    backgroundColor: 'white',
+                }}
+                contentContainerStyle={{ paddingBottom: 70 }}
+                refreshControl={(
+                    <RefreshControl
+                        refreshing={isFetchingAllProducts}
+                        onRefresh={refreshAllProducts}
+                    />
+                )}
+                itemDimension={constants.boxSize}
+                data={isFetchingAllProducts ? [] : passedCheckProducts}
+                keyExtractor={item => item._id}
+                renderItem={({ item }) => (
+                    <ProductCard
+                        product={item}
+                        setExchangeDialog={setExchangeDialog}
+                        setExchangeProduct={setExchangeProduct}
+                    />
+                )}
+            />
+        </>
     )
 };

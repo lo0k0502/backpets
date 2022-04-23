@@ -46,7 +46,7 @@ export default () => {
   const [countyMenu, setCountyMenu] = useState(false);
   const [districtMenu, setDistrictMenu] = useState(false);
 
-  const selectedTags = constants.animalTagsArray.filter(tag => animalTags.find(_tag => _tag.name === tag && _tag.selected));
+  const selectedTags = animalTags.filter(_tag => _tag.selected).map(_tag => _tag.name);
 
   const checkPutUpForAdoptionMatchTagAndSearchTextAndArea = (putUpForAdoption) => {
     const pet = pets.find(_pet => _pet._id === putUpForAdoption.petId);

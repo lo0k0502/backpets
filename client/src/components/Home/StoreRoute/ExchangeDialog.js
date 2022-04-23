@@ -7,6 +7,7 @@ import { SERVERURL } from '../../../api/API';
 import { exchangeProduct } from '../../../redux/userReducer';
 import { selectUser } from '../../../redux/userSlice';
 import DialogActions from '../../common/DialogActions';
+import PostSubheading from '../../common/PostSubheading';
 
 export default ({
     visible,
@@ -60,34 +61,27 @@ export default ({
                         style={{ height: 300 }}
                         resizeMode='contain'
                     />
-                    <Subheading style={{ padding: 10 }}>
-                        <Text style={{ color: colors.primary }}>商品名稱: </Text>
+                    <PostSubheading label='商品名稱'>
                         {product.product_name}
-                    </Subheading>
-                    <Subheading style={{ padding: 10 }}>
-                        <Text style={{ color: colors.primary }}>商品簡介: </Text>
+                    </PostSubheading>
+                    <PostSubheading label='商品簡介'>
                         {product.description}
-                    </Subheading>
-                    <Subheading style={{ padding: 10 }}>
-                        <Text style={{ color: colors.primary }}>庫存數量: </Text>
+                    </PostSubheading>
+                    <PostSubheading label='庫存數量'>
                         {product.remaining_quantity}
-                    </Subheading>
-                    <Subheading style={{ padding: 10 }}>
-                        <Text style={{ color: colors.primary }}>公司名稱: </Text>
+                    </PostSubheading>
+                    <PostSubheading label='公司名稱'>
                         {product.company_name}
-                    </Subheading>
-                    <Subheading style={{ padding: 10 }}>
-                        <Text style={{ color: colors.primary }}>公司電話: </Text>
+                    </PostSubheading>
+                    <PostSubheading label='公司電話'>
                         {product.company_telephone}
-                    </Subheading>
-                    <Subheading style={{ padding: 10 }}>
-                        <Text style={{ color: colors.primary }}>公司地址: </Text>
+                    </PostSubheading>
+                    <PostSubheading label='公司地址'>
                         {product.company_address}
-                    </Subheading>
-                    <Subheading style={{ padding: 10 }}>
-                        <Text style={{ color: colors.primary }}>所需點數: </Text>
+                    </PostSubheading>
+                    <PostSubheading label='所需點數'>
                         {product.points}
-                    </Subheading>
+                    </PostSubheading>
                     <HelperText type='error' style={{ fontSize: 16 }}>
                         {!(user.info?.points >= product.points) ? '您的點數不足!' : ''}
                     </HelperText>

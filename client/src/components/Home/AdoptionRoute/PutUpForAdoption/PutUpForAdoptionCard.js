@@ -21,6 +21,7 @@ import { selectUser } from '../../../../redux/userSlice';
 import Tag from '../../../common/Tag';
 import { isEmptyObject } from '../../../../utils';
 import { Skeleton } from '../../Skeleton';
+import PostSubheading from '../../../common/PostSubheading';
 
 export default ({
     putUpForAdoption,
@@ -126,36 +127,29 @@ export default ({
                         />
                     ) : null
                 }
-                <Subheading style={{ padding: 10 }}>
-                    <Text style={{ color: colors.primary }}>寵物名稱: </Text>
+                <PostSubheading label='寵物名稱'>
                     {pet.name}
-                </Subheading>
-                <Subheading style={{ padding: 10 }}>
-                    <Text style={{ color: colors.primary }}>品種: </Text>
+                </PostSubheading>
+                <PostSubheading label='品種'>
                     {pet.breed}
-                </Subheading>
-                <Subheading style={{ padding: 10 }}>
-                    <Text style={{ color: colors.primary }}>性別: </Text>
+                </PostSubheading>
+                <PostSubheading label='性別'>
                     {pet.gender}
-                </Subheading>
-                <Subheading style={{ padding: 10 }}>
-                    <Text style={{ color: colors.primary }}>特徵: </Text>
+                </PostSubheading>
+                <PostSubheading label='特徵'>
                     {pet.feature}
-                </Subheading>
-                <Subheading style={{ padding: 10 }}>
-                    <Text style={{ color: colors.primary }}>是否結紮: </Text>
+                </PostSubheading>
+                <PostSubheading label='是否結紮'>
                     {pet.ligated ? '是' : '否'}
-                </Subheading>
-                <Subheading style={{ padding: 10 }}>
-                    <Text style={{ color: colors.primary }}>年齡: </Text>
+                </PostSubheading>
+                <PostSubheading label='年齡'>
                     {pet.age.toString()}
-                </Subheading>
+                </PostSubheading>
                 {
                     pet.microchip ? (
-                        <Subheading style={{ padding: 10 }}>
-                            <Text style={{ color: colors.primary }}>寵物晶片號碼: </Text>
+                        <PostSubheading label='寵物晶片號碼'>
                             {pet?.microchip}
-                        </Subheading>
+                        </PostSubheading>
                     ) : null
                 }
                 {
@@ -169,14 +163,12 @@ export default ({
                 <View style={{ flexDirection: 'row', paddingHorizontal: 10, paddingBottom: 10 }}>
                     <Tag tag={{ name: pet.tag, selected: tagSelected }} />
                 </View>
-                <Subheading style={{ padding: 10 }}>
-                    <Text style={{ color: colors.primary }}>地區: </Text>
+                <PostSubheading label='地區'>
                     {putUpForAdoption.county}{putUpForAdoption.district}
-                </Subheading>
-                <Subheading style={{ padding: 10 }}>
-                    <Text style={{ color: colors.primary }}>電話: </Text>
+                </PostSubheading>
+                <PostSubheading label='電話'>
                     {putUpForAdoption.phone}
-                </Subheading>
+                </PostSubheading>
                 {
                     poster._id === user.info?._id ? (
                         <Divider

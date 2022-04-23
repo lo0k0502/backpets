@@ -1029,6 +1029,44 @@ export const useSelfCoupons = (userId, dependencies = []) => {
     };
 };
 
+/**
+ * @returns {{ data: {}[], refreshData: Function, isFetchingData: boolean }}
+ */
+export const useAdoptionData = (dependencies = []) => {
+    const [data, setData] = useState([]);
+    const isMounted = useRef(true);
+    const [isFetching, setIsFetching] = useState(false);
+
+    // Fetch all data
+    const fetchData = async () => {
+        if (isMounted.current) setIsFetching(true);
+
+        try {
+            const response = await fetch('https://data.coa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL');
+            const result = await response.json();
+            if (isMounted.current) setData(result);
+        } catch (error) {
+            console.log(error);
+        }
+
+        if (isMounted.current) setIsFetching(false);
+    };
+
+    useEffect(() => {
+        isMounted.current = true;
+
+        fetchData();
+
+        return () => { isMounted.current = false };
+    }, [...dependencies]);
+
+    return {
+        data: data,
+        refreshData: fetchData,
+        isFetchingData: isFetching,
+    };
+};
+
 export default {
     useUpdateEffect,
     useStateWithValidation,
@@ -1052,4 +1090,5 @@ export default {
     useProducts,
     useProduct,
     useSelfCoupons,
+    useAdoptionData,
 };

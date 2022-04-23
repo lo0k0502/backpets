@@ -3,6 +3,12 @@ import { useTheme } from 'react-native-paper';
 import SkeletonContent from '@vitu.soares/react-native-skeleton-content';
 import { constants } from '../../utils';
 
+/**
+ * @param {{
+ *  mode: 'card' | 'item' | 'grid'
+ * }} props 
+ * @returns 
+ */
 export const Skeleton = ({ mode = 'card' }) => {
     const { colors } = useTheme();
 
