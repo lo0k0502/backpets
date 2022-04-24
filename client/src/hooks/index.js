@@ -21,6 +21,7 @@ import {
     fetchProductById,
     fetchCouponsByUserId,
 } from '../api';
+import axios from 'axios';
 
 export const useOnceUpdateEffect = (callback, dependencies) => {
     const isFirst = useRef(true);
@@ -1042,9 +1043,8 @@ export const useAdoptionData = (dependencies = []) => {
         if (isMounted.current) setIsFetching(true);
 
         try {
-            const response = await fetch('https://data.coa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL');
-            const result = await response.json();
-            if (isMounted.current) setData(result);
+            const result = await axios.get('https://data.coa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL');
+            if (isMounted.current) setData(result.data);
         } catch (error) {
             console.log(error);
         }
