@@ -1,16 +1,22 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { RefreshControl } from 'react-native';
 import { FlatGrid } from 'react-native-super-grid';
-import { Title } from 'react-native-paper';
+import { Portal, Title } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { useProducts } from '../../../../hooks';
 import { selectUser } from '../../../../redux/userSlice';
 import { constants } from '../../../../utils';
 import BuyCard from './BuyCard';
+import BuyDialog from './BuyDialog';
+import Context from '../../../../context';
 
 export default () => {
     const user = useSelector(selectUser);
     const { allProducts, refreshAllProducts, isFetchingAllProducts } = useProducts();
+    const { showSnackbar } = useContext(Context);
+
+    const [buyDialog, setBuyDialog] = useState(false);
+    const [buyProduct, setBuyProduct] = useState({});
 
     const checkProductMatchSearchText = (product) => (
         !user.searchText
@@ -24,6 +30,17 @@ export default () => {
 
     return (
         <>
+            <Portal>
+                <BuyDialog
+                    visible={buyDialog}
+                    close={() => {
+                        setBuyDialog(false);
+                        setBuyProduct({});
+                    }}
+                    product={buyProduct}
+                    showSnackbar={showSnackbar}
+                />
+            </Portal>
             {
                 !isFetchingAllProducts && !passedCheckProducts.length ? (
                     <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有商品QQ</Title>
@@ -45,7 +62,13 @@ export default () => {
                 data={isFetchingAllProducts ? [] : passedCheckProducts}
                 keyExtractor={item => item._id}
                 renderItem={({ item }) => (
-                    <BuyCard product={item} />
+                    <BuyCard
+                        product={item}
+                        onBuyPress={() => {
+                            setBuyProduct(item);
+                            setBuyDialog(true);
+                        }}
+                    />
                 )}
             />
         </>

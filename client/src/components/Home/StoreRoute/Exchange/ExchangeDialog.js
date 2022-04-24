@@ -58,7 +58,7 @@ export default ({
                         ※兌換券有效期限: 1個月
                     </HelperText>
                     <Image
-                        source={{ uri: `${SERVERURL}/image/${product.photoId}` }}
+                        source={{ uri: product.photoId ? `${SERVERURL}/image/${product.photoId}` : null }}
                         style={{ height: 300 }}
                         resizeMode='contain'
                     />

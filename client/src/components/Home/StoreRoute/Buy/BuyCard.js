@@ -6,6 +6,7 @@ import { constants } from '../../../../utils';
 
 export default ({
     product,
+    onBuyPress = () => {},
 }) => {
     const { colors } = useTheme();
 
@@ -51,7 +52,7 @@ export default ({
                     disabled={!product.remaining_quantity}
                     style={{ flexGrow: 1 }}
                     theme={{ roundness: 0 }}
-                    onPress={() => {}}
+                    onPress={onBuyPress}
                 >
                     我要購買
                 </Button>

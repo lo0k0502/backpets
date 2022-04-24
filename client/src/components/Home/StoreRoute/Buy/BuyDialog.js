@@ -9,6 +9,7 @@ export default ({
     visible,
     close,
     product,
+    showSnackbar = () => {},
 }) => {
     const [isLoading, setIsLoading] = useState(false);
 
@@ -20,6 +21,13 @@ export default ({
         setIsLoading(true);
 
         try {
+            await new Promise(resolve => {
+                setTimeout(() => {
+                    resolve();
+                }, 1000);
+            });
+
+            showSnackbar('購買成功!');
             handleClose();
         } catch (error) {
             console.log('While buying: ', error);
@@ -40,7 +48,7 @@ export default ({
                         ※購買證明有效期限: 1個月
                     </HelperText>
                     <Image
-                        source={{ uri: `${SERVERURL}/image/${product.photoId}` }}
+                        source={{ uri: product.photoId ? `${SERVERURL}/image/${product.photoId}` : null }}
                         style={{ height: 300 }}
                         resizeMode='contain'
                     />
