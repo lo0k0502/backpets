@@ -2,8 +2,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Image, View } from 'react-native';
 import { Button, Card, Divider, Text, useTheme } from 'react-native-paper';
-import { SERVERURL } from '../../../api/API';
-import { constants } from '../../../utils';
+import { SERVERURL } from '../../../../api/API';
+import { constants } from '../../../../utils';
 
 export default ({
     product,

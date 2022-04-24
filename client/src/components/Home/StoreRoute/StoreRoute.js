@@ -1,75 +1,18 @@
-import React, { useContext, useState } from 'react';
-import { RefreshControl, View } from 'react-native';
-import { FlatGrid } from 'react-native-super-grid';
-import { Portal, Title } from 'react-native-paper';
-import { useSelector } from 'react-redux';
-import { useProducts } from '../../../hooks';
-import { selectUser } from '../../../redux/userSlice';
-import ProductCard from './ProductCard';
-import ExchangeDialog from './ExchangeDialog';
-import Context from '../../../context';
-import { constants } from '../../../utils';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import React from 'react';
+import { useTheme } from 'react-native-paper';
+import BuyRoute from './Buy/BuyRoute';
+import ExchangeRoute from './Exchange/ExchangeRoute';
+
+const StoreTab = createMaterialTopTabNavigator();
 
 export default () => {
-    const user = useSelector(selectUser);
-    const { allProducts, refreshAllProducts, isFetchingAllProducts } = useProducts();
-    const { refreshSelfCoupons } = useContext(Context);
-
-    const [exchangeDialog, setExchangeDialog] = useState(false);
-    const [exchangeProduct, setExchangeProduct] = useState({});
-
-    const checkProductMatchSearchText = (product) => (
-        !user.searchText
-        || product.product_name.search(user.searchText) !== -1
-        || product.description.search(user.searchText) !== -1
-        || product.company_name.search(user.searchText) !== -1
-        || product.company_address.search(user.searchText) !== -1
-    );
-
-    const passedCheckProducts = allProducts.filter(checkProductMatchSearchText);
+    const { colors } = useTheme();
 
     return (
-        <>
-            <Portal>
-                <ExchangeDialog
-                    visible={exchangeDialog}
-                    close={() => {
-                        setExchangeDialog(false);
-                        setExchangeProduct({});
-                    }}
-                    product={exchangeProduct}
-                    refreshAllProducts={refreshAllProducts}
-                    refreshSelfCoupons={refreshSelfCoupons}
-                />
-            </Portal>
-            {
-            !isFetchingAllProducts && !passedCheckProducts.length ? (
-                <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有商品QQ</Title>
-            ) : null
-            }
-            <FlatGrid
-                style={{
-                    flex: 1,
-                    backgroundColor: 'white',
-                }}
-                contentContainerStyle={{ paddingBottom: 70 }}
-                refreshControl={(
-                    <RefreshControl
-                        refreshing={isFetchingAllProducts}
-                        onRefresh={refreshAllProducts}
-                    />
-                )}
-                itemDimension={constants.boxSize}
-                data={isFetchingAllProducts ? [] : passedCheckProducts}
-                keyExtractor={item => item._id}
-                renderItem={({ item }) => (
-                    <ProductCard
-                        product={item}
-                        setExchangeDialog={setExchangeDialog}
-                        setExchangeProduct={setExchangeProduct}
-                    />
-                )}
-            />
-        </>
-    )
+        <StoreTab.Navigator screenOptions={{ tabBarIndicatorStyle: { backgroundColor: colors.primary } }}>
+            <StoreTab.Screen name='Exchange' options={{ title: '兌換' }} component={ExchangeRoute} />
+            <StoreTab.Screen name='Buy' options={{ title: '購買' }} component={BuyRoute} />
+        </StoreTab.Navigator>
+    );
 };

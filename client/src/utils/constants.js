@@ -193,6 +193,25 @@ const locationDeltas = {
 
 const boxSize = Dimensions.get('window').width / 2 - 20;
 
+const QAs = [
+    {
+        question: '如何使用app?',
+        answer: '登入後可進行app內的部分功能操作，但發布任務及領養資訊前，需要請您完成寵物護照的設定。',
+    },
+    {
+        question: '如何進行通報?',
+        answer: '當您發現受傷、死亡、具威脅性或未知狀況...等動物時，可以在通報的欄位裡去發布此動物的相關資訊。未知狀況指的是此動物可能為某些飼主的遺失寵物，因此遺失寵物的飼主可以到這個欄位去尋找是否有匹配的資訊。此外，app內也有提供部分動物醫院的聯絡資料，當您遇到受傷的動物時可以及時地處理狀況。',
+    },
+    {
+        question: '任務、通報、送養等貼文可以進行編輯嗎?',
+        answer: '可以，只要文章狀態尚未被設定成已完成，都可以點選貼文的「編輯」按鈕進行修改。',
+    },
+    {
+        question: '找回遺失的寵物後該作甚麼呢?',
+        answer: '選擇有幫助到您的協尋者，系統會發放點數給您選擇的使用者。',
+    },
+];
+
 export default {
     animalTagsArray,
     reportTagsArray,
@@ -209,4 +228,5 @@ export default {
     AsyncFunction,
     locationDeltas,
     boxSize,
+    QAs,
 };

@@ -26,6 +26,9 @@ export class Product {
     photoId: Types.ObjectId;
 
     @Prop({ required: true })
+    price: Number;
+
+    @Prop({ required: true })
     points: Number;
 
     @Prop({ required: true })

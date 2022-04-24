@@ -184,6 +184,18 @@ export default ({
                             >
                                 {clue.pointsReceived ? '點數已領取' : '領取點數'}
                             </Button>
+                            {
+                                clue.pointsReceived ? null : (
+                                    <Badge
+                                        style={{
+                                            position: 'absolute',
+                                            top: 0,
+                                            right: 0,
+                                        }}
+                                        size={8}
+                                    />
+                                )
+                            }
                         </Card.Actions>
                     </>
                 ) : null

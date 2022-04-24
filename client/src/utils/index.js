@@ -47,6 +47,7 @@ export const routeNametoTitle = (routeName) => {
         case 'ChangePassword': return '更改密碼';
         case 'Clue': return '線索';
         case 'Feedback': return '意見回饋';
+        case 'QA': return '常見問題';
         case 'Setting': return '設定';
         default: return routeName;
     }

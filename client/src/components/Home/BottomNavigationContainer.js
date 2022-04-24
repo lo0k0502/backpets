@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Portal, Snackbar, useTheme } from 'react-native-paper';
+import { Portal, Snackbar, Text, useTheme } from 'react-native-paper';
 import Context from '../../context';
 import { useSelfClues, useSelfCoupons } from '../../hooks';
 
@@ -37,10 +37,25 @@ export default ({ children, userId }) => {
                     }}
                     duration={5000}
                     action={snackbarAction}
-                    style={{ backgroundColor: colors.primary }}
-                    theme={{ colors: { surface: 'white', accent: colors.background2 } }}
+                    style={{
+                        backgroundColor: colors.background2,
+                        borderColor: colors.primary,
+                        borderWidth: 1,
+                    }}
+                    theme={{
+                        colors: {
+                            surface: colors.primary,
+                        },
+                    }}
                 >
-                    {snackbarText}
+                    <Text
+                        style={{
+                            color: colors.primary,
+                            fontSize: 15,
+                        }}
+                    >
+                        {snackbarText}
+                    </Text>
                 </Snackbar>
             </Portal>
         </Context.Provider>

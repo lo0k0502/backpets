@@ -20,7 +20,7 @@ export class ProductController {
     }
 
     @Post('add')
-    async AddProduct(@Body() { productName, description, companyName, companyTelephone, companyAddress, photoId, points, remainingQuantity }, @Res() res: Response) {
+    async AddProduct(@Body() { productName, description, companyName, companyTelephone, companyAddress, photoId, price, points, remainingQuantity }, @Res() res: Response) {
         try {
             await this.productService.create({
                 _id: null,
@@ -30,6 +30,7 @@ export class ProductController {
                 company_telephone: companyTelephone,
                 company_address: companyAddress,
                 photoId: new Types.ObjectId(photoId),
+                price,
                 points,
                 remaining_quantity: remainingQuantity,
             });

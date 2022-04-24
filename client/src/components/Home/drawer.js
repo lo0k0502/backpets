@@ -17,7 +17,7 @@ export default ({ navigation }) => {
     return (
         <DrawerContentScrollView style={styles.root}>
             <List.Section style={{ flex: 1 }}>
-                {['設定', '意見回饋', '登出'].map((title, index) => (
+                {['設定', '意見回饋', '常見問題', '登出'].map((title, index) => (
                     <ListItem 
                         key={index}
                         title={title}
@@ -31,6 +31,10 @@ export default ({ navigation }) => {
                                 }
                                 case '意見回饋': {
                                     navigation.navigate('Feedback');
+                                    break;
+                                }
+                                case '常見問題': {
+                                    navigation.navigate('QA');
                                     break;
                                 }
                                 case '登出': {

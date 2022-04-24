@@ -1,25 +1,15 @@
-import { unwrapResult } from '@reduxjs/toolkit';
 import React, { useState } from 'react';
 import { Image, ScrollView } from 'react-native';
-import { Dialog, HelperText, Subheading, Text, useTheme } from 'react-native-paper';
-import { useDispatch, useSelector } from 'react-redux';
-import { SERVERURL } from '../../../api/API';
-import { exchangeProduct } from '../../../redux/userReducer';
-import { selectUser } from '../../../redux/userSlice';
-import DialogActions from '../../common/DialogActions';
-import PostSubheading from '../../common/PostSubheading';
+import { Dialog, HelperText } from 'react-native-paper';
+import { SERVERURL } from '../../../../api/API';
+import DialogActions from '../../../common/DialogActions';
+import PostSubheading from '../../../common/PostSubheading';
 
 export default ({
     visible,
     close,
     product,
-    refreshAllProducts = () => {},
-    refreshSelfCoupons = () => {},
 }) => {
-    const user = useSelector(selectUser);
-    const { colors } = useTheme();
-    const dispatch = useDispatch();
-
     const [isLoading, setIsLoading] = useState(false);
 
     const handleClose = () => {
@@ -30,16 +20,9 @@ export default ({
         setIsLoading(true);
 
         try {
-            unwrapResult(await dispatch(exchangeProduct({
-                userId: user.info._id,
-                productId: product._id,
-            })));
-
-            refreshAllProducts();
-            refreshSelfCoupons();
             handleClose();
         } catch (error) {
-            console.log('While exchanging: ', error);
+            console.log('While buying: ', error);
         }
 
         setIsLoading(false);
@@ -47,14 +30,14 @@ export default ({
 
     return (
         <Dialog visible={visible} onDismiss={handleClose}>
-            <Dialog.Title>兌換商品</Dialog.Title>
+            <Dialog.Title>購買商品</Dialog.Title>
             <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
                 <ScrollView
                     style={{ height: '80%', paddingHorizontal: 20 }}
                     contentContainerStyle={{ paddingBottom: 20 }}
                 >
                     <HelperText type='error' style={{ fontSize: 18 }}>
-                        ※兌換券有效期限: 1個月
+                        ※購買證明有效期限: 1個月
                     </HelperText>
                     <Image
                         source={{ uri: `${SERVERURL}/image/${product.photoId}` }}
@@ -79,21 +62,17 @@ export default ({
                     <PostSubheading label='公司地址'>
                         {product.company_address}
                     </PostSubheading>
-                    <PostSubheading label='所需點數'>
-                        {product.points}
+                    <PostSubheading label='價格'>
+                        {product.price} TWD
                     </PostSubheading>
-                    <HelperText type='error' style={{ fontSize: 16 }}>
-                        {!(user.info?.points >= product.points) ? '您的點數不足!' : ''}
-                    </HelperText>
                 </ScrollView>
             </Dialog.ScrollArea>
             <DialogActions
                 cancelBtnLabel='取消'
-                submitBtnLabel='兌換'
+                submitBtnLabel='購買'
                 cancelBtnDisabled={isLoading}
                 submitBtnDisabled={
                     isLoading
-                    || !(user.info?.points >= product.points)
                     || !product.remaining_quantity
                 }
                 isLoading={isLoading}

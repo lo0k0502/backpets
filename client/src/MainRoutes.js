@@ -8,6 +8,7 @@ import Clue from './components/Home/Clue';
 import DrawerContent from './components/Home/drawer';
 import Feedback from './components/Home/Feedback';
 import Search from './components/Home/PostsRoute/Search';
+import QA from './components/Home/QA';
 import Setting from './components/Home/Setting';
 
 const Drawer = createDrawerNavigator();
@@ -26,14 +27,19 @@ export default memo(({ logout }) => {
             component={BottomNavigation}
           />
           <Drawer.Screen
+            name='Setting'
+            options={{ header: props => <Appbar {...props} /> }}
+            component={Setting}
+          />
+          <Drawer.Screen
             name='Feedback'
             options={{ header: props => <Appbar {...props} /> }}
             component={Feedback}
           />
           <Drawer.Screen
-            name='Setting'
+            name='QA'
             options={{ header: props => <Appbar {...props} /> }}
-            component={Setting}
+            component={QA}
           />
           <Drawer.Screen
             name='Clue'
