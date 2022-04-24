@@ -4,6 +4,7 @@ import { Image, View } from 'react-native';
 import { Button, Card, Divider, Text, useTheme } from 'react-native-paper';
 import { SERVERURL } from '../../../../api/API';
 import { constants } from '../../../../utils';
+import PointIcon from '../../../common/PointIcon';
 
 export default ({
     product,
@@ -34,8 +35,8 @@ export default ({
                     {product.description}
                 </Text>
                 <View style={{ flexDirection: 'row' }}>
-                    <MaterialCommunityIcons name='currency-usd' size={20} />
-                    <Text>{product.points}</Text>
+                    <PointIcon size={18} />
+                    <Text> {product.points}</Text>
                 </View>
                 <Text style={{ fontSize: 12 }}>
                     庫存數量: {product.remaining_quantity}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Portal, Snackbar, Text, useTheme } from 'react-native-paper';
 import Context from '../../context';
 import { useSelfClues, useSelfCoupons } from '../../hooks';
+import DailyCheckIn from './DailyCheckIn';
 
 export default ({ children, userId }) => {
     const { colors } = useTheme();
@@ -9,6 +10,14 @@ export default ({ children, userId }) => {
     const [snackbar, setSnackbar] = useState(false);
     const [snackbarText, setSnackbarText] = useState('');
     const [snackbarAction, setSnackbarAction] = useState({});
+
+    const showSnackbar = (text, action) => {
+        setSnackbarText(text);
+        setSnackbarAction(action);
+        setSnackbar(true);
+    };
+
+    const [dailyCheckInDialog, setDailyCheckInDialog] = useState(true);
 
     const selfCluesHook = useSelfClues(userId);
     const selfCouponsHook = useSelfCoupons(userId);
@@ -19,11 +28,8 @@ export default ({ children, userId }) => {
                 ...selfCluesHook,
                 ...selfCouponsHook,
                 getSelfClueByClueId: clueId => selfCluesHook.selfClues.find(_clue => _clue._id === clueId) || {},
-                showSnackbar: (text, action) => {
-                    setSnackbarText(text);
-                    setSnackbarAction(action);
-                    setSnackbar(true);
-                },
+                showSnackbar,
+                setDailyCheckInDialog,
             }}
         >
             {children}
@@ -57,6 +63,11 @@ export default ({ children, userId }) => {
                         {snackbarText}
                     </Text>
                 </Snackbar>
+                <DailyCheckIn
+                    visible={dailyCheckInDialog}
+                    close={() => setDailyCheckInDialog(false)}
+                    showSnackbar={showSnackbar}
+                />
             </Portal>
         </Context.Provider>
     );

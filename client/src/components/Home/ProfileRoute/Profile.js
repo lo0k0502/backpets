@@ -7,6 +7,7 @@ import { selectUser } from '../../../redux/userSlice';
 import { SERVERURL } from '../../../api/API';
 import Context from '../../../context';
 import { constants } from '../../../utils';
+import PointIcon from '../../common/PointIcon';
 
 const styles = StyleSheet.create({
   root: {
@@ -47,7 +48,7 @@ export default ({ navigation }) => {
           </Text>
           <View style={{ flexDirection: 'row' }}>
             <View style={{ alignItems: 'center', paddingHorizontal: '10%' }}>
-              <MaterialCommunityIcons name='currency-usd' color='white' size={25} />
+              <PointIcon mode='light' style={{ margin: 3, marginTop: 4 }} />
               <Text style={styles.points}>點數</Text>
               <Text style={styles.points}>{user.info?.points}</Text>
             </View>
