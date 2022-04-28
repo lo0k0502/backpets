@@ -4,6 +4,7 @@ import { useTheme } from 'react-native-paper';
 import Appbar from './components/Home/Appbar';
 import AppSearchbar from './components/Home/AppSearchbar';
 import BottomNavigation from './components/Home/BottomNavigation';
+import ChatRoom from './components/Home/ChatRoom';
 import Clue from './components/Home/Clue';
 import DrawerContent from './components/Home/drawer';
 import Feedback from './components/Home/Feedback';
@@ -25,6 +26,11 @@ export default memo(({ logout }) => {
             name='BottomNavigation'
             options={{ headerShown: false }}
             component={BottomNavigation}
+          />
+          <Drawer.Screen
+            name='ChatRoom'
+            options={{ header: props => <Appbar {...props} /> }}
+            component={ChatRoom}
           />
           <Drawer.Screen
             name='Setting'

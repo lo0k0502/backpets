@@ -17,7 +17,7 @@ export default ({ navigation }) => {
     return (
         <DrawerContentScrollView style={styles.root}>
             <List.Section style={{ flex: 1 }}>
-                {['設定', '意見回饋', '常見問題', '登出'].map((title, index) => (
+                {['獸醫聊天室', '設定', '意見回饋', '常見問題', '登出'].map((title, index) => (
                     <ListItem 
                         key={index}
                         title={title}
@@ -25,6 +25,10 @@ export default ({ navigation }) => {
                         dividerColor={colors.border}
                         onItemPress={() => {
                             switch (title) {
+                                case '獸醫聊天室': {
+                                    navigation.navigate('ChatRoom');
+                                    break;
+                                }
                                 case '設定': {
                                     navigation.navigate('Setting');
                                     break;
