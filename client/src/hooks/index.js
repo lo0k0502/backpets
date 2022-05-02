@@ -51,8 +51,8 @@ export const useUpdateEffect = (callback, firstCallback, dependencies, options) 
 
 /**
  * @param {any} initialValue initial value
- * @param {Function} validationFunction returns true if valid
- * @returns {[any, Function, Boolean, Boolean]} An array contains state, setState function, is valid boolean and is empty boolean
+ * @param {() => {}} validationFunction returns true if valid
+ * @returns {[any, () => {}), Boolean, Boolean]} An array contains state, setState function, is valid boolean and is empty boolean
  */
 export const useStateWithValidation = (initialValue, validationFunction = state => !!state) => {
     const [state, setState] = useState(initialValue);
@@ -101,7 +101,7 @@ export const useCurrentLocation = (dependencies = []) => {
 };
 
 /**
- * @returns {{ allMissions: Object[], refreshAllMissions: Function, isFetchingAllMissions: boolean }}
+ * @returns {{ allMissions: Object[], refreshAllMissions: () => {}, isFetchingAllMissions: boolean }}
  */
 export const useMissions = (dependencies = []) => {
     const [missions, setMissions] = useState([]);
@@ -139,7 +139,7 @@ export const useMissions = (dependencies = []) => {
 
 /**
  * @param {any} userId
- * @returns {{ selfMissions: Object[], refreshSelfMissions: Function, isFetchingSelfMissions: boolean }}
+ * @returns {{ selfMissions: Object[], refreshSelfMissions: () => {}, isFetchingSelfMissions: boolean }}
  */
 export const useSelfMissions = (userId, dependencies = []) => {
     const [missions, setMissions] = useState([]);
@@ -179,7 +179,7 @@ export const useSelfMissions = (userId, dependencies = []) => {
  * @param {*} missionId 
  * @returns {{
  *  mission: {},
- *  refreshMission: Function,
+ *  refreshMission: () => {},
  *  isFetchingMission: boolean,
  * }}
  */
@@ -235,7 +235,7 @@ export const useMission = (missionId) => {
  *      awarded: Boolean,
  *      pointsReceived: Boolean,
  *  }[],
- *  refreshMissionClues: Function,
+ *  refreshMissionClues: () => {},
  *  isFetchingMissionClues: boolean,
  * }}
  */
@@ -291,7 +291,7 @@ export const useMissionClues = (missionId, dependencies = []) => {
  *      awarded: Boolean,
  *      pointsReceived: Boolean,
  *  }[],
- *  refreshSelfClues: Function,
+ *  refreshSelfClues: () => {},
  *  isFetchingSelfClues: boolean,
  * }}
  */
@@ -343,7 +343,7 @@ export const useSelfClues = (userId, dependencies = []) => {
  *          longitude: Number,
  *      },
  *  }[],
- *  refreshAllReports: Function,
+ *  refreshAllReports: () => {},
  *  isFetchingAllReports: boolean,
  * }}
  */
@@ -394,7 +394,7 @@ export const useReports = (dependencies = []) => {
  *      phone: String,
  *      completed: Boolean,
  *  }[],
- *  refreshAllPutUpForAdoptions: Function,
+ *  refreshAllPutUpForAdoptions: () => {},
  *  isFetchingAllPutUpForAdoptions: boolean,
  * }}
  */
@@ -448,7 +448,7 @@ export const usePutUpForAdoptions = (dependencies = []) => {
  *      phone: String,
  *      completed: Boolean,
  *  }[],
- *  refreshSelfPutUpForAdoptions: Function,
+ *  refreshSelfPutUpForAdoptions: () => {},
  *  isFetchingSelfPutUpForAdoptions: boolean
  * }}
  */
@@ -500,7 +500,7 @@ export const useSelfPutUpForAdoptions = (userId, dependencies = []) => {
  *      phone: String,
  *      completed: Boolean,
  *  },
- *  refreshPutUpForAdoption: Function,
+ *  refreshPutUpForAdoption: () => {},
  *  isFetchingPutUpForAdoption: boolean
  * }}
  */
@@ -601,7 +601,7 @@ export const useUser = (userId) => {
  *      age: Number,
  *      microchip: String,
  *  }[],
- *  refreshPets: Function,
+ *  refreshPets: () => {},
  *  isFetching: boolean,
  * }}
  */
@@ -654,7 +654,7 @@ export const usePets = (dependencies = []) => {
  *      age: Number,
  *      microchip: String,
  *  }[],
- *  refreshSelfPets: Function,
+ *  refreshSelfPets: () => {},
  *  isFetchingSelfPets: boolean,
  * }}
  */
@@ -754,7 +754,7 @@ export const usePet = (petId, dependencies = []) => {
  *      product: String?,
  *      time: Number,
  *  }[],
- *  refreshPointRecords: Function,
+ *  refreshPointRecords: () => {},
  *  isFetching: boolean,
  * }}
  */
@@ -802,7 +802,7 @@ export const useSelfPointRecords = (userId, dependencies = []) => {
  *      petId: String,
  *      time: Number,
  *  }[],
- *  refreshSelfAdoptionRecords: Function,
+ *  refreshSelfAdoptionRecords: () => {},
  *  isFetchingSelfAdoptionRecords: boolean,
  * }}
  */
@@ -850,7 +850,7 @@ export const useSelfAdoptionRecords = (userId, dependencies = []) => {
  *      petId: String,
  *      time: Number,
  *  }[],
- *  refreshSelfPutAdoptionRecords: Function,
+ *  refreshSelfPutAdoptionRecords: () => {},
  *  isFetchingSelfPutAdoptionRecords: boolean,
  * }}
  */
@@ -899,7 +899,7 @@ export const useSelfPutAdoptionRecords = (userId, dependencies = []) => {
  *      photoId: String,
  *      points: Number,
  *  }[],
- *  refreshAllProducts: Function,
+ *  refreshAllProducts: () => {},
  *  isFetchingAllProducts: boolean,
  * }}
  */
@@ -992,7 +992,7 @@ export const useProduct = (productId, dependencies = []) => {
  *      due_time: Number,
  *      exchanged: Boolean,
  *  }[],
- *  refreshSelfCoupons: Function,
+ *  refreshSelfCoupons: () => {},
  *  isFetchingSelfCoupons: boolean,
  * }}
  */
@@ -1031,7 +1031,7 @@ export const useSelfCoupons = (userId, dependencies = []) => {
 };
 
 /**
- * @returns {{ data: {}[], refreshData: Function, isFetchingData: boolean }}
+ * @returns {{ data: {}[], refreshData: () => {}, isFetchingData: boolean }}
  */
 export const useAdoptionData = (dependencies = []) => {
     const [data, setData] = useState([]);
