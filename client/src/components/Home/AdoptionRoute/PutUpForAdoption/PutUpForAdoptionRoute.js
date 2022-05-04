@@ -7,10 +7,12 @@ import {
   View,
 } from 'react-native';
 import {
+  Dialog,
   Divider,
   FAB,
   Portal,
   Subheading,
+  TextInput,
   Title,
 } from 'react-native-paper';
 import { useSelector } from 'react-redux';
@@ -24,6 +26,7 @@ import ViolationReportDialog from '../../PostsRoute/ViolationReportDialog';
 import CompletePutUpForAdoptionDialog from './CompletePutUpForAdoptionDialog';
 import PutUpForAdoptionCard from './PutUpForAdoptionCard';
 import PutUpForAdoptionDialog from './PutUpForAdoptionDialog';
+import DialogActions from '../../../common/DialogActions';
 
 export default () => {
   const user = useSelector(selectUser);
@@ -38,6 +41,7 @@ export default () => {
   const [editPutUpForAdoptionPoster, setEditPutUpForAdoptionPoster] = useState({});
   const [completeDialog, setCompleteDialog] = useState(false);
   const [completeId, setCompleteId] = useState('');
+  const [adoptDialog, setAdoptDialog] = useState(false);
 
   const [animalTags, setAnimalTags] = useState(constants.animalTagsArray.map(tagName => ({ name: tagName, selected: false })));
   const [county, setCounty] = useState(constants.all_countys[0]);
@@ -80,6 +84,9 @@ export default () => {
       onCompletePress={() => {
         setCompleteId(putUpForAdoption._id);
         setCompleteDialog(true);
+      }}
+      onAdoptPress={() => {
+        setAdoptDialog(true);
       }}
     />
   );
@@ -159,6 +166,23 @@ export default () => {
             refreshAllPutUpForAdoptions={refreshAllPutUpForAdoptions}
             refreshSelfPets={refreshSelfPets}
           />
+          <Dialog visible={adoptDialog} onDismiss={() => setAdoptDialog(false)}>
+            <Dialog.Title>我要領養</Dialog.Title>
+            <Dialog.ScrollArea style={{ paddingHorizontal: 0 }}>
+                <ScrollView style={{ height: '80%', paddingHorizontal: 20 }}>
+                    <TextInput
+                        mode='outlined'
+                        label='請輸入您的電話(必要)'
+                    />
+                </ScrollView>
+            </Dialog.ScrollArea>
+            <DialogActions
+                cancelBtnLabel='取消'
+                submitBtnLabel='確認'
+                onCancel={() => setAdoptDialog(false)}
+                onSubmit={() => setAdoptDialog(false)}
+            />
+          </Dialog>
         </Portal>
         {
           isFetchingAllPutUpForAdoptions || isFetchingPets ? null : (

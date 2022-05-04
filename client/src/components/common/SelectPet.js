@@ -44,7 +44,7 @@ export default ({
                                                     key={pet._id}
                                                     pet={pet}
                                                     disabled={posts.find(post => post.petId === pet._id)}
-                                                    onPress={onPetPress}
+                                                    onPress={() => onPetPress(pet)}
                                                 />
                                             ))
                                         ) : null

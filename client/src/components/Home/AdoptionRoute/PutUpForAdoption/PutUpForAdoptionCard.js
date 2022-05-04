@@ -31,6 +31,7 @@ export default ({
     setViolationReportDialog = () => {},
     setEditPutUpForAdoptionPoster = () => {},
     onCompletePress = () => {},
+    onAdoptPress = () => {},
 }) => {
     const user = useSelector(selectUser);
     const { colors } = useTheme();
@@ -169,22 +170,18 @@ export default ({
                 <PostSubheading label='電話'>
                     {putUpForAdoption.phone}
                 </PostSubheading>
+                <Divider
+                    style={{
+                        backgroundColor: colors.primary,
+                        width: '95%',
+                        height: 1,
+                        alignSelf: 'center',
+                    }}
+                />
+            </View>
+            <Card.Actions style={{ flexDirection: 'row', padding: 0 }}>
                 {
                     poster._id === user.info?._id ? (
-                        <Divider
-                            style={{
-                                backgroundColor: colors.primary,
-                                width: '95%',
-                                height: 1,
-                                alignSelf: 'center',
-                            }}
-                        />
-                    ) : null
-                }
-            </View>
-            {
-                poster._id === user.info?._id ? (
-                    <Card.Actions style={{ flexDirection: 'row', padding: 0 }}>
                         <Button
                             dark
                             disabled={putUpForAdoption.completed}
@@ -194,9 +191,18 @@ export default ({
                         >
                             完成送養
                         </Button>
-                    </Card.Actions>
-                ) : null
-            }
+                    ) : (
+                        <Button
+                            dark
+                            style={{ flexGrow: 1 }}
+                            theme={{ roundness: 0 }}
+                            onPress={onAdoptPress}
+                        >
+                            我要領養
+                        </Button>
+                    )
+                }
+            </Card.Actions>
         </Card>
     ) : <Skeleton />;
 };
