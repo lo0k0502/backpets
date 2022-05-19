@@ -43,7 +43,15 @@ export default () => {
             </Portal>
             {
                 !isFetchingAllProducts && !passedCheckProducts.length ? (
-                    <Title style={{ marginTop: 50, alignSelf: 'center' }}>沒有商品QQ</Title>
+                    <Title
+                        style={{
+                            backgroundColor: 'white',
+                            marginTop: 50,
+                            alignSelf: 'center',
+                        }}
+                    >
+                        沒有商品QQ
+                    </Title>
                 ) : null
             }
             <FlatGrid
