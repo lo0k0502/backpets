@@ -47,32 +47,22 @@ const styles = StyleSheet.create({
     },
     text: {
         fontWeight: '900',
-        marginLeft: 10,
+        margin: 10,
     },
 });
 
-export default ({ report }) => {
+export default ({ hospital }) => {
     const navigation = useNavigation();
 
     return (
         <View style={styles.container}>
             <View style={styles.bubble}>
                 <View style={styles.root}>
-                
-                    <Svg width={220} height={120} style={styles.image}>
-                        <ImageSvg
-                            width={'100%'}
-                            height={'100%'}
-                            preserveAspectRatio="xMidYMid slice"
-                            href={{ uri: `${SERVERURL}/image/${report.photoId}` }}
-                        />
-                    </Svg>
 
                     <Text style={ styles.text }>
-                        這裏{report.tag}，請小心！
-                    </Text>
-                    <Text style={ styles.text }>
-                        {report.content}
+                        {hospital.name} {"\n"}
+                        電話：{hospital.tel} {"\n"}
+                        地址：{hospital.address}
                     </Text>
                 </View>
             </View>

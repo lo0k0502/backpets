@@ -5,6 +5,7 @@ import MapView, { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Colors, useTheme, FAB } from 'react-native-paper';
 import { useCurrentLocation, useMissions, useReports, usePets } from '../../../hooks';
 import PostCallout from './PostCallout';
+import PlaceCallout from './PlaceCallout';
 import ReportCallout from './ReportCallout';
 import TagsView from '../../common/TagsView';
 import { useSelector } from 'react-redux';
@@ -125,6 +126,9 @@ export default ({ route, navigation }) => {
 
     return reportsMatchTagAndSearchText.length ? true : false;
   };
+
+  //Hospital
+  const hospital_ChiaYi = require('./Hospital_ChiaYi.json');
   
   return (
 
@@ -141,6 +145,26 @@ export default ({ route, navigation }) => {
       followsUserLocation={true}
       showsMyLocationButton={false}
     >
+
+      {//Chia Yi Hospital map
+      hospital_ChiaYi.map((hospital, index) => (
+        <Marker
+          key={index}
+          coordinate={{
+            latitude: hospital.lat,
+            longitude: hospital.long,
+          }}
+          description={hospital.name}
+          image={require('../../../../assets/hospital_marker.png')}
+        >
+          <Callout
+            tooltip
+            onPress={() => { } }
+          >
+            <PlaceCallout hospital={hospital} />
+          </Callout>
+        </Marker>
+      ))}
 
       { //Start of Marker for Mission
       allMissions.map((mission, index) => (
