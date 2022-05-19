@@ -8,6 +8,7 @@ import ChatRoom from './components/Home/ChatRoom';
 import Clue from './components/Home/Clue';
 import DrawerContent from './components/Home/drawer';
 import Feedback from './components/Home/Feedback';
+import HelpPetProcess from './components/Home/HelpPetProcess';
 import Search from './components/Home/PostsRoute/Search';
 import QA from './components/Home/QA';
 import Setting from './components/Home/Setting';
@@ -41,6 +42,11 @@ export default memo(({ logout }) => {
             name='Feedback'
             options={{ header: props => <Appbar {...props} /> }}
             component={Feedback}
+          />
+          <Drawer.Screen
+            name='HelpPetProcess'
+            options={{ header: props => <Appbar {...props} /> }}
+            component={HelpPetProcess}
           />
           <Drawer.Screen
             name='QA'

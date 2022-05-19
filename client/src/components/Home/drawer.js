@@ -17,7 +17,7 @@ export default ({ navigation }) => {
     return (
         <DrawerContentScrollView style={styles.root}>
             <List.Section style={{ flex: 1 }}>
-                {['獸醫聊天室', '設定', '意見回饋', '常見問題', '登出'].map((title, index) => (
+                {['獸醫聊天室', '設定', '意見回饋', '傷亡動物處理步驟', '常見問題', '登出'].map((title, index) => (
                     <ListItem 
                         key={index}
                         title={title}
@@ -31,6 +31,10 @@ export default ({ navigation }) => {
                                 }
                                 case '設定': {
                                     navigation.navigate('Setting');
+                                    break;
+                                }
+                                case '傷亡動物處理步驟': {
+                                    navigation.navigate('HelpPetProcess');
                                     break;
                                 }
                                 case '意見回饋': {

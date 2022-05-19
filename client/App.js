@@ -16,7 +16,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <PaperProvider theme={theme}>
-        <SafeAreaView 
+        <SafeAreaView
           style={{ 
             flex: 1,
             backgroundColor: theme.colors.background2,

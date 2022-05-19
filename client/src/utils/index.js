@@ -1,4 +1,4 @@
-import _constants from './constants';
+import * as _constants from './constants';
 import * as Location from 'expo-location';
 
 export default {
@@ -48,6 +48,7 @@ export const routeNametoTitle = (routeName) => {
         case 'Clue': return '線索';
         case 'ChatRoom': return '獸醫聊天室';
         case 'Feedback': return '意見回饋';
+        case 'HelpPetProcess': return '傷亡動物處理步驟';
         case 'QA': return '常見問題';
         case 'Setting': return '設定';
         default: return routeName;

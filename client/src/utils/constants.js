@@ -212,7 +212,27 @@ const QAs = [
     },
 ];
 
-export default {
+const HelpPetProcess = [
+    {
+        processTitle: '遇到路死動物的步驟',
+        process: [
+            '將流浪動物遺體移至路邊或安全地帶。',
+            '至安全的地方連絡相關單位處理，告知明確的流浪動物所在地，可撥打政府1999依各縣市政府規定處理，或是自行連絡相關業者協助。',
+            '若有能力可以在相關單位到達之前，先用報紙將流浪動物遺體包住，吸完血水後用塑膠袋包裹，再放入紙箱中以便運輸。',
+            '在明顯且安全的位置等待相關單位到達。',
+        ],
+    },
+    {
+        processTitle: '遇到受傷動物的步驟',
+        process: [
+            '記下地點、時間、動物特徵與受傷狀況。',
+            '電話聯絡動物協會尋求幫忙，尋求不到動物協會的話再聯絡公家單位(打1999或聯絡各縣市動保處)，有經濟能力可以負擔醫療費用的話可以送往動物醫院。',
+            '若沒有辦法馬上處理的話在app裡的貼文裡發布通報。',
+        ],
+    }
+];
+
+export {
     animalTagsArray,
     reportTagsArray,
     backIcon,
@@ -229,4 +249,5 @@ export default {
     locationDeltas,
     boxSize,
     QAs,
+    HelpPetProcess,
 };
