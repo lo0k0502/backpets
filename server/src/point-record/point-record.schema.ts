@@ -5,13 +5,15 @@ export type PointRecordDocument = PointRecord & Document;
 
 @Schema()
 export class PointRecord {
+  _id: Types.ObjectId;
+
   @Prop({ required: true })
   points: Number;
 
   @Prop()
   missionId: Types.ObjectId;
 
-  @Prop()
+  @Prop({ required: true })
   userId: Types.ObjectId;
 
   @Prop()
@@ -20,7 +22,7 @@ export class PointRecord {
   @Prop()
   productId: Types.ObjectId;
   
-  @Prop()
+  @Prop({ required: true })
   time: Number;
 }
 

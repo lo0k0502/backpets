@@ -5,6 +5,8 @@ export type FeedbackDocument = Feedback & Document;
 
 @Schema()
 export class Feedback {
+    _id: Types.ObjectId;
+
     @Prop({ required: true })
     userId: Types.ObjectId;
 

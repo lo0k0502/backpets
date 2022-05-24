@@ -5,6 +5,8 @@ export type MissionDocument = Mission & Document;
 
 @Schema()
 export class Mission {
+  _id: Types.ObjectId;
+
   @Prop({ required: true })
   petId: Types.ObjectId;
 
@@ -14,10 +16,10 @@ export class Mission {
   @Prop()
   content: string;
 
-  @Prop()
+  @Prop({ required: true })
   lost_time: string;
 
-  @Prop()
+  @Prop({ required: true })
   post_time: Number;
 
   @Prop({ type: Object, required: true })
@@ -26,11 +28,8 @@ export class Mission {
     longitude: Number,
   };
 
-  @Prop()
+  @Prop({ required: true })
   completed: Boolean;
-
-  @Prop()
-  chosen_clueIds: Types.ObjectId[];
 }
 
 export const MissionSchema = SchemaFactory.createForClass(Mission);

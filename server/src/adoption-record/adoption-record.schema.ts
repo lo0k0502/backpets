@@ -5,16 +5,18 @@ export type AdoptionRecordDocument = AdoptionRecord & Document;
 
 @Schema()
 export class AdoptionRecord {
-  @Prop()
+  _id: Types.ObjectId;
+
+  @Prop({ required: true })
   putUpForAdoptionId: Types.ObjectId;
 
-  @Prop()
+  @Prop({ required: true })
   userId: Types.ObjectId;
 
-  @Prop()
+  @Prop({ required: true })
   petId: Types.ObjectId;
 
-  @Prop()
+  @Prop({ required: true })
   time: Number;
 }
 

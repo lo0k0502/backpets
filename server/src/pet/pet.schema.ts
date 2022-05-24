@@ -5,6 +5,8 @@ export type PetDocument = Pet & Document;
 
 @Schema()
 export class Pet {
+  _id: Types.ObjectId;
+
   @Prop({ required: true })
   name: string;
 

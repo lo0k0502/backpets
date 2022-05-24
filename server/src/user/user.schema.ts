@@ -16,16 +16,13 @@ export class User {
   @Prop({ required: true })
   email: string;
 
-  @Prop()
+  @Prop({ required: true })
   photoId: Types.ObjectId;
 
-  @Prop()
+  @Prop({ required: true })
   points: Number;
 
-  @Prop()
-  couponIds: Types.ObjectId[];
-
-  @Prop()
+  @Prop({ required: true })
   searchHistory: string[];
 
   @Prop()

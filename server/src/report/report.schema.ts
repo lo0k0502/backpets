@@ -5,22 +5,24 @@ export type ReportDocument = Report & Document;
 
 @Schema()
 export class Report {
-    @Prop()
+    _id: Types.ObjectId;
+  
+    @Prop({ required: true })
     userId: Types.ObjectId;
 
-    @Prop()
+    @Prop({ required: true })
     content: string;
 
-    @Prop()
+    @Prop({ required: true })
     tag: string;
 
-    @Prop()
+    @Prop({ required: true })
     post_time: Number;
 
-    @Prop()
+    @Prop({ required: true })
     photoId: Types.ObjectId;
 
-    @Prop({ type: Object })
+    @Prop({ required: true, type: Object })
     location: {
         latitude: Number,
         longitude: Number,

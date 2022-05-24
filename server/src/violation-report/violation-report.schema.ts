@@ -5,6 +5,8 @@ export type ViolationReportDocument = ViolationReport & Document;
 
 @Schema()
 export class ViolationReport {
+    _id: Types.ObjectId;
+  
     @Prop({ required: true })
     userId: Types.ObjectId;
 
