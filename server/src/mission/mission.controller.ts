@@ -48,6 +48,7 @@ export class MissionController {
             if (!existPet) return res.status(400).json({ message: '寵物不存在' });
 
             const result = await this.missionService.create({
+                _id: null,
                 petId: new Types.ObjectId(petId),
                 userId: existPet.userId,
                 content,
@@ -55,7 +56,6 @@ export class MissionController {
                 post_time: moment().valueOf(),
                 location,
                 completed: false,
-                chosen_clueIds: [],
             });
             return res.status(200).json({ result });
         } catch (error) {
@@ -76,7 +76,6 @@ export class MissionController {
                 { _id: missionid },
                 {
                     completed: true,
-                    chosen_clueIds: chosen_clueIds.map(chosen_clueId => new Types.ObjectId(chosen_clueId)),
                 },
             );
 
@@ -86,6 +85,7 @@ export class MissionController {
                 const existCluePoster = await this.clueService.findOne({ _id: clueId });
 
                 await this.pointRecordService.create({
+                    _id: null,
                     points: 10,
                     missionId: new Types.ObjectId(missionid),
                     userId: existCluePoster.userId,

@@ -3,6 +3,7 @@ import { Portal, Snackbar, Text, useTheme } from 'react-native-paper';
 import Context from '../../context';
 import { useSelfClues, useSelfCoupons } from '../../hooks';
 import DailyCheckIn from './DailyCheckIn';
+import JoinMemberDialog from './JoinMemberDialog';
 
 export default ({ children, userId }) => {
     const { colors } = useTheme();
@@ -18,6 +19,7 @@ export default ({ children, userId }) => {
     };
 
     const [dailyCheckInDialog, setDailyCheckInDialog] = useState(true);
+    const [joinMemberDialog, setJoinMemberDialog] = useState(false);
 
     const selfCluesHook = useSelfClues(userId);
     const selfCouponsHook = useSelfCoupons(userId);
@@ -30,6 +32,7 @@ export default ({ children, userId }) => {
                 getSelfClueByClueId: clueId => selfCluesHook.selfClues.find(_clue => _clue._id === clueId) || {},
                 showSnackbar,
                 setDailyCheckInDialog,
+                setJoinMemberDialog,
             }}
         >
             {children}
@@ -67,6 +70,11 @@ export default ({ children, userId }) => {
                     visible={dailyCheckInDialog}
                     close={() => setDailyCheckInDialog(false)}
                     showSnackbar={showSnackbar}
+                    setJoinMemberDialog={setJoinMemberDialog}
+                />
+                <JoinMemberDialog
+                    visible={joinMemberDialog}
+                    close={() => setJoinMemberDialog(false)}
                 />
             </Portal>
         </Context.Provider>

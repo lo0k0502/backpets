@@ -30,6 +30,7 @@ export class ClueController {
     async AddClue(@Body() { userId, missionId, content, photoId, location }, @Res() res: Response) {
         try {
             const result = await this.clueService.create({
+                _id: null,
                 userId: new Types.ObjectId(userId),
                 missionId: new Types.ObjectId(missionId),
                 content,

@@ -162,18 +162,18 @@ export default ({
                     ) : null
                 }
             </View>
-            {
-                clue.awarded && user.info?._id === poster._id ? (
-                    <>
-                        <Divider
-                            style={{
-                                backgroundColor: colors.primary,
-                                width: '95%',
-                                height: 1,
-                                alignSelf: 'center',
-                            }}
-                        />
-                        <Card.Actions style={{ flexDirection: 'row', padding: 0 }}>
+            <Divider
+                style={{
+                    backgroundColor: colors.primary,
+                    width: '95%',
+                    height: 1,
+                    alignSelf: 'center',
+                }}
+            />
+            <Card.Actions style={{ flexDirection: 'row', padding: 0 }}>
+                {
+                    clue.awarded && user.info?._id === poster._id ? (
+                        <>
                             <Button
                                 dark
                                 disabled={clue.pointsReceived || isLoading}
@@ -196,10 +196,20 @@ export default ({
                                     />
                                 )
                             }
-                        </Card.Actions>
-                    </>
-                ) : null
-            }
+                        </>
+                    ) : (
+                        <Button
+                            icon='map-marker-outline'
+                            dark
+                            style={{ flexGrow: 1 }}
+                            theme={{ roundness: 0 }}
+                            onPress={() => {}}
+                        >
+                            前往地圖
+                        </Button>
+                    )
+                }
+            </Card.Actions>
         </Card>
     ) : <Skeleton />;
 };

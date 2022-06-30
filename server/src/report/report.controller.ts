@@ -24,6 +24,7 @@ export class ReportController {
     async AddReport(@Body() { userId, content, tag, photoId, location }, @Res() res: Response) {
         try {
             const result = await this.reportService.create({
+                _id: null,
                 userId: new Types.ObjectId(userId),
                 content,
                 tag,

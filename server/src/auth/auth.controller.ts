@@ -36,7 +36,6 @@ export class AuthController {
           email,
           photoId: new Types.ObjectId('61a2dbeb3a662969fc731434'),
           points: 0,
-          couponIds: [],
           searchHistory: [],
           refreshToken: null,
           verified: false,

@@ -29,6 +29,7 @@ export class PetController {
     async AddPet(@Body() { name, userId, tag, breed, feature, gender, photoId, ligated, age, microchip }, @Res() res: Response) {
         try {
             const result = await this.petService.create({
+                _id: null,
                 name,
                 userId: new Types.ObjectId(userId),
                 tag,

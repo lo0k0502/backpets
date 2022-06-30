@@ -18,6 +18,7 @@ export class FeedbackController {
     async AddFeedback(@Body() { userId, content }, @Res() res: Response) {
         try {
             const result = await this.feedbackService.create({
+                _id: null,
                 userId: new Types.ObjectId(userId),
                 content,
                 post_time: moment().valueOf(),

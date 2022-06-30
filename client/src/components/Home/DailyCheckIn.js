@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
-import { Dialog, Text } from 'react-native-paper';
+import { Pressable, View } from 'react-native';
+import { Button, Dialog, Text, useTheme } from 'react-native-paper';
 import DialogActions from '../common/DialogActions';
 import PointIcon from '../common/PointIcon';
 
@@ -8,7 +8,10 @@ export default ({
     visible,
     close,
     showSnackbar = () => {},
+    setJoinMemberDialog = () => {},
 }) => {
+    const { colors } = useTheme();
+
     const [isLoading, setIsLoading] = useState(false);
 
     const handleClose = () => {
@@ -44,6 +47,19 @@ export default ({
                         <PointIcon />
                         <Text> 30</Text>
                     </View>
+                    <Button
+                        icon='crown'
+                        mode='contained'
+                        dark
+                        style={{
+                            alignSelf: 'flex-start',
+                            marginTop: 10,
+                            elevation: 0,
+                        }}
+                        onPress={() => setJoinMemberDialog(true)}
+                    >
+                        升級付費會員點數加倍
+                    </Button>
                 </View>
             </Dialog.Content>
             <DialogActions

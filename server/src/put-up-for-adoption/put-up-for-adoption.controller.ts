@@ -82,6 +82,7 @@ export class PutUpForAdoptionController {
             );
 
             await this.adoptionRecordService.create({
+                _id: null,
                 putUpForAdoptionId: new Types.ObjectId(putupforadoptionid),
                 userId: existUser._id,
                 petId: existPutUpForAdoption.petId,

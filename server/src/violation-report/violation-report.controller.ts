@@ -18,6 +18,7 @@ export class ViolationReportController {
     async AddViolationReport(@Body() { userId, post_type, postId, category, content }, @Res() res: Response) {
         try {
             const result = await this.violationReportService.create({
+                _id: null,
                 userId: new Types.ObjectId(userId),
                 post_type,
                 postId: new Types.ObjectId(postId),
