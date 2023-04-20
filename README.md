@@ -1,6 +1,5 @@
 # BackPets
 ## Start Up
-Make sure to yarn install after each pull!!
 ```
 git clone https://github.com/lo0k0502/backpets.git
 ```
@@ -13,13 +12,4 @@ yarn start
 cd server
 yarn install
 yarn start
-```
-
-## Localhost Setting
-Make sure to change your ip in both client and server's ``env.js`` file!!
-```javascript
-const env = {
-    ...,
-    BASE_URL: 'Your_IP',
-};
 ```
