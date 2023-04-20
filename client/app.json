@@ -21,7 +21,7 @@
       "buildNumber": "1.0.0",
       "supportsTablet": true, 
       "config": {
-        "googleMapsApiKey": "AIzaSyBuwXxUEC-NRP0wePTdKK0QsFSEJ7WiU0M"
+        "googleMapsApiKey": ""
       }
     },
     "android": {
@@ -29,7 +29,7 @@
       "versionCode": 1,
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyAvszEp6weLtrEElAqE060wv31hdWfOIRU"
+          "apiKey": ""
         }
       }
     },
